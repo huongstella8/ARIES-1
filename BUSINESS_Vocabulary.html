@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUSINESS Vocabulary — Huong Stella Paradigm</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--navy:#1e3a5f;--blue:#2563eb;--blue-light:#dbeafe;--accent:#f59e0b;--bg:#f0f4f8;--card:#fff;--text:#1e293b;--muted:#64748b;--green:#16a34a;--red:#dc2626;--border:#e2e8f0;--radius:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;font-size:15px;}
+
+/* ── HEADER ── */
+.site-header{background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);color:#fff;padding:22px 24px 18px;text-align:center;}
+.paradigm{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75;margin-bottom:5px;}
+.site-title{font-size:1.8rem;font-weight:800;letter-spacing:-.5px;}
+.site-sub{font-size:12px;opacity:.65;margin-top:4px;}
+
+/* ── STUDENT FORM ── */
+.student-form{background:#fff;border-bottom:3px solid var(--blue);padding:14px 24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.student-form label{font-size:12px;font-weight:600;color:var(--navy);}
+.student-form input{padding:7px 11px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;width:200px;transition:border .2s;}
+.student-form input:focus{outline:none;border-color:var(--blue);}
+.form-group{display:flex;flex-direction:column;gap:3px;}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{background:#fff;padding:10px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.progress-label{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;}
+.progress-bar{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:4px;transition:width .4s;}
+.progress-pct{font-size:12px;font-weight:700;color:var(--blue);min-width:32px;}
+
+/* ── TAB NAV ── */
+.tab-nav{background:#fff;border-bottom:2px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.tab-btn{flex-shrink:0;padding:14px 20px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.tab-btn:hover{color:var(--navy);background:#f8fafc;}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn .tab-icon{font-size:17px;}
+.tab-btn .tab-label{font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
+.tab-btn .tab-score{font-size:10px;background:var(--border);color:var(--muted);padding:1px 6px;border-radius:8px;margin-top:1px;}
+.tab-btn.active .tab-score{background:var(--blue-light);color:var(--blue);}
+.tab-btn.done .tab-score{background:#dcfce7;color:var(--green);}
+
+/* ── TAB PANELS ── */
+.tab-panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.tab-panel.active{display:block;}
+
+/* ── SECTION HEADER ── */
+.section-header{background:var(--navy);color:#fff;border-radius:var(--radius) var(--radius) 0 0;padding:16px 20px;display:flex;align-items:center;gap:12px;margin-bottom:0;}
+.section-num{background:var(--accent);color:#fff;font-weight:800;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.section-title{font-size:1.05rem;font-weight:700;}
+.section-source{font-size:11px;opacity:.65;margin-top:2px;}
+.section-body{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);}
+
+/* ── VOCAB CARDS ── */
+.vocab-grid{padding:18px;display:flex;flex-direction:column;gap:10px;}
+.vocab-card{border:1.5px solid var(--border);border-radius:8px;overflow:hidden;transition:box-shadow .2s;}
+.vocab-card:hover{box-shadow:0 2px 12px rgba(37,99,235,.1);}
+.card-top{background:var(--blue-light);padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+.card-word{font-size:.95rem;font-weight:800;color:var(--navy);}
+.card-ipa{font-size:12px;color:var(--muted);font-style:italic;}
+.card-pos{background:var(--navy);color:#fff;font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap;}
+.card-speak{background:none;border:none;cursor:pointer;font-size:16px;margin-left:auto;padding:2px 6px;border-radius:4px;transition:background .2s;flex-shrink:0;}
+.card-speak:hover{background:rgba(0,0,0,.08);}
+.card-toggle{font-size:11px;color:var(--blue);flex-shrink:0;}
+.card-body{padding:14px 16px;display:none;flex-direction:column;gap:10px;}
+.card-body.open{display:flex;}
+.def-block strong,.coll-block strong,.ctx-block strong,.write-block strong{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px;}
+.def-en{font-size:14px;color:var(--text);}
+.viet-btn{background:none;border:1.5px solid var(--border);border-radius:5px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--muted);transition:all .2s;}
+.viet-btn:hover{border-color:var(--blue);color:var(--blue);}
+.viet-text{display:none;background:#fef3c7;border-left:3px solid var(--accent);padding:6px 10px;font-size:13px;border-radius:4px;margin-top:4px;}
+.viet-text.show{display:block;}
+.conno-block{background:#f8fafc;border-left:3px solid var(--blue);padding:8px 12px;font-size:13px;border-radius:4px;}
+.conno-block .warn{color:var(--red);font-weight:600;margin-top:5px;font-size:12px;}
+.coll-list{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.coll-list li{background:var(--blue-light);color:var(--navy);padding:3px 9px;border-radius:4px;font-size:12px;font-weight:500;}
+.ctx-quote{font-style:italic;color:#374151;background:#f9fafb;border-left:3px solid var(--navy);padding:6px 10px;border-radius:4px;font-size:13px;}
+.write-eg{font-style:italic;color:#374151;background:#ecfdf5;border-left:3px solid var(--green);padding:6px 10px;border-radius:4px;font-size:13px;}
+.tier-core .card-top{border-left:4px solid var(--accent);}
+.tier-imp .card-top{border-left:4px solid var(--blue);}
+
+/* ── EXERCISES ── */
+.exercise-wrap{border-top:2px dashed var(--border);padding:18px;}
+.exercise-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.exercise-sub{font-size:12px;color:var(--muted);margin-bottom:14px;}
+.word-bank{background:var(--blue-light);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:13px;}
+.word-bank strong{display:block;margin-bottom:5px;font-size:12px;color:var(--navy);}
+.word-bank span{display:inline-block;background:#fff;border:1px solid var(--blue);color:var(--navy);padding:2px 8px;border-radius:4px;margin:2px;font-size:12px;font-weight:600;}
+.q-block{margin-bottom:16px;}
+.q-num{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:5px;}
+.q-text{font-size:14px;margin-bottom:7px;line-height:1.8;}
+.q-text select{border:1.5px solid var(--blue);border-radius:5px;padding:3px 8px;font-size:13px;background:#fff;cursor:pointer;color:var(--text);}
+.q-text select.correct{border-color:var(--green);background:#dcfce7;}
+.q-text select.wrong{border-color:var(--red);background:#fee2e2;}
+.radio-opts{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
+.radio-opts label{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;cursor:pointer;font-size:13px;transition:all .2s;}
+.radio-opts label:hover{border-color:var(--blue);background:var(--blue-light);}
+.radio-opts label.correct{border-color:var(--green);background:#dcfce7;}
+.radio-opts label.wrong{border-color:var(--red);background:#fee2e2;}
+.radio-opts input[type=radio]{margin-top:2px;flex-shrink:0;}
+.check-btn{background:var(--blue);color:#fff;border:none;padding:10px 24px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;}
+.check-btn:hover{background:var(--navy);}
+.score-display{margin-top:12px;padding:12px 16px;border-radius:7px;font-size:14px;font-weight:600;display:none;}
+.score-display.good{background:#dcfce7;color:var(--green);border:1.5px solid var(--green);}
+.score-display.ok{background:#fef3c7;color:#92400e;border:1.5px solid var(--accent);}
+.score-display.bad{background:#fee2e2;color:var(--red);border:1.5px solid var(--red);}
+.feedback-list{margin-top:8px;font-size:13px;font-weight:400;list-style:none;display:flex;flex-direction:column;gap:4px;}
+.feedback-list li{padding:4px 8px;border-radius:4px;}
+.fb-correct{background:#f0fdf4;color:var(--green);}
+.fb-wrong{background:#fff1f2;color:var(--red);}
+
+/* ── NEXT TAB BUTTON ── */
+.next-tab-btn{display:flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:18px;transition:background .2s;}
+.next-tab-btn:hover{background:var(--blue);}
+
+/* ── RESULTS ── */
+.results-header{background:var(--navy);color:#fff;padding:14px 20px;font-size:1rem;font-weight:700;border-radius:var(--radius) var(--radius) 0 0;}
+.results-body{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:20px;}
+.score-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;}
+.score-table th{background:var(--blue-light);color:var(--navy);padding:8px 12px;text-align:left;font-weight:700;}
+.score-table td{padding:8px 12px;border-bottom:1px solid var(--border);}
+.score-table tr:last-child td{border-bottom:none;}
+.total-row td{background:#f0fdf4!important;color:var(--green);font-weight:800;}
+.logbook-empty{color:var(--muted);font-size:13px;font-style:italic;}
+.logbook-entry{background:#fff1f2;border-left:3px solid var(--red);padding:8px 12px;border-radius:4px;font-size:13px;margin-bottom:6px;}
+.logbook-entry .le-section{font-size:11px;color:var(--muted);margin-bottom:2px;}
+.logbook-entry .le-yours{color:var(--red);font-weight:600;}
+.logbook-entry .le-correct{color:var(--green);font-weight:600;}
+.action-bar{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;}
+.btn-pdf{background:var(--red);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.btn-pdf:hover{opacity:.85;}
+.btn-email{background:var(--green);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s;}
+.btn-email:hover{opacity:.85;}
+.btn-note{font-size:12px;color:var(--muted);align-self:center;}
+.results-panel{margin-bottom:24px;}
+
+/* ── SECTION COMPLETE BANNER ── */
+.section-complete{display:none;align-items:center;gap:10px;background:#dcfce7;border:1.5px solid var(--green);border-radius:8px;padding:12px 16px;margin-top:16px;font-size:14px;font-weight:600;color:var(--green);}
+.section-complete.show{display:flex;}
+
+@media(max-width:600px){
+  .student-form{flex-direction:column;}
+  .student-form input{width:100%;}
+  .tab-btn{padding:10px 12px;}
+  .tab-btn .tab-label{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="site-header">
+  <div class="paradigm">Huong Stella Paradigm · Integrated Workshop</div>
+  <div class="site-title">BUSINESS VOCABULARY</div>
+  <div class="site-sub">Academic Word Study · Reading · Listening · Writing · Speaking</div>
+</header>
+
+<!-- ══ STUDENT INFO ══ -->
+<div class="student-form">
+  <div class="form-group">
+    <label for="sName">Full Name</label>
+    <input type="text" id="sName" placeholder="Họ và tên..." oninput="saveInfo()">
+  </div>
+  <div class="form-group">
+    <label for="sEmail">Email</label>
+    <input type="email" id="sEmail" placeholder="Email của bạn..." oninput="saveInfo()">
+  </div>
+  <div class="form-group">
+    <label for="sGroup">Group</label>
+    <input type="text" id="sGroup" placeholder="Nhóm..." oninput="saveInfo()" style="width:110px">
+  </div>
+</div>
+
+<!-- ══ PROGRESS ══ -->
+<div class="progress-wrap">
+  <span class="progress-label">OVERALL PROGRESS</span>
+  <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+  <span class="progress-pct" id="progPct">0%</span>
+</div>
+
+<!-- ══ TAB NAVIGATION ══ -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(1)" id="tabBtn1">
+    <span class="tab-icon">📄</span>
+    <span class="tab-label">Section 1</span>
+    <span style="font-size:10px;font-weight:600;color:inherit;margin-top:1px;">Governance</span>
+    <span class="tab-score" id="tabScore1">—/5</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(2)" id="tabBtn2">
+    <span class="tab-icon">🔊</span>
+    <span class="tab-label">Section 2</span>
+    <span style="font-size:10px;font-weight:600;color:inherit;margin-top:1px;">Values</span>
+    <span class="tab-score" id="tabScore2">—/5</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(3)" id="tabBtn3">
+    <span class="tab-icon">💻</span>
+    <span class="tab-label">Section 3</span>
+    <span style="font-size:10px;font-weight:600;color:inherit;margin-top:1px;">Technology</span>
+    <span class="tab-score" id="tabScore3">—/5</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(4)" id="tabBtn4">
+    <span class="tab-icon">📊</span>
+    <span class="tab-label">Section 4</span>
+    <span style="font-size:10px;font-weight:600;color:inherit;margin-top:1px;">Graphs</span>
+    <span class="tab-score" id="tabScore4">—/5</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(5)" id="tabBtn5">
+    <span class="tab-icon">🏆</span>
+    <span class="tab-label">Results</span>
+    <span style="font-size:10px;font-weight:600;color:inherit;margin-top:1px;">Summary</span>
+    <span class="tab-score" id="tabScore5">—</span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     TAB 1 · GOVERNANCE & CORPORATE LEADERSHIP
+     ═══════════════════════════════════════ -->
+<div class="tab-panel active" id="panel1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Governance &amp; Corporate Leadership</div>
+      <div class="section-source">📄 Reading: "UK companies need more effective boards of directors"</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="vocab-grid">
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">GOVERNANCE</span>
+          <span class="card-ipa">/ˈɡʌvənəns/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('governance')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The system by which an organisation is directed and controlled — the rules, practices, and relationships that determine how decisions are made at the highest level.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">quản trị (tổ chức / doanh nghiệp) — cách thức một tổ chức được điều hành và kiểm soát ở cấp cao nhất</div></div>
+          <div class="conno-block">🎯 Formal, neutral. Strongly <em>negative</em> with "failures of" or "poor." "Good governance" = strongly positive.<div class="warn">⚠️ "Governance" (cách quản trị) ≠ "government" (chính phủ). "Corporate governance" = cách điều hành công ty ở cấp HĐQT — không phải nhà nước.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>corporate governance</li><li>failures of governance</li><li>governance structure / framework</li><li>good / poor governance</li><li>strengthen governance</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"After a number of serious <u>failures of governance</u>, companies in Britain should consider radical changes to their directors' roles."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Weak <u>corporate governance</u> was widely cited as a contributing factor to the 2008 financial crisis, prompting regulators to demand greater board accountability."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">SCRUTINY</span>
+          <span class="card-ipa">/ˈskruːtɪni/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('scrutiny')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">Close and thorough examination or investigation of something, especially to detect problems or verify that it is satisfactory.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">sự xem xét kỹ lưỡng; sự kiểm tra chặt chẽ; sự giám sát cẩn thận</div></div>
+          <div class="conno-block">🎯 Formal, neutral-to-negative. Implies <em>critical, evaluative</em> attention — not just interest.<div class="warn">⚠️ Often misused as "attention." Scrutiny = looking for problems. "Come under scrutiny" = bị kiểm tra vì có thể sai.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>close / intense / public scrutiny</li><li>come under scrutiny</li><li>face / withstand scrutiny</li><li>subject to scrutiny</li><li>media scrutiny</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"The knock-on effect of this <u>scrutiny</u> has been to make the governance of companies in general an issue of intense public debate."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"As public <u>scrutiny</u> of executive pay intensifies, boards are under increasing pressure to justify their compensation decisions to shareholders."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">BOARD OF DIRECTORS / NON-EXECUTIVE DIRECTOR</span>
+          <span class="card-ipa">/bɔːrd/ · /nɒn ɪɡˈzekjətɪv/</span>
+          <span class="card-pos">n</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('board of directors')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en"><strong>Board of directors:</strong> The group responsible for overseeing a company's management and strategic direction. <strong>Non-executive director (NED):</strong> A board member who provides independent oversight without being involved in daily operations.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text"><strong>Hội đồng quản trị</strong> — nhóm giám sát và định hướng công ty. <strong>Thành viên độc lập HĐQT</strong> — không tham gia điều hành trực tiếp.</div></div>
+          <div class="conno-block">🎯 The passage criticises the "classic model" of part-time NEDs — implies they may be too detached to be effective.<div class="warn">⚠️ British English: "board of directors." "Directors" alone = members of the board (NOT mid-level managers as in Vietnamese "giám đốc").</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>sit on / serve on the board</li><li>the board voted to...</li><li>board meeting / decision</li><li>independent / non-executive director</li><li>part-time NED</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"…calling into question the effectiveness of the classic model of corporate governance by part-time, independent <u>non-executive directors</u>."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"The <u>board of directors</u> failed to anticipate the scale of the crisis, partly because <u>non-executive directors</u> lacked access to detailed financial information."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">REMUNERATION</span>
+          <span class="card-ipa">/rɪˌmjuːnəˈreɪʃən/</span>
+          <span class="card-pos">n [U] formal</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('remuneration')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">Payment or compensation received for work or services, including salary, bonuses, and benefits. Broader and more formal than "salary" alone.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">thù lao; tiền lương + thưởng + phúc lợi (toàn bộ gói đãi ngộ — rộng hơn "salary")</div></div>
+          <div class="conno-block">🎯 Formal, neutral. "Executive remuneration" is often politically charged — scrutinised by shareholders.<div class="warn">⚠️ "Remuneration package" = tổng gói. Do NOT use in casual speech — say "pay" or "salary" instead.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>executive remuneration</li><li>remuneration package / committee</li><li>competitive / generous remuneration</li><li>remuneration policy</li><li>vote down remuneration</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"Their powers to vote down executive <u>remuneration</u> policies increased when binding votes came into force."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Critics argue that the <u>remuneration</u> packages awarded to senior executives are often disproportionate to the company's actual performance."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">TRANSPARENCY</span>
+          <span class="card-ipa">/trænsˈpærənsi/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('transparency')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The quality of being open, honest, and clear — operating in a way that allows outsiders to see how decisions are made and how the organisation functions.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">tính minh bạch; sự công khai (trong cách hoạt động và ra quyết định)</div></div>
+          <div class="conno-block">🎯 Strongly positive. Its absence = distrust, scandal. Almost always paired with "accountability." Very frequent in IELTS academic writing on business and governance.</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>greater / full transparency</li><li>promote / ensure transparency</li><li>transparency and accountability</li><li>lack of transparency</li><li>transparency in decision-making</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"Many would argue that this is in the interest of <u>transparency</u> and good governance as shareholders use their muscle to pressure boards."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Greater <u>transparency</u> in executive pay decisions would help restore public trust and strengthen confidence in corporate governance."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">SUSTAINABILITY</span>
+          <span class="card-ipa">/səˌsteɪnəˈbɪlɪti/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('sustainability')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">In business: the ability to operate successfully over the long term, considering economic, environmental, and social impacts — not just short-term profits.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">tính bền vững; khả năng duy trì lâu dài (về kinh tế, môi trường và xã hội)</div></div>
+          <div class="conno-block">🎯 Strongly positive. The passage criticises boards for neglecting long-term sustainability in favour of short-term results.<div class="warn">⚠️ Includes BOTH environmental responsibility AND long-term business viability. Context determines which meaning is primary.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>long-term sustainability</li><li>sustainability and governance</li><li>environmental / financial sustainability</li><li>promote / ensure sustainability</li><li>sustainable development</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"One of the main criticisms is that boards do not focus sufficiently on longer-term matters of strategy, <u>sustainability</u> and governance."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Companies that prioritise short-term profits at the expense of long-term <u>sustainability</u> risk damaging both their reputation and their ability to attract future investment."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">CORPORATE ETHICS</span>
+          <span class="card-ipa">/ˈkɔːrpərɪt ˈeθɪks/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('corporate ethics')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The set of moral principles and values that guide a company's behaviour — determining what is right and wrong in business decisions and relationships with stakeholders.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">đạo đức doanh nghiệp; chuẩn mực đạo đức trong kinh doanh</div></div>
+          <div class="conno-block">🎯 Neutral but important. "A heightened awareness of corporate ethics" (from the passage) = positive development. Central to IELTS Task 2 arguments about business responsibility.</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>heightened awareness of corporate ethics</li><li>breach / uphold corporate ethics</li><li>corporate ethics and social responsibility</li><li>ethical business practices</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Reading Passage</strong><div class="ctx-quote">"The financial crisis stimulated a debate about a heightened awareness of <u>corporate ethics</u>."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"A growing emphasis on <u>corporate ethics</u> has led consumers and investors to favour companies that demonstrate genuine social and environmental responsibility."</div></div>
+        </div>
+      </div>
+
+    </div><!-- /vocab-grid -->
+
+    <div class="exercise-wrap">
+      <div class="exercise-title">📝 Exercise 1 — Fill in the Blank</div>
+      <div class="exercise-sub">Select the correct word. Each word used once. Attempts: <strong id="att1">0</strong></div>
+      <div class="word-bank">
+        <strong>Word Bank:</strong>
+        <span>governance</span><span>scrutiny</span><span>non-executive directors</span><span>remuneration</span><span>transparency</span><span>sustainability</span><span>corporate ethics</span><span>the board of directors</span>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q1.</div>
+        <div class="q-text">Following the financial crisis, companies faced intense public
+          <select id="s1q1"><option value="">— select —</option><option>governance</option><option>scrutiny</option><option>non-executive directors</option><option>remuneration</option><option>transparency</option><option>sustainability</option><option>corporate ethics</option><option>the board of directors</option></select>
+          over their management practices and decision-making processes.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q2.</div>
+        <div class="q-text">Many companies employ
+          <select id="s1q2"><option value="">— select —</option><option>governance</option><option>scrutiny</option><option>non-executive directors</option><option>remuneration</option><option>transparency</option><option>sustainability</option><option>corporate ethics</option><option>the board of directors</option></select>
+          to provide independent oversight without being involved in day-to-day management.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q3.</div>
+        <div class="q-text">The chief executive's
+          <select id="s1q3"><option value="">— select —</option><option>governance</option><option>scrutiny</option><option>non-executive directors</option><option>remuneration</option><option>transparency</option><option>sustainability</option><option>corporate ethics</option><option>the board of directors</option></select>
+          package sparked controversy, with critics arguing the bonus was disproportionate to the company's performance.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q4.</div>
+        <div class="q-text">
+          <select id="s1q4"><option value="">— select —</option><option>governance</option><option>scrutiny</option><option>non-executive directors</option><option>remuneration</option><option>transparency</option><option>sustainability</option><option>corporate ethics</option><option>the board of directors</option></select>
+          voted unanimously to appoint a new Chief Executive after months of pressure from major investors.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q5.</div>
+        <div class="q-text">A growing awareness of
+          <select id="s1q5"><option value="">— select —</option><option>governance</option><option>scrutiny</option><option>non-executive directors</option><option>remuneration</option><option>transparency</option><option>sustainability</option><option>corporate ethics</option><option>the board of directors</option></select>
+          has led shareholders to question whether companies are genuinely committed to social responsibility or simply managing their image.
+        </div>
+      </div>
+      <button class="check-btn" onclick="checkSection(1)">Check Answers</button>
+      <div class="score-display" id="score1"></div>
+      <div class="section-complete" id="complete1">✅ Section 1 done! Move on to Section 2 →</div>
+      <button class="next-tab-btn" onclick="switchTab(2)">Next: Business Values →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 2 · BUSINESS VALUES & WORKPLACE SKILLS
+     ═══════════════════════════════════════ -->
+<div class="tab-panel" id="panel2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">Business Values &amp; Workplace Skills</div>
+      <div class="section-source">🔊 Listening: "Four Business Values" (Collaboration · Industriousness · Creativity · Excellence) · Speaking tasks</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="vocab-grid">
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">COLLABORATION</span>
+          <span class="card-ipa">/kəˌlæbəˈreɪʃən/</span>
+          <span class="card-pos">n [U/C]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('collaboration')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The act of working jointly with others to achieve a shared goal, especially across organisations, teams, or disciplines.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">sự hợp tác (cùng nhau làm việc để đạt mục tiêu chung)</div></div>
+          <div class="conno-block">🎯 Positive — but the listening challenges this: the speaker's team <em>won</em> by reducing collaboration. Valuable but not always optimal — important nuance for IELTS critical thinking.<div class="warn">⚠️ "Collaboration" = two separate entities working together. "Teamwork" = within one team.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>close / effective collaboration</li><li>in collaboration with</li><li>cross-departmental collaboration</li><li>foster / promote collaboration</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Listening</strong><div class="ctx-quote">"Other teams experienced difficulties from trying to <u>collaborate</u>. The speaker's team won because they reduced collaboration."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"While <u>collaboration</u> between departments can drive innovation, it also has the potential to slow decision-making if communication channels are poorly managed."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-imp">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">INDUSTRIOUSNESS</span>
+          <span class="card-ipa">/ɪnˈdʌstriəsnəs/</span>
+          <span class="card-pos">n [U] formal</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('industriousness')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The quality of working hard and diligently; the habit of consistent effort and dedication.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">tính chăm chỉ; sự cần cù; đức tính chịu khó làm việc</div></div>
+          <div class="conno-block">🎯 The listening complicates this: "hard work may be a bad use of company resources." Effort alone is not a virtue if misdirected — key IELTS nuance.<div class="warn">⚠️ Adjective: "industrious" (diligent). NOT "industrial" (relating to manufacturing).</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>industrious worker / employee</li><li>a spirit of industriousness</li><li>hard work and dedication</li><li>diligence and effort</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Listening</strong><div class="ctx-quote">"Hard work may be a bad use of various company resources. 'Lazy' in this context refers to people who avoid doing tasks that are unnecessary."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"<u>Industriousness</u> is traditionally considered a core business virtue, yet research suggests that working smarter — rather than harder — often separates high-performing teams."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">CREATIVITY</span>
+          <span class="card-ipa">/ˌkriːeɪˈtɪvɪti/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('creativity')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The ability to produce original and imaginative ideas, solutions, or products; the capacity to think in novel ways and generate value through innovation.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">sự sáng tạo; khả năng tư duy độc đáo và tạo ra giá trị mới</div></div>
+          <div class="conno-block">🎯 Positive, but the listening notes creativity must be purposeful — "used as a response to a particular problem." Being creative for its own sake may not boost sales.<div class="warn">⚠️ In business: "creative solution / approach." Not "a creative" (noun) unless referring to a creative professional.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>foster / encourage / stifle creativity</li><li>creative thinking / solution</li><li>creativity and innovation</li><li>spark creativity</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Listening</strong><div class="ctx-quote">"An advertising campaign was memorable but failed to boost sales. Creativity should be used as a response to a particular need."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Companies that fail to <u>foster creativity</u> among their employees risk falling behind competitors who are more innovative and adaptable."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-imp">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">EXCELLENCE</span>
+          <span class="card-ipa">/ˈeksələns/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('excellence')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The quality of being exceptionally good or outstanding; a standard of performance that significantly exceeds the norm.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">sự xuất sắc; tiêu chuẩn vượt trội; chất lượng đặc biệt cao</div></div>
+          <div class="conno-block">🎯 Positive — but the listening: "companies that always aim at excellence may miss opportunities." Pioneers who act first may outperform perfectionists who wait.<div class="warn">⚠️ "Strive for / pursue / aim at excellence." NOT "do excellence."</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>strive for / pursue excellence</li><li>a commitment to excellence</li><li>excellence in performance</li><li>centre of excellence</li></ul></div>
+          <div class="ctx-block"><strong>📖 From the Listening</strong><div class="ctx-quote">"Pioneers had a success rate far higher than that of followers. Companies that always aim at <u>excellence</u> may miss opportunities."</div></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"While a commitment to <u>excellence</u> is admirable, businesses must balance the pursuit of perfection with the need to move quickly in rapidly changing markets."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">WORK PLACEMENT / INTERNSHIP</span>
+          <span class="card-ipa">/wɜːrk ˈpleɪsmənt/ · /ˈɪntɜːrnʃɪp/</span>
+          <span class="card-pos">n [C]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('work placement')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">A temporary position providing practical work experience. <em>Work placement</em> = British English (IELTS Cambridge); <em>internship</em> = American/global English.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">thực tập (tại doanh nghiệp); kỳ thực tập; vị trí thực tập sinh</div></div>
+          <div class="conno-block">🎯 Positive. Appears in Cambridge IELTS C10, Test 4 — Laura and her tutor discuss her work placement experience.</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>complete / undertake a work placement</li><li>paid / unpaid internship</li><li>work placement programme</li><li>gain experience through a placement</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Completing a <u>work placement</u> not only equips graduates with practical skills but also helps them understand workplace culture and employer expectations."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-imp">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">CONFLICT RESOLUTION</span>
+          <span class="card-ipa">/ˈkɒnflɪkt ˌrezəˈluːʃən/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('conflict resolution')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The process of finding a constructive and peaceful solution to a disagreement or dispute, especially in a workplace or organisational context.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">giải quyết xung đột; hòa giải mâu thuẫn</div></div>
+          <div class="conno-block">🎯 Positive concept. Appears in Speaking Part 3 discussions about teamwork, management, and business communication.</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>effective conflict resolution</li><li>conflict resolution skills / techniques</li><li>resolve a dispute</li><li>mediation and conflict resolution</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Strong <u>conflict resolution</u> skills are increasingly valued in the modern workplace, where diverse teams must navigate differences in working style."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">STAKEHOLDERS</span>
+          <span class="card-ipa">/ˈsteɪkˌhoʊldərz/</span>
+          <span class="card-pos">n [C, plural]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('stakeholders')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">Any person, group, or organisation that has an interest in, or is affected by, the decisions of a company — including employees, customers, investors, local communities, and regulators.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">các bên liên quan; tất cả những ai có lợi ích gắn với tổ chức (rộng hơn "cổ đông")</div></div>
+          <div class="conno-block">🎯 Neutral-formal. Broader than "shareholder." Implies companies have responsibilities beyond profit — to a wider community.<div class="warn">⚠️ CRITICAL: stakeholder ≠ shareholder. Shareholder = người SỞ HỮU cổ phần. Stakeholder = bất kỳ ai CÓ LIÊN QUAN.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>key / major stakeholders</li><li>engage with / consult stakeholders</li><li>stakeholder interests / concerns</li><li>stakeholder management</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"A responsible corporation proactively engages with all key <u>stakeholders</u> — from employees and customers to local communities — before making major strategic decisions."</div></div>
+        </div>
+      </div>
+
+    </div><!-- /vocab-grid -->
+
+    <div class="exercise-wrap">
+      <div class="exercise-title">📝 Exercise 2 — Multiple Choice in Context</div>
+      <div class="exercise-sub">Choose the best answer (A–D). Attempts: <strong id="att2">0</strong></div>
+
+      <div class="q-block">
+        <div class="q-num">Q1. "The advertising campaign was memorable but failed to boost sales — proving that __________ alone is not enough; it must serve a clear business purpose."</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s2q1" value="A"> A) industriousness</label>
+          <label><input type="radio" name="s2q1" value="B"> B) creativity</label>
+          <label><input type="radio" name="s2q1" value="C"> C) scrutiny</label>
+          <label><input type="radio" name="s2q1" value="D"> D) sustainability</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q2. Which sentence correctly uses 'collaboration' in an IELTS academic context?</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s2q2" value="A"> A) "The team's collaboration peaked at 40% in the third quarter."</label>
+          <label><input type="radio" name="s2q2" value="B"> B) "Effective collaboration between departments can lead to more innovative solutions."</label>
+          <label><input type="radio" name="s2q2" value="C"> C) "The manager's collaboration was questioned by the board."</label>
+          <label><input type="radio" name="s2q2" value="D"> D) "Collaboration declined sharply after the merger."</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q3. "Research shows pioneers outperform those who wait to perfect their product, suggesting that always striving for __________ can cause businesses to miss opportunities."</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s2q3" value="A"> A) collaboration</label>
+          <label><input type="radio" name="s2q3" value="B"> B) remuneration</label>
+          <label><input type="radio" name="s2q3" value="C"> C) excellence</label>
+          <label><input type="radio" name="s2q3" value="D"> D) scrutiny</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q4. "After completing a six-month __________ at a London consulting firm, she was offered a permanent position based on her outstanding performance."</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s2q4" value="A"> A) directorship</label>
+          <label><input type="radio" name="s2q4" value="B"> B) work placement</label>
+          <label><input type="radio" name="s2q4" value="C"> C) remuneration</label>
+          <label><input type="radio" name="s2q4" value="D"> D) audit committee</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q5. A company that consults employees, local residents, investors, AND environmental groups before a major decision is engaging all its key __________.</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s2q5" value="A"> A) shareholders</label>
+          <label><input type="radio" name="s2q5" value="B"> B) non-executive directors</label>
+          <label><input type="radio" name="s2q5" value="C"> C) stakeholders</label>
+          <label><input type="radio" name="s2q5" value="D"> D) auditors</label>
+        </div>
+      </div>
+      <button class="check-btn" onclick="checkSection(2)">Check Answers</button>
+      <div class="score-display" id="score2"></div>
+      <div class="section-complete" id="complete2">✅ Section 2 done! Move on to Section 3 →</div>
+      <button class="next-tab-btn" onclick="switchTab(3)">Next: Technology & Modern Work →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 3 · TECHNOLOGY & MODERN WORK
+     ═══════════════════════════════════════ -->
+<div class="tab-panel" id="panel3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div>
+      <div class="section-title">Technology &amp; Modern Work</div>
+      <div class="section-source">✍️ Writing Task 2: "Business meetings increasingly online" · Speaking · HW Vocabulary List</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="vocab-grid">
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">DIGITAL TRANSFORMATION</span>
+          <span class="card-ipa">/ˈdɪdʒɪtl trænsˌfɔːrˈmeɪʃən/</span>
+          <span class="card-pos">n [U/C]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('digital transformation')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The process by which a company integrates digital technology into all areas of its operations, fundamentally changing how it functions and delivers value.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">chuyển đổi số — quá trình ứng dụng công nghệ số vào toàn bộ hoạt động doanh nghiệp</div></div>
+          <div class="conno-block">🎯 Strongly positive, forward-looking. Companies that fail to transform risk obsolescence. Very common in IELTS Writing Task 2 about technology and business.</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>undergo / drive digital transformation</li><li>digital transformation strategy</li><li>accelerate / embrace digital transformation</li><li>resist digital transformation</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Companies that fail to embrace <u>digital transformation</u> risk being outpaced by competitors who have integrated AI and data analytics into their core operations."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">REMOTE WORK / TELECOMMUTING</span>
+          <span class="card-ipa">/rɪˈmoʊt wɜːrk/ · /ˈtelikəˌmjuːtɪŋ/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('remote work')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">A work arrangement where employees perform duties from a location outside the traditional office — typically home — using digital tools. <em>Telecommuting</em> = older/formal term; <em>remote work</em> = current usage.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">làm việc từ xa; làm việc tại nhà</div></div>
+          <div class="conno-block">🎯 Mixed: positive (flexibility, autonomy) vs. negative (isolation, blurred boundaries). IELTS Task 2 often asks for both sides.<div class="warn">⚠️ "Work remotely" (adverb): "I work remotely." "Remote work" (noun): "Remote work has grown rapidly."</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>work remotely / from home</li><li>shift to / rise of remote work</li><li>remote work policy / culture</li><li>benefits / drawbacks of remote work</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"The rapid shift to <u>remote work</u> during the pandemic demonstrated that many roles can be performed effectively outside the office, challenging traditional assumptions."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">WORK-LIFE BALANCE</span>
+          <span class="card-ipa">/wɜːrk laɪf ˈbæləns/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('work life balance')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The equilibrium between professional responsibilities and personal life — the degree to which a person can maintain a healthy division of time and energy between work and non-work activities.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">cân bằng giữa công việc và cuộc sống cá nhân</div></div>
+          <div class="conno-block">🎯 Positive concept. Poor balance → stress, burnout, high staff turnover. Central to modern HR and IELTS Speaking Part 3.</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>achieve / maintain / improve work-life balance</li><li>poor / healthy work-life balance</li><li>promote work-life balance</li><li>work-life balance challenges</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Flexible working arrangements have been shown to significantly improve employees' <u>work-life balance</u> and reduce absenteeism."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">AUTOMATION</span>
+          <span class="card-ipa">/ˌɔːtəˈmeɪʃən/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('automation')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The use of technology, machines, or software to perform tasks with minimal human intervention — often replacing manual labour or repetitive processes.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">tự động hóa — dùng máy móc/phần mềm thay thế lao động thủ công</div></div>
+          <div class="conno-block">🎯 Mixed. Positive: efficiency, cost reduction. Negative: job displacement, inequality. In IELTS: always present both sides.<div class="warn">⚠️ Automation ≠ AI. Automation = any system replacing human action. AI = intelligence-based decisions. They overlap but differ.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>industrial / office automation</li><li>automation of tasks / jobs</li><li>increased / rapid automation</li><li>automation threatens / creates jobs</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"While <u>automation</u> undeniably increases operational efficiency, its impact on employment — particularly in manufacturing — remains deeply contested."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">PRODUCTIVITY</span>
+          <span class="card-ipa">/ˌprɒdʌkˈtɪvɪti/</span>
+          <span class="card-pos">n [U]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('productivity')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">The efficiency with which inputs (time, labour, capital) are converted into outputs (goods, services, results). Higher productivity = more output per unit of input.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">năng suất (lao động); hiệu suất làm việc</div></div>
+          <div class="conno-block">🎯 Strongly positive. "Low productivity" = problem. Directly relevant to Writing Task 2 about online meetings — does it help or hinder productivity?<div class="warn">⚠️ INCREASE / BOOST / IMPROVE / REDUCE productivity. NEVER "make productivity" or "do productivity."</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>increase / boost / improve productivity</li><li>labour / worker productivity</li><li>productivity levels / gains</li><li>measure / hamper productivity</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"Employees who work from home often report higher <u>productivity</u>, largely due to fewer distractions and greater autonomy over their schedule."</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-imp">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">DISRUPTION</span>
+          <span class="card-ipa">/dɪsˈrʌpʃən/</span>
+          <span class="card-pos">n [U/C]</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('disruption')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">In business: a radical innovation that displaces established industries or business models. More broadly: an interruption that prevents a process from working normally.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">(kinh doanh) sự phá vỡ thị trường; đổi mới đột phá / (chung) sự gián đoạn; xáo trộn</div></div>
+          <div class="conno-block">🎯 DUAL meaning — critical distinction:<br>✅ POSITIVE: "disruptive innovation" / "market disruption" (e.g., Uber disrupted taxis)<br>❌ NEGATIVE: "disruption to services" / "supply chain disruption" (= problem)<div class="warn">⚠️ Context is ESSENTIAL. "Disruptive technology" = positive breakthrough. "Service disruption" = something went wrong.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>market / industry disruption (positive)</li><li>disruptive innovation / technology</li><li>cause disruption to (negative)</li><li>supply chain disruption</li></ul></div>
+          <div class="write-block"><strong>✍️ Writing / Speaking</strong><div class="write-eg">"The rise of e-commerce has caused significant <u>disruption</u> to the traditional retail sector, forcing brick-and-mortar stores to rethink their business models."</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="exercise-wrap">
+      <div class="exercise-title">📝 Exercise 3 — Multiple Choice in Context</div>
+      <div class="exercise-sub">Choose the best answer (A–D). Attempts: <strong id="att3">0</strong></div>
+
+      <div class="q-block">
+        <div class="q-num">Q1. "Implementing AI-driven customer service tools was part of the company's broader __________ strategy, aimed at reducing costs and improving the customer experience."</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s3q1" value="A"> A) staff turnover</label>
+          <label><input type="radio" name="s3q1" value="B"> B) digital transformation</label>
+          <label><input type="radio" name="s3q1" value="C"> C) work-life balance</label>
+          <label><input type="radio" name="s3q1" value="D"> D) conflict resolution</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q2. "The sudden rise of app-based ride-sharing platforms completely __________ the traditional taxi industry, forcing established operators to adapt or exit the market."</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s3q2" value="A"> A) automated</label>
+          <label><input type="radio" name="s3q2" value="B"> B) fluctuated</label>
+          <label><input type="radio" name="s3q2" value="C"> C) disrupted</label>
+          <label><input type="radio" name="s3q2" value="D"> D) plateaued</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q3. Many employees say the ability to __________ has become a deciding factor when choosing between job offers, as it allows greater flexibility and reduces commuting time.</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s3q3" value="A"> A) work remotely</label>
+          <label><input type="radio" name="s3q3" value="B"> B) work quarterly</label>
+          <label><input type="radio" name="s3q3" value="C"> C) work with scrutiny</label>
+          <label><input type="radio" name="s3q3" value="D"> D) work with disruption</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q4. "Introducing automated assembly lines allowed the factory to significantly boost its __________, with output per worker increasing by 35% within the first year."</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s3q4" value="A"> A) disruption</label>
+          <label><input type="radio" name="s3q4" value="B"> B) governance</label>
+          <label><input type="radio" name="s3q4" value="C"> C) productivity</label>
+          <label><input type="radio" name="s3q4" value="D"> D) remuneration</label>
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q5. Which sentence uses 'work-life balance' correctly in a Writing Task 2 context?</div>
+        <div class="radio-opts">
+          <label><input type="radio" name="s3q5" value="A"> A) "Work-life balance has been disrupted by the board of directors."</label>
+          <label><input type="radio" name="s3q5" value="B"> B) "Remote working policies have been shown to improve employees' work-life balance by reducing commuting time and increasing personal autonomy."</label>
+          <label><input type="radio" name="s3q5" value="C"> C) "Work-life balance peaked in 2019 and has since declined sharply."</label>
+          <label><input type="radio" name="s3q5" value="D"> D) "The board voted to improve work-life balance by appointing new directors."</label>
+        </div>
+      </div>
+      <button class="check-btn" onclick="checkSection(3)">Check Answers</button>
+      <div class="score-display" id="score3"></div>
+      <div class="section-complete" id="complete3">✅ Section 3 done! Move on to Section 4 →</div>
+      <button class="next-tab-btn" onclick="switchTab(4)">Next: Graph & Data Language →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 4 · GRAPH & DATA LANGUAGE
+     ═══════════════════════════════════════ -->
+<div class="tab-panel" id="panel4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div>
+      <div class="section-title">Graph &amp; Data Language</div>
+      <div class="section-source">📊 Writing Task 1: "Annual earnings of three bakeries in London, 2000–2010" (Bernie's Buns · Lovely Loaves · Robbie's Bakery)</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="vocab-grid">
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">PEAKED AT / REACHED A PEAK OF</span>
+          <span class="card-ipa">/piːkt æt/</span>
+          <span class="card-pos">verb phrase</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('peaked at')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">Reached the highest point before declining or levelling off. Always followed by a figure and/or time reference.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">đạt đỉnh điểm (tại mức ...); đạt mức cao nhất là ...</div></div>
+          <div class="conno-block">🎯 Neutral, precise, essential for Task 1. Implies that after this point, the figure decreased or stabilised.<div class="warn">⚠️ Always include "at" + figure: "peaked AT £100,000." "Reached a peak of" = same meaning, slightly more formal.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>peaked at [£X] in [year]</li><li>reached a peak of [figure]</li><li>hit a high point of</li><li>before peaking at</li></ul></div>
+          <div class="ctx-block"><strong>📖 Task 1 Graph Context</strong><div class="ctx-quote">Bernie's Buns' annual earnings <u>peaked at</u> approximately £100,000 in 2003, before declining steadily over subsequent years.</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">FLUCTUATED</span>
+          <span class="card-ipa">/ˈflʌktʃueɪtɪd/</span>
+          <span class="card-pos">verb (past)</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('fluctuated')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">Rose and fell repeatedly with no clear, consistent direction — showing irregular variation over time.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">dao động (lên xuống không theo hướng nhất định); biến động thất thường</div></div>
+          <div class="conno-block">🎯 Critical distinction: "fluctuated" = irregular movement up AND down (no clear trend). Do NOT use if the line only rises or only falls.<div class="warn">⚠️ "Fluctuated between £X and £Y" to be precise about the range.</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>fluctuated between X and Y</li><li>fluctuated considerably / wildly / slightly</li><li>fluctuations in + noun</li><li>show / display fluctuations</li></ul></div>
+          <div class="ctx-block"><strong>📖 Task 1 Graph Context</strong><div class="ctx-quote">Lovely Loaves' income <u>fluctuated</u> considerably throughout the decade, with no sustained upward or downward trend.</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">REMAINED STABLE / PLATEAUED</span>
+          <span class="card-ipa">/rɪˈmeɪnd ˈsteɪbəl/ · /ˈplætoʊd/</span>
+          <span class="card-pos">verb phrase</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('remained stable')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en"><strong>Remained stable:</strong> Showed little or no change. <strong>Plateaued:</strong> Reached a level after growth and then stopped rising — implies a period of growth before levelling off.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">duy trì ổn định / đi ngang — "plateaued" = tăng rồi dừng lại ở mức cao</div></div>
+          <div class="conno-block">🎯 Subtle difference: "remained stable" = flat throughout; "plateaued" = growth stopped. Also useful: "levelled off," "stayed relatively constant," "hovered around £X."</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>remained stable / relatively stable at</li><li>remained relatively constant</li><li>plateaued at / around [figure]</li><li>levelled off / held steady</li></ul></div>
+          <div class="ctx-block"><strong>📖 Task 1 Graph Context</strong><div class="ctx-quote">Robbie's Bakery's earnings <u>remained relatively stable</u> at around £20,000–£25,000 for much of the early period, before rising sharply from 2007 onwards.</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">DECLINED SHARPLY / GRADUALLY</span>
+          <span class="card-ipa">/dɪˈklaɪnd ˈʃɑːrpli/</span>
+          <span class="card-pos">verb phrase</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('declined sharply')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en">Decreased — either rapidly (sharply / dramatically / steeply) or slowly (gradually / steadily / slightly).</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">giảm mạnh (sharply) / giảm dần (gradually) — adverb thay đổi tốc độ</div></div>
+          <div class="conno-block">🎯 The adverb is critical. Choose precisely based on what the graph shows.<br><strong>Fast drops:</strong> sharply · dramatically · steeply · significantly<br><strong>Slow drops:</strong> gradually · steadily · slightly · moderately</div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>declined / fell sharply / dramatically</li><li>declined gradually / steadily</li><li>dropped / dipped / plummeted</li><li>experienced a sharp / gradual decline</li></ul></div>
+          <div class="ctx-block"><strong>📖 Task 1 Graph Context</strong><div class="ctx-quote">After reaching its peak in 2003, Bernie's Buns' income <u>declined gradually</u> before experiencing a <u>sharper fall</u> between 2006 and 2008.</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-core">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">SURPASSED / OVERTOOK</span>
+          <span class="card-ipa">/sərˈpæst/ · /ˌoʊvərˈtʊk/</span>
+          <span class="card-pos">verb (past)</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('surpassed')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en"><strong>Surpassed:</strong> Exceeded a specific figure or level. <strong>Overtook:</strong> Went past a competitor in terms of ranking or value.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">vượt qua (một mức cụ thể) / vượt lên trên (một đối thủ)</div></div>
+          <div class="conno-block">🎯 Both describe a crossover point — essential for line graphs showing multiple series.<div class="warn">⚠️ "Surpassed" = vượt mức (số liệu); "overtook" = vượt đối thủ (thứ hạng).</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>surpassed the [figure / record]</li><li>overtook [Company X] to become</li><li>exceeded / outpaced its rivals</li></ul></div>
+          <div class="ctx-block"><strong>📖 Task 1 Graph Context</strong><div class="ctx-quote">By 2010, Robbie's Bakery had <u>surpassed</u> both competitors to record the highest annual earnings of the three, reaching approximately £120,000.</div></div>
+        </div>
+      </div>
+
+      <div class="vocab-card tier-imp">
+        <div class="card-top" onclick="toggleCard(this)">
+          <span class="card-word">BY CONTRAST · IN COMPARISON · OVERALL, IT IS CLEAR THAT</span>
+          <span class="card-ipa"></span>
+          <span class="card-pos">discourse markers</span>
+          <button class="card-speak" onclick="event.stopPropagation();speak('by contrast')">🔊</button>
+          <span class="card-toggle">▼</span>
+        </div>
+        <div class="card-body">
+          <div class="def-block"><strong>Definition</strong><span class="def-en"><strong>By contrast / In comparison</strong> = introduce a contrasting trend. <strong>Overall, it is clear that</strong> = open the Overview paragraph with a summary statement.</span></div>
+          <div><button class="viet-btn" onclick="toggleViet(this)">🇻🇳 Show Vietnamese</button><div class="viet-text">ngược lại / để so sánh / nhìn chung, có thể thấy rõ rằng</div></div>
+          <div class="conno-block">🎯 "Overall, it is clear that..." MUST appear in your Overview paragraph — signals to the examiner that you've identified the main trends.<div class="warn">⚠️ Do NOT write "In conclusion" in Task 1. Correct phrase for the overview: "Overall" or "In general."</div></div>
+          <div class="coll-block"><strong>Key Collocations</strong><ul class="coll-list"><li>By contrast, ... / In contrast, ...</li><li>In comparison, ... / Compared to ...</li><li>Overall, it is clear that ...</li><li>whereas / while (mid-sentence contrast)</li></ul></div>
+          <div class="ctx-block"><strong>📖 Task 1 Example Overview</strong><div class="ctx-quote">"<u>Overall, it is clear that</u> all three bakeries experienced significant fluctuations, with Robbie's showing the most dramatic growth by 2010. <u>By contrast</u>, Bernie's Buns followed a broadly declining trend after its peak in 2003."</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="exercise-wrap">
+      <div class="exercise-title">📝 Exercise 4 — Graph Description: Fill in the Blank</div>
+      <div class="exercise-sub">Select the correct phrase to complete each sentence. Attempts: <strong id="att4">0</strong></div>
+      <div class="word-bank">
+        <strong>Phrase Bank:</strong>
+        <span>peaked at</span><span>fluctuated</span><span>remained relatively stable</span><span>declined sharply</span><span>surpassed</span><span>Overall, it is clear that</span><span>By contrast</span>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q1.</div>
+        <div class="q-text">Bernie's Buns' annual earnings
+          <select id="s4q1"><option value="">— select —</option><option>peaked at</option><option>fluctuated</option><option>remained relatively stable</option><option>declined sharply</option><option>surpassed</option><option>Overall, it is clear that</option><option>By contrast</option></select>
+          approximately £100,000 in 2003, before entering a period of sustained decline.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q2.</div>
+        <div class="q-text">Lovely Loaves' income
+          <select id="s4q2"><option value="">— select —</option><option>peaked at</option><option>fluctuated</option><option>remained relatively stable</option><option>declined sharply</option><option>surpassed</option><option>Overall, it is clear that</option><option>By contrast</option></select>
+          considerably throughout the decade, with no clear upward or downward trend.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q3.</div>
+        <div class="q-text">Robbie's Bakery's earnings
+          <select id="s4q3"><option value="">— select —</option><option>peaked at</option><option>fluctuated</option><option>remained relatively stable</option><option>declined sharply</option><option>surpassed</option><option>Overall, it is clear that</option><option>By contrast</option></select>
+          at around £20,000–£25,000 for most of the early period, before rising steeply from 2007 onwards.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q4.</div>
+        <div class="q-text">By 2010, Robbie's Bakery had
+          <select id="s4q4"><option value="">— select —</option><option>peaked at</option><option>fluctuated</option><option>remained relatively stable</option><option>declined sharply</option><option>surpassed</option><option>Overall, it is clear that</option><option>By contrast</option></select>
+          both of its competitors to record the highest annual income of the three businesses.
+        </div>
+      </div>
+      <div class="q-block">
+        <div class="q-num">Q5.</div>
+        <div class="q-text">
+          <select id="s4q5"><option value="">— select —</option><option>peaked at</option><option>fluctuated</option><option>remained relatively stable</option><option>declined sharply</option><option>surpassed</option><option>Overall, it is clear that</option><option>By contrast</option></select>
+          the period was characterised by considerable volatility for two of the three bakeries, while one showed a remarkable rise to market leadership.
+        </div>
+      </div>
+      <button class="check-btn" onclick="checkSection(4)">Check Answers</button>
+      <div class="score-display" id="score4"></div>
+      <div class="section-complete" id="complete4">✅ All sections done! View your results →</div>
+      <button class="next-tab-btn" onclick="switchTab(5)">View Results &amp; Export →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TAB 5 · RESULTS & EXPORT
+     ═══════════════════════════════════════ -->
+<div class="tab-panel" id="panel5">
+  <div class="results-header">🏆 Results Summary &amp; Error Logbook</div>
+  <div class="results-body">
+
+    <table class="score-table">
+      <thead>
+        <tr><th>Section</th><th>Topic</th><th>Score</th><th>Attempts</th><th>Best Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Governance &amp; Corporate Leadership</td><td id="rt1">—</td><td id="ra1">0</td><td id="rb1">—</td></tr>
+        <tr><td>2</td><td>Business Values &amp; Workplace</td><td id="rt2">—</td><td id="ra2">0</td><td id="rb2">—</td></tr>
+        <tr><td>3</td><td>Technology &amp; Modern Work</td><td id="rt3">—</td><td id="ra3">0</td><td id="rb3">—</td></tr>
+        <tr><td>4</td><td>Graph &amp; Data Language</td><td id="rt4">—</td><td id="ra4">0</td><td id="rb4">—</td></tr>
+        <tr class="total-row"><td colspan="2"><strong>OVERALL TOTAL</strong></td><td id="rtTotal"><strong>—</strong></td><td id="raTotal"><strong>0</strong></td><td id="rbTotal"><strong>—</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">❌ Error Logbook — Questions to Review</div>
+    <div id="logbookContent"><div class="logbook-empty">Complete the exercises in each section to see your error log here.</div></div>
+
+    <div class="action-bar">
+      <button class="btn-pdf" onclick="exportPDF()">📄 Export PDF Report</button>
+      <button class="btn-email" onclick="emailTeacher()">📧 Send Results to Teacher</button>
+      <span class="btn-note">Results sent to huongstella8@gmail.com</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ ANSWERS ══
+const answers={
+  s1:{q1:"scrutiny",q2:"non-executive directors",q3:"remuneration",q4:"the board of directors",q5:"corporate ethics"},
+  s2:{q1:"B",q2:"B",q3:"C",q4:"B",q5:"C"},
+  s3:{q1:"B",q2:"C",q3:"A",q4:"C",q5:"B"},
+  s4:{q1:"peaked at",q2:"fluctuated",q3:"remained relatively stable",q4:"surpassed",q5:"Overall, it is clear that"}
+};
+const sectionNames={1:"Governance & Corporate Leadership",2:"Business Values & Workplace",3:"Technology & Modern Work",4:"Graph & Data Language"};
+const qLabels={
+  s1:{q1:"Q1",q2:"Q2",q3:"Q3",q4:"Q4",q5:"Q5"},
+  s2:{q1:"Q1",q2:"Q2",q3:"Q3",q4:"Q4",q5:"Q5"},
+  s3:{q1:"Q1",q2:"Q2",q3:"Q3",q4:"Q4",q5:"Q5"},
+  s4:{q1:"Q1",q2:"Q2",q3:"Q3",q4:"Q4",q5:"Q5"}
+};
+
+let attempts={1:0,2:0,3:0,4:0};
+let bestScores={1:-1,2:-1,3:-1,4:-1};
+let lastScores={1:-1,2:-1,3:-1,4:-1};
+let errorLog=[];
+
+// ══ TABS ══
+function switchTab(n){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel'+n).classList.add('active');
+  document.getElementById('tabBtn'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══ CARD TOGGLE ══
+function toggleCard(el){
+  const body=el.nextElementSibling;
+  const arrow=el.querySelector('.card-toggle');
+  body.classList.toggle('open');
+  arrow.textContent=body.classList.contains('open')?'▲':'▼';
+}
+
+// ══ VIET TOGGLE ══
+function toggleViet(btn){
+  const t=btn.nextElementSibling;
+  t.classList.toggle('show');
+  btn.textContent=t.classList.contains('show')?'🇻🇳 Hide Vietnamese':'🇻🇳 Show Vietnamese';
+}
+
+// ══ SPEAK ══
+function speak(text){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-GB';u.rate=0.85;u.pitch=1;
+  speechSynthesis.speak(u);
+}
+
+// ══ STUDENT INFO ══
+function saveInfo(){
+  localStorage.setItem('biz_name',document.getElementById('sName').value);
+  localStorage.setItem('biz_email',document.getElementById('sEmail').value);
+  localStorage.setItem('biz_group',document.getElementById('sGroup').value);
+}
+window.onload=function(){
+  const n=localStorage.getItem('biz_name'),e=localStorage.getItem('biz_email'),g=localStorage.getItem('biz_group');
+  if(n)document.getElementById('sName').value=n;
+  if(e)document.getElementById('sEmail').value=e;
+  if(g)document.getElementById('sGroup').value=g;
+};
+
+// ══ GET STUDENT ANSWER ══
+function getStudentAnswer(s,q){
+  if(s===1||s===4)return document.getElementById('s'+s+'q'+q).value;
+  const sel=document.querySelector('input[name="s'+s+'q'+q+'"]:checked');
+  return sel?sel.value:'';
+}
+
+// ══ CHECK SECTION ══
+function checkSection(s){
+  attempts[s]++;
+  document.getElementById('att'+s).textContent=attempts[s];
+  document.getElementById('ra'+s).textContent=attempts[s];
+  const sKey='s'+s;
+  let correct=0;
+  errorLog=errorLog.filter(e=>e.section!==s);
+
+  for(let q=1;q<=5;q++){
+    const qKey='q'+q;
+    const correctAns=answers[sKey][qKey];
+    const studentAns=getStudentAnswer(s,q);
+    const isCorrect=studentAns===correctAns||studentAns.toLowerCase()===correctAns.toLowerCase();
+
+    if(s===1||s===4){
+      const sel=document.getElementById(sKey+qKey);
+      sel.className=isCorrect?'correct':'wrong';
+    } else {
+      document.querySelectorAll('input[name="'+sKey+qKey+'"]').forEach(r=>{r.parentElement.className='';});
+      const sel=document.querySelector('input[name="'+sKey+qKey+'"]:checked');
+      if(sel){
+        if(isCorrect)sel.parentElement.classList.add('correct');
+        else{
+          sel.parentElement.classList.add('wrong');
+          document.querySelectorAll('input[name="'+sKey+qKey+'"]').forEach(r=>{if(r.value===correctAns)r.parentElement.classList.add('correct');});
+        }
+      } else {
+        document.querySelectorAll('input[name="'+sKey+qKey+'"]').forEach(r=>{if(r.value===correctAns)r.parentElement.classList.add('correct');});
+      }
+    }
+
+    if(isCorrect)correct++;
+    else errorLog.push({section:s,sectionName:sectionNames[s],qLabel:qLabels[sKey][qKey],yourAnswer:studentAns||'(no answer)',correctAnswer:correctAns});
+  }
+
+  lastScores[s]=correct;
+  if(correct>bestScores[s])bestScores[s]=correct;
+
+  // score display
+  const scoreEl=document.getElementById('score'+s);
+  scoreEl.style.display='block';
+  const cls=correct===5?'good':correct>=3?'ok':'bad';
+  scoreEl.className='score-display '+cls;
+  let fb='';
+  for(let q=1;q<=5;q++){
+    const qKey='q'+q;
+    const studentAns=getStudentAnswer(s,q);
+    const correctAns=answers[sKey][qKey];
+    const isCorrect=studentAns===correctAns||studentAns.toLowerCase()===correctAns.toLowerCase();
+    fb+=`<li class="${isCorrect?'fb-correct':'fb-wrong'}">${isCorrect?'✅':'❌'} ${qLabels[sKey][qKey]}: ${isCorrect?'Correct!':'Your answer: "'+studentAns+'" → Correct: "'+correctAns+'"'}</li>`;
+  }
+  scoreEl.innerHTML=`<strong>Section ${s} Score: ${correct}/5 (Attempt #${attempts[s]})</strong> | Best: ${bestScores[s]}/5<ul class="feedback-list">${fb}</ul>`;
+
+  if(correct===5){document.getElementById('complete'+s).classList.add('show');}
+
+  // update results table
+  document.getElementById('rt'+s).textContent=correct+'/5';
+  document.getElementById('rb'+s).textContent=bestScores[s]+'/5';
+
+  // update tab score badge
+  const tabScore=document.getElementById('tabScore'+s);
+  tabScore.textContent=correct+'/5';
+  if(correct===5){document.getElementById('tabBtn'+s).classList.add('done');}
+
+  updateTotals();
+  updateLogbook();
+  updateProgress();
+}
+
+// ══ TOTALS ══
+function updateTotals(){
+  let totalScore=0,totalAttempts=0,totalBest=0,scoredN=0,bestN=0;
+  for(let s=1;s<=4;s++){
+    totalAttempts+=attempts[s];
+    if(lastScores[s]>=0){totalScore+=lastScores[s];scoredN++;}
+    if(bestScores[s]>=0){totalBest+=bestScores[s];bestN++;}
+  }
+  document.getElementById('rtTotal').innerHTML='<strong>'+(scoredN>0?totalScore+'/'+scoredN*5:'—')+'</strong>';
+  document.getElementById('raTotal').innerHTML='<strong>'+totalAttempts+'</strong>';
+  document.getElementById('rbTotal').innerHTML='<strong>'+(bestN>0?totalBest+'/'+bestN*5:'—')+'</strong>';
+  document.getElementById('tabScore5').textContent=scoredN>0?totalScore+'/'+(scoredN*5):'—';
+}
+
+// ══ LOGBOOK ══
+function updateLogbook(){
+  const lc=document.getElementById('logbookContent');
+  if(errorLog.length===0){lc.innerHTML='<div class="logbook-empty" style="color:var(--green)">✅ No errors — excellent work!</div>';return;}
+  let html='';
+  errorLog.forEach(e=>{
+    html+=`<div class="logbook-entry"><div class="le-section">Section ${e.section}: ${e.sectionName} · ${e.qLabel}</div><div class="le-yours">Your answer: "${e.yourAnswer}"</div><div class="le-correct">Correct answer: "${e.correctAnswer}"</div></div>`;
+  });
+  lc.innerHTML=html;
+}
+
+// ══ PROGRESS ══
+function updateProgress(){
+  const completed=Object.values(lastScores).filter(v=>v>=0).length;
+  const pct=Math.round(completed/4*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+}
+
+// ══ PDF EXPORT ══
+function exportPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const name=document.getElementById('sName').value||'Unknown';
+  const email=document.getElementById('sEmail').value||'—';
+  const group=document.getElementById('sGroup').value||'—';
+  const date=new Date().toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'});
+
+  doc.setFillColor(30,58,95);doc.rect(0,0,210,28,'F');
+  doc.setTextColor(255,255,255);doc.setFontSize(8);doc.text('HUONG STELLA PARADIGM · INTEGRATED WORKSHOP',105,8,{align:'center'});
+  doc.setFontSize(16);doc.setFont(undefined,'bold');doc.text('BUSINESS VOCABULARY REPORT',105,18,{align:'center'});
+
+  doc.setTextColor(30,58,95);doc.setFontSize(10);doc.setFont(undefined,'normal');
+  let y=36;
+  doc.text('Student: '+name,14,y);doc.text('Email: '+email,14,y+7);
+  doc.text('Group: '+group,140,y);doc.text('Date: '+date,140,y+7);
+  y+=20;
+
+  doc.setFillColor(219,234,254);doc.rect(14,y,182,8,'F');
+  doc.setFont(undefined,'bold');doc.setFontSize(9);doc.setTextColor(30,58,95);
+  doc.text('Section',16,y+5.5);doc.text('Topic',40,y+5.5);doc.text('Score',130,y+5.5);doc.text('Attempts',150,y+5.5);doc.text('Best',175,y+5.5);
+  y+=8;
+  const rows=[
+    ['1','Governance & Corporate Leadership',lastScores[1]>=0?lastScores[1]+'/5':'—',attempts[1],bestScores[1]>=0?bestScores[1]+'/5':'—'],
+    ['2','Business Values & Workplace',lastScores[2]>=0?lastScores[2]+'/5':'—',attempts[2],bestScores[2]>=0?bestScores[2]+'/5':'—'],
+    ['3','Technology & Modern Work',lastScores[3]>=0?lastScores[3]+'/5':'—',attempts[3],bestScores[3]>=0?bestScores[3]+'/5':'—'],
+    ['4','Graph & Data Language',lastScores[4]>=0?lastScores[4]+'/5':'—',attempts[4],bestScores[4]>=0?bestScores[4]+'/5':'—'],
+  ];
+  doc.setFont(undefined,'normal');doc.setFontSize(9);
+  rows.forEach((r,i)=>{
+    if(i%2===0){doc.setFillColor(248,250,252);doc.rect(14,y,182,7,'F');}
+    doc.setTextColor(30,41,59);
+    doc.text(r[0],16,y+5);doc.text(r[1],40,y+5);doc.text(String(r[2]),132,y+5);doc.text(String(r[3]),155,y+5);doc.text(String(r[4]),177,y+5);
+    y+=7;
+  });
+  const totalS=Object.values(lastScores).filter(v=>v>=0).reduce((a,b)=>a+b,0);
+  const totalA=Object.values(attempts).reduce((a,b)=>a+b,0);
+  const totalB=Object.values(bestScores).filter(v=>v>=0).reduce((a,b)=>a+b,0);
+  const scoredN=Object.values(lastScores).filter(v=>v>=0).length;
+  doc.setFillColor(220,252,231);doc.rect(14,y,182,8,'F');
+  doc.setFont(undefined,'bold');doc.setTextColor(22,163,74);
+  doc.text('TOTAL',16,y+5.5);doc.text(scoredN>0?totalS+'/'+scoredN*5:'—',132,y+5.5);
+  doc.text(String(totalA),155,y+5.5);doc.text(scoredN>0?totalB+'/'+scoredN*5:'—',177,y+5.5);
+  y+=14;
+
+  doc.setFont(undefined,'bold');doc.setFontSize(11);doc.setTextColor(30,58,95);
+  doc.text('Error Logbook',14,y);y+=8;
+  if(errorLog.length===0){
+    doc.setFont(undefined,'italic');doc.setFontSize(9);doc.setTextColor(22,163,74);
+    doc.text('No errors recorded. All answers correct!',14,y);
+  } else {
+    doc.setFont(undefined,'normal');doc.setFontSize(9);
+    errorLog.forEach(e=>{
+      if(y>265){doc.addPage();y=20;}
+      doc.setFillColor(255,241,242);doc.rect(14,y-4,182,14,'F');
+      doc.setTextColor(30,58,95);doc.setFont(undefined,'bold');
+      doc.text('S'+e.section+': '+e.sectionName+' · '+e.qLabel,16,y);y+=5;
+      doc.setFont(undefined,'normal');doc.setTextColor(220,38,38);
+      doc.text('Your answer: "'+e.yourAnswer+'"',16,y);y+=4;
+      doc.setTextColor(22,163,74);
+      doc.text('Correct answer: "'+e.correctAnswer+'"',16,y);y+=7;
+    });
+  }
+
+  doc.setFont(undefined,'italic');doc.setFontSize(8);doc.setTextColor(148,163,184);
+  doc.text('Huong Stella Paradigm · Integrated Workshop · huongstella8@gmail.com',105,290,{align:'center'});
+  doc.save('Business_Vocabulary_'+name.replace(/\s+/g,'_')+'_'+date+'.pdf');
+}
+
+// ══ EMAIL TEACHER ══
+function emailTeacher(){
+  const name=document.getElementById('sName').value||'Unknown Student';
+  const studentEmail=document.getElementById('sEmail').value||'—';
+  const group=document.getElementById('sGroup').value||'—';
+  const date=new Date().toLocaleDateString('en-GB');
+  const totalA=Object.values(attempts).reduce((a,b)=>a+b,0);
+  if(totalA===0){alert('Please complete at least one exercise section before sending results.');return;}
+  let body=`BUSINESS VOCABULARY RESULTS\n========================================\n`;
+  body+=`Student: ${name}\nEmail: ${studentEmail}\nGroup: ${group}\nDate: ${date}\n\n`;
+  body+=`SCORES:\n`;
+  for(let s=1;s<=4;s++){body+=`  Section ${s} (${sectionNames[s]}): ${lastScores[s]>=0?lastScores[s]+'/5':'not attempted'} | Attempts: ${attempts[s]} | Best: ${bestScores[s]>=0?bestScores[s]+'/5':'—'}\n`;}
+  const scoredN=Object.values(lastScores).filter(v=>v>=0).length;
+  const totalS=Object.values(lastScores).filter(v=>v>=0).reduce((a,b)=>a+b,0);
+  body+=`  OVERALL: ${scoredN>0?totalS+'/'+scoredN*5:'—'} | Total Attempts: ${totalA}\n\n`;
+  body+=`ERROR LOGBOOK:\n`;
+  if(errorLog.length===0){body+=`  No errors!\n`;}
+  else{errorLog.forEach(e=>{body+=`  [S${e.section}] ${e.qLabel}: Your="${e.yourAnswer}" | Correct="${e.correctAnswer}"\n`;});}
+  body+=`\n========================================\nSent from Business Vocabulary Tool — Huong Stella Paradigm`;
+  const subject=encodeURIComponent(`Business Vocab Results — ${name} — ${date}`);
+  window.open(`mailto:huongstella8@gmail.com?subject=${subject}&body=${encodeURIComponent(body)}`);
+}
+</script>
+</body>
+</html>
