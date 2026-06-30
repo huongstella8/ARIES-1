@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARIES 1 — Units 1–3 Review</title>
+<style>
+/* ── Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue:      #1E4D8C;
+  --blue-lt:   #4A90D9;
+  --teal:      #2E86AB;
+  --teal-lt:   #C8EAF5;
+  --orange:    #D9620A;
+  --green:     #2D7D46;
+  --green-lt:  #D4EDDA;
+  --red:       #C0392B;
+  --red-lt:    #FDECEA;
+  --gray-1:    #F2F5FA;
+  --gray-2:    #E0E8F5;
+  --gray-3:    #B0BED4;
+  --dark:      #1A2638;
+  --text:      #2C3A50;
+  --muted:     #6B7A96;
+  --white:     #FFFFFF;
+  --u1:        #E8690A;
+  --u2:        #2E86AB;
+  --u3:        #2D7D46;
+  --radius:    10px;
+  --shadow:    0 2px 12px rgba(30,77,140,.12);
+  --shadow-lg: 0 6px 30px rgba(30,77,140,.18);
+  font-size: 15px;
+}
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--gray-1); color: var(--text); line-height: 1.65; }
+a { color: var(--blue-lt); }
+
+/* ── Top nav ──────────────────────────────────────────── */
+.topbar {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--blue) 100%);
+  color: #fff; padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+  height: 56px; position: sticky; top: 0; z-index: 1000;
+  box-shadow: var(--shadow-lg);
+}
+.topbar-logo-wrap {
+  display: flex; align-items: center; gap: 10px; white-space: nowrap; flex-shrink: 0;
+}
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #4A90D9, #E8690A);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: .85rem; color: #fff; letter-spacing: .5px;
+}
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-main { font-weight: 800; font-size: .9rem; color: #fff; letter-spacing: .3px; }
+.logo-sub { font-size: .6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.logo-divider { width: 1px; height: 28px; background: rgba(255,255,255,.25); margin: 0 4px; }
+.logo-course { font-weight: 800; font-size: 1rem; letter-spacing: .5px; color: rgba(255,255,255,.9); }
+.logo-course span { color: #4A90D9; }
+.nav-tabs { display: flex; gap: 4px; overflow-x: auto; flex: 1; }
+.nav-tabs::-webkit-scrollbar { height: 0; }
+.nav-tab {
+  padding: 6px 14px; border-radius: 6px; border: none;
+  background: rgba(255,255,255,.08); color: rgba(255,255,255,.7);
+  cursor: pointer; font-size: .82rem; font-weight: 600; white-space: nowrap;
+  transition: all .2s; letter-spacing: .3px;
+}
+.nav-tab:hover { background: rgba(255,255,255,.18); color: #fff; }
+.nav-tab.active { background: var(--blue-lt); color: #fff; box-shadow: 0 2px 8px rgba(74,144,217,.4); }
+
+/* ── Main container ───────────────────────────────────── */
+.main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── Unit colour codes ────────────────────────────────── */
+.u1-accent { --ua: var(--u1); }
+.u2-accent { --ua: var(--u2); }
+.u3-accent { --ua: var(--u3); }
+
+/* ── Cards & sections ─────────────────────────────────── */
+.card {
+  background: var(--white); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px;
+}
+.card-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px;
+}
+.card-icon {
+  width: 38px; height: 38px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+}
+.card-title { font-size: 1.05rem; font-weight: 700; color: var(--dark); }
+.card-sub { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
+.section-label {
+  font-size: .7rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+
+/* ── Unit pills ───────────────────────────────────────── */
+.badge {
+  display: inline-block; padding: 2px 9px; border-radius: 20px;
+  font-size: .72rem; font-weight: 700; letter-spacing: .4px;
+}
+.badge-u1 { background: #FDE8D6; color: var(--u1); }
+.badge-u2 { background: #D0EEF9; color: var(--u2); }
+.badge-u3 { background: var(--green-lt); color: var(--u3); }
+.badge-all { background: var(--gray-2); color: var(--blue); }
+
+/* ── Overview grid ────────────────────────────────────── */
+.overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+.ov-card {
+  border-radius: var(--radius); padding: 20px;
+  box-shadow: var(--shadow); border-top: 4px solid var(--ua);
+  background: var(--white);
+}
+.ov-unit { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--ua); }
+.ov-title { font-size: 1.05rem; font-weight: 700; color: var(--dark); margin: 4px 0 10px; }
+.ov-rows { display: flex; flex-direction: column; gap: 6px; }
+.ov-row { display: flex; gap: 8px; align-items: flex-start; font-size: .82rem; }
+.ov-row-key { font-weight: 700; color: var(--muted); min-width: 76px; font-size: .75rem; }
+
+/* ── Grammar reference boxes ──────────────────────────── */
+.gram-box {
+  background: var(--gray-1); border-left: 4px solid var(--blue);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 14px 16px; margin-bottom: 14px;
+}
+.gram-box h4 { font-size: .88rem; color: var(--blue); margin-bottom: 8px; font-weight: 700; }
+.gram-box .rule { margin-bottom: 8px; }
+.gram-box .rule strong { color: var(--dark); }
+.gram-box .ex { font-style: italic; color: var(--teal); font-size: .9rem; margin-left: 12px; }
+.gram-box .warn { background: #FFF3CD; border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-size: .83rem; }
+
+/* ── Tables ───────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; margin-bottom: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th { background: var(--blue); color: #fff; padding: 9px 12px; text-align: left; font-size: .8rem; letter-spacing: .3px; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--gray-2); vertical-align: top; }
+tr:nth-child(even) td { background: var(--gray-1); }
+td strong { color: var(--blue); }
+td em { color: var(--teal); }
+
+/* ── Vocab cards ──────────────────────────────────────── */
+.vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.vocab-card {
+  background: var(--white); border-radius: var(--radius);
+  border: 1.5px solid var(--gray-2); padding: 16px;
+  transition: box-shadow .2s, border-color .2s;
+  position: relative;
+}
+.vocab-card:hover { box-shadow: var(--shadow); border-color: var(--blue-lt); }
+.vc-word { font-size: 1.05rem; font-weight: 800; color: var(--dark); margin-bottom: 2px; }
+.vc-pron {
+  font-size: .83rem; color: var(--teal); font-family: 'Courier New', monospace;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+}
+.audio-btn {
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  background: var(--teal); color: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .9rem; transition: background .2s; flex-shrink: 0;
+}
+.audio-btn:hover { background: var(--blue); }
+.vc-type { font-size: .72rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.vc-def { font-size: .88rem; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+.vc-ex { font-style: italic; font-size: .83rem; color: var(--teal); background: var(--teal-lt); border-radius: 6px; padding: 6px 10px; margin-bottom: 8px; }
+.vc-context { font-size: .78rem; color: var(--muted); border-top: 1px solid var(--gray-2); padding-top: 8px; margin-top: 6px; }
+.vc-confuse { font-size: .78rem; background: #FFF3CD; border-radius: 6px; padding: 6px 8px; margin-top: 6px; }
+.vc-confuse strong { color: var(--orange); }
+.vc-unit { position: absolute; top: 12px; right: 12px; }
+
+/* ── Vocab filter bar ─────────────────────────────────── */
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.filter-btn {
+  padding: 5px 14px; border-radius: 20px; border: 2px solid var(--gray-2);
+  background: var(--white); cursor: pointer; font-size: .82rem; font-weight: 600;
+  color: var(--muted); transition: all .2s;
+}
+.filter-btn:hover { border-color: var(--blue-lt); color: var(--blue); }
+.filter-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* ── Practice exercises ───────────────────────────────── */
+.exercise { margin-bottom: 24px; }
+.ex-instruction { font-size: .88rem; color: var(--text); margin-bottom: 12px; background: var(--gray-2); padding: 10px 14px; border-radius: 8px; }
+.ex-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding: 10px 12px; background: var(--white); border: 1.5px solid var(--gray-2); border-radius: 8px; transition: border-color .2s; }
+.ex-num { font-weight: 700; color: var(--muted); min-width: 22px; font-size: .85rem; padding-top: 1px; }
+.ex-content { flex: 1; font-size: .9rem; }
+.ex-input { border: 1.5px solid var(--gray-3); border-radius: 6px; padding: 4px 10px; font-size: .88rem; font-family: inherit; width: 100%; outline: none; transition: border-color .2s; }
+.ex-input:focus { border-color: var(--blue-lt); }
+.ex-input.correct { border-color: var(--green); background: var(--green-lt); }
+.ex-input.wrong { border-color: var(--red); background: var(--red-lt); }
+.ex-select { border: 1.5px solid var(--gray-3); border-radius: 6px; padding: 4px 8px; font-size: .88rem; font-family: inherit; background: var(--white); cursor: pointer; }
+.ex-select.correct { border-color: var(--green); background: var(--green-lt); }
+.ex-select.wrong { border-color: var(--red); background: var(--red-lt); }
+.feedback { font-size: .8rem; margin-top: 5px; font-weight: 600; }
+.feedback.ok { color: var(--green); }
+.feedback.no { color: var(--red); }
+.check-btn {
+  padding: 8px 22px; border-radius: 8px; border: none;
+  background: var(--blue); color: #fff; font-weight: 700; font-size: .88rem;
+  cursor: pointer; transition: background .2s; margin-top: 8px;
+}
+.check-btn:hover { background: var(--teal); }
+.reset-btn {
+  padding: 8px 18px; border-radius: 8px; border: 2px solid var(--gray-3);
+  background: var(--white); color: var(--muted); font-weight: 600; font-size: .85rem;
+  cursor: pointer; transition: all .2s; margin-top: 8px; margin-left: 8px;
+}
+.reset-btn:hover { border-color: var(--blue-lt); color: var(--blue); }
+.score-bar { display: inline-flex; align-items: center; gap: 10px; background: var(--gray-1); padding: 8px 16px; border-radius: 8px; margin-top: 12px; font-size: .88rem; }
+.score-val { font-size: 1.2rem; font-weight: 800; color: var(--blue); }
+
+/* ── Speaking section ─────────────────────────────────── */
+.speaking-prompt {
+  background: linear-gradient(135deg, #EEF4FF, #D0EEF9);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 16px;
+  border-left: 4px solid var(--blue);
+}
+.sp-label { font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+.sp-q { font-size: .98rem; font-weight: 600; color: var(--dark); }
+.model-answer {
+  background: var(--white); border: 1.5px solid var(--gray-2);
+  border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 14px;
+}
+.ma-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; background: var(--gray-1); cursor: pointer;
+  font-size: .85rem; font-weight: 700; color: var(--blue);
+  user-select: none;
+}
+.ma-head .ma-arrow { transition: transform .3s; }
+.ma-head.open .ma-arrow { transform: rotate(180deg); }
+.ma-body { padding: 14px 16px; font-size: .9rem; line-height: 1.7; display: none; }
+.ma-body.open { display: block; }
+.highlight-gram { background: #FFF3CD; border-radius: 3px; padding: 0 2px; }
+.highlight-voc { background: #D4EDDA; border-radius: 3px; padding: 0 2px; }
+
+/* ── Pronunciation section ────────────────────────────── */
+.pron-card {
+  background: var(--white); border-radius: var(--radius);
+  border: 1.5px solid var(--gray-2); padding: 16px; margin-bottom: 12px;
+}
+.pron-word { font-size: 1.1rem; font-weight: 800; color: var(--dark); }
+.pron-ipa { font-family: 'Courier New', monospace; color: var(--teal); font-size: .92rem; }
+.pron-stress { font-size: .85rem; color: var(--muted); margin-top: 4px; }
+.stress-syl { display: inline-block; padding: 2px 5px; border-radius: 4px; margin: 1px; font-size: .85rem; }
+.stress-syl.main { background: var(--blue); color: #fff; font-weight: 700; }
+.stress-syl.sec { background: var(--gray-2); color: var(--dark); }
+.pron-tip { background: var(--teal-lt); border-radius: 6px; padding: 6px 10px; font-size: .8rem; margin-top: 8px; }
+
+/* ── Tabs within panels ───────────────────────────────── */
+.sub-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.sub-tab {
+  padding: 6px 16px; border-radius: 20px; border: 2px solid var(--gray-2);
+  background: var(--white); cursor: pointer; font-size: .82rem; font-weight: 600;
+  color: var(--muted); transition: all .2s;
+}
+.sub-tab:hover { border-color: var(--blue-lt); color: var(--blue); }
+.sub-tab.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* ── Accordion ────────────────────────────────────────── */
+.accordion { border: 1.5px solid var(--gray-2); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+.acc-head {
+  padding: 12px 16px; cursor: pointer; font-weight: 700; font-size: .9rem;
+  background: var(--gray-1); display: flex; justify-content: space-between; align-items: center;
+  color: var(--dark); user-select: none; transition: background .2s;
+}
+.acc-head:hover { background: var(--gray-2); }
+.acc-head.open { background: var(--blue); color: #fff; }
+.acc-body { padding: 16px; background: var(--white); display: none; font-size: .9rem; }
+.acc-body.open { display: block; }
+
+/* ── Progress bar ─────────────────────────────────────── */
+.prog-wrap { height: 6px; background: var(--gray-2); border-radius: 3px; margin-bottom: 16px; }
+.prog-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--blue-lt), var(--green)); transition: width .4s; }
+
+/* ── Utilities ────────────────────────────────────────── */
+.flex { display: flex; gap: 12px; }
+.flex-wrap { flex-wrap: wrap; }
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.tag {
+  padding: 3px 10px; border-radius: 20px; font-size: .75rem; font-weight: 600;
+  background: var(--gray-2); color: var(--muted);
+}
+h2 { font-size: 1.25rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+h3 { font-size: 1rem; font-weight: 700; color: var(--blue); margin-bottom: 10px; }
+h4 { font-size: .9rem; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+p { font-size: .9rem; margin-bottom: 10px; }
+ul { padding-left: 18px; }
+li { font-size: .9rem; margin-bottom: 4px; }
+.mb-0 { margin-bottom: 0; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.mt-12 { margin-top: 12px; }
+.text-muted { color: var(--muted); font-size: .85rem; }
+.text-center { text-align: center; }
+.hero-band {
+  background: linear-gradient(135deg, var(--dark), var(--blue));
+  color: #fff; padding: 24px 28px; border-radius: var(--radius);
+  margin-bottom: 24px;
+}
+.hero-band h1 { font-size: 1.4rem; font-weight: 900; margin-bottom: 4px; }
+.hero-band p { color: rgba(255,255,255,.75); font-size: .88rem; margin: 0; }
+.unit-banner {
+  padding: 16px 20px; border-radius: var(--radius); margin-bottom: 20px;
+  color: #fff; font-weight: 700;
+}
+.ub-u1 { background: linear-gradient(135deg, #C0470A, var(--u1)); }
+.ub-u2 { background: linear-gradient(135deg, #1B5E78, var(--u2)); }
+.ub-u3 { background: linear-gradient(135deg, #1B5A30, var(--u3)); }
+.ub-title { font-size: 1.1rem; }
+.ub-sub { font-size: .82rem; opacity: .85; margin-top: 2px; }
+.two-col-lang { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lang-col { background: var(--gray-1); border-radius: 8px; padding: 14px; }
+.lang-col h4 { color: var(--blue); font-size: .85rem; border-bottom: 2px solid var(--gray-2); padding-bottom: 6px; margin-bottom: 10px; }
+.lang-col li { font-size: .83rem; }
+@media (max-width: 768px) {
+  .overview-grid, .cols-2, .cols-3, .two-col-lang { grid-template-columns: 1fr; }
+  .vocab-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ─────────────────────────────────────────── -->
+<nav class="topbar">
+  <div class="topbar-logo-wrap">
+    <div class="logo-mark">HS</div>
+    <div class="logo-text">
+      <span class="logo-main">Huong Stella</span>
+      <span class="logo-sub">PARADIGM</span>
+    </div>
+    <div class="logo-divider"></div>
+    <div class="logo-course">ARIES <span>1</span></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('overview')">🗺 Overview</button>
+    <button class="nav-tab" onclick="switchTab('u1')">📖 Unit 1</button>
+    <button class="nav-tab" onclick="switchTab('u2')">💼 Unit 2</button>
+    <button class="nav-tab" onclick="switchTab('u3')">🔍 Unit 3</button>
+    <button class="nav-tab" onclick="switchTab('vocab')">📚 Vocabulary</button>
+    <button class="nav-tab" onclick="switchTab('grammar')">✏️ Grammar</button>
+    <button class="nav-tab" onclick="switchTab('pron')">🔊 Pronunciation</button>
+    <button class="nav-tab" onclick="switchTab('speaking')">🎙 Speaking</button>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: OVERVIEW
+═══════════════════════════════════════════════════════ -->
+<div id="panel-overview" class="panel active">
+  <div class="hero-band">
+    <h1>ARIES 1 — Review Units 1–3</h1>
+    <p>B1+ · Huong Stella · Complete knowledge system: grammar, vocabulary, pronunciation & speaking practice</p>
+  </div>
+
+  <div class="overview-grid">
+    <div class="ov-card u1-accent">
+      <div class="ov-unit">Unit 1</div>
+      <div class="ov-title">Storytelling & Describing Objects</div>
+      <div class="ov-rows">
+        <div class="ov-row"><span class="ov-row-key">Grammar</span><span>Narrative tenses · Verb patterns</span></div>
+        <div class="ov-row"><span class="ov-row-key">Vocab</span><span>Possessions · Materials · Gadgets</span></div>
+        <div class="ov-row"><span class="ov-row-key">Skills</span><span>Storytelling · Describing objects · Product pitch</span></div>
+        <div class="ov-row"><span class="ov-row-key">Pron.</span><span>Auxiliary weak forms</span></div>
+      </div>
+    </div>
+    <div class="ov-card u2-accent">
+      <div class="ov-unit">Unit 2</div>
+      <div class="ov-title">Working Life</div>
+      <div class="ov-rows">
+        <div class="ov-row"><span class="ov-row-key">Grammar</span><span>unless/even if/in case · Modals · Preferences</span></div>
+        <div class="ov-row"><span class="ov-row-key">Vocab</span><span>Work phrases · Personality adjectives · Negative prefixes</span></div>
+        <div class="ov-row"><span class="ov-row-key">Skills</span><span>Job interview · Discussion board post</span></div>
+        <div class="ov-row"><span class="ov-row-key">Pron.</span><span>Stress in personality adjectives</span></div>
+      </div>
+    </div>
+    <div class="ov-card u3-accent">
+      <div class="ov-unit">Unit 3</div>
+      <div class="ov-title">Fact or Fiction?</div>
+      <div class="ov-rows">
+        <div class="ov-row"><span class="ov-row-key">Grammar</span><span>Past plans & intentions · Indirect & negative questions</span></div>
+        <div class="ov-row"><span class="ov-row-key">Vocab</span><span>Truth & lies · Film-making · The news</span></div>
+        <div class="ov-row"><span class="ov-row-key">Skills</span><span>Retell hoax · Documentary pitch · News discussion</span></div>
+        <div class="ov-row"><span class="ov-row-key">Pron.</span><span>Silent consonants · Intonation in questions · Stress in adverbs</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick grammar summary table -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:#EEF4FF;font-size:1.3rem;">📋</div>
+      <div><div class="card-title">Grammar Summary — 3 Units</div><div class="card-sub">Quick comparison table</div></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Structure</th><th>Formula</th><th>Example</th><th>Unit</th></tr>
+        <tr><td><strong>Past Simple</strong></td><td>V-ed / irregular</td><td><em>She woke up early and decided to go out.</em></td><td><span class="badge badge-u1">U1</span></td></tr>
+        <tr><td><strong>Past Continuous</strong></td><td>was/were + V-ing</td><td><em>I was driving home when my phone rang.</em></td><td><span class="badge badge-u1">U1</span></td></tr>
+        <tr><td><strong>Past Perfect</strong></td><td>had + V3</td><td><em>She had sent me a message I hadn't replied to.</em></td><td><span class="badge badge-u1">U1</span></td></tr>
+        <tr><td><strong>Verb + -ing</strong></td><td>enjoy / avoid / suggest + -ing</td><td><em>I believe in telling the truth.</em></td><td><span class="badge badge-u1">U1</span></td></tr>
+        <tr><td><strong>Verb + to-inf</strong></td><td>want / decide / hope + to-inf</td><td><em>She succeeded in persuading him.</em></td><td><span class="badge badge-u1">U1</span></td></tr>
+        <tr><td><strong>unless</strong></td><td>unless + present simple</td><td><em>I can't concentrate unless it's quiet.</em></td><td><span class="badge badge-u2">U2</span></td></tr>
+        <tr><td><strong>even if</strong></td><td>even if + clause</td><td><em>I keep working even if I'm tired.</em></td><td><span class="badge badge-u2">U2</span></td></tr>
+        <tr><td><strong>in case</strong></td><td>in case + might happen</td><td><em>I keep my phone on in case someone needs me.</em></td><td><span class="badge badge-u2">U2</span></td></tr>
+        <tr><td><strong>Modals (necessity)</strong></td><td>need to / have to</td><td><em>Gig workers need to manage their own finances.</em></td><td><span class="badge badge-u2">U2</span></td></tr>
+        <tr><td><strong>would rather</strong></td><td>would rather + bare inf.</td><td><em>I'd rather work outdoors.</em></td><td><span class="badge badge-u2">U2</span></td></tr>
+        <tr><td><strong>Past plans</strong></td><td>was going to / had meant to</td><td><em>They were planning to keep the photos secret.</em></td><td><span class="badge badge-u3">U3</span></td></tr>
+        <tr><td><strong>Indirect questions</strong></td><td>Could you tell me + S+V</td><td><em>Could you tell me where she works?</em></td><td><span class="badge badge-u3">U3</span></td></tr>
+        <tr><td><strong>Negative questions</strong></td><td>Didn't/Wouldn't you…?</td><td><em>Didn't she win an award?</em></td><td><span class="badge badge-u3">U3</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Key vocabulary summary -->
+  <div class="card">
+    <div class="card-head">
+      <div class="card-icon" style="background:#D4EDDA;">🔤</div>
+      <div><div class="card-title">Key Vocabulary by Unit</div></div>
+    </div>
+    <div class="cols-3">
+      <div>
+        <h4 style="color:var(--u1)">Unit 1 — Objects & Stories</h4>
+        <div class="tag-row">
+          <span class="tag">inherited</span><span class="tag">genuine</span><span class="tag">damaged</span>
+          <span class="tag">durable</span><span class="tag">portable</span><span class="tag">multifunctional</span>
+          <span class="tag">sleek</span><span class="tag">compact</span><span class="tag">glossy</span>
+          <span class="tag">apart from</span><span class="tag">except for</span><span class="tag">even</span>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:var(--u2)">Unit 2 — Working Life</h4>
+        <div class="tag-row">
+          <span class="tag">meet deadlines</span><span class="tag">fall behind</span><span class="tag">lose concentration</span>
+          <span class="tag">flexible</span><span class="tag">responsible</span><span class="tag">independent</span>
+          <span class="tag">irresponsible</span><span class="tag">unprofessional</span><span class="tag">temporary</span>
+          <span class="tag">exploit</span><span class="tag">handle</span>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:var(--u3)">Unit 3 — Fact or Fiction</h4>
+        <div class="tag-row">
+          <span class="tag">hoax</span><span class="tag">deceive</span><span class="tag">confess</span>
+          <span class="tag">breaking news</span><span class="tag">trending</span><span class="tag">go viral</span>
+          <span class="tag">biased</span><span class="tag">gripping</span><span class="tag">compelling</span>
+          <span class="tag">credible</span><span class="tag">fabricate</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: UNIT 1
+═══════════════════════════════════════════════════════ -->
+<div id="panel-u1" class="panel">
+  <div class="unit-banner ub-u1">
+    <div class="ub-title">📖 Unit 1 — Storytelling &amp; Describing Objects</div>
+    <div class="ub-sub">Narrative Tenses · Verb Patterns · Describing Possessions</div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchSub('u1','grammar')">Grammar</button>
+    <button class="sub-tab" onclick="switchSub('u1','vocab')">Vocabulary</button>
+    <button class="sub-tab" onclick="switchSub('u1','practice')">Exercises</button>
+    <button class="sub-tab" onclick="switchSub('u1','text')">Source Text</button>
+  </div>
+
+  <div id="u1-grammar" class="sub-panel active">
+    <div class="gram-box">
+      <h4>Narrative Tenses — The 3 storytelling tenses</h4>
+      <div class="rule"><strong>Past Simple</strong> → main completed action<br><span class="ex">She woke up early and decided to go out for a walk.</span></div>
+      <div class="rule"><strong>Past Continuous</strong> → background scene, ongoing action<br><span class="ex">I was driving home when my phone rang.</span></div>
+      <div class="rule"><strong>Past Perfect</strong> → action that happened BEFORE another past action<br><span class="ex">She had sent me a weird message that I hadn't had time to reply to.</span></div>
+      <div class="warn">⚠ Common error: "I am driving when…" → correct: <strong>"I was driving when…"</strong></div>
+    </div>
+
+    <div class="gram-box">
+      <h4>Verb Patterns — Verb + following form</h4>
+      <div class="rule"><strong>Verb + to-infinitive:</strong> want, decide, hope, plan, promise, refuse, offer, agree, manage, learn, forget, try<br><span class="ex">She decided to leave early. / He hopes to become a doctor.</span></div>
+      <div class="rule"><strong>Verb + -ing:</strong> enjoy, avoid, suggest, mind, finish, keep, imagine, consider, admit, deny<br><span class="ex">I enjoy listening to podcasts. / She admitted taking the money.</span></div>
+      <div class="rule"><strong>Verb + preposition + -ing:</strong> (when a preposition comes before a second verb, use -ing)<br><span class="ex">I believe in telling the truth. / She succeeded in persuading people.</span></div>
+      <div class="rule"><strong>Stop/Remember + to-inf vs -ing (two different meanings):</strong><br>
+        <span class="ex">She stopped <u>to talk</u> to me. (stop in order to do something) / She stopped <u>talking</u>. (stop doing something completely)</span><br>
+        <span class="ex">Remember <u>to set</u> your alarm. (don't forget to do) / I remember <u>playing</u> as a child. (remember having done)</span>
+      </div>
+    </div>
+
+    <div class="gram-box">
+      <h4>except for / apart from / (not) even</h4>
+      <div class="rule"><strong>except for / apart from</strong> + noun → excluding (same meaning)<br><span class="ex">I like all gadgets apart from smartwatches. / She eats everything except for onions.</span></div>
+      <div class="rule"><strong>even</strong> → emphasises something unexpected or unusual<br><span class="ex">I'll even stay late to help you finish it.</span></div>
+      <div class="rule"><strong>not even</strong> → emphasises a surprising negative<br><span class="ex">She'd changed so much I didn't even recognise her!</span></div>
+    </div>
+  </div>
+
+  <div id="u1-vocab" class="sub-panel">
+    <h3>Vocabulary: Describing Objects & Possessions</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Word</th><th>Meaning</th><th>Example</th><th>Don't confuse</th></tr>
+        <tr><td><strong>inherited</strong> /ɪnˈherɪtɪd/</td><td>received from someone who has died</td><td><em>I inherited this ring from my grandmother.</em></td><td>≠ received (any transfer, not necessarily from someone who died)</td></tr>
+        <tr><td><strong>genuine</strong> /ˈdʒenjuɪn/</td><td>real; original; not fake or a copy</td><td><em>It's a genuine 1980s leather jacket.</em></td><td>≠ fake, counterfeit</td></tr>
+        <tr><td><strong>damaged</strong> /ˈdæmɪdʒd/</td><td>partially damaged; no longer perfect</td><td><em>It's a bit damaged but still works.</em></td><td>≠ broken (completely non-functional)</td></tr>
+        <tr><td><strong>durable</strong> /ˈdjʊərəbl/</td><td>able to last a long time without deteriorating</td><td><em>This bag is extremely durable.</em></td><td>≠ fragile (easily broken)</td></tr>
+        <tr><td><strong>portable</strong> /ˈpɔːtəbl/</td><td>easy to carry around; not fixed in one place</td><td><em>A portable speaker is easy to take everywhere.</em></td><td>≠ bulky (large and awkward)</td></tr>
+        <tr><td><strong>compact</strong> /ˈkɒmpækt/</td><td>small and efficiently designed, taking up little space</td><td><em>The charger comes in a compact case.</em></td><td>≠ bulky</td></tr>
+        <tr><td><strong>sleek</strong> /sliːk/</td><td>elegant, smooth, and modern-looking</td><td><em>The phone has a sleek design.</em></td><td>≠ clunky (big and ungainly)</td></tr>
+        <tr><td><strong>multifunctional</strong></td><td>serving multiple functions</td><td><em>This gadget is multifunctional.</em></td><td>≠ single-purpose</td></tr>
+        <tr><td><strong>glossy</strong> /ˈɡlɒsi/</td><td>shiny and smooth on the surface</td><td><em>The screen is glossy so fingerprints show easily.</em></td><td>≠ matte (non-reflective surface)</td></tr>
+        <tr><td><strong>apart from / except for</strong></td><td>excluding; with the exception of</td><td><em>I like all materials apart from plastic.</em></td><td>Same meaning, interchangeable in most contexts</td></tr>
+      </table>
+    </div>
+    <h3 class="mt-12">Materials</h3>
+    <div class="tag-row">
+      <span class="tag">leather</span><span class="tag">steel</span><span class="tag">wood</span>
+      <span class="tag">glass</span><span class="tag">rubber</span><span class="tag">cotton</span>
+      <span class="tag">silver</span><span class="tag">gold</span><span class="tag">iron</span>
+      <span class="tag">plastic</span><span class="tag">stone</span><span class="tag">denim</span>
+    </div>
+  </div>
+
+  <div id="u1-practice" class="sub-panel">
+    <h3>Exercises — Narrative Tenses</h3>
+    <div class="exercise" id="ex-u1-1">
+      <div class="ex-instruction">Choose the correct tense for each gap</div>
+
+      <div class="ex-item">
+        <div class="ex-num">1.</div>
+        <div class="ex-content">
+          I _____ (drive) home when I suddenly _____ (notice) something strange.
+          <br><span style="font-size:.8rem;color:var(--muted)">Hint: background action + sudden interruption</span>
+          <br><select class="ex-select" data-ans="was driving" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>drove</option><option>was driving</option><option>had driven</option>
+          </select>
+          <select class="ex-select" data-ans="noticed" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>was noticing</option><option>noticed</option><option>had noticed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">2.</div>
+        <div class="ex-content">
+          By the time the police arrived, the thief _____ (escape).
+          <select class="ex-select" data-ans="had escaped" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>escaped</option><option>was escaping</option><option>had escaped</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">3.</div>
+        <div class="ex-content">
+          While we _____ (talk), the lights suddenly _____ (go) out.
+          <select class="ex-select" data-ans="were talking" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>talked</option><option>were talking</option><option>had talked</option>
+          </select>
+          <select class="ex-select" data-ans="went" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>were going</option><option>went</option><option>had gone</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ex-item">
+        <div class="ex-num">4.</div>
+        <div class="ex-content">
+          She _____ (already / leave) when I _____ (arrive).
+          <select class="ex-select" data-ans="had already left" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>already left</option><option>had already left</option><option>was already leaving</option>
+          </select>
+          <select class="ex-select" data-ans="arrived" onchange="checkSel(this)">
+            <option value="">-- select --</option>
+            <option>was arriving</option><option>had arrived</option><option>arrived</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="mt-12">Exercises — Verb Patterns</h3>
+    <div class="exercise" id="ex-u1-2">
+      <div class="ex-instruction">Fill in the correct form of the verb in brackets</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">She admitted _____ (take) the money without asking. <input class="ex-input" data-ans="taking" placeholder="your answer"></div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">I look forward to _____ (hear) from you soon. <input class="ex-input" data-ans="hearing" placeholder="your answer"></div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">He stopped _____ (eat) junk food after his doctor's advice. <input class="ex-input" data-ans="eating" placeholder="your answer"></div></div>
+      <div class="ex-item"><div class="ex-num">4.</div><div class="ex-content">Don't forget _____ (set) your alarm tonight! <input class="ex-input" data-ans="to set" placeholder="your answer"></div></div>
+      <div class="ex-item"><div class="ex-num">5.</div><div class="ex-content">I believe in _____ (be) honest, even when it's difficult. <input class="ex-input" data-ans="being" placeholder="your answer"></div></div>
+      <button class="check-btn" onclick="checkInputs('ex-u1-2')">Check</button>
+      <button class="reset-btn" onclick="resetInputs('ex-u1-2')">Reset</button>
+      <div id="score-ex-u1-2"></div>
+    </div>
+  </div>
+
+  <div id="u1-text" class="sub-panel">
+    <div class="gram-box" style="border-left-color:var(--u1)">
+      <h4 style="color:var(--u1)">The Unexpected Guest — Source Text</h4>
+      <p>Last Friday, I <strong>was driving</strong> home in the pouring rain when my phone rang. It was my best friend Anna, but her voice sounded strange. I <strong>had just finished</strong> a long day at work and I <strong>was feeling</strong> exhausted. Earlier that morning, she <strong>had sent</strong> me a weird message that I <strong>hadn't had</strong> time to reply to.</p>
+      <p>Anyway, I pulled over safely and answered the call. "You won't believe what <strong>happened</strong>," she said. While we <strong>were talking</strong>, I suddenly <strong>saw</strong> flashing blue lights behind me. A police car <strong>had stopped</strong> right behind my car! I <strong>hadn't noticed</strong> it before...</p>
+    </div>
+    <div class="gram-box" style="border-left-color:var(--teal)">
+      <h4 style="color:var(--teal)">Minimalism vs. Maximalism — Reading Text</h4>
+      <p>According to the Los Angeles Times, the average American home contains 300,000 items. The average British 10-year-old owns 238 toys but plays with only twelve daily. <em>The Story of Stuff</em> tells us we consume double the number of things that we did half a century ago...</p>
+      <p><strong>Zuleya (Minimalism):</strong> "Less is more. Minimalism allows us to appreciate what really matters — people and relationships, not stuff."</p>
+      <p><strong>Richard (Maximalism):</strong> "Maximalism isn't about luxury. It's about joy. My house is filled with treasures that bring back memories and give pleasure."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: UNIT 2
+═══════════════════════════════════════════════════════ -->
+<div id="panel-u2" class="panel">
+  <div class="unit-banner ub-u2">
+    <div class="ub-title">💼 Unit 2 — Working Life</div>
+    <div class="ub-sub">Conditionals · Modals · Interview Language · Preferences</div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchSub('u2','grammar')">Grammar</button>
+    <button class="sub-tab" onclick="switchSub('u2','vocab')">Vocabulary</button>
+    <button class="sub-tab" onclick="switchSub('u2','practice')">Exercises</button>
+    <button class="sub-tab" onclick="switchSub('u2','phrases')">Functional Language</button>
+  </div>
+
+  <div id="u2-grammar" class="sub-panel active">
+    <div class="gram-box">
+      <h4>unless / even if / in case — Conditions & Precautions</h4>
+      <div class="rule"><strong>unless</strong> = if … not  (negative condition)<br><span class="ex">I can't concentrate unless it's quiet. (= if it is NOT quiet)</span></div>
+      <div class="rule"><strong>even if</strong> = despite the fact that (the condition does not change the result)<br><span class="ex">I keep working even if I'm tired. (Being tired doesn't stop me.)</span></div>
+      <div class="rule"><strong>in case</strong> = because something might happen  (precaution / preparation)<br><span class="ex">I keep my phone on in case someone needs me.</span></div>
+      <div class="warn">⚠ Don't confuse <strong>in case</strong> with <strong>if</strong>:<br>
+        ✗ "I'll call you in case I have a problem." (= implying you expect a problem!)<br>
+        ✓ "I'll call you <strong>if</strong> I have a problem." (= only if it actually happens)
+      </div>
+    </div>
+
+    <div class="gram-box">
+      <h4>Necessity, Obligation &amp; Permission — Modal Verbs</h4>
+      <div class="rule"><strong>Necessity (something essential):</strong> need to, have to, it's essential to<br><span class="ex">I need to find my own work every week.</span></div>
+      <div class="rule"><strong>Obligation (required or expected):</strong> be supposed to, be expected to, be required to<br><span class="ex">Gig workers are not supposed to expect employee benefits.</span></div>
+      <div class="rule"><strong>Permission (something allowed):</strong> be allowed to, be permitted to, can<br><span class="ex">You're allowed to choose your own hours.</span></div>
+      <div class="rule"><strong>No necessity (no requirement):</strong> don't need to, don't have to<br><span class="ex">You don't have to work for the same company.</span></div>
+    </div>
+
+    <div class="gram-box">
+      <h4>Expressing Preferences — Expressing Preferences</h4>
+      <div class="rule"><strong>would prefer + to + infinitive:</strong><br><span class="ex">I'd prefer to work outdoors.</span></div>
+      <div class="rule"><strong>would rather + bare infinitive (NO "to" after rather):</strong><br><span class="ex">I'd rather work outdoors. ✗ NOT: I'd rather <u>to work</u></span></div>
+      <div class="rule"><strong>I'd go for + noun/gerund:</strong><br><span class="ex">I'd go for something creative.</span></div>
+      <div class="rule"><strong>Strong preference:</strong><br><span class="ex">I'd much rather work from home than in an office.<br>I'd far prefer a creative job to a routine one.</span></div>
+    </div>
+  </div>
+
+  <div id="u2-vocab" class="sub-panel">
+    <h3>Work Phrases</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Phrase</th><th>Meaning</th><th>Example</th></tr>
+        <tr><td><strong>get a lot done</strong></td><td>complete a large amount of work</td><td><em>I always get a lot done in the morning.</em></td></tr>
+        <tr><td><strong>lose concentration</strong></td><td>stop concentrating; lose focus</td><td><em>Any noise makes me lose concentration.</em></td></tr>
+        <tr><td><strong>fall behind schedule</strong></td><td>fall behind the planned timeline</td><td><em>If you don't plan, you'll fall behind schedule.</em></td></tr>
+        <tr><td><strong>keep to a routine</strong></td><td>follow the same routine consistently</td><td><em>It's important to keep to a routine.</em></td></tr>
+        <tr><td><strong>avoid distractions</strong></td><td>keep away from things that break focus</td><td><em>She uses apps to avoid distractions.</em></td></tr>
+        <tr><td><strong>deal with problems</strong></td><td>manage a problem or difficult situation successfully</td><td><em>She deals well with unexpected situations.</em></td></tr>
+        <tr><td><strong>meet deadlines</strong></td><td>complete tasks by the required deadline</td><td><em>He always manages to meet deadlines.</em></td></tr>
+        <tr><td><strong>get things out of the way</strong></td><td>finish something difficult first to feel free</td><td><em>I get difficult tasks out of the way first.</em></td></tr>
+      </table>
+    </div>
+    <h3 class="mt-12">Personality Adjectives &amp; Negative Prefixes</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Adjective</th><th>Meaning</th><th>Negative prefix</th><th>Stress (syllable)</th></tr>
+        <tr><td><strong>confident</strong></td><td>sure of your own abilities</td><td>un<strong>confident</strong></td><td><strong>CON</strong>-fi-dent</td></tr>
+        <tr><td><strong>enthusiastic</strong></td><td>very interested and excited</td><td>un<strong>enthusiastic</strong></td><td>en-thu-si-<strong>AS</strong>-tic</td></tr>
+        <tr><td><strong>flexible</strong></td><td>able to change and adapt easily</td><td>in<strong>flexible</strong></td><td><strong>FLEX</strong>-i-ble</td></tr>
+        <tr><td><strong>independent</strong></td><td>not relying on others</td><td>in<strong>dependent</strong> ✗ unindependent</td><td>in-de-<strong>PEN</strong>-dent</td></tr>
+        <tr><td><strong>responsible</strong></td><td>reliable; takes care of obligations</td><td>ir<strong>responsible</strong></td><td>re-<strong>SPON</strong>-si-ble</td></tr>
+        <tr><td><strong>professional</strong></td><td>behaving in a skilled, competent way</td><td>un<strong>professional</strong></td><td>pro-<strong>FES</strong>-sion-al</td></tr>
+        <tr><td><strong>sensitive</strong></td><td>aware of other people's feelings</td><td>in<strong>sensitive</strong></td><td><strong>SEN</strong>-si-tive</td></tr>
+        <tr><td><strong>willing</strong></td><td>ready to do something if asked</td><td>un<strong>willing</strong></td><td><strong>WILL</strong>-ing</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="u2-practice" class="sub-panel">
+    <h3>Exercises — unless / even if / in case</h3>
+    <div class="exercise" id="ex-u2-1">
+      <div class="ex-instruction">Choose the correct word</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">I always bring my charger _____ my laptop battery dies.
+        <select class="ex-select" data-ans="in case" onchange="checkSel(this)"><option value="">--</option><option>unless</option><option>in case</option><option>even if</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">I can't work _____ there's complete silence around me.
+        <select class="ex-select" data-ans="unless" onchange="checkSel(this)"><option value="">--</option><option>unless</option><option>in case</option><option>even if</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">She keeps working _____ she's tired, because deadlines matter.
+        <select class="ex-select" data-ans="even if" onchange="checkSel(this)"><option value="">--</option><option>unless</option><option>in case</option><option>even if</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">4.</div><div class="ex-content">He won't stop _____ someone tells him to take a break.
+        <select class="ex-select" data-ans="unless" onchange="checkSel(this)"><option value="">--</option><option>unless</option><option>in case</option><option>even if</option></select>
+      </div></div>
+    </div>
+
+    <h3 class="mt-12">Exercises — Negative Prefixes</h3>
+    <div class="exercise" id="ex-u2-2">
+      <div class="ex-instruction">Add the correct negative prefix (un-, in-, ir-, im-, dis-)</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">___responsible <input class="ex-input" data-ans="irresponsible" placeholder="full word"></div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">___flexible <input class="ex-input" data-ans="inflexible" placeholder="full word"></div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">___professional <input class="ex-input" data-ans="unprofessional" placeholder="full word"></div></div>
+      <div class="ex-item"><div class="ex-num">4.</div><div class="ex-content">___sensitive <input class="ex-input" data-ans="insensitive" placeholder="full word"></div></div>
+      <div class="ex-item"><div class="ex-num">5.</div><div class="ex-content">___enthusiastic <input class="ex-input" data-ans="unenthusiastic" placeholder="full word"></div></div>
+      <button class="check-btn" onclick="checkInputs('ex-u2-2')">Check</button>
+      <button class="reset-btn" onclick="resetInputs('ex-u2-2')">Reset</button>
+      <div id="score-ex-u2-2"></div>
+    </div>
+
+    <h3 class="mt-12">Exercises — Preferences</h3>
+    <div class="exercise" id="ex-u2-3">
+      <div class="ex-instruction">Correct the mistake in each sentence</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">I'd rather <strong>to work</strong> from home. → Correct: <input class="ex-input" data-ans="I'd rather work from home." placeholder="corrected sentence"></div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">She would prefer <strong>work</strong> flexibly. → Correct: <input class="ex-input" data-ans="She would prefer to work flexibly." placeholder="corrected sentence"></div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">He'd much rather <strong>being</strong> a musician. → Correct: <input class="ex-input" data-ans="He'd much rather be a musician." placeholder="corrected sentence"></div></div>
+      <button class="check-btn" onclick="checkInputs('ex-u2-3')">Check</button>
+      <button class="reset-btn" onclick="resetInputs('ex-u2-3')">Reset</button>
+      <div id="score-ex-u2-3"></div>
+    </div>
+  </div>
+
+  <div id="u2-phrases" class="sub-panel">
+    <h3>Interview Language</h3>
+    <div class="two-col-lang">
+      <div class="lang-col">
+        <h4>Checking a question</h4>
+        <ul>
+          <li>How do you mean exactly?</li>
+          <li>Are you asking me about…?</li>
+          <li>What do you mean by '…'?</li>
+          <li>Do you mean…?</li>
+        </ul>
+      </div>
+      <div class="lang-col">
+        <h4>Buying time</h4>
+        <ul>
+          <li>That's an interesting question.</li>
+          <li>Let me think for a moment.</li>
+          <li>That's a good point. Well,…</li>
+          <li>Where should I start?</li>
+        </ul>
+      </div>
+      <div class="lang-col">
+        <h4>Strong answer openers</h4>
+        <ul>
+          <li>I think one of my key strengths is…</li>
+          <li>I'm the kind of person who…</li>
+          <li>For example, once I…</li>
+          <li>One of my main strengths is that I…</li>
+        </ul>
+      </div>
+      <div class="lang-col">
+        <h4>Giving opinions on work</h4>
+        <ul>
+          <li>I completely agree with that.</li>
+          <li>I agree up to a point, but…</li>
+          <li>I'm not entirely sure about…</li>
+          <li>I think the opposite, actually.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: UNIT 3
+═══════════════════════════════════════════════════════ -->
+<div id="panel-u3" class="panel">
+  <div class="unit-banner ub-u3">
+    <div class="ub-title">🔍 Unit 3 — Fact or Fiction?</div>
+    <div class="ub-sub">Past Plans & Intentions · Indirect & Negative Questions · Talking About the News</div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchSub('u3','grammar')">Grammar</button>
+    <button class="sub-tab" onclick="switchSub('u3','vocab')">Vocabulary</button>
+    <button class="sub-tab" onclick="switchSub('u3','practice')">Exercises</button>
+    <button class="sub-tab" onclick="switchSub('u3','news')">News Language</button>
+  </div>
+
+  <div id="u3-grammar" class="sub-panel active">
+    <div class="gram-box">
+      <h4>Past Plans &amp; Intentions</h4>
+      <div class="rule"><strong>was/were going to</strong> → a plan that changed or did not happen<br><span class="ex">I was going to call you, but I was too busy.</span></div>
+      <div class="rule"><strong>was/were planning to</strong> → a deliberate plan made in advance<br><span class="ex">She was planning to submit it early, but ran out of time.</span></div>
+      <div class="rule"><strong>was/were hoping to</strong> → a wish or expectation viewed from the past<br><span class="ex">He was hoping to finish by Friday, but he couldn't.</span></div>
+      <div class="rule"><strong>had meant to</strong> (informal) → planned but forgot or failed to do<br><span class="ex">I meant to introduce you, but he left early. / She didn't mean to cause trouble.</span></div>
+      <div class="rule"><strong>had intended to</strong> (formal) → deliberate purpose; common in writing<br><span class="ex">The doctor intended to see me last week, but had to cancel.</span></div>
+      <div class="rule"><strong>had been going to</strong> (past perfect) → plan that had been abandoned<br><span class="ex">They had been going to confess many times, but they were afraid.</span></div>
+    </div>
+
+    <div class="gram-box">
+      <h4>Indirect Questions — More Polite Forms</h4>
+      <div class="rule"><strong>After opener phrase → use affirmative word order (S + V), NO inversion:</strong></div>
+      <div class="rule">Could you tell me… / Do you know… / Can I ask (if/whether)… / I was wondering…<br>
+        <span class="ex">Direct: <u>Where does she work?</u> → Indirect: Could you tell me <strong>where she works</strong>?</span><br>
+        <span class="ex">Direct: <u>Did she win?</u> → Indirect: Can I ask <strong>if she won</strong>?</span>
+      </div>
+      <div class="warn">⚠ Common error: "Could you tell me where <u>does she work</u>?" → WRONG<br>Correct: "Could you tell me where <strong>she works</strong>?"</div>
+    </div>
+
+    <div class="gram-box">
+      <h4>Negative Questions</h4>
+      <div class="rule"><strong>Checking/confirming information:</strong> <em>Didn't / Isn't / Wasn't / Haven't + subject?</em><br><span class="ex">Didn't she win a BAFTA? (I think she won — confirming)</span></div>
+      <div class="rule"><strong>Expressing surprise:</strong><br><span class="ex">Isn't it time to go? (I'm surprised you're not ready)</span></div>
+      <div class="rule"><strong>Polite persuasion:</strong> <em>Don't you think… / Wouldn't you say…</em><br><span class="ex">Don't you think we should take a taxi? / Wouldn't you say this is his best film?</span></div>
+      <div class="rule"><strong>Answering negative questions:</strong> Use a full sentence instead of just yes/no<br><span class="ex">A: Wouldn't you like a drink? B: <strong>Thank you, that would be lovely.</strong> (NOT just "Yes.")</span></div>
+    </div>
+  </div>
+
+  <div id="u3-vocab" class="sub-panel">
+    <h3>Truth &amp; Lies</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Word</th><th>Meaning</th><th>Example</th><th>Don't confuse</th></tr>
+        <tr><td><strong>hoax</strong> /həʊks/</td><td>a deliberate plan to make people believe something false</td><td><em>The Cottingley Fairies was a famous hoax.</em></td><td>≠ mistake (unintentional error)</td></tr>
+        <tr><td><strong>deceive</strong> /dɪˈsiːv/</td><td>make someone believe something untrue</td><td><em>They deceived the whole world for 60 years.</em></td><td>≠ lie to (lie = say something false; deceive = act to mislead)</td></tr>
+        <tr><td><strong>fabricate</strong> /ˈfæbrɪkeɪt/</td><td>invent a false story or piece of evidence</td><td><em>She fabricated the entire story.</em></td><td>≠ exaggerate (overstate, not necessarily false)</td></tr>
+        <tr><td><strong>confess</strong> /kənˈfes/</td><td>admit to having done something wrong</td><td><em>They finally confessed in 1983.</em></td><td>≠ admit (lighter, more neutral). Confess implies guilt.</td></tr>
+        <tr><td><strong>cover up</strong></td><td>hide the truth about something wrong</td><td><em>The company tried to cover up the scandal.</em></td><td>≠ hide (hide = conceal an object; cover up = conceal the truth)</td></tr>
+        <tr><td><strong>genuine</strong> /ˈdʒenjuɪn/</td><td>real; not fake or forged</td><td><em>The photos looked genuine to experts.</em></td><td>≠ fake, fraudulent</td></tr>
+        <tr><td><strong>credible</strong> /ˈkredɪbl/</td><td>capable of being believed; convincing</td><td><em>The story was credible enough to fool millions.</em></td><td>≠ credulous (easily fooled — the OPPOSITE)</td></tr>
+      </table>
+    </div>
+    <h3 class="mt-12">The News — Vocabulary</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Word</th><th>Meaning</th><th>Example</th></tr>
+        <tr><td><strong>breaking news</strong></td><td>the most recent urgent news story</td><td><em>We interrupt this programme for breaking news.</em></td></tr>
+        <tr><td><strong>trending</strong></td><td>currently very popular and discussed online</td><td><em>The story is trending on all social platforms.</em></td></tr>
+        <tr><td><strong>go viral</strong></td><td>spread extremely rapidly on the internet</td><td><em>The video went viral overnight.</em></td></tr>
+        <tr><td><strong>biased</strong> /ˈbaɪəst/</td><td>unfairly favouring one side</td><td><em>Some say the coverage was biased.</em></td></tr>
+        <tr><td><strong>live feed</strong></td><td>real-time video or audio stream of an event</td><td><em>We have a live feed from the scene.</em></td></tr>
+        <tr><td><strong>subscribe</strong></td><td>sign up to receive content regularly</td><td><em>Subscribe to our channel for updates.</em></td></tr>
+        <tr><td><strong>announcement</strong></td><td>official statement about something important</td><td><em>The government made an announcement.</em></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="u3-practice" class="sub-panel">
+    <h3>Exercises — Past Plans &amp; Intentions</h3>
+    <div class="exercise" id="ex-u3-1">
+      <div class="ex-instruction">Choose the correct expression</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">They _____ produce a documentary, but the project fell through.
+        <select class="ex-select" data-ans="were planning to" onchange="checkSel(this)"><option value="">--</option><option>were planning to</option><option>plan to</option><option>are going to</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">I _____ call you earlier, but I got distracted.
+        <select class="ex-select" data-ans="had meant to" onchange="checkSel(this)"><option value="">--</option><option>mean to</option><option>had meant to</option><option>was meaning</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">She _____ confess many times, but always changed her mind.
+        <select class="ex-select" data-ans="had been going to" onchange="checkSel(this)"><option value="">--</option><option>had been going to</option><option>has been going to</option><option>will go to</option></select>
+      </div></div>
+    </div>
+
+    <h3 class="mt-12">Exercises — Indirect Questions</h3>
+    <div class="exercise" id="ex-u3-2">
+      <div class="ex-instruction">Rewrite each direct question as an indirect question</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">Where does the director live? → Could you tell me _____
+        <input class="ex-input" data-ans="where the director lives?" placeholder="your answer">
+      </div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">Did she win an award? → Can I ask if _____
+        <input class="ex-input" data-ans="she won an award?" placeholder="your answer">
+      </div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">What time does it start? → Do you know _____
+        <input class="ex-input" data-ans="what time it starts?" placeholder="your answer">
+      </div></div>
+      <div class="ex-item"><div class="ex-num">4.</div><div class="ex-content">Is this based on a true story? → Can I ask whether _____
+        <input class="ex-input" data-ans="this is based on a true story?" placeholder="your answer">
+      </div></div>
+      <button class="check-btn" onclick="checkInputs('ex-u3-2')">Check</button>
+      <button class="reset-btn" onclick="resetInputs('ex-u3-2')">Reset</button>
+      <div id="score-ex-u3-2"></div>
+    </div>
+  </div>
+
+  <div id="u3-news" class="sub-panel">
+    <h3>Language for Talking About the News</h3>
+    <div class="two-col-lang">
+      <div class="lang-col">
+        <h4>Starting a discussion</h4>
+        <ul>
+          <li>Did you hear the news about…?</li>
+          <li>Have you seen/read about…?</li>
+          <li>Are you following the story about…?</li>
+          <li>Did you catch the story about…?</li>
+        </ul>
+      </div>
+      <div class="lang-col">
+        <h4>Summarising / describing</h4>
+        <ul>
+          <li>So, basically, what happened was…</li>
+          <li>I can't remember all the details, but…</li>
+          <li>It seems/appears that…</li>
+          <li>Apparently… / From what I've read…</li>
+        </ul>
+      </div>
+      <div class="lang-col">
+        <h4>Commenting on coverage</h4>
+        <ul>
+          <li>It's all over the news.</li>
+          <li>It's on all the news channels.</li>
+          <li>It's received a lot of coverage.</li>
+          <li>It's trending everywhere.</li>
+        </ul>
+      </div>
+      <div class="lang-col">
+        <h4>Responding</h4>
+        <ul>
+          <li>Really? I had no idea.</li>
+          <li>I can hardly believe it!</li>
+          <li>Oh no! That's terrible/amazing.</li>
+          <li>That's a relief. / That sounds scary.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: VOCABULARY (full with audio)
+═══════════════════════════════════════════════════════ -->
+<div id="panel-vocab" class="panel">
+  <div class="hero-band" style="background:linear-gradient(135deg,#1B5A30,var(--teal))">
+    <h1>📚 Vocabulary — All Three Units</h1>
+    <p>Correct pronunciation · Usage context · Common confusions</p>
+  </div>
+
+  <div class="filter-bar" id="vocab-filters">
+    <button class="filter-btn active" onclick="filterVocab('all')">All</button>
+    <button class="filter-btn" onclick="filterVocab('u1')">Unit 1</button>
+    <button class="filter-btn" onclick="filterVocab('u2')">Unit 2</button>
+    <button class="filter-btn" onclick="filterVocab('u3')">Unit 3</button>
+    <button class="filter-btn" onclick="filterVocab('grammar')">Grammar</button>
+    <button class="filter-btn" onclick="filterVocab('work')">Work</button>
+    <button class="filter-btn" onclick="filterVocab('news')">News Language</button>
+  </div>
+
+  <div class="vocab-grid" id="vocab-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: GRAMMAR
+═══════════════════════════════════════════════════════ -->
+<div id="panel-grammar" class="panel">
+  <div class="hero-band" style="background:linear-gradient(135deg,var(--dark),var(--blue))">
+    <h1>✏️ Grammar Reference — Units 1–3</h1>
+    <p>Full theory · Mixed exercises · Comparing easy-to-confuse structures</p>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">📖 Unit 1 — Narrative Tenses (Past Simple / Continuous / Perfect)</div>
+    <div class="acc-body">
+      <div class="cols-2">
+        <div>
+          <h4>Past Simple — completed main action</h4>
+          <p>Used for the main events of the story. Answers: "What happened?"</p>
+          <div class="gram-box mb-0"><span class="ex">She woke up early and decided to go for a walk.</span></div>
+        </div>
+        <div>
+          <h4>Past Continuous — background scene</h4>
+          <p>Used for an ongoing background action interrupted by another event.</p>
+          <div class="gram-box mb-0"><span class="ex">I was driving home when my phone rang.</span></div>
+        </div>
+        <div>
+          <h4>Past Perfect — earlier past action</h4>
+          <p>Used to clarify that an action happened BEFORE another past action.</p>
+          <div class="gram-box mb-0"><span class="ex">When I arrived, she had already left.</span></div>
+        </div>
+        <div>
+          <h4>Combining all three tenses in one sentence</h4>
+          <div class="gram-box mb-0"><span class="ex">I was driving (ongoing background) when I suddenly noticed (main event) that I had forgotten (earlier action) my wallet.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">📖 Unit 1 — Verb Patterns (to-inf vs -ing)</div>
+    <div class="acc-body">
+      <div class="table-wrap">
+        <table>
+          <tr><th>Group</th><th>Verbs</th><th>Example</th></tr>
+          <tr><td><strong>+ to-infinitive</strong></td><td>want, decide, hope, plan, promise, refuse, offer, agree, manage, learn, forget, try</td><td><em>She decided to leave. / He hopes to pass.</em></td></tr>
+          <tr><td><strong>+ -ing</strong></td><td>enjoy, avoid, suggest, mind, finish, keep, imagine, consider, admit, deny</td><td><em>I enjoy running. / She admitted taking it.</em></td></tr>
+          <tr><td><strong>prep + -ing</strong></td><td>believe in, succeed in, think about, dream about, look forward to</td><td><em>I look forward to hearing from you.</em></td></tr>
+          <tr><td><strong>stop + to-inf / -ing</strong></td><td>2 different meanings</td><td><em>stop to talk (stop in order to speak) / stop talking (stop completely)</em></td></tr>
+          <tr><td><strong>remember + to-inf / -ing</strong></td><td>2 different meanings</td><td><em>remember to set alarm (don't forget) / remember playing (recall having done)</em></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">💼 Unit 2 — Conditionals: unless / even if / in case</div>
+    <div class="acc-body">
+      <div class="table-wrap">
+        <table>
+          <tr><th>Word</th><th>Meaning</th><th>Feature</th><th>Example</th></tr>
+          <tr><td><strong>unless</strong></td><td>= if not</td><td>Negative condition</td><td><em>I can't focus unless it's quiet.</em></td></tr>
+          <tr><td><strong>even if</strong></td><td>= despite the fact</td><td>Condition doesn't change the result</td><td><em>I'll finish even if I'm tired.</em></td></tr>
+          <tr><td><strong>in case</strong></td><td>= because might happen</td><td>precaution / preparation</td><td><em>Take an umbrella in case it rains.</em></td></tr>
+          <tr><td><strong>in case of</strong></td><td>= if something happens (formal)</td><td>Used in formal/official writing</td><td><em>In case of fire, use the stairs.</em></td></tr>
+        </table>
+      </div>
+      <div class="warn">⚠ if vs in case: "I'll call you if there's a problem." (reaction) vs "Take my number in case there's a problem." (precaution — preparedness)</div>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">💼 Unit 2 — Modals: Necessity, Obligation & Permission</div>
+    <div class="acc-body">
+      <div class="table-wrap">
+        <table>
+          <tr><th>Type</th><th>Expression</th><th>Example</th></tr>
+          <tr><td>Necessity</td><td>need to, have to, it's essential to</td><td><em>I need to find new clients regularly.</em></td></tr>
+          <tr><td>Obligation</td><td>supposed to, expected to, required to</td><td><em>We're supposed to arrive on time.</em></td></tr>
+          <tr><td>Permission ✓</td><td>allowed to, permitted to, can</td><td><em>You're allowed to choose your hours.</em></td></tr>
+          <tr><td>No permission ✗</td><td>not allowed to, not permitted to</td><td><em>You're not allowed to share client data.</em></td></tr>
+          <tr><td>No necessity</td><td>don't need to, don't have to</td><td><em>You don't have to work weekends.</em></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">💼 Unit 2 — Preferences: would rather / would prefer / I'd go for</div>
+    <div class="acc-body">
+      <div class="table-wrap">
+        <table>
+          <tr><th>Expression</th><th>Form after</th><th>Example</th></tr>
+          <tr><td><strong>would rather</strong></td><td>bare infinitive (NO "to" after rather)</td><td><em>I'd rather work indoors.</em></td></tr>
+          <tr><td><strong>would prefer</strong></td><td>to + infinitive</td><td><em>I'd prefer to work indoors.</em></td></tr>
+          <tr><td><strong>I'd go for</strong></td><td>noun / gerund</td><td><em>I'd go for a creative career.</em></td></tr>
+          <tr><td><strong>be for</strong></td><td>noun / gerund</td><td><em>I'm for flexible working.</em></td></tr>
+          <tr><td><strong>much/far rather</strong></td><td>emphasis / strong preference</td><td><em>I'd much rather work alone than in a team.</em></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">🔍 Unit 3 — Past Plans & Intentions</div>
+    <div class="acc-body">
+      <div class="table-wrap">
+        <table>
+          <tr><th>Expression</th><th>Meaning & when to use</th><th>Example</th></tr>
+          <tr><td>was/were going to</td><td>plan that changed or did not happen</td><td><em>I was going to call you but I forgot.</em></td></tr>
+          <tr><td>was/were planning to</td><td>a deliberate plan made in advance</td><td><em>She was planning to submit it early.</em></td></tr>
+          <tr><td>was/were hoping to</td><td>a wish or expectation at that time</td><td><em>We were hoping to find evidence.</em></td></tr>
+          <tr><td>had meant to</td><td>informal — intended but forgot or failed to do</td><td><em>I meant to tell you yesterday.</em></td></tr>
+          <tr><td>had intended to</td><td>formal — deliberate purpose</td><td><em>She hadn't intended to reveal the secret.</em></td></tr>
+          <tr><td>had been going to</td><td>past perfect — plan that had been abandoned</td><td><em>She had been going to confess many times.</em></td></tr>
+          <tr><td>thought it would be</td><td>the reason / motivation behind a plan</td><td><em>I brought flowers — I thought it would be nice.</em></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="acc-head">🔍 Unit 3 — Indirect & Negative Questions</div>
+    <div class="acc-body">
+      <h4>Indirect Questions — affirmative word order</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Opener</th><th>Direct → Indirect</th></tr>
+          <tr><td>Could you tell me…</td><td>Where <u>does</u> he work? → Could you tell me <strong>where he works</strong>?</td></tr>
+          <tr><td>Do you know…</td><td>What time <u>does</u> it start? → Do you know <strong>what time it starts</strong>?</td></tr>
+          <tr><td>Can I ask if/whether…</td><td><u>Did</u> she win? → Can I ask <strong>if she won</strong>?</td></tr>
+          <tr><td>I was wondering…</td><td><u>Are</u> you free? → I was wondering <strong>whether you were free</strong>.</td></tr>
+        </table>
+      </div>
+      <h4 class="mt-12">Negative Questions — when to use</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Purpose</th><th>Example</th></tr>
+          <tr><td>Confirm (expect yes)</td><td><em>Didn't she win a BAFTA? (I think she did)</em></td></tr>
+          <tr><td>Express surprise</td><td><em>Isn't it time to go? (I'm surprised you're not ready)</em></td></tr>
+          <tr><td>Persuade gently</td><td><em>Don't you think we should leave?</em></td></tr>
+          <tr><td>Invite agreement</td><td><em>Wouldn't you say this is his best film?</em></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cross-unit grammar exercise -->
+  <div class="card mt-12">
+    <h3>🏋️ Mixed Exercises — All 3 Units</h3>
+    <div class="exercise" id="ex-mixed">
+      <div class="ex-instruction">Choose the correct answer (covers all 3 Units)</div>
+      <div class="ex-item"><div class="ex-num">1.</div><div class="ex-content">While I _____ (read) the report, my boss called me. (Unit 1)
+        <select class="ex-select" data-ans="was reading" onchange="checkSel(this)"><option value="">--</option><option>read</option><option>was reading</option><option>had read</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">2.</div><div class="ex-content">I'd rather _____ from home than commute. (Unit 2)
+        <select class="ex-select" data-ans="work" onchange="checkSel(this)"><option value="">--</option><option>work</option><option>to work</option><option>working</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">3.</div><div class="ex-content">She _____ submit it early, but she ran out of time. (Unit 3)
+        <select class="ex-select" data-ans="was planning to" onchange="checkSel(this)"><option value="">--</option><option>plans to</option><option>was planning to</option><option>had plan to</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">4.</div><div class="ex-content">I believe in _____ (honest) with my colleagues. (Unit 1)
+        <select class="ex-select" data-ans="being honest" onchange="checkSel(this)"><option value="">--</option><option>be honest</option><option>being honest</option><option>to be honest</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">5.</div><div class="ex-content">Could you tell me _____ the documentary starts? (Unit 3)
+        <select class="ex-select" data-ans="what time" onchange="checkSel(this)"><option value="">--</option><option>what time does</option><option>what time</option><option>when does</option></select>
+      </div></div>
+      <div class="ex-item"><div class="ex-num">6.</div><div class="ex-content">I save my work regularly _____ (in case/unless) my computer crashes. (Unit 2)
+        <select class="ex-select" data-ans="in case" onchange="checkSel(this)"><option value="">--</option><option>unless</option><option>in case</option><option>even if</option></select>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: PRONUNCIATION
+═══════════════════════════════════════════════════════ -->
+<div id="panel-pron" class="panel">
+  <div class="hero-band" style="background:linear-gradient(135deg,#4A1E8C,var(--teal))">
+    <h1>🔊 Pronunciation — Units 1–3</h1>
+    <p>Weak forms · Word stress · Silent consonants · Intonation patterns</p>
+  </div>
+
+  <div class="card">
+    <h3>Unit 1 — Auxiliary Verbs: Weak Forms</h3>
+    <p>In natural English, auxiliary verbs are often reduced to their weak forms:</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Strong form</th><th>Weak form (natural speech)</th><th>Example sentence</th><th>IPA</th></tr>
+        <tr><td>was</td><td>/wəz/</td><td><em>I was driving home.</em></td><td>/aɪ wəz ˈdraɪvɪŋ həʊm/</td></tr>
+        <tr><td>were</td><td>/wə/</td><td><em>They were talking.</em></td><td>/ðeɪ wə ˈtɔːkɪŋ/</td></tr>
+        <tr><td>had</td><td>/həd/ or /əd/</td><td><em>She had left.</em></td><td>/ʃi həd left/</td></tr>
+        <tr><td>have</td><td>/həv/ or /əv/</td><td><em>I have done it.</em></td><td>/aɪ həv dʌn ɪt/</td></tr>
+        <tr><td>been</td><td>/bɪn/</td><td><em>I've been studying.</em></td><td>/aɪv bɪn ˈstʌdiɪŋ/</td></tr>
+      </table>
+    </div>
+    <div class="pron-tip">💡 Rule: Auxiliary verbs are NOT stressed in normal speech. Stress them only for emphasis or in short answers: "Yes, I HAVE." / "No, she HASN'T."</div>
+  </div>
+
+  <div class="card">
+    <h3>Unit 2 — Stress in Personality Adjectives</h3>
+    <p>Correct word stress is essential in IELTS Speaking:</p>
+    <div class="vocab-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+      <div class="pron-card">
+        <div class="pron-word">confident</div>
+        <div><span class="stress-syl main">CON</span><span class="stress-syl sec">fi</span><span class="stress-syl sec">dent</span></div>
+        <div class="pron-ipa">/ˈkɒnfɪdənt/</div>
+        <div class="pron-tip">Stress: 1st syllable</div>
+      </div>
+      <div class="pron-card">
+        <div class="pron-word">enthusiastic</div>
+        <div><span class="stress-syl sec">en</span><span class="stress-syl sec">thu</span><span class="stress-syl sec">si</span><span class="stress-syl main">AS</span><span class="stress-syl sec">tic</span></div>
+        <div class="pron-ipa">/ɪnˌθjuːziˈæstɪk/</div>
+        <div class="pron-tip">Stress: 4th syllable -AS-</div>
+      </div>
+      <div class="pron-card">
+        <div class="pron-word">flexible</div>
+        <div><span class="stress-syl main">FLEX</span><span class="stress-syl sec">i</span><span class="stress-syl sec">ble</span></div>
+        <div class="pron-ipa">/ˈfleksɪbl/</div>
+        <div class="pron-tip">Stress: 1st syllable</div>
+      </div>
+      <div class="pron-card">
+        <div class="pron-word">independent</div>
+        <div><span class="stress-syl sec">in</span><span class="stress-syl sec">de</span><span class="stress-syl main">PEN</span><span class="stress-syl sec">dent</span></div>
+        <div class="pron-ipa">/ˌɪndɪˈpendənt/</div>
+        <div class="pron-tip">Stress: 3rd syllable -PEN-</div>
+      </div>
+      <div class="pron-card">
+        <div class="pron-word">responsible</div>
+        <div><span class="stress-syl sec">re</span><span class="stress-syl main">SPON</span><span class="stress-syl sec">si</span><span class="stress-syl sec">ble</span></div>
+        <div class="pron-ipa">/rɪˈspɒnsɪbl/</div>
+        <div class="pron-tip">Stress: 2nd syllable -SPON-</div>
+      </div>
+      <div class="pron-card">
+        <div class="pron-word">professional</div>
+        <div><span class="stress-syl sec">pro</span><span class="stress-syl main">FES</span><span class="stress-syl sec">sion</span><span class="stress-syl sec">al</span></div>
+        <div class="pron-ipa">/prəˈfeʃənl/</div>
+        <div class="pron-tip">Stress: 2nd syllable -FES-</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Unit 3 — Silent Consonants</h3>
+    <p>In English, many consonants are silent. Here are the most common examples:</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Word</th><th>Correct IPA</th><th>Silent sound</th><th>Notes</th></tr>
+        <tr><td><strong>honest</strong></td><td>/ˈɒnɪst/</td><td>h (silent)</td><td>an honest answer (use "an" because it starts with a vowel sound /ɒ/)</td></tr>
+        <tr><td><strong>know</strong></td><td>/nəʊ/</td><td>k (silent)</td><td>knife, knock, knight — k before n is always silent</td></tr>
+        <tr><td><strong>doubt</strong></td><td>/daʊt/</td><td>b (silent)</td><td>debt, subtle — b is silent in many Latin-origin words</td></tr>
+        <tr><td><strong>island</strong></td><td>/ˈaɪlənd/</td><td>s (silent)</td><td>aisle is the same: /aɪl/</td></tr>
+        <tr><td><strong>genuine</strong></td><td>/ˈdʒenjuɪn/</td><td>g = /dʒ/</td><td>NOT /ˈgenjuɪn/</td></tr>
+        <tr><td><strong>hoax</strong></td><td>/həʊks/</td><td>h (light/weak)</td><td>Pronounced /həʊks/, x sounds like /ks/</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Unit 3 — Intonation in Indirect &amp; Negative Questions</h3>
+    <div class="cols-2">
+      <div>
+        <h4>Indirect questions → Falling intonation ↓</h4>
+        <p>Indirect questions normally use falling intonation (like statements):</p>
+        <div class="gram-box">
+          <span class="ex">Could you tell me where she works? ↓</span><br>
+          <span class="ex">Do you know what time it starts? ↓</span>
+        </div>
+      </div>
+      <div>
+        <h4>Negative questions → Rising ↑ or Falling ↓</h4>
+        <p>Genuinely checking: Rising ↑<br>Persuading or expressing opinion: Falling ↓</p>
+        <div class="gram-box">
+          <span class="ex">Didn't she win an award? ↑ (genuinely checking)</span><br>
+          <span class="ex">Don't you think we should leave? ↓ (persuading)</span>
+        </div>
+      </div>
+    </div>
+    <div class="pron-tip mt-12">💡 Practice: Read these sentences aloud and focus on intonation:<br>
+      1. "Could you tell me where the director was born?" ↓<br>
+      2. "Didn't the film win an Oscar?" ↑<br>
+      3. "Wouldn't you say this is his best work?" ↓
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Unit 3 — Word Stress in Adverbs (for summarising news)</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Adverb</th><th>IPA</th><th>Stress</th><th>When to use</th></tr>
+        <tr><td><strong>basically</strong></td><td>/ˈbeɪsɪkli/</td><td><strong>BAS</strong>-ic-ally</td><td>To summarise the most important point</td></tr>
+        <tr><td><strong>apparently</strong></td><td>/əˈpærəntli/</td><td>a-<strong>PAR</strong>-ent-ly</td><td>Reportedly… (uncertain source)</td></tr>
+        <tr><td><strong>actually</strong></td><td>/ˈæktʃuəli/</td><td><strong>ACT</strong>-u-ally</td><td>Actually… (correction or addition)</td></tr>
+        <tr><td><strong>generally</strong></td><td>/ˈdʒenrəli/</td><td><strong>GEN</strong>-er-ally</td><td>Generally…</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PANEL: SPEAKING
+═══════════════════════════════════════════════════════ -->
+<div id="panel-speaking" class="panel">
+  <div class="hero-band" style="background:linear-gradient(135deg,#8C1E4D,var(--orange))">
+    <h1>🎙 Speaking Practice — IELTS Parts 1, 2 &amp; 3</h1>
+    <p>Model answers Band 7+ · Grammar &amp; vocabulary highlighted throughout</p>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchSub('sp','p1')">Part 1 — Short Answers</button>
+    <button class="sub-tab" onclick="switchSub('sp','p2')">Part 2 — Long Turn</button>
+    <button class="sub-tab" onclick="switchSub('sp','p3')">Part 3 — Discussion</button>
+    <button class="sub-tab" onclick="switchSub('sp','tips')">Tips &amp; Checklist</button>
+  </div>
+
+  <div id="sp-p1" class="sub-panel active">
+    <p class="text-muted mb-16">Part 1: Short questions — give 2–4 sentences per answer. Click "Model Answer" to compare.</p>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 1 — Objects &amp; Stories</div>
+      <div class="sp-q">Q1: Do you have any possessions that are very special to you? Why?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer (Band 7+) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        Yes, I have a few. The one that comes to mind most immediately is an old camera that <span class="highlight-gram">belonged to</span> my grandfather. It's <span class="highlight-voc">not worth a lot</span> in monetary terms, but it's extremely <span class="highlight-voc">special to me</span> because it <span class="highlight-gram">reminds me of</span> spending weekends with him when I was young. The camera is a bit <span class="highlight-voc">damaged</span> now, and honestly I <span class="highlight-gram">keep meaning to</span> get it repaired — but somehow I never do. <span class="highlight-gram">Apart from</span> its sentimental value, it's also a <span class="highlight-voc">genuine</span> vintage piece, which makes it even more interesting to me.
+        <div class="pron-tip mt-12">✅ Key language: <em>belonged to, not worth a lot, special to me, damaged, genuine, apart from, keep meaning to</em> (verb pattern)</div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 1 — Gadgets</div>
+      <div class="sp-q">Q2: What gadgets do you use every day? Could you live without them?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer (Band 7+) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        <span class="highlight-gram">Apart from</span> my phone, I'd say my wireless earphones are the gadget I use most. They're incredibly <span class="highlight-voc">compact</span> and <span class="highlight-voc">portable</span>, which means I take them everywhere. As for living without them — I <span class="highlight-gram">wouldn't say</span> it's impossible, but it would definitely affect my daily routine. I <span class="highlight-gram">enjoy listening to</span> podcasts while commuting, so I'd probably <span class="highlight-gram">miss doing</span> that. <span class="highlight-voc">Actually</span>, I think what makes modern gadgets so valuable is how <span class="highlight-voc">multifunctional</span> they are — my phone is a camera, a map, a bank, and an entertainment system all in one.
+        <div class="pron-tip mt-12">✅ Key language: <em>apart from, compact, portable, enjoy + -ing, miss + -ing, multifunctional, actually</em></div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 2 — Working Life</div>
+      <div class="sp-q">Q3: Do you prefer to work alone or in a team? Why?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer (Band 7+) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        Honestly, I <span class="highlight-gram">would rather</span> work alone for focused tasks, but I definitely <span class="highlight-gram">prefer to collaborate</span> when it comes to creative projects. I think I'm fairly <span class="highlight-voc">independent</span> by nature — I <span class="highlight-voc">keep to a routine</span> more easily when I'm on my own and I find I <span class="highlight-voc">get a lot more done</span> without interruptions. That said, I also think it's <span class="highlight-gram">essential to</span> have good team relationships because working in complete isolation can make you <span class="highlight-voc">lose perspective</span>. So <span class="highlight-gram">even if</span> I could choose to work alone all the time, I'd probably still want some collaborative time built in.
+        <div class="pron-tip mt-12">✅ Key language: <em>would rather, prefer to, independent, keep to a routine, get a lot done, essential to, even if</em></div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 3 — Media &amp; News</div>
+      <div class="sp-q">Q4: How do you usually find out about the news?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer (Band 7+) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        I mainly use social media and news apps, to be honest. <span class="highlight-voc">Apparently</span> most people my age get their news the same way — through things that are <span class="highlight-voc">trending</span> or have <span class="highlight-voc">gone viral</span> online. The advantage is that you <span class="highlight-gram">don't have to</span> wait for a scheduled broadcast. <span class="highlight-voc">Breaking news</span> reaches you instantly. The downside, though, is that not all of it is reliable — some sources are clearly <span class="highlight-voc">biased</span> or present <span class="highlight-voc">misleading</span> information as fact. So I've started to <span class="highlight-gram">make a point of</span> checking stories across multiple sources before I <span class="highlight-gram">decide to believe</span> them.
+        <div class="pron-tip mt-12">✅ Key language: <em>apparently, trending, gone viral, don't have to, breaking news, biased, misleading, decide to + inf</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sp-p2" class="sub-panel">
+    <p class="text-muted mb-16">Part 2: Speak continuously for 1:45–2:00 minutes. Prepare for 1 minute with short notes.</p>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 1 — Cue Card</div>
+      <div class="sp-q">Describe an important object you own. Say: what it is / how you got it / what it looks like / why it is important to you.</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer Band 7+ (Unit 1) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        <p>One object that is particularly important to me is a <span class="highlight-voc">foldable</span> travel backpack that I bought about two years ago before a trip to Europe. I needed something <span class="highlight-voc">compact</span> and <span class="highlight-voc">lightweight</span>, so I spent a while researching options.</p>
+        <p>In terms of appearance, it's <span class="highlight-voc">rectangular</span> when open but becomes very small when folded. It's made of <span class="highlight-voc">waterproof fabric</span> with some carbon-fibre parts on the straps, which makes it extremely <span class="highlight-voc">durable</span>. The texture is mostly <span class="highlight-voc">smooth</span> with some <span class="highlight-voc">rubbery</span> grip areas on the handles.</p>
+        <p>What makes it special is its <span class="highlight-voc">multifunctional</span> design — it has many compartments and <span class="highlight-gram">even</span> converts into a shoulder bag. I use it almost every week for work and short trips. <span class="highlight-gram">Compared with</span> conventional backpacks, this one is much more <span class="highlight-voc">practical</span> and <span class="highlight-voc">portable</span>. <span class="highlight-gram">From a practical point of view</span>, it helps me stay organised and travel lightly. <span class="highlight-gram">As far as I'm concerned</span>, it's not just a bag — it represents my love for simple and efficient living.</p>
+        <div class="pron-tip mt-12">✅ Structure: Appearance → Material/Texture → Function → Why special | Key language: <em>compact, durable, multifunctional, portable, even, compared with, as far as I'm concerned</em></div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 2 — Cue Card</div>
+      <div class="sp-q">Describe a job or type of work you think you would enjoy. Say: what it is / what skills it requires / what attracts you to it / whether you think you'd be good at it.</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer Band 7+ (Unit 2) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        <p>If I had to choose, I <span class="highlight-gram">would go for</span> a career in documentary film-making. It's something I've <span class="highlight-gram">been meaning to explore</span> for years but never properly pursued. I find myself drawn to the idea of telling real stories that matter.</p>
+        <p>In terms of skills, I think you <span class="highlight-gram">need to</span> be <span class="highlight-voc">creative</span> but also <span class="highlight-voc">responsible</span> — you're dealing with real people's lives. You <span class="highlight-gram">have to</span> <span class="highlight-voc">meet deadlines</span>, <span class="highlight-voc">deal with</span> unexpected situations, and <span class="highlight-voc">keep to a schedule</span> on location. You're also <span class="highlight-gram">not allowed to</span> manipulate what you capture.</p>
+        <p>What attracts me most is the variety. <span class="highlight-gram">Even if</span> the hours are long, at least no two days are the same. I <span class="highlight-gram">would rather</span> have a career with unpredictability than one that <span class="highlight-voc">falls into a routine</span> that I find dull. <span class="highlight-gram">As for whether</span> I'd be good at it — I think I'm <span class="highlight-voc">flexible</span> and <span class="highlight-voc">enthusiastic</span>, which I believe are two of the most important qualities.</p>
+        <div class="pron-tip mt-12">✅ Key language: <em>would go for, been meaning to, need to, meet deadlines, deal with, not allowed to, even if, would rather, flexible, enthusiastic</em></div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 3 — Cue Card</div>
+      <div class="sp-q">Describe a news story or documentary that impressed you. Say: what it was about / what you remember / why it was interesting / how it affected you.</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer Band 7+ (Unit 3) <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        <p>One documentary that really impressed me was about the Cottingley Fairies <span class="highlight-voc">hoax</span> — the story of two young girls who claimed to have photographed real fairies in 1917. I came across it on a streaming platform about two years ago. I <span class="highlight-gram">had been going to</span> watch something else that evening, but this caught my eye.</p>
+        <p>What struck me immediately was how <span class="highlight-voc">credible</span> the photos seemed, even to experts. The documentary was <span class="highlight-voc">gripping</span> from the start, and it dealt with how easily people want to believe in something magical. It was entirely <span class="highlight-voc">compelling</span> because it asked a genuinely difficult question: what does it mean to <span class="highlight-voc">deceive</span> someone who desperately wants to be deceived?</p>
+        <p><span class="highlight-gram">Wouldn't you say</span> that's a remarkable story — a childhood <span class="highlight-voc">hoax</span> that fooled the world for over sixty years? <span class="highlight-gram">From what I've read</span> since watching it, the girls <span class="highlight-gram">had intended to confess</span> many times, but the story had become too big to stop. It affected me because it made me think about how <span class="highlight-voc">biased</span> we all are — we tend to believe what we want to believe.</p>
+        <div class="pron-tip mt-12">✅ Key language: <em>hoax, had been going to, credible, gripping, compelling, deceive, wouldn't you say, from what I've read, had intended to, biased</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sp-p3" class="sub-panel">
+    <p class="text-muted mb-16">Part 3: Extended discussion questions. Aim for 45–60 seconds per answer.</p>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 1 — Discussion</div>
+      <div class="sp-q">Do you think people buy too many unnecessary objects these days? Why / Why not?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer Band 7+ <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        Yes, I do, and I think the evidence is fairly clear. <span class="highlight-gram">Consider</span> the statistic that the average American home contains 300,000 items — that's a staggering number. <span class="highlight-gram">From my point of view</span>, the problem is largely driven by advertising. We're persuaded to <span class="highlight-gram">keep buying</span> things we don't actually need. <span class="highlight-gram">Apart from</span> the obvious financial cost, there's also an enormous environmental impact. I think people <span class="highlight-gram">need to stop</span> and <span class="highlight-gram">start thinking</span> about whether they really need something before they buy it. That said, I understand that for some people, surrounding themselves with objects — like the maximalist designer Richard Mbuya described — brings genuine joy. It's not necessarily unhealthy to own things; the problem is when we <span class="highlight-voc">accumulate</span> things we don't value.
+        <div class="pron-tip mt-12">✅ Key language: <em>consider (opener), from my point of view, apart from, need to stop + -ing, start thinking</em></div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 2 — Discussion</div>
+      <div class="sp-q">Do you think the rise of gig work is positive or negative for society?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer Band 7+ <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        It's a complex issue and I think the answer depends on who you ask. For young people, <span class="highlight-gram">I'd say</span> it's largely positive — you're <span class="highlight-gram">allowed to</span> choose your own hours and location, you <span class="highlight-gram">don't have to</span> commute, and you have a lot of <span class="highlight-voc">independence</span>. However, for older workers or those with families, the lack of security can be genuinely difficult. Gig workers are <span class="highlight-gram">not supposed to</span> receive employee benefits like sick pay or a pension, which puts them at a serious disadvantage. <span class="highlight-gram">Even if</span> the freedom is appealing, I think it's <span class="highlight-gram">essential to</span> have some form of protection <span class="highlight-gram">in case</span> a worker becomes ill or injured. <span class="highlight-gram">Unless</span> governments introduce better regulation, I fear companies will continue to <span class="highlight-voc">exploit</span> gig workers.
+        <div class="pron-tip mt-12">✅ Key language: <em>allowed to, don't have to, independent, not supposed to, even if, essential to, in case, unless, exploit</em></div>
+      </div>
+    </div>
+
+    <div class="speaking-prompt">
+      <div class="sp-label">Unit 3 — Discussion</div>
+      <div class="sp-q">How has social media changed the way people consume news? Is this a positive change?</div>
+    </div>
+    <div class="model-answer">
+      <div class="ma-head" onclick="toggleMA(this)">🎯 Model Answer Band 7+ <span class="ma-arrow">▾</span></div>
+      <div class="ma-body">
+        I believe it has fundamentally transformed how people engage with news. <span class="highlight-voc">Apparently</span>, studies show that most people under thirty get their news primarily from social media. <span class="highlight-gram">Don't you think</span> that's a concern, given how easy it is for stories to <span class="highlight-voc">go viral</span> before being fact-checked? <span class="highlight-gram">From what I've read</span>, <span class="highlight-voc">misleading</span> headlines are shared six times more often than accurate ones. <span class="highlight-gram">Could you argue</span> that this is <span class="highlight-voc">biased</span> — yes, absolutely. On the other hand, social media has democratised the news. Stories that <span class="highlight-gram">would never have been covered</span> by mainstream broadcasters <span class="highlight-gram">had intended to</span>… actually, let me rephrase: events that mainstream media might have ignored are now shared and discussed by millions. <span class="highlight-gram">Even if</span> there are clear risks, I think the transparency that comes with widespread access to information is largely positive — <span class="highlight-gram">provided</span> people develop stronger critical thinking skills.
+        <div class="pron-tip mt-12">✅ Key language: <em>apparently, go viral, don't you think, from what I've read, misleading, biased, even if, provided</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sp-tips" class="sub-panel">
+    <div class="card">
+      <h3>✅ Speaking Checklist — before you practise</h3>
+      <div class="cols-2">
+        <div>
+          <h4>Content</h4>
+          <ul>
+            <li>Have I used at least 5 vocabulary items from the lesson?</li>
+            <li>Have I used at least 2 grammar structures correctly?</li>
+            <li>Have I given specific examples?</li>
+            <li>Have I provided reasons and explanations?</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Delivery</h4>
+          <ul>
+            <li>Am I speaking continuously (avoiding long pauses)?</li>
+            <li>Am I using natural fillers? (Well, Actually, To be honest…)</li>
+            <li>Am I stressing words correctly?</li>
+            <li>Is my speaking pace appropriate (not too fast)?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔗 Linking Phrases for Part 3</h3>
+      <div class="two-col-lang">
+        <div class="lang-col">
+          <h4>Introducing your view</h4>
+          <ul>
+            <li>From my point of view…</li>
+            <li>As far as I'm concerned…</li>
+            <li>I'd say that…</li>
+            <li>Personally, I think…</li>
+            <li>I believe…</li>
+          </ul>
+        </div>
+        <div class="lang-col">
+          <h4>Providing evidence</h4>
+          <ul>
+            <li>For example / For instance…</li>
+            <li>Take… as an example</li>
+            <li>From what I've read…</li>
+            <li>Apparently…</li>
+            <li>Consider the fact that…</li>
+          </ul>
+        </div>
+        <div class="lang-col">
+          <h4>Conceding / Balancing</h4>
+          <ul>
+            <li>That said…</li>
+            <li>On the other hand…</li>
+            <li>I understand that…</li>
+            <li>Even if… (still…)</li>
+            <li>Unless… (it's difficult to…)</li>
+          </ul>
+        </div>
+        <div class="lang-col">
+          <h4>Concluding</h4>
+          <ul>
+            <li>All in all…</li>
+            <li>Taking everything into account…</li>
+            <li>In the end…</li>
+            <li>Long story short…</li>
+            <li>It all comes down to…</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg,var(--gray-1),var(--teal-lt));border:2px solid var(--teal)">
+      <h3>🎯 IELTS Speaking Exam Structure</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Part</th><th>Time</th><th>Task</th><th>Key Tips</th></tr>
+          <tr><td><strong>Part 1</strong></td><td>4–5 min</td><td>Questions about yourself, family, interests</td><td>2–3 sentences per answer; use <em>because, since, so</em></td></tr>
+          <tr><td><strong>Part 2</strong></td><td>3–4 min (1 min prep + 2 min speaking)</td><td>Speak about a topic from the cue card</td><td>Take short notes; cover all bullet points; finish naturally</td></tr>
+          <tr><td><strong>Part 3</strong></td><td>4–5 min</td><td>Discussion and analytical questions</td><td>Develop ideasdeas; give 2 perspectives; use complex grammar</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── TAB SYSTEM ────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function switchSub(panel, sub) {
+  const prefix = panel + '-';
+  document.querySelectorAll('[id^="' + prefix + '"]').forEach(el => {
+    if(el.classList.contains('sub-panel')) el.classList.remove('active');
+  });
+  const btn = event.currentTarget;
+  btn.closest('.sub-tabs').querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const target = document.getElementById(panel + '-' + sub);
+  if(target) target.classList.add('active');
+}
+
+// ── ACCORDION ─────────────────────────────────────────
+function toggleAcc(el) {
+  const head = el.querySelector('.acc-head') || el;
+  const body = el.querySelector('.acc-body');
+  if(!body) return;
+  head.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+// ── MODEL ANSWER ──────────────────────────────────────
+function toggleMA(head) {
+  head.classList.toggle('open');
+  const body = head.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ── SELECT CHECKS ─────────────────────────────────────
+function checkSel(sel) {
+  if(!sel.value) return;
+  const correct = sel.dataset.ans;
+  sel.classList.remove('correct','wrong');
+  sel.classList.add(sel.value === correct ? 'correct' : 'wrong');
+}
+
+// ── INPUT CHECKS ──────────────────────────────────────
+function checkInputs(exId) {
+  const ex = document.getElementById(exId);
+  const inputs = ex.querySelectorAll('.ex-input');
+  let correct = 0;
+  inputs.forEach(inp => {
+    const ans = inp.dataset.ans.toLowerCase().trim();
+    const val = inp.value.toLowerCase().trim();
+    inp.classList.remove('correct','wrong');
+    let feedback = inp.nextElementSibling;
+    if(feedback && feedback.classList.contains('feedback')) feedback.remove();
+    const fb = document.createElement('div');
+    fb.className = 'feedback';
+    if(val === ans) {
+      inp.classList.add('correct');
+      fb.classList.add('ok');
+      fb.textContent = '✓ Correct!';
+      correct++;
+    } else if(val) {
+      inp.classList.add('wrong');
+      fb.classList.add('no');
+      fb.textContent = '✗ Answer: ' + inp.dataset.ans;
+    }
+    if(val) inp.after(fb);
+  });
+  const scoreEl = document.getElementById('score-' + exId);
+  if(scoreEl) {
+    scoreEl.innerHTML = `<div class="score-bar"><span class="score-val">${correct}/${inputs.length}</span><span>${correct === inputs.length ? '🎉 Perfect!' : correct >= inputs.length/2 ? '👍 Good job!' : '📚 Review the rules!'}</span></div>`;
+  }
+}
+
+function resetInputs(exId) {
+  const ex = document.getElementById(exId);
+  ex.querySelectorAll('.ex-input').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct','wrong');
+    let fb = inp.nextElementSibling;
+    if(fb && fb.classList.contains('feedback')) fb.remove();
+  });
+  const scoreEl = document.getElementById('score-' + exId);
+  if(scoreEl) scoreEl.innerHTML = '';
+}
+
+// ── AUDIO using SpeechSynthesis ────────────────────────
+// ── Audio: robust SpeechSynthesis with loading wait ──────────
+let _ttsReady = false;
+let _ttsVoice = null;
+
+function _initVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  // prefer en-GB female, then any en voice
+  _ttsVoice = voices.find(v => v.lang === 'en-GB' && v.name.toLowerCase().includes('female'))
+    || voices.find(v => v.lang === 'en-GB')
+    || voices.find(v => v.lang.startsWith('en-'))
+    || voices[0] || null;
+  _ttsReady = voices.length > 0;
+}
+
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = _initVoices;
+  _initVoices(); // call immediately in case already loaded
+}
+
+function speakWord(word, btn) {
+  if (!window.speechSynthesis) {
+    alert('Your browser does not support text-to-speech. Please try Chrome or Edge.');
+    return;
+  }
+  // Unlock on iOS/Safari: must happen inside user gesture (onclick) — we are already inside one
+  window.speechSynthesis.cancel();
+
+  function _speak() {
+    const utt = new SpeechSynthesisUtterance(word);
+    utt.lang = 'en-GB';
+    utt.rate = 0.82;
+    utt.pitch = 1.0;
+    if (_ttsVoice) utt.voice = _ttsVoice;
+
+    // visual feedback
+    if (btn) { btn.textContent = '⏸'; btn.disabled = true; }
+    utt.onend = () => { if (btn) { btn.textContent = '▶'; btn.disabled = false; } };
+    utt.onerror = () => { if (btn) { btn.textContent = '▶'; btn.disabled = false; } };
+
+    window.speechSynthesis.speak(utt);
+  }
+
+  if (_ttsReady) {
+    _speak();
+  } else {
+    // Voices not yet loaded — wait up to 1s
+    let attempts = 0;
+    const timer = setInterval(() => {
+      _initVoices();
+      attempts++;
+      if (_ttsReady || attempts > 10) {
+        clearInterval(timer);
+        _speak();
+      }
+    }, 100);
+  }
+}
+
+// ── VOCAB DATA ────────────────────────────────────────
+const vocabData = [
+  // Unit 1
+  { word:'inherited', pron:'/ɪnˈherɪtɪd/', type:'verb (past)', unit:'u1', tags:['u1'],
+    def:'Received from someone who has died; passed down.',
+    ex:'I inherited this ring when my grandmother passed away.',
+    context:'Use when something passes from one generation to another. Can be physical objects, money, or even traits.',
+    confuse:'≠ received: "received" is neutral (any transfer). "Inherited" is specifically from someone who died.' },
+  { word:'genuine', pron:'/ˈdʒenjuɪn/', type:'adjective', unit:'u1', tags:['u1'],
+    def:'Real; original; not fake or a copy.',
+    ex:"It's a genuine 1980s leather jacket — not a reproduction.",
+    context:'Useful when describing antiques, art, or branded items. Also used figuratively: "a genuine smile".',
+    confuse:'≠ fake / counterfeit. ≠ credible (credible = believable; genuine = real).' },
+  { word:'durable', pron:'/ˈdjʊərəbl/', type:'adjective', unit:'u1', tags:['u1'],
+    def:'Able to last for a long time without deteriorating.',
+    ex:'The carbon-fibre straps make the bag extremely durable.',
+    context:'Common in product descriptions. "Built to last." Pair with materials: "durable stainless steel".',
+    confuse:'≠ strong (strong = withstands force; durable = lasts over time). ≠ fragile (opposite).' },
+  { word:'compact', pron:'/ˈkɒmpækt/', type:'adjective', unit:'u1', tags:['u1'],
+    def:'Small and efficiently designed, taking up little space.',
+    ex:'The charging case is compact enough to fit in your pocket.',
+    context:'Common in tech/product contexts. "Compact design", "compact car". Can also be a noun (a small mirror case).',
+    confuse:'≠ bulky (big and awkward). ≠ tiny (just small, no design implication).' },
+  { word:'apart from / except for', pron:'/əˈpɑːt frəm/', type:'phrase', unit:'u1', tags:['u1','grammar'],
+    def:'Excluding; with the exception of (same meaning).',
+    ex:"I like all materials apart from plastic. / She eats everything except for onions.",
+    context:'Interchangeable in most cases. Use when listing ONE exception to a general statement.',
+    confuse:'≠ besides (besides = "in addition to"). "Apart from" = excluding. "Besides" = plus.' },
+  { word:'sleek', pron:'/sliːk/', type:'adjective', unit:'u1', tags:['u1'],
+    def:'Elegant, smooth, and modern-looking.',
+    ex:'The new smartphone has a sleek, minimal design.',
+    context:'Describes design aesthetics: products, cars, hairstyles. Positive connotation of sophistication.',
+    confuse:'≠ clunky (opposite). ≠ smooth (smooth = texture; sleek = overall aesthetic).' },
+  // Unit 2
+  { word:'meet deadlines', pron:'/miːt ˈdedlaɪnz/', type:'phrase', unit:'u2', tags:['u2','work'],
+    def:'Complete tasks or work by the required time.',
+    ex:'She is very organised and always manages to meet deadlines.',
+    context:'Essential in professional settings. "I always meet my deadlines" is a strong positive in job interviews.',
+    confuse:'≠ beat a deadline (finish early). ≠ miss a deadline (finish late).' },
+  { word:'fall behind schedule', pron:'/fɔːl bɪˈhaɪnd ˈʃedjuːl/', type:'phrase', unit:'u2', tags:['u2','work'],
+    def:'To be behind the planned or expected timeline.',
+    ex:"If you don't plan properly, you're more likely to fall behind schedule.",
+    context:'Use when talking about project management or study plans. Often with "risk of", "avoid", "prevent".',
+    confuse:'≠ miss a deadline (specific point in time). Fall behind = ongoing gradual delay.' },
+  { word:'independent', pron:'/ˌɪndɪˈpendənt/', type:'adjective', unit:'u2', tags:['u2','work'],
+    def:'Not relying on others; able to work or act alone.',
+    ex:'She is highly independent — she prefers to manage her own projects.',
+    context:'Positive trait in job interviews. "I work well independently as well as in a team" is a classic strong answer.',
+    confuse:'≠ indifferent (doesn\'t care). Negative prefix: in-dependent (NOT "unindependent").' },
+  { word:'responsible', pron:'/rɪˈspɒnsɪbl/', type:'adjective', unit:'u2', tags:['u2'],
+    def:'Having a duty to deal with something; reliable and trustworthy.',
+    ex:"I'm the kind of person who is responsible — I always follow through on what I promise.",
+    context:'In interviews, say: "I take responsibility for my work". Negative prefix: irresponsible (ir-, not un-).',
+    confuse:'≠ responsive (quick to react). Stress: re-SPON-si-ble.' },
+  { word:'unless', pron:'/ənˈles/', type:'conjunction', unit:'u2', tags:['u2','grammar'],
+    def:'= If … not. Introduces a condition that must be true to avoid a result.',
+    ex:"I can't concentrate unless it's quiet. (= if it is NOT quiet)",
+    context:'Use to state what condition is necessary. Very common in spoken English.',
+    confuse:'≠ in case (preparation). ≠ even if (contrast). "Unless" implies a necessary condition.' },
+  { word:'in case', pron:'/ɪn keɪs/', type:'phrase', unit:'u2', tags:['u2','grammar'],
+    def:'As a precaution because something might happen.',
+    ex:'I keep my phone on in case someone needs me.',
+    context:'Used when preparing for a possible future event. NOT the same as "if" (reaction after the event).',
+    confuse:'⚠ "I\'ll bring an umbrella if it rains" (reaction). "I\'ll bring an umbrella in case it rains" (preparation — just in case).' },
+  { word:'temporary', pron:'/ˈtemprəri/', type:'adjective', unit:'u2', tags:['u2','work'],
+    def:'Lasting only for a limited time; not permanent.',
+    ex:'He took a temporary job while looking for something permanent.',
+    context:'Common in work/employment contexts: "temporary contract", "temporary worker".',
+    confuse:'≠ permanent (lasts forever). ≠ occasional (happening sometimes, not always).' },
+  // Unit 3
+  { word:'hoax', pron:'/həʊks/', type:'noun', unit:'u3', tags:['u3'],
+    def:'A plan to deceive people, making them believe something false.',
+    ex:'The Cottingley Fairies was one of the most famous hoaxes of the 20th century.',
+    context:'Often used in media/news contexts. "Perpetrate a hoax", "expose a hoax".',
+    confuse:'≠ prank (harmless joke). ≠ fraud (illegal financial deception).' },
+  { word:'deceive', pron:'/dɪˈsiːv/', type:'verb', unit:'u3', tags:['u3'],
+    def:'To make someone believe something that is not true.',
+    ex:'They deceived the public for over sixty years.',
+    context:'"Deceive" is slightly more formal than "trick" or "fool". "Deceptive" (adj): a deceptive appearance.',
+    confuse:'≠ mislead (possibly unintentional). Deceive = always intentional.' },
+  { word:'confess', pron:'/kənˈfes/', type:'verb', unit:'u3', tags:['u3'],
+    def:'To admit to having done something wrong or to tell the truth after hiding it.',
+    ex:'They finally confessed in 1983 — over sixty years later.',
+    context:'More formal/serious than "admit". Common in legal, religious, and personal contexts.',
+    confuse:'≠ admit (admit is more casual/neutral). Confess often implies guilt or wrongdoing.' },
+  { word:'biased', pron:'/ˈbaɪəst/', type:'adjective', unit:'u3', tags:['u3','news'],
+    def:'Unfairly favouring one side; showing prejudice.',
+    ex:'Some viewers complained that the documentary was biased against the company.',
+    context:'Common in media/news discussions. "Media bias", "biased reporting", "free from bias".',
+    confuse:'≠ balanced (fair, both sides). ≠ prejudiced (prejudiced = attitude towards people; biased = unfair in reporting).' },
+  { word:'go viral', pron:'/ɡəʊ ˈvaɪrəl/', type:'phrase', unit:'u3', tags:['u3','news'],
+    def:'To spread very rapidly on the internet, reaching a huge number of people.',
+    ex:'The video went viral overnight, reaching 50 million views.',
+    context:'Very modern phrase. "A post went viral", "going viral on TikTok". Metaphor from virus spreading.',
+    confuse:'≠ trending (trending = currently popular; viral = spreading rapidly/explosively). Something can trend without going viral.' },
+  { word:'breaking news', pron:'/ˈbreɪkɪŋ njuːz/', type:'phrase', unit:'u3', tags:['u3','news'],
+    def:'The most recent, urgent news that is just happening.',
+    ex:'We interrupt this programme for breaking news from the capital.',
+    context:'Used in broadcast media. "This just in", "breaking news alert".',
+    confuse:'≠ update (update = new info about ongoing story). Breaking news = brand new event.' },
+  { word:'credible', pron:'/ˈkredɪbl/', type:'adjective', unit:'u3', tags:['u3'],
+    def:'Able to be believed; convincing.',
+    ex:'The photos looked credible even to photography experts.',
+    context:'Used in journalism, law, academic contexts. "A credible source", "credible evidence".',
+    confuse:'≠ credulous (credulous = easily tricked/gullible — the OPPOSITE!). ≠ incredible (unbelievable).' },
+  { word:'gripping', pron:'/ˈɡrɪpɪŋ/', type:'adjective', unit:'u3', tags:['u3'],
+    def:'Very exciting and interesting; impossible to stop watching/reading.',
+    ex:'The documentary was gripping from the first minute.',
+    context:'Often used for films, books, stories. "A gripping thriller", "I found it absolutely gripping".',
+    confuse:'≠ gripping (physical = holding tight — same word, different meaning by context). ≠ engaging (engaging = generally interesting; gripping = intensely exciting).' },
+  { word:'trending', pron:'/ˈtrendɪŋ/', type:'adjective', unit:'u3', tags:['u3','news'],
+    def:'Currently very popular and widely discussed, especially online.',
+    ex:"The story is trending on Twitter right now.",
+    context:'Social media language. "Trending topics", "#trending". More permanent than "viral".',
+    confuse:'≠ viral (viral = sudden explosive spread; trending = sustained high engagement over time).' },
+];
+
+// ── RENDER VOCAB GRID ──────────────────────────────────
+function renderVocab(filter = 'all') {
+  const grid = document.getElementById('vocab-grid');
+  const items = filter === 'all' ? vocabData : vocabData.filter(v => v.tags.includes(filter));
+  grid.innerHTML = items.map(v => `
+    <div class="vocab-card" data-tags="${v.tags.join(' ')}">
+      <div class="vc-unit"><span class="badge badge-${v.unit}">${v.unit.toUpperCase()}</span></div>
+      <div class="vc-word">${v.word}</div>
+      <div class="vc-pron">
+        <button class="audio-btn" onclick="speakWord('${v.word}', this)" title="Listen">▶</button>
+        ${v.pron}
+      </div>
+      <div class="vc-type">${v.type}</div>
+      <div class="vc-def">${v.def}</div>
+      <div class="vc-ex">${v.ex}</div>
+      <div class="vc-context">📌 <strong>Context:</strong> ${v.context}</div>
+      ${v.confuse ? `<div class="vc-confuse"><strong>⚠ Don't confuse:</strong> ${v.confuse}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function filterVocab(filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderVocab(filter);
+}
+
+// ── INIT ──────────────────────────────────────────────
+renderVocab();
+</script>
+</body>
+</html>
