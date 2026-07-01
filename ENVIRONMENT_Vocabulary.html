@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The World About Us — Vocabulary Practice</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#fff8f0;color:#1a1a2e;min-height:100vh}
+nav{background:#c0392b;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.brand{color:#fff;font-size:16px;font-weight:800}
+.brand small{font-size:10px;color:#ffd5d0;display:block;font-family:monospace;letter-spacing:.1em;font-weight:400}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab-btn{padding:7px 13px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:rgba(255,255,255,.15);color:#fff;transition:.15s}
+.tab-btn:hover{background:rgba(255,255,255,.25)}
+.tab-btn.active{background:#fff;color:#c0392b}
+.page{display:none}.page.active{display:block}
+#pbar{height:4px;background:#e74c3c;transition:width .4s;width:0}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 70px}
+.sec-head{background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;border-radius:12px;padding:18px 22px;margin-bottom:20px}
+.sec-head h2{font-size:20px;font-weight:800;margin-bottom:4px}
+.sec-head p{font-size:13px;opacity:.9;line-height:1.5}
+.info-box{background:#fef9c3;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:#78350f;line-height:1.6}
+.ex-card{background:#fff;border-radius:12px;border:1px solid #fde8e8;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:20px;margin-bottom:14px}
+.ex-num{font-size:11px;font-weight:800;color:#c0392b;font-family:monospace;letter-spacing:.08em;margin-bottom:6px;text-transform:uppercase}
+.ex-instr{font-size:13px;color:#64748b;font-style:italic;margin-bottom:14px;padding:8px 12px;background:#fff5f5;border-radius:7px;border-left:3px solid #c0392b}
+.q-item{padding:12px 0;border-bottom:1px solid #f9fafb}
+.q-item:last-of-type{border-bottom:none;padding-bottom:0}
+.q-label{font-size:11px;font-weight:800;color:#e74c3c;font-family:monospace;margin-bottom:5px}
+.q-text{font-size:14px;color:#1f2937;line-height:1.7;margin-bottom:8px;font-weight:500}
+.q-hint{font-size:12px;color:#9ca3af;font-style:italic;margin-bottom:6px}
+.inp{padding:7px 12px;border-radius:7px;border:1.5px solid #fca5a5;font-size:14px;outline:none;width:180px;transition:.2s;background:#fff}
+.inp:focus{border-color:#c0392b}
+.inp.ok{border-color:#16a34a;background:#f0fdf4}
+.inp.bad{border-color:#dc2626;background:#fef2f2}
+.sel{padding:7px 10px;border-radius:7px;border:1.5px solid #fca5a5;font-size:14px;outline:none;background:#fff;cursor:pointer}
+.sel.ok{border-color:#16a34a;background:#f0fdf4}
+.sel.bad{border-color:#dc2626;background:#fef2f2}
+.sel:disabled{cursor:default}
+.opts{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.opt{padding:9px 14px;border-radius:8px;border:1.5px solid #fde8e8;background:#fff;font-size:14px;cursor:pointer;text-align:left;line-height:1.4;transition:.15s}
+.opt:hover:not(:disabled){border-color:#c0392b;background:#fff5f5}
+.opt.chosen{border-color:#c0392b;background:#fff5f5;font-weight:600}
+.opt.correct{border-color:#16a34a!important;background:#f0fdf4!important;font-weight:700}
+.opt.wrong{border-color:#dc2626!important;background:#fef2f2!important}
+.opt:disabled{cursor:default}
+.tfng-row{display:flex;gap:7px;margin-top:6px}
+.tfng{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid #fde8e8;background:#f9fafb;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;max-width:110px}
+.tfng:hover:not(:disabled){border-color:#c0392b;background:#fff5f5}
+.tfng.chosen{background:#c0392b;color:#fff;border-color:#c0392b}
+.tfng.correct{background:#16a34a!important;color:#fff!important;border-color:#16a34a!important}
+.tfng.wrong{background:#dc2626!important;color:#fff!important;border-color:#dc2626!important}
+.tfng:disabled{cursor:default}
+.match-bank{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#fff5f5;border-radius:8px;margin-bottom:14px;border:1px dashed #fca5a5}
+.chip{padding:6px 13px;border-radius:20px;background:#fff;border:1.5px solid #fca5a5;font-size:13px;font-weight:600;color:#c0392b;cursor:pointer;transition:.15s;user-select:none}
+.chip:hover{background:#fef2f2}
+.chip.used{opacity:.35;pointer-events:none}
+.chip.sel2{background:#c0392b;color:#fff;border-color:#c0392b}
+.slot{display:inline-block;min-width:130px;padding:4px 10px;border-radius:6px;border:1.5px dashed #fca5a5;background:#fff;font-size:13px;color:#c0392b;font-weight:600;cursor:pointer;transition:.15s;vertical-align:middle;margin:0 4px;min-height:28px}
+.slot:hover{background:#fff5f5}
+.slot.filled{border-style:solid;background:#fff5f5}
+.slot.ok{border-color:#16a34a;background:#f0fdf4;color:#166534}
+.slot.bad{border-color:#dc2626;background:#fef2f2;color:#991b1b}
+.fb{margin-top:8px;padding:8px 12px;border-radius:7px;font-size:13px;line-height:1.55;display:none}
+.fb.show{display:block}
+.fb.ok{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+.fb.bad{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid #f9fafb}
+.btn-c{background:#c0392b;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.btn-c:hover{background:#a93226}
+.btn-r{background:#fff;color:#c0392b;border:1.5px solid #c0392b;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.s-banner{padding:12px 18px;border-radius:10px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:15px;color:#fff;flex-wrap:wrap;gap:8px}
+.word-ref{background:#fff;border-radius:12px;border:1px solid #fde8e8;padding:20px;margin-bottom:12px}
+.wt{font-size:18px;font-weight:800;color:#c0392b;margin-bottom:2px}
+.pos{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:#fff0ee;color:#c0392b;font-family:monospace;margin-bottom:8px;border:1px solid #fca5a5}
+.wdef{font-size:13px;color:#64748b;font-style:italic;margin-bottom:6px;line-height:1.5}
+.wex{font-size:13px;color:#374151;line-height:1.6;padding:6px 10px;background:#fff5f5;border-radius:6px;border-left:3px solid #fca5a5;margin-bottom:6px}
+.colls{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.coll{padding:3px 10px;border-radius:14px;background:#fff0ee;border:1px solid #fca5a5;font-size:12px;color:#c0392b;font-weight:600}
+.phrase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:14px}
+.phrase-card{background:#fff;border:1px solid #fde8e8;border-radius:10px;padding:14px;border-left:4px solid #c0392b}
+.phrase-type{font-size:10px;font-weight:800;color:#c0392b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.phrase-text{font-size:14px;font-weight:700;color:#1f2937;margin-bottom:4px}
+.phrase-ex{font-size:12px;color:#64748b;font-style:italic;line-height:1.5}
+.rtable{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #fde8e8}
+.rtable th{padding:9px 12px;background:#fff5f5;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;color:#64748b;border-bottom:1.5px solid #fde8e8}
+.rtable td{padding:8px 12px;border-bottom:1px solid #f9fafb}
+.res-ok{color:#16a34a;font-weight:700}.res-bad{color:#dc2626;font-weight:700}
+.match-ref{background:#f0fdf4;border:1px solid #d1fae5;border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.bd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.bd-card{background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid #fde8e8}
+.bd-s{font-size:22px;font-weight:800}.bd-l{font-size:11px;color:#64748b;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand"><small>IELTS PREPARATION - UNIT 3</small>The World About Us</div>
+  <div class="tabs">
+    <button class="tab-btn active" data-page="reference">Word Reference</button>
+    <button class="tab-btn" data-page="ex1">Ex 1: Causes &amp; Effects</button>
+    <button class="tab-btn" data-page="ex2">Ex 2: Collocations</button>
+    <button class="tab-btn" data-page="ex3">Ex 3: Word Forms</button>
+    <button class="tab-btn" data-page="ex4">Ex 4: Opinions</button>
+    <button class="tab-btn" data-page="ex5">Ex 5: In Context</button>
+    <button class="tab-btn" data-page="results">Results</button>
+  </div>
+</nav>
+<div id="pbar"></div>
+
+<div class="page active" id="page-reference">
+<div class="wrap">
+  <div class="sec-head"><h2>Word Reference - The World About Us</h2><p>Key vocabulary from the unit. Study these before doing the exercises.</p></div>
+  <div class="info-box"><strong>How to use:</strong> Read each word's definition, example sentence, and collocations. These are essential for IELTS Speaking and Writing. When ready, move to the exercises.</div>
+  <div id="ref-words"></div>
+  <p style="font-size:13px;font-weight:800;color:#c0392b;text-transform:uppercase;letter-spacing:.1em;margin:20px 0 10px">Useful Phrases for Expressing Opinions (IELTS Speaking Part 3)</p>
+  <div class="phrase-grid" id="phrase-cards"></div>
+</div>
+</div>
+
+<div class="page" id="page-ex1">
+<div class="wrap">
+  <div class="sec-head"><h2>Exercise 1 - Causes and Effects</h2><p>Practice causal language: can lead to - can result in - can be caused by - can result from - can be affected by</p></div>
+  <div class="info-box"><strong>Grammar tip:</strong> Use modal verbs (can, could, may, might) to avoid being too definite.<br><strong>Pattern:</strong> [Effect] can result from [Cause] | [Cause] can lead to [Effect] | [Thing] can be affected by [Factor]</div>
+  <div id="ex1-wrap"></div>
+</div>
+</div>
+
+<div class="page" id="page-ex2">
+<div class="wrap">
+  <div class="sec-head"><h2>Exercise 2 - Collocations</h2><p>Choose the adjective that does NOT collocate with the noun. Then match correct collocations.</p></div>
+  <div class="info-box"><strong>What is a collocation?</strong> Words that naturally go together. e.g. "environmental damage" not "ecological damage". Strong collocations show high lexical resource in IELTS.</div>
+  <div id="ex2-wrap"></div>
+</div>
+</div>
+
+<div class="page" id="page-ex3">
+<div class="wrap">
+  <div class="sec-head"><h2>Exercise 3 - Word Forms (-ion nouns)</h2><p>Complete the table and sentences using the correct verb or noun form.</p></div>
+  <div class="info-box"><strong>Pronunciation rule:</strong> Stress in -ion nouns always falls on the syllable BEFORE -ion.<br>e.g. po-LU-tion | mi-GRA-tion | con-SUMP-tion | e-MIS-sion</div>
+  <div id="ex3-wrap"></div>
+</div>
+</div>
+
+<div class="page" id="page-ex4">
+<div class="wrap">
+  <div class="sec-head"><h2>Exercise 4 - Expressing Views and Opinions</h2><p>Complete opinion phrases, match them to justifications, and classify question types.</p></div>
+  <div class="info-box"><strong>IELTS Speaking tip:</strong> In Part 3, use: opinion phrase - reason/evidence - example or consequence. e.g. "Personally, I think governments need to do more. Unless they act, the consequences will be severe."</div>
+  <div id="ex4-wrap"></div>
+</div>
+</div>
+
+<div class="page" id="page-ex5">
+<div class="wrap">
+  <div class="sec-head"><h2>Exercise 5 - Vocabulary in Context</h2><p>Synonyms, T/F/NG, and classification practice.</p></div>
+  <div class="info-box"><strong>IELTS Listening tip:</strong> The audio uses different words from the question. e.g. Question: "a decrease in temperature" - Audio might say "temperatures dropped / fell / went down".</div>
+  <div id="ex5-wrap"></div>
+</div>
+</div>
+
+<div class="page" id="page-results">
+<div class="wrap"><div id="results-wrap">
+  <div style="text-align:center;color:#94a3b8;padding:50px 0">
+    <div style="font-size:36px;margin-bottom:10px">&#128202;</div>
+    <div style="font-weight:700;font-size:17px;color:#374151;margin-bottom:5px">No results yet</div>
+    <div style="font-size:14px">Complete an exercise to see your results here.</div>
+  </div>
+</div></div>
+</div>
+
+<script>
+// ============================================================
+//  DATA
+// ============================================================
+var WORDS = [
+  {word:"drought",pos:"noun",def:"a prolonged period of abnormally low rainfall, leading to water shortage",
+   ex:"The severe drought in East Africa destroyed crops and caused widespread famine.",
+   colls:["severe drought","prolonged drought","drought-stricken","suffer a drought","drought conditions","drought-resistant crops"]},
+  {word:"flooding",pos:"noun",def:"an overflow of water onto normally dry land, caused by heavy rain or storms",
+   ex:"Recent storms and flooding caused widespread damage to homes and infrastructure.",
+   colls:["severe flooding","flash flooding","flooding damage","flooding risk","coastal flooding","flood warning"]},
+  {word:"famine",pos:"noun",def:"extreme scarcity of food causing widespread hunger and starvation",
+   ex:"The civil war led to a devastating famine affecting millions of people.",
+   colls:["widespread famine","famine relief","cause famine","famine-stricken","face famine","risk of famine"]},
+  {word:"deforestation",pos:"noun",def:"the large-scale removal of trees from forests, often for agriculture or development",
+   ex:"Deforestation in the Amazon has contributed significantly to global greenhouse gas emissions.",
+   colls:["tropical deforestation","illegal deforestation","combat deforestation","rate of deforestation","large-scale deforestation"]},
+  {word:"emission",pos:"noun",def:"gases or substances released into the atmosphere, especially from burning fuels",
+   ex:"Reducing carbon emissions is essential to limit global warming to 1.5 degrees.",
+   colls:["carbon emissions","fossil fuel emissions","greenhouse gas emissions","reduce emissions","emission targets","net-zero emissions"]},
+  {word:"migration",pos:"noun",def:"the movement of people or animals from one place to another, often due to necessity",
+   ex:"Climate change is expected to trigger large-scale migration as sea levels rise.",
+   colls:["mass migration","economic migration","migration crisis","forced migration","migration patterns","climate migration"]},
+  {word:"contamination",pos:"noun",def:"the process of making water, soil, or food impure by introducing harmful substances",
+   ex:"Industrial contamination of rivers has made the water unsafe to drink.",
+   colls:["water contamination","soil contamination","chemical contamination","radioactive contamination","contamination levels","prevent contamination"]},
+  {word:"epidemic",pos:"noun",def:"a widespread outbreak of a disease affecting a large number of people",
+   ex:"Poor sanitation following the floods triggered a cholera epidemic.",
+   colls:["disease epidemic","epidemic outbreak","global epidemic","contain an epidemic","epidemic proportions","epidemic of obesity"]},
+  {word:"destruction",pos:"noun",def:"the process of causing so much damage that something no longer exists or works",
+   ex:"The destruction of natural habitats is driving many species towards extinction.",
+   colls:["environmental destruction","widespread destruction","cause destruction","destruction of habitats","total destruction","mass destruction"]},
+  {word:"conservation",pos:"noun",def:"the protection of the natural environment, wildlife, and resources from harm",
+   ex:"Wildlife conservation programmes have helped bring several endangered species back from the brink.",
+   colls:["wildlife conservation","nature conservation","conservation efforts","conservation strategy","environmental conservation","support conservation"]}
+];
+
+var PHRASES = [
+  {type:"Prediction",text:"It is quite likely that...",ex:"It is quite likely that extreme weather events will become more frequent."},
+  {type:"Comparison",text:"The main difference is...",ex:"The main difference is that younger people tend to be more environmentally aware."},
+  {type:"Suggestion",text:"They should definitely...",ex:"They should definitely invest more in renewable energy sources."},
+  {type:"Personal experience",text:"Very rarely, but last year we...",ex:"Very rarely, but last year we experienced record-breaking temperatures in our region."},
+  {type:"Personal opinion",text:"Personally, I think...",ex:"Personally, I think individuals need to take more responsibility for their carbon footprint."},
+  {type:"Suggestion",text:"It would be a good idea if...",ex:"It would be a good idea if governments introduced stricter penalties for pollution."},
+  {type:"Comparison",text:"There are now far more...",ex:"There are now far more extreme weather events than there were fifty years ago."},
+  {type:"Prediction",text:"There will probably be...",ex:"There will probably be a significant increase in climate refugees in the coming decades."},
+  {type:"Explanation",text:"There are several negative effects including...",ex:"There are several negative effects including soil erosion, flooding, and loss of biodiversity."},
+  {type:"Personal opinion",text:"In my view,...",ex:"In my view, deforestation is one of the most pressing environmental issues we face."},
+  {type:"Personal opinion",text:"As far as I can see,...",ex:"As far as I can see, governments have not done enough to tackle climate change."},
+  {type:"Personal opinion",text:"I would say that...",ex:"I would say that the biggest challenge is changing people's daily habits."}
+];
+
+// Exercise data
+var EX1_A = {
+  qs:[
+    {text:"Global warming _____ more frequent droughts and heatwaves.",opts:["can lead to","can be caused by","can result from"],a:"can lead to",fb:"'Lead to' shows cause-to-effect. Global warming (cause) leads to droughts (effect)."},
+    {text:"Coastal flooding _____ rising sea levels.",opts:["can lead to","can result from","can result in"],a:"can result from",fb:"'Result from' shows what caused the problem. Flooding is the effect of rising sea levels."},
+    {text:"Deforestation _____ soil erosion, flooding, and loss of biodiversity.",opts:["can be caused by","can result in","can be affected by"],a:"can result in",fb:"'Result in' = lead to. Deforestation (cause) results in soil erosion etc. (effects)."},
+    {text:"Wildlife populations _____ climate change, habitat loss, and pollution.",opts:["can result from","can lead to","can be affected by"],a:"can be affected by",fb:"'Be affected by' shows what influences something. Wildlife is influenced by multiple factors."},
+    {text:"A tsunami _____ an undersea earthquake.",opts:["can be caused by","can lead to","can result in"],a:"can be caused by",fb:"'Be caused by' introduces the cause. A tsunami is the effect; earthquake is the cause."},
+    {text:"Poor harvests _____ food shortages and, in extreme cases, famine.",opts:["can be affected by","can result in","can result from"],a:"can result in",fb:"'Result in' shows consequences. Poor harvests (cause) result in food shortages (effects)."}
+  ]
+};
+var EX1_B = {
+  qs:[
+    {text:"Fossil fuel emissions can lead to _____ .",prompt:"(write 2-3 effects)",sample:"global warming, respiratory disease, and climate change"},
+    {text:"Mass migration can result from _____ .",prompt:"(write 2-3 causes)",sample:"famine, armed conflict, drought, or extreme poverty"},
+    {text:"The destruction of rainforests can result in _____ .",prompt:"(write 2-3 consequences)",sample:"loss of biodiversity, increased carbon emissions, and soil degradation"}
+  ]
+};
+
+var EX2_A = {
+  qs:[
+    {text:"_____ damage to the environment",opts:["long-term","irreversible","disastrous","main"],a:"main",fb:"We say 'long-term damage', 'irreversible damage', 'disastrous damage'. 'Main damage' is not natural - say 'the main cause of damage' instead."},
+    {text:"_____ disaster",opts:["widespread","major","humanitarian","trivial"],a:"trivial",fb:"'Widespread disaster', 'major disaster', 'humanitarian disaster' are correct. 'Trivial disaster' is a contradiction - disasters are always serious."},
+    {text:"_____ aid",opts:["emergency","financial","disastrous","humanitarian"],a:"disastrous",fb:"'Emergency aid', 'financial aid', 'humanitarian aid' are standard. 'Disastrous aid' makes no sense - aid is intended to help."},
+    {text:"_____ crisis",opts:["ongoing","impending","trivial","humanitarian"],a:"trivial",fb:"'Ongoing crisis', 'impending crisis', 'humanitarian crisis' are all natural. A 'trivial crisis' is contradictory."},
+    {text:"_____ consequences",opts:["environmental","far-reaching","devastating","eternal"],a:"eternal",fb:"'Environmental consequences', 'far-reaching consequences', 'devastating consequences' are correct. 'Eternal' is not standard - use 'lasting' or 'long-term'."}
+  ]
+};
+
+var EX2_B = {
+  bank:["humanitarian","widespread","far-reaching","ongoing","impending","devastating","emergency","irreversible"],
+  qs:[
+    {text:"The Red Cross provided _____ aid to victims of the earthquake.",a:"emergency",fb:"'Emergency aid' = immediate help in a crisis. Fits the earthquake context perfectly."},
+    {text:"Scientists warn that if we don't act now, the damage to the climate will be _____ .",a:"irreversible",fb:"'Irreversible damage' = damage that cannot be undone. A key collocation in climate writing."},
+    {text:"The flooding caused _____ destruction to crops and livestock.",a:"devastating",fb:"'Devastating destruction' = extremely severe damage. Used for serious natural disasters."},
+    {text:"The civil war has created a _____ crisis, with millions fleeing the country.",a:"humanitarian",fb:"A 'humanitarian crisis' involves large-scale human suffering requiring international aid."},
+    {text:"Climate scientists are warning of an _____ crisis if temperatures keep rising.",a:"impending",fb:"'Impending' = about to happen. An 'impending crisis' emphasises urgency."},
+    {text:"The effects of deforestation are _____ - they affect not just the region but the global climate.",a:"far-reaching",fb:"'Far-reaching effects' = effects that extend broadly beyond the immediate area."}
+  ]
+};
+
+var EX3_A = {
+  pairs:[
+    {verb:"pollute",noun:"pollution",show:"verb"},
+    {verb:"emit",noun:"emission",show:"noun"},
+    {verb:"migrate",noun:"migration",show:"verb"},
+    {verb:"contaminate",noun:"contamination",show:"noun"},
+    {verb:"consume",noun:"consumption",show:"verb"},
+    {verb:"destroy",noun:"destruction",show:"noun"},
+    {verb:"conserve",noun:"conservation",show:"verb"},
+    {verb:"contribute",noun:"contribution",show:"noun"},
+    {verb:"deteriorate",noun:"deterioration",show:"verb"},
+    {verb:"prevent",noun:"prevention",show:"verb"},
+    {verb:"reduce",noun:"reduction",show:"noun"},
+    {verb:"protect",noun:"protection",show:"verb"}
+  ]
+};
+var EX3_B = {
+  bank:["contribute","contribution","emit","emission","migrate","migration","consume","consumption","conserve","conservation","destroy","destruction"],
+  qs:[
+    {text:"What type of human activity _____ most to global warming?",a:"contributes",clue:"verb form",fb:"Verb: 'contribute to'. Subject: human activity - singular verb. Do not write 'makes contribution to' in this structure."},
+    {text:"What effect does the _____ of the rainforest have on wildlife?",a:"destruction",clue:"noun after 'the'",fb:"We need a noun after 'the'. 'Destruction' follows the article. 'Destroy' is a verb and cannot follow 'the'."},
+    {text:"How can households reduce their water _____ ?",a:"consumption",clue:"noun form",fb:"'Water consumption' = how much water is used. 'Consume' is the verb form."},
+    {text:"Climate change has forced the _____ of millions of people from coastal regions.",a:"migration",clue:"noun after 'the'",fb:"'Migration' (noun) follows 'the'. It refers to the movement of people."},
+    {text:"Carbon dioxide and methane are greenhouse gases that _____ most to climate change.",a:"contribute",clue:"verb form",fb:"'Contribute to' = play a part in causing. Greenhouse gases are the subject."},
+    {text:"It is essential that we _____ natural habitats before they are permanently lost.",a:"conserve",clue:"verb form",fb:"'Conserve' (verb) = protect from harm. 'Conservation' is the noun form."}
+  ]
+};
+
+var EX4_A = {
+  bank:["would","far","me","tend","against","view","believe","say"],
+  qs:[
+    {text:"Most people _____ agree that it is essential for big companies to reduce their carbon emissions.",a:"would",fb:"'Would agree' expresses strong consensus. 'Most people would agree that...' introduces a widely held opinion without personal bias."},
+    {text:"As _____ as I can see, the problems caused by fossil fuel emissions are not going to disappear.",a:"far",fb:"'As far as I can see' = based on my observation. Introduces a personal view while acknowledging limits."},
+    {text:"For _____, fuel emissions from cars are one of the biggest sources of air pollution.",a:"me",fb:"'For me' = in my personal opinion. Direct and informal way to introduce a personal view in speaking."},
+    {text:"I _____ to think that some claims about climate change are exaggerated.",a:"tend",fb:"'I tend to think' = my general inclination. 'Tend to' softens the opinion, making it sound considered."},
+    {text:"I'm totally _____ the amount of plastic packaging most manufacturers use.",a:"against",fb:"'I'm totally against' = I strongly oppose. Use 'against' + noun/gerund."},
+    {text:"In my _____, the increase in endangered species is a real cause for concern.",a:"view",fb:"'In my view' = in my opinion. Formal phrase used in IELTS writing and speaking."},
+    {text:"I _____ that companies contaminating rivers should be heavily fined.",a:"believe",fb:"'I believe' = I am convinced. Confident way to express an opinion. Always follow with a reason."},
+    {text:"I _____ say that better education is the most effective long-term solution.",a:"would",fb:"'I would say that' = in my assessment. Slightly softer than 'I think'."}
+  ]
+};
+
+var EX4_B = {
+  bank:["A","B","C","D","E","F"],
+  stmts:[
+    "1. Most people would agree that big companies must reduce their carbon emissions.",
+    "2. For me, fuel emissions from cars are the biggest source of air pollution.",
+    "3. In my view, the increase in endangered species is a real cause for concern.",
+    "4. I'm totally against excessive plastic packaging.",
+    "5. I would say that companies contaminating rivers should be heavily fined.",
+    "6. I believe the public needs to be better educated about environmental issues."
+  ],
+  opts:[
+    "A. That's why it's so important to educate people, particularly children, so they grow up understanding how to protect our planet.",
+    "B. I don't think it's necessary, and not only is it a waste of money, it also adds to landfill.",
+    "C. Unless they take action, there could be severe consequences for future generations.",
+    "D. If more people left their vehicles at home and walked or shared lifts, this would be greatly reduced.",
+    "E. This already happens in my country and it has greatly reduced water pollution in recent years.",
+    "F. That's why I am a big supporter of charities that promote animal and plant conservation."
+  ],
+  answers:["C","D","F","B","E","A"],
+  fbs:["C: 'Unless they take action, there could be severe consequences.' Explains WHY companies must act.",
+       "D: 'If more people left their vehicles at home, this would be greatly reduced.' Practical consequence.",
+       "F: 'That's why I am a big supporter of conservation charities.' Personal commitment arising from the view.",
+       "B: 'Not only is it a waste of money, it also adds to landfill.' Two concrete reasons against plastic.",
+       "E: 'This already happens in my country and has greatly reduced water pollution.' Real-world example.",
+       "A: 'It's so important to educate people, particularly children.' Long-term reasoning."]
+};
+
+var EX4_C = {
+  cats:["Explanation","Comparison","Suggestion","Personal opinion","Prediction","Personal experience"],
+  qs:[
+    {text:"What are some of the causes of water pollution?",a:"Explanation",fb:"'What are the causes of...' requires an explanation of factors and reasons."},
+    {text:"How will climate change affect people's lives in the future?",a:"Prediction",fb:"The future tense signals a prediction. Use 'It is likely that...' or 'There will probably be...'"},
+    {text:"What are the differences between old and young people's attitudes towards the environment?",a:"Comparison",fb:"'What are the differences between X and Y?' requires a comparison. Use 'whereas', 'while', 'on the other hand'."},
+    {text:"What can individuals do to protect the environment?",a:"Suggestion",fb:"'What can... do?' asks for suggestions. Use 'should', 'could', 'It would be a good idea if...'"},
+    {text:"Do you believe businesses do enough to protect the environment?",a:"Personal opinion",fb:"'Do you believe...?' asks for your personal view. Use 'Personally, I think...', 'In my view...'"},
+    {text:"Does it often snow in your country?",a:"Personal experience",fb:"This asks about your own country and experience. Use 'Very rarely, but last year...', 'In my region...'"}
+  ]
+};
+
+var EX5_A = {
+  qs:[
+    {text:"'There was a significant DECREASE in average temperatures for a few years.'",
+     opts:["A. temperatures rose","B. temperatures dropped","C. temperatures remained stable","D. temperatures fluctuated"],a:"B",
+     fb:"'Decrease' = go down = 'dropped'. In IELTS Listening, you might hear 'dropped/fell/went down' when the question says 'decrease'."},
+    {text:"'The term was INVENTED in the 19th century.'",
+     opts:["A. was discovered","B. was coined","C. was defined","D. was studied"],a:"B",
+     fb:"'Coined' is the most precise synonym for 'invented' when talking about a word or term. 'A term was coined' is a standard academic collocation."},
+    {text:"'Average temperatures started to INCREASE CONSIDERABLY.'",
+     opts:["A. rose sharply","B. dropped slightly","C. became unstable","D. remained constant"],a:"A",
+     fb:"'Increase considerably' = 'rose sharply'. The audio might use 'rise/go up/climb' for 'increase' and 'sharply/dramatically' for 'considerably'."},
+    {text:"'A major DROUGHT occurred in North America.'",
+     opts:["A. flood","B. heat wave","C. period of very little rain","D. storm"],a:"C",
+     fb:"A drought is a prolonged period of very low rainfall. The audio might describe it as 'very little rain for months' rather than using the word 'drought'."},
+    {text:"'Methane was IDENTIFIED as a greenhouse gas.'",
+     opts:["A. was dismissed","B. was named","C. was recognised as","D. was considered not to be"],a:"C",
+     fb:"'Identified as' = 'recognised as'. In IELTS, the audio might say 'scientists recognised methane as a greenhouse gas' when the question uses 'identified'."}
+  ]
+};
+
+var EX5_B = {
+  qs:[
+    {text:"1. Droughts can only be caused by natural factors, never by human activity.",a:"FALSE",fb:"FALSE - droughts can be affected by both natural factors AND human activity such as overuse of water and deforestation."},
+    {text:"2. 'Humanitarian crisis' describes a situation where large numbers of people face danger, disease, or starvation.",a:"TRUE",fb:"TRUE - a humanitarian crisis involves large-scale human suffering, typically requiring international aid."},
+    {text:"3. 'Irreversible' means a situation can eventually be improved with enough time and resources.",a:"FALSE",fb:"FALSE - 'irreversible' specifically means damage CANNOT be undone or reversed. This is the opposite of repairable."},
+    {text:"4. Climate migration is considered a recent phenomenon with no historical precedent.",a:"NOT GIVEN",fb:"NOT GIVEN - the vocabulary explains what migration is but gives no specific information about its historical origins."},
+    {text:"5. Modal verbs such as can, could, may, and might are recommended in academic writing to avoid definite statements.",a:"TRUE",fb:"TRUE - explicitly stated in the textbook. Modal verbs acknowledge uncertainty and degree of probability."},
+    {text:"6. An epidemic always affects the entire world.",a:"FALSE",fb:"FALSE - an epidemic affects a large region or community. A PANDEMIC is worldwide. Important vocabulary distinction for IELTS."}
+  ]
+};
+
+var EX5_C = {
+  cats:["A - Natural disaster","B - Human-caused","C - Can be either"],
+  qs:[
+    {text:"An earthquake",a:"A - Natural disaster",fb:"Earthquakes are caused by tectonic plate movements - a purely natural geological process."},
+    {text:"Drought",a:"C - Can be either",fb:"Droughts can result from natural climate cycles, but deforestation and fossil fuels worsen them."},
+    {text:"Flooding",a:"C - Can be either",fb:"Heavy rainfall is natural, but deforestation and urban development make flooding far worse."},
+    {text:"Famine",a:"C - Can be either",fb:"Famine can result from drought (natural) but is frequently caused by war, poor governance, and inequality."},
+    {text:"A volcanic eruption",a:"A - Natural disaster",fb:"Volcanic eruptions are caused by geological processes - the movement of tectonic plates."},
+    {text:"Deforestation",a:"B - Human-caused",fb:"Deforestation is primarily caused by human activity: agriculture, logging, and urban development."}
+  ]
+};
+
+// ============================================================
+//  STATE
+// ============================================================
+var allResults = {};
+var matchState = {};
+var userSel = {};  // stores answers: userSel[groupId][qi] = value
+
+// ============================================================
+//  TAB NAVIGATION - using event delegation, no inline onclick
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var page = btn.getAttribute('data-page');
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById('page-' + page).classList.add('active');
+    btn.classList.add('active');
+    if (page === 'results') renderResults();
+    updatePbar();
+  });
+});
+
+function updatePbar() {
+  var done = Object.keys(allResults).length;
+  document.getElementById('pbar').style.width = Math.round(done / 5 * 100) + '%';
+}
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function showFB(id, ok, msg) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'fb show ' + (ok ? 'ok' : 'bad');
+  el.innerHTML = msg;
+}
+
+function showBanner(wrapId, correct, total, label) {
+  var pct = Math.round(correct / total * 100);
+  var color = pct >= 70 ? '#166534' : pct >= 50 ? '#b45309' : '#991b1b';
+  var msg = pct === 100 ? 'Perfect!' : pct >= 70 ? 'Well done!' : pct >= 50 ? 'Keep practising' : 'Review the explanations';
+  var wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  var old = wrap.querySelector('.s-banner.main');
+  if (old) wrap.removeChild(old);
+  var b = document.createElement('div');
+  b.className = 's-banner main';
+  b.style.background = color;
+  b.innerHTML = '<span>' + msg + ' (' + label + ')</span><span style="font-size:20px">' + correct + '/' + total + ' (' + pct + '%)</span>';
+  wrap.insertBefore(b, wrap.firstChild);
+}
+
+function sel(id) { return document.getElementById(id); }
+
+// ============================================================
+//  WORD REFERENCE
+// ============================================================
+function initRef() {
+  var rw = sel('ref-words');
+  WORDS.forEach(function(w) {
+    var chips = w.colls.map(function(c) { return '<span class="coll">' + c + '</span>'; }).join('');
+    rw.innerHTML += '<div class="word-ref"><div class="wt">' + w.word + '</div><span class="pos">' + w.pos + '</span>' +
+      '<div class="wdef">' + w.def + '</div><div class="wex">' + w.ex + '</div>' +
+      '<div style="font-size:11px;font-weight:700;color:#c0392b;text-transform:uppercase;letter-spacing:.08em;margin:6px 0 4px">Key collocations:</div>' +
+      '<div class="colls">' + chips + '</div></div>';
+  });
+  var pc = sel('phrase-cards');
+  PHRASES.forEach(function(p) {
+    pc.innerHTML += '<div class="phrase-card"><div class="phrase-type">' + p.type + '</div>' +
+      '<div class="phrase-text">' + p.text + '</div><div class="phrase-ex">e.g. ' + p.ex + '</div></div>';
+  });
+}
+
+// ============================================================
+//  EX 1
+// ============================================================
+function initEx1() {
+  var wrap = sel('ex1-wrap');
+  wrap.innerHTML = '';
+  userSel['ex1a'] = {};
+
+  // Part A
+  var html = '<div class="ex-card"><div class="ex-num">Part A - Choose the correct causal verb</div>' +
+    '<div class="ex-instr">Select the word/phrase that correctly completes each sentence about cause and effect.</div>';
+  EX1_A.qs.forEach(function(q, i) {
+    var opts = q.opts.map(function(o) {
+      return '<option value="' + o + '">' + o + '</option>';
+    }).join('');
+    html += '<div class="q-item"><div class="q-label">Q' + (i+1) + '</div>' +
+      '<div class="q-text">' + q.text.replace('_____', '<select class="sel" id="s1a' + i + '"><option value="">choose...</option>' + opts + '</select>') + '</div>' +
+      '<div class="fb" id="fb1a' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check1a">Check Part A</button>' +
+    '<button class="btn-r" id="reset1">Reset</button></div></div>';
+
+  // Part B
+  html += '<div class="ex-card"><div class="ex-num">Part B - Complete using your own ideas</div>' +
+    '<div class="ex-instr">No single correct answer - compare with the sample answer shown after checking.</div>';
+  EX1_B.qs.forEach(function(q, i) {
+    html += '<div class="q-item"><div class="q-label">Q' + (EX1_A.qs.length+i+1) + '</div>' +
+      '<div class="q-text">' + q.text + '</div><div class="q-hint">' + q.prompt + '</div>' +
+      '<input class="inp" id="b1open' + i + '" placeholder="write your answer..." style="width:100%;max-width:500px">' +
+      '<div class="fb" id="fb1b' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="reveal1b">Show Sample Answers</button></div></div>';
+
+  wrap.innerHTML = html;
+
+  sel('check1a').addEventListener('click', checkEx1a);
+  sel('reset1').addEventListener('click', initEx1);
+  sel('reveal1b').addEventListener('click', revealEx1b);
+}
+
+function checkEx1a() {
+  var correct = 0, total = EX1_A.qs.length;
+  EX1_A.qs.forEach(function(q, i) {
+    var s = sel('s1a' + i);
+    if (!s) return;
+    var val = s.value;
+    var ok = val === q.a;
+    if (ok) correct++;
+    s.disabled = true; s.classList.add(ok ? 'ok' : 'bad');
+    showFB('fb1a' + i, ok, ok ? 'Correct! ' + q.fb : 'The answer is "' + q.a + '". ' + q.fb);
+  });
+  showBanner('ex1-wrap', correct, total, 'Part A');
+  allResults['ex1'] = {correct: correct, total: total, title: 'Ex 1 - Causes and Effects'};
+  updatePbar();
+}
+
+function revealEx1b() {
+  EX1_B.qs.forEach(function(q, i) {
+    var inp = sel('b1open' + i);
+    if (inp) inp.readOnly = true;
+    showFB('fb1b' + i, true, 'Sample answer: ' + q.text.replace('_____', q.sample));
+  });
+}
+
+// ============================================================
+//  EX 2
+// ============================================================
+function initEx2() {
+  var wrap = sel('ex2-wrap');
+  wrap.innerHTML = '';
+  matchState['ex2b'] = {selected: null, filled: {}};
+
+  // Part A - odd one out
+  var html = '<div class="ex-card"><div class="ex-num">Part A - Odd one out</div>' +
+    '<div class="ex-instr">Which adjective does NOT naturally collocate with the noun? Choose the odd one out.</div>';
+  EX2_A.qs.forEach(function(q, i) {
+    var btns = q.opts.map(function(o) {
+      return '<button class="opt" data-g="ex2a" data-qi="' + i + '" data-v="' + o + '">' + o + '</button>';
+    }).join('');
+    html += '<div class="q-item"><div class="q-label">Q' + (i+1) + '</div>' +
+      '<div class="q-text">' + q.text + '</div><div class="opts">' + btns + '</div>' +
+      '<div class="fb" id="fb2a' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check2a">Check Part A</button>' +
+    '<button class="btn-r" id="reset2">Reset</button></div></div>';
+
+  // Part B - matching chips
+  var chipHTML = EX2_B.bank.map(function(b) {
+    return '<span class="chip" data-g="ex2b" data-v="' + b + '">' + b + '</span>';
+  }).join('');
+  html += '<div class="ex-card"><div class="ex-num">Part B - Collocation matching</div>' +
+    '<div class="ex-instr">Click a word from the bank, then click the blank in the sentence to fill it.</div>' +
+    '<div class="match-bank" id="bank-ex2b">' + chipHTML + '</div>';
+  EX2_B.qs.forEach(function(q, i) {
+    var sentence = q.text.replace('_____', '<span class="slot" data-g="ex2b" data-qi="' + i + '">click to fill</span>');
+    html += '<div class="q-item"><div class="q-label">Q' + (EX2_A.qs.length+i+1) + '</div>' +
+      '<div class="q-text">' + sentence + '</div>' +
+      '<div class="fb" id="fb2b' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check2b">Check Part B</button></div></div>';
+
+  wrap.innerHTML = html;
+
+  // Attach MCQ listeners
+  wrap.querySelectorAll('.opt[data-g="ex2a"]').forEach(function(btn) {
+    btn.addEventListener('click', function() { pickOpt(btn); });
+  });
+  // Attach chip listeners
+  wrap.querySelectorAll('.chip[data-g="ex2b"]').forEach(function(chip) {
+    chip.addEventListener('click', function() { selectChip('ex2b', chip.getAttribute('data-v'), chip); });
+  });
+  // Attach slot listeners
+  wrap.querySelectorAll('.slot[data-g="ex2b"]').forEach(function(slot) {
+    slot.addEventListener('click', function() { fillSlot('ex2b', parseInt(slot.getAttribute('data-qi')), slot); });
+  });
+
+  sel('check2a').addEventListener('click', checkEx2a);
+  sel('reset2').addEventListener('click', initEx2);
+  sel('check2b').addEventListener('click', function() { checkMatching('ex2b', EX2_B, 'ex2-wrap', 'fb2b', EX2_A.qs.length, 'ex2'); });
+}
+
+function pickOpt(btn) {
+  var g = btn.getAttribute('data-g');
+  var qi = btn.getAttribute('data-qi');
+  btn.closest('.q-item').querySelectorAll('.opt[data-qi="' + qi + '"]').forEach(function(b) { b.classList.remove('chosen'); });
+  btn.classList.add('chosen');
+  if (!userSel[g]) userSel[g] = {};
+  userSel[g][qi] = btn.getAttribute('data-v');
+}
+
+function checkEx2a() {
+  var correct = 0, total = EX2_A.qs.length;
+  EX2_A.qs.forEach(function(q, i) {
+    var chosen = (userSel['ex2a'] || {})[i] || '';
+    var ok = chosen === q.a;
+    if (ok) correct++;
+    document.querySelectorAll('.opt[data-g="ex2a"][data-qi="' + i + '"]').forEach(function(b) {
+      b.disabled = true;
+      if (b.getAttribute('data-v') === q.a) b.classList.add('correct');
+      else if (b.getAttribute('data-v') === chosen) b.classList.add('wrong');
+    });
+    showFB('fb2a' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex2-wrap', correct, total, 'Part A');
+  if (!allResults['ex2']) allResults['ex2'] = {correct: correct, total: total + EX2_B.qs.length, title: 'Ex 2 - Collocations'};
+  else allResults['ex2'].correct += correct;
+  updatePbar();
+}
+
+// ============================================================
+//  MATCHING (shared)
+// ============================================================
+function selectChip(gid, val, chipEl) {
+  if (!matchState[gid]) return;
+  if (matchState[gid].filled && Object.values(matchState[gid].filled).indexOf(val) >= 0) return;
+  document.querySelectorAll('.chip[data-g="' + gid + '"]').forEach(function(c) { c.classList.remove('sel2'); });
+  chipEl.classList.add('sel2');
+  matchState[gid].selected = val;
+}
+
+function fillSlot(gid, qi, slotEl) {
+  if (!matchState[gid] || !matchState[gid].selected) return;
+  var val = matchState[gid].selected;
+  var prev = matchState[gid].filled[qi];
+  if (prev) {
+    var prevChip = document.querySelector('.chip[data-g="' + gid + '"][data-v="' + prev + '"]');
+    if (prevChip) prevChip.classList.remove('used');
+  }
+  matchState[gid].filled[qi] = val;
+  slotEl.textContent = val;
+  slotEl.classList.add('filled');
+  var chip = document.querySelector('.chip[data-g="' + gid + '"][data-v="' + val + '"]');
+  if (chip) { chip.classList.remove('sel2'); chip.classList.add('used'); }
+  matchState[gid].selected = null;
+}
+
+function checkMatching(gid, data, wrapId, fbPrefix, offset, resultKey) {
+  if (!matchState[gid]) return;
+  var correct = 0, total = data.qs.length;
+  data.qs.forEach(function(q, i) {
+    var filled = matchState[gid].filled[i] || '';
+    var ok = filled === q.a;
+    if (ok) correct++;
+    var slot = document.querySelector('.slot[data-g="' + gid + '"][data-qi="' + i + '"]');
+    if (slot) { slot.classList.add(ok ? 'ok' : 'bad'); slot.style.cursor = 'default'; slot.onclick = null; }
+    var chip = document.querySelector('.chip[data-g="' + gid + '"][data-v="' + q.a + '"]');
+    showFB(fbPrefix + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  document.querySelectorAll('.chip[data-g="' + gid + '"]').forEach(function(c) { c.style.pointerEvents = 'none'; });
+  showBanner(wrapId, correct, total, 'Part B');
+  if (resultKey) {
+    if (!allResults[resultKey]) allResults[resultKey] = {correct: correct, total: total, title: 'Ex ' + resultKey.slice(-1)};
+    else allResults[resultKey].correct += correct;
+    updatePbar();
+  }
+}
+
+// ============================================================
+//  EX 3
+// ============================================================
+function initEx3() {
+  var wrap = sel('ex3-wrap');
+  wrap.innerHTML = '';
+
+  // Part A - table
+  var html = '<div class="ex-card"><div class="ex-num">Part A - Complete the word form table</div>' +
+    '<div class="ex-instr">Fill in the missing verb OR noun form. Stress falls on the syllable before -ion.</div>' +
+    '<table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:12px">' +
+    '<tr style="background:#fff5f5"><th style="padding:9px 12px;text-align:left;font-size:11px;font-weight:800;color:#c0392b;text-transform:uppercase;border-bottom:2px solid #fca5a5">Verb</th>' +
+    '<th style="padding:9px 12px;text-align:left;font-size:11px;font-weight:800;color:#c0392b;text-transform:uppercase;border-bottom:2px solid #fca5a5">Noun</th></tr>';
+  EX3_A.pairs.forEach(function(p, i) {
+    if (p.show === 'verb') {
+      html += '<tr style="border-bottom:1px solid #f9fafb"><td style="padding:9px 12px;color:#64748b;font-style:italic">' + p.verb + '</td>' +
+        '<td style="padding:9px 12px"><input class="inp" id="t3a' + i + '" placeholder="noun form..." style="width:170px"> <span id="t3af' + i + '"></span></td></tr>';
+    } else {
+      html += '<tr style="border-bottom:1px solid #f9fafb"><td style="padding:9px 12px"><input class="inp" id="t3a' + i + '" placeholder="verb form..." style="width:170px"> <span id="t3af' + i + '"></span></td>' +
+        '<td style="padding:9px 12px;color:#64748b;font-style:italic">' + p.noun + '</td></tr>';
+    }
+  });
+  html += '</table><div class="btn-row"><button class="btn-c" id="check3a">Check Table</button>' +
+    '<button class="btn-r" id="reset3">Reset</button></div></div>';
+
+  // Part B
+  var bankH = EX3_B.bank.map(function(w) { return '<span class="coll">' + w + '</span>'; }).join('');
+  html += '<div class="ex-card"><div class="ex-num">Part B - Use the correct form in context</div>' +
+    '<div class="ex-instr">Complete each sentence with the correct word form from the box.</div>' +
+    '<div style="margin-bottom:14px"><strong style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.08em">Word Bank:</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">' + bankH + '</div></div>';
+  EX3_B.qs.forEach(function(q, i) {
+    html += '<div class="q-item"><div class="q-label">Q' + (EX3_A.pairs.length+i+1) + '</div>' +
+      '<div class="q-text">' + q.text.replace('_____', '<input class="inp" id="i3b' + i + '" placeholder="' + q.clue + '...">') + '</div>' +
+      '<div class="q-hint">Clue: ' + q.clue + '</div>' +
+      '<div class="fb" id="fb3b' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check3b">Check Part B</button></div></div>';
+  wrap.innerHTML = html;
+
+  sel('check3a').addEventListener('click', checkEx3a);
+  sel('reset3').addEventListener('click', initEx3);
+  sel('check3b').addEventListener('click', checkEx3b);
+}
+
+function checkEx3a() {
+  var correct = 0, total = EX3_A.pairs.length;
+  EX3_A.pairs.forEach(function(p, i) {
+    var inp = sel('t3a' + i);
+    if (!inp) return;
+    var expected = p.show === 'verb' ? p.noun : p.verb;
+    var ok = inp.value.trim().toLowerCase() === expected.toLowerCase();
+    if (ok) correct++;
+    inp.classList.add(ok ? 'ok' : 'bad'); inp.readOnly = true;
+    var fb = sel('t3af' + i);
+    if (fb) fb.innerHTML = ok ? ' <span style="color:#16a34a;font-size:12px;font-weight:700">&#10003;</span>' : ' <span style="color:#dc2626;font-size:12px;font-weight:700">&#10007; ' + expected + '</span>';
+  });
+  showBanner('ex3-wrap', correct, total, 'Part A');
+  allResults['ex3'] = {correct: correct, total: total + EX3_B.qs.length, title: 'Ex 3 - Word Forms'};
+  updatePbar();
+}
+
+function checkEx3b() {
+  var correct = 0, total = EX3_B.qs.length;
+  EX3_B.qs.forEach(function(q, i) {
+    var inp = sel('i3b' + i);
+    if (!inp) return;
+    var ok = inp.value.trim().toLowerCase() === q.a.toLowerCase();
+    if (ok) correct++;
+    inp.classList.add(ok ? 'ok' : 'bad'); inp.readOnly = true;
+    showFB('fb3b' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex3-wrap', correct, total, 'Part B');
+  if (allResults['ex3']) allResults['ex3'].correct += correct;
+  updatePbar();
+}
+
+// ============================================================
+//  EX 4
+// ============================================================
+function initEx4() {
+  var wrap = sel('ex4-wrap');
+  wrap.innerHTML = '';
+  matchState['ex4b'] = {selected: null, filled: {}};
+
+  // Part A
+  var bankH = EX4_A.bank.map(function(w) { return '<span class="coll">' + w + '</span>'; }).join('');
+  var html = '<div class="ex-card"><div class="ex-num">Part A - Complete opinion phrases</div>' +
+    '<div class="ex-instr">Fill each blank with ONE word from the box.</div>' +
+    '<div style="margin-bottom:14px"><strong style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.08em">Word Bank:</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">' + bankH + '</div></div>';
+  EX4_A.qs.forEach(function(q, i) {
+    html += '<div class="q-item"><div class="q-label">Q' + (i+1) + '</div>' +
+      '<div class="q-text">' + q.text.replace('_____', '<input class="inp" id="i4a' + i + '" placeholder="one word...">') + '</div>' +
+      '<div class="fb" id="fb4a' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check4a">Check Part A</button>' +
+    '<button class="btn-r" id="reset4">Reset</button></div></div>';
+
+  // Part B - match opinion to justification (chips matching)
+  var optsH = EX4_B.opts.map(function(o) { return '<div style="padding:7px 12px;background:#fff5f5;border-radius:7px;border:1px solid #fde8e8;font-size:13px;line-height:1.5;margin-bottom:6px">' + o + '</div>'; }).join('');
+  var chipH = EX4_B.bank.map(function(b) { return '<span class="chip" data-g="ex4b" data-v="' + b + '">' + b + '</span>'; }).join('');
+  html += '<div class="ex-card"><div class="ex-num">Part B - Match opinion to justification</div>' +
+    '<div class="ex-instr">Click a letter from the bank, then click the blank box next to the statement to match it.</div>' +
+    '<div style="margin-bottom:14px"><strong style="font-size:12px;color:#c0392b;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:8px">Justifications:</strong>' + optsH + '</div>' +
+    '<div class="match-bank" id="bank-ex4b">' + chipH + '</div>';
+  EX4_B.stmts.forEach(function(stmt, i) {
+    html += '<div class="q-item"><div class="q-label">Statement ' + (i+1) + '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+      '<div class="q-text" style="flex:1;margin:0">' + stmt + '</div>' +
+      '<span class="slot" data-g="ex4b" data-qi="' + i + '" style="min-width:50px">?</span></div>' +
+      '<div class="fb" id="fb4b' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check4b">Check Part B</button></div></div>';
+
+  // Part C - classify
+  var catH = EX4_C.cats.map(function(c) { return '<span class="coll" style="cursor:default">' + c + '</span>'; }).join('');
+  html += '<div class="ex-card"><div class="ex-num">Part C - Classify the question type</div>' +
+    '<div class="ex-instr">What type of answer does each question require?</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">' + catH + '</div>';
+  EX4_C.qs.forEach(function(q, i) {
+    var optH = EX4_C.cats.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
+    html += '<div class="q-item"><div class="q-label">Q' + (EX4_A.qs.length + EX4_B.stmts.length + i+1) + '</div>' +
+      '<div class="q-text">' + q.text + '</div>' +
+      '<select class="sel" id="cl4c' + i + '"><option value="">classify...</option>' + optH + '</select>' +
+      '<div class="fb" id="fb4c' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check4c">Check Part C</button></div></div>';
+
+  wrap.innerHTML = html;
+
+  // Attach listeners
+  sel('check4a').addEventListener('click', checkEx4a);
+  sel('reset4').addEventListener('click', initEx4);
+  sel('check4b').addEventListener('click', checkEx4b);
+  sel('check4c').addEventListener('click', checkEx4c);
+
+  wrap.querySelectorAll('.chip[data-g="ex4b"]').forEach(function(chip) {
+    chip.addEventListener('click', function() { selectChip('ex4b', chip.getAttribute('data-v'), chip); });
+  });
+  wrap.querySelectorAll('.slot[data-g="ex4b"]').forEach(function(slot) {
+    slot.addEventListener('click', function() { fillSlot('ex4b', parseInt(slot.getAttribute('data-qi')), slot); });
+  });
+}
+
+function checkEx4a() {
+  var correct = 0, total = EX4_A.qs.length;
+  EX4_A.qs.forEach(function(q, i) {
+    var inp = sel('i4a' + i);
+    if (!inp) return;
+    var ok = inp.value.trim().toLowerCase() === q.a.toLowerCase();
+    if (ok) correct++;
+    inp.classList.add(ok ? 'ok' : 'bad'); inp.readOnly = true;
+    showFB('fb4a' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex4-wrap', correct, total, 'Part A');
+  allResults['ex4'] = {correct: correct, total: EX4_A.qs.length + EX4_B.stmts.length + EX4_C.qs.length, title: 'Ex 4 - Opinions'};
+  updatePbar();
+}
+
+function checkEx4b() {
+  if (!matchState['ex4b']) return;
+  var correct = 0, total = EX4_B.stmts.length;
+  EX4_B.stmts.forEach(function(stmt, i) {
+    var filled = matchState['ex4b'].filled[i] || '';
+    var ok = filled === EX4_B.answers[i];
+    if (ok) correct++;
+    var slot = document.querySelector('.slot[data-g="ex4b"][data-qi="' + i + '"]');
+    if (slot) { slot.classList.add(ok ? 'ok' : 'bad'); slot.style.cursor = 'default'; }
+    showFB('fb4b' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + EX4_B.answers[i] + '". ') + EX4_B.fbs[i]);
+  });
+  document.querySelectorAll('.chip[data-g="ex4b"]').forEach(function(c) { c.style.pointerEvents = 'none'; });
+  showBanner('ex4-wrap', correct, total, 'Part B');
+  if (allResults['ex4']) allResults['ex4'].correct += correct;
+  updatePbar();
+}
+
+function checkEx4c() {
+  var correct = 0, total = EX4_C.qs.length;
+  EX4_C.qs.forEach(function(q, i) {
+    var s = sel('cl4c' + i);
+    if (!s) return;
+    var ok = s.value === q.a;
+    if (ok) correct++;
+    s.disabled = true; s.classList.add(ok ? 'ok' : 'bad');
+    showFB('fb4c' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex4-wrap', correct, total, 'Part C');
+  if (allResults['ex4']) allResults['ex4'].correct += correct;
+  updatePbar();
+}
+
+// ============================================================
+//  EX 5
+// ============================================================
+function initEx5() {
+  var wrap = sel('ex5-wrap');
+  wrap.innerHTML = '';
+
+  // Part A - MCQ synonyms
+  var html = '<div class="ex-card"><div class="ex-num">Part A - Synonym recognition</div>' +
+    '<div class="ex-instr">Choose the word or phrase closest in meaning to the CAPITALISED word. This is a key IELTS Listening skill.</div>';
+  EX5_A.qs.forEach(function(q, i) {
+    var btns = q.opts.map(function(o) {
+      return '<button class="opt" data-g="ex5a" data-qi="' + i + '" data-v="' + o[0] + '">' + o + '</button>';
+    }).join('');
+    html += '<div class="q-item"><div class="q-label">Q' + (i+1) + '</div>' +
+      '<div class="q-text">' + q.text + '</div><div class="opts">' + btns + '</div>' +
+      '<div class="fb" id="fb5a' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check5a">Check Part A</button>' +
+    '<button class="btn-r" id="reset5">Reset</button></div></div>';
+
+  // Part B - T/F/NG
+  html += '<div class="ex-card"><div class="ex-num">Part B - True / False / Not Given</div>' +
+    '<div class="ex-instr">Based on vocabulary definitions: TRUE, FALSE, or NOT GIVEN.</div>';
+  EX5_B.qs.forEach(function(q, i) {
+    var btns = ['TRUE','FALSE','NOT GIVEN'].map(function(v) {
+      return '<button class="tfng" data-g="ex5b" data-qi="' + i + '" data-v="' + v + '">' + v + '</button>';
+    }).join('');
+    html += '<div class="q-item"><div class="q-label">Statement ' + (EX5_A.qs.length+i+1) + '</div>' +
+      '<div class="q-text">' + q.text + '</div><div class="tfng-row">' + btns + '</div>' +
+      '<div class="fb" id="fb5b' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check5b">Check Part B</button></div></div>';
+
+  // Part C - classify
+  var catH = EX5_C.cats.map(function(c) { return '<span class="coll" style="cursor:default">' + c + '</span>'; }).join('');
+  html += '<div class="ex-card"><div class="ex-num">Part C - Classify: natural disaster, human-caused, or both?</div>' +
+    '<div class="ex-instr">Classify each event as: A (Natural), B (Human-caused), or C (Can be either).</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">' + catH + '</div>';
+  EX5_C.qs.forEach(function(q, i) {
+    var optH = EX5_C.cats.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
+    html += '<div class="q-item"><div class="q-label">Item ' + (i+1) + '</div>' +
+      '<div class="q-text">' + q.text + '</div>' +
+      '<select class="sel" id="cl5c' + i + '"><option value="">classify...</option>' + optH + '</select>' +
+      '<div class="fb" id="fb5c' + i + '"></div></div>';
+  });
+  html += '<div class="btn-row"><button class="btn-c" id="check5c">Check Part C</button></div></div>';
+
+  wrap.innerHTML = html;
+
+  sel('check5a').addEventListener('click', checkEx5a);
+  sel('reset5').addEventListener('click', initEx5);
+  sel('check5b').addEventListener('click', checkEx5b);
+  sel('check5c').addEventListener('click', checkEx5c);
+
+  wrap.querySelectorAll('.opt[data-g="ex5a"]').forEach(function(btn) {
+    btn.addEventListener('click', function() { pickOpt(btn); });
+  });
+  wrap.querySelectorAll('.tfng[data-g="ex5b"]').forEach(function(btn) {
+    btn.addEventListener('click', function() { pickTFNG(btn); });
+  });
+}
+
+function pickTFNG(btn) {
+  var g = btn.getAttribute('data-g');
+  var qi = btn.getAttribute('data-qi');
+  document.querySelectorAll('.tfng[data-g="' + g + '"][data-qi="' + qi + '"]').forEach(function(b) {
+    b.classList.remove('chosen');
+    b.style.background = ''; b.style.color = '';
+  });
+  btn.classList.add('chosen');
+  btn.style.background = '#c0392b'; btn.style.color = '#fff';
+  if (!userSel[g]) userSel[g] = {};
+  userSel[g][qi] = btn.getAttribute('data-v');
+}
+
+function checkEx5a() {
+  var correct = 0, total = EX5_A.qs.length;
+  EX5_A.qs.forEach(function(q, i) {
+    var chosen = (userSel['ex5a'] || {})[i] || '';
+    var ok = chosen === q.a;
+    if (ok) correct++;
+    document.querySelectorAll('.opt[data-g="ex5a"][data-qi="' + i + '"]').forEach(function(b) {
+      b.disabled = true;
+      if (b.getAttribute('data-v') === q.a) b.classList.add('correct');
+      else if (b.getAttribute('data-v') === chosen) b.classList.add('wrong');
+    });
+    showFB('fb5a' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex5-wrap', correct, total, 'Part A');
+  allResults['ex5'] = {correct: correct, total: EX5_A.qs.length + EX5_B.qs.length + EX5_C.qs.length, title: 'Ex 5 - Vocabulary in Context'};
+  updatePbar();
+}
+
+function checkEx5b() {
+  var correct = 0, total = EX5_B.qs.length;
+  EX5_B.qs.forEach(function(q, i) {
+    var chosen = (userSel['ex5b'] || {})[i] || '';
+    var ok = chosen === q.a;
+    if (ok) correct++;
+    document.querySelectorAll('.tfng[data-g="ex5b"][data-qi="' + i + '"]').forEach(function(b) {
+      b.disabled = true;
+      var v = b.getAttribute('data-v');
+      if (v === q.a) { b.classList.add('correct'); b.style.background = '#16a34a'; b.style.color = '#fff'; }
+      else if (v === chosen) { b.classList.add('wrong'); b.style.background = '#dc2626'; b.style.color = '#fff'; }
+    });
+    showFB('fb5b' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex5-wrap', correct, total, 'Part B');
+  if (allResults['ex5']) allResults['ex5'].correct += correct;
+  updatePbar();
+}
+
+function checkEx5c() {
+  var correct = 0, total = EX5_C.qs.length;
+  EX5_C.qs.forEach(function(q, i) {
+    var s = sel('cl5c' + i);
+    if (!s) return;
+    var ok = s.value === q.a;
+    if (ok) correct++;
+    s.disabled = true; s.classList.add(ok ? 'ok' : 'bad');
+    showFB('fb5c' + i, ok, (ok ? 'Correct! ' : 'Answer: "' + q.a + '". ') + q.fb);
+  });
+  showBanner('ex5-wrap', correct, total, 'Part C');
+  if (allResults['ex5']) allResults['ex5'].correct += correct;
+  updatePbar();
+}
+
+// ============================================================
+//  RESULTS
+// ============================================================
+function renderResults() {
+  var keys = Object.keys(allResults);
+  var wrap = sel('results-wrap');
+  if (!keys.length) {
+    wrap.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:50px 0"><div style="font-size:36px;margin-bottom:10px">&#128202;</div><div style="font-weight:700;font-size:17px;color:#374151;margin-bottom:5px">No results yet</div><div style="font-size:14px">Complete an exercise to see your results here.</div></div>';
+    return;
+  }
+  var tc = 0, tt = 0;
+  keys.forEach(function(k) { tc += allResults[k].correct; tt += allResults[k].total; });
+  var op = Math.round(tc / tt * 100);
+  var band = op >= 90 ? '8.0+' : op >= 77 ? '7.0-7.5' : op >= 65 ? '6.0-6.5' : op >= 50 ? '5.5-6.0' : '< 5.5';
+  var bdH = keys.map(function(k) {
+    var r = allResults[k];
+    var p = Math.round(r.correct / r.total * 100);
+    var c = p >= 70 ? '#c0392b' : p >= 50 ? '#d97706' : '#dc2626';
+    return '<div class="bd-card"><div class="bd-s" style="color:' + c + '">' + r.correct + '/' + r.total + '</div><div class="bd-l">' + r.title.split(' - ')[0] + '</div></div>';
+  }).join('');
+  wrap.innerHTML = '<div style="background:linear-gradient(135deg,#c0392b,#e74c3c);border-radius:14px;padding:28px 24px;text-align:center;color:#fff;margin-bottom:20px">' +
+    '<div style="font-size:48px;font-weight:800;margin-bottom:4px">' + tc + ' / ' + tt + '</div>' +
+    '<div style="font-size:19px;color:#ffd5d0;margin-bottom:6px">Estimated IELTS Level: ' + band + '</div>' +
+    '<div style="font-size:14px;opacity:.85">' + op + '% accuracy - ' + keys.length + ' exercise set' + (keys.length > 1 ? 's' : '') + ' completed</div></div>' +
+    '<div class="bd-grid">' + bdH + '</div>' +
+    '<table class="rtable"><thead><tr><th>Exercise</th><th>Correct</th><th>Total</th><th>Score</th></tr></thead><tbody>' +
+    keys.map(function(k) {
+      var r = allResults[k]; var p = Math.round(r.correct / r.total * 100);
+      return '<tr><td>' + r.title + '</td><td class="' + (p>=70?'res-ok':'res-bad') + '">' + r.correct + '</td><td>' + r.total + '</td><td class="' + (p>=70?'res-ok':'res-bad') + '">' + p + '%</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+initRef();
+initEx1();
+initEx2();
+initEx3();
+initEx4();
+initEx5();
+</script>
+</body>
+</html>
