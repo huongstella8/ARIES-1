@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Writing Task 1 — Huong Stella Paradigm</title>
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #f0d080;
+  --gold-dark: #8a6f2e;
+  --dark: #1a1a2e;
+  --dark2: #16213e;
+  --dark3: #0f3460;
+  --white: #ffffff;
+  --off-white: #f8f6f0;
+  --text: #2c2c2c;
+  --text-light: #666;
+  --sidebar-w: 270px;
+  --c-line: #3b82f6;
+  --c-bar: #8b5cf6;
+  --c-pie: #ec4899;
+  --c-table: #10b981;
+  --c-mixed: #f59e0b;
+  --c-process: #06b6d4;
+  --c-map: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--off-white); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark3) 100%);
+  color: var(--white);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900; color: var(--dark);
+}
+.logo span { color: var(--gold-light); }
+.header-badge {
+  background: var(--gold);
+  color: var(--dark);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* LAYOUT */
+.layout { display: flex; margin-top: 64px; min-height: calc(100vh - 64px); }
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  background: var(--dark2);
+  position: fixed;
+  top: 64px; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: 90;
+  padding: 16px 0;
+  border-right: 1px solid rgba(201,168,76,0.2);
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 2px; }
+.sidebar-title {
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 8px 20px 6px;
+  opacity: 0.7;
+}
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: rgba(255,255,255,0.75);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+.sidebar-item:hover { background: rgba(201,168,76,0.1); color: var(--gold-light); border-left-color: var(--gold); }
+.sidebar-item.active { background: rgba(201,168,76,0.15); color: var(--gold-light); border-left-color: var(--gold); font-weight: 600; }
+.sidebar-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sidebar-sub {
+  padding: 6px 20px 6px 43px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+.sidebar-sub:hover { color: var(--gold-light); }
+.sidebar-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 8px 20px; }
+
+/* MAIN */
+#main { margin-left: var(--sidebar-w); flex: 1; padding: 32px; max-width: calc(100% - var(--sidebar-w)); }
+
+/* SECTIONS */
+.section { display: none; }
+.section.active { display: block; }
+
+/* SECTION HEADER */
+.section-header {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark3) 100%);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.section-header::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.1);
+}
+.section-tag {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  background: rgba(201,168,76,0.25);
+  color: var(--gold-light);
+}
+.section-header h1 { font-size: 1.8rem; margin-bottom: 6px; }
+.section-header p { opacity: 0.8; font-size: 0.95rem; }
+.section-accent { display: inline-block; width: 40px; height: 4px; border-radius: 2px; margin-top: 10px; background: var(--gold); }
+
+/* CARDS */
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid var(--gold);
+}
+.card h2 {
+  font-size: 1.1rem;
+  color: var(--dark);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h2 .icon { font-size: 1.2rem; }
+.card h3 { font-size: 1rem; color: var(--dark3); margin: 16px 0 10px; }
+.card p { line-height: 1.7; color: var(--text); margin-bottom: 8px; font-size: 0.93rem; }
+.card ul, .card ol { padding-left: 20px; }
+.card li { line-height: 1.8; font-size: 0.93rem; }
+
+/* VOCAB TABLE */
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.vocab-table th {
+  background: var(--dark);
+  color: var(--gold-light);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.vocab-table td { padding: 10px 14px; border-bottom: 1px solid #e8e4d8; vertical-align: top; }
+.vocab-table tr:hover td { background: #fdf8ee; }
+.vocab-table tr:last-child td { border-bottom: none; }
+
+/* TAGS / PILLS */
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 2px;
+}
+.pill-gold { background: #fff3cd; color: #856404; }
+.pill-blue { background: #dbeafe; color: #1e40af; }
+.pill-green { background: #d1fae5; color: #065f46; }
+.pill-red { background: #fee2e2; color: #991b1b; }
+.pill-purple { background: #ede9fe; color: #5b21b6; }
+
+/* STRUCTURE BOX */
+.structure-box {
+  display: flex;
+  gap: 2px;
+  margin: 16px 0;
+}
+.struct-part {
+  flex: 1;
+  padding: 14px 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.85rem;
+}
+.struct-i { background: #dbeafe; border: 2px solid #93c5fd; }
+.struct-o { background: #d1fae5; border: 2px solid #6ee7b7; }
+.struct-b { background: #ede9fe; border: 2px solid #c4b5fd; flex: 2; }
+.struct-part strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+
+/* EXAMPLE BOX */
+.example-box {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid var(--gold);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.example-box .label {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* EXERCISES */
+.exercise-card {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-top: 4px solid var(--gold);
+}
+.exercise-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.exercise-header h2 { font-size: 1.1rem; color: var(--dark); }
+.exercise-type-badge {
+  background: var(--gold);
+  color: var(--dark);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.question {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  border-left: 3px solid #dee2e6;
+}
+.question-num {
+  font-weight: 700;
+  color: var(--dark3);
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.question-text { font-size: 0.9rem; line-height: 1.6; color: var(--text); }
+.answer-btn {
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+.answer-btn:hover { background: var(--gold-dark); color: white; }
+.answer-reveal {
+  display: none;
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: #065f46;
+  line-height: 1.6;
+}
+.answer-reveal.show { display: block; }
+.show-all-btn {
+  background: var(--dark);
+  color: var(--gold-light);
+  border: 1px solid var(--gold);
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+.show-all-btn:hover { background: var(--gold); color: var(--dark); }
+
+/* REAL EXAM QUESTION */
+.exam-question-card {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--dark3) 100%);
+  border-radius: 12px;
+  padding: 28px;
+  margin-top: 28px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.exam-question-card::before {
+  content: '2026';
+  position: absolute;
+  top: -10px; right: 20px;
+  font-size: 5rem;
+  font-weight: 900;
+  opacity: 0.08;
+  color: var(--gold);
+}
+.exam-question-card .exam-tag {
+  background: var(--gold);
+  color: var(--dark);
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+.exam-question-card h2 { color: var(--gold-light); font-size: 1rem; margin-bottom: 12px; }
+.exam-question-text {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-size: 0.93rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.9);
+}
+.exam-tip {
+  background: rgba(201,168,76,0.15);
+  border-left: 3px solid var(--gold);
+  padding: 10px 14px;
+  margin-top: 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+}
+
+/* BAND SCORE TABLE */
+.band-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.85rem; }
+.band-table th { background: var(--gold); color: var(--dark); padding: 8px 12px; text-align: center; }
+.band-table td { padding: 8px 12px; border: 1px solid #e5e7eb; text-align: center; }
+.band-table tr:nth-child(even) td { background: #fafaf5; }
+.band-9 { background: #d1fae5 !important; font-weight: 700; }
+.band-7 { background: #dbeafe !important; }
+
+/* HIGHLIGHT BOX */
+.highlight-box {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.highlight-box .hl-title {
+  font-weight: 700;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+/* WARNING BOX */
+.warning-box {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.9rem;
+}
+.warning-box .w-title { font-weight: 700; color: #991b1b; margin-bottom: 6px; }
+
+/* GRID 2-col */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 14px 0; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 14px 0; }
+@media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+.mini-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+}
+.mini-card h4 { font-size: 0.88rem; color: var(--dark3); margin-bottom: 8px; font-weight: 700; }
+.mini-card p, .mini-card li { font-size: 0.85rem; line-height: 1.7; }
+
+/* PROGRESSION ARROW */
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.flow-step {
+  background: var(--dark3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.flow-step.gold { background: var(--gold); color: var(--dark); }
+.arrow-sep { color: var(--gold); font-size: 1.2rem; font-weight: 900; }
+
+/* TABS */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid #e5e7eb; }
+.tab-btn {
+  padding: 8px 18px;
+  border: none;
+  background: none;
+  color: var(--text-light);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.tab-btn.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* FILL BLANK */
+.fill-blank {
+  display: inline-block;
+  border-bottom: 2px solid var(--gold-dark);
+  min-width: 100px;
+  color: transparent;
+  background: #fff3cd;
+  padding: 0 4px;
+  border-radius: 2px;
+  font-size: 0.9rem;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">HSP</div>
+    <div>
+      <div><span>Huong Stella</span> Paradigm</div>
+      <div style="font-size:0.65rem;opacity:0.7;font-weight:400;letter-spacing:2px;">IELTS EXCELLENCE SYSTEM</div>
+    </div>
+  </div>
+  <div class="header-badge">IELTS Writing Task 1 — Master Guide</div>
+</header>
+
+<div class="layout">
+<nav id="sidebar">
+  <div class="sidebar-title">Navigation</div>
+  <a class="sidebar-item active" onclick="showSection('overview')">
+    <span class="sidebar-dot" style="background:var(--gold)"></span> Overview &amp; Basics
+  </a>
+  <hr class="sidebar-divider">
+  <div class="sidebar-title">Graphs — Dynamic</div>
+  <a class="sidebar-item" onclick="showSection('linegraph')">
+    <span class="sidebar-dot" style="background:var(--c-line)"></span> Line Graph
+  </a>
+  <a class="sidebar-item" onclick="showSection('barchart-trend')">
+    <span class="sidebar-dot" style="background:var(--c-bar)"></span> Bar Chart (Trend)
+  </a>
+  <hr class="sidebar-divider">
+  <div class="sidebar-title">Graphs — Static</div>
+  <a class="sidebar-item" onclick="showSection('barchart-static')">
+    <span class="sidebar-dot" style="background:var(--c-bar)"></span> Bar Chart (Comparative)
+  </a>
+  <a class="sidebar-item" onclick="showSection('piechart')">
+    <span class="sidebar-dot" style="background:var(--c-pie)"></span> Pie Chart
+  </a>
+  <a class="sidebar-item" onclick="showSection('table')">
+    <span class="sidebar-dot" style="background:var(--c-table)"></span> Table
+  </a>
+  <a class="sidebar-item" onclick="showSection('mixed')">
+    <span class="sidebar-dot" style="background:var(--c-mixed)"></span> Mixed / Two Graphs
+  </a>
+  <hr class="sidebar-divider">
+  <div class="sidebar-title">Non-graph Tasks</div>
+  <a class="sidebar-item" onclick="showSection('process')">
+    <span class="sidebar-dot" style="background:var(--c-process)"></span> Process Diagram
+  </a>
+  <a class="sidebar-item" onclick="showSection('map')">
+    <span class="sidebar-dot" style="background:var(--c-map)"></span> Map / Plan
+  </a>
+  <hr class="sidebar-divider">
+  <div class="sidebar-title">Quick Reference</div>
+  <a class="sidebar-item" onclick="showSection('quickref')">
+    <span class="sidebar-dot" style="background:#94a3b8"></span> Vocabulary Master List
+  </a>
+</nav>
+
+<main id="main">
+
+<!-- ==================== OVERVIEW ==================== -->
+<section id="overview" class="section active">
+  <div class="section-header">
+    <div class="section-tag">Foundation</div>
+    <h1>IELTS Writing Task 1 — Overview</h1>
+    <p>Master the fundamentals before diving into individual task types</p>
+    <div class="section-accent"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📋</span> What is Writing Task 1?</h2>
+    <div class="grid-2">
+      <div>
+        <table class="vocab-table">
+          <tr><th>Requirement</th><th>Detail</th></tr>
+          <tr><td>Minimum words</td><td><strong>150 words</strong></td></tr>
+          <tr><td>Recommended time</td><td><strong>20 minutes</strong></td></tr>
+          <tr><td>Recommended length</td><td>160–200 words</td></tr>
+          <tr><td>% of Writing score</td><td><strong>33%</strong></td></tr>
+          <tr><td>Task</td><td>Describe / summarise a visual</td></tr>
+          <tr><td>Do NOT include</td><td>Personal opinions, solutions, causes</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="mini-card">
+          <h4>⚠️ Common Mistakes to Avoid</h4>
+          <ul>
+            <li>Writing under 150 words (automatic band reduction)</li>
+            <li>Describing every detail — only select key features</li>
+            <li>Giving opinions: "I think this is because..."</li>
+            <li>Writing an introduction that is too similar to the question</li>
+            <li>Forgetting an overview paragraph</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📊</span> The 7 Task Types</h2>
+    <div class="grid-3">
+      <div class="mini-card" style="border-top:3px solid var(--c-line)">
+        <h4>📈 Line Graph</h4>
+        <p>Shows trends over time. Uses trend vocabulary.</p>
+      </div>
+      <div class="mini-card" style="border-top:3px solid var(--c-bar)">
+        <h4>📊 Bar Chart</h4>
+        <p>Can show trends (over time) OR comparisons (static).</p>
+      </div>
+      <div class="mini-card" style="border-top:3px solid var(--c-pie)">
+        <h4>🥧 Pie Chart</h4>
+        <p>Shows proportions at one or two time points.</p>
+      </div>
+      <div class="mini-card" style="border-top:3px solid var(--c-table)">
+        <h4>📋 Table</h4>
+        <p>Data in rows/columns — static comparison or trends.</p>
+      </div>
+      <div class="mini-card" style="border-top:3px solid var(--c-mixed)">
+        <h4>🔀 Mixed / Two Graphs</h4>
+        <p>Two different graph types — describe both, link them.</p>
+      </div>
+      <div class="mini-card" style="border-top:3px solid var(--c-process)">
+        <h4>⚙️ Process</h4>
+        <p>Steps in a cycle or linear process. Passive voice.</p>
+      </div>
+    </div>
+    <div class="mini-card" style="border-top:3px solid var(--c-map); margin-top:12px">
+      <h4>🗺️ Map / Plan</h4>
+      <p>Town/area before and after changes. Present perfect passive tense.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🔑</span> The Two Key Categories</h2>
+    <div class="grid-2">
+      <div class="mini-card" style="border:2px solid var(--c-line); background:#eff6ff">
+        <h4 style="color:var(--c-line)">📈 CHANGE OVER TIME (Dynamic)</h4>
+        <p><strong>Use TREND vocabulary:</strong></p>
+        <ul>
+          <li>rise, fall, increase, decrease</li>
+          <li>soar, plummet, fluctuate, level off</li>
+          <li>dramatically, gradually, significantly</li>
+          <li>Tense: Past simple, present perfect</li>
+        </ul>
+        <p style="margin-top:8px;"><strong>Examples:</strong> Line graph, bar chart over years</p>
+      </div>
+      <div class="mini-card" style="border:2px solid var(--c-pie); background:#fdf2f8">
+        <h4 style="color:var(--c-pie)">📊 SINGLE TIME POINT (Static)</h4>
+        <p><strong>Use COMPARISON vocabulary:</strong></p>
+        <ul>
+          <li>higher/lower than, more/less than</li>
+          <li>twice as many, half as much</li>
+          <li>the most/least popular</li>
+          <li>Tense: Past simple or present simple</li>
+        </ul>
+        <p style="margin-top:8px;"><strong>Examples:</strong> Pie chart, table, single-year bar chart</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🏗️</span> Universal Essay Structure (I-O-B)</h2>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>I — Introduction</strong>1 sentence<br><small>Rephrase the question</small></div>
+      <div class="struct-part struct-o"><strong>O — Overview</strong>2–3 sentences<br><small>Main trends / biggest features</small></div>
+      <div class="struct-part struct-b"><strong>B — Body Paragraphs</strong>2 paragraphs<br><small>Specific data with numbers/% &amp; comparisons</small></div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">⭐ Examiner's Tip</div>
+      The Overview is the most important paragraph for a high band score. Without it, you cannot score above Band 5 for Task Achievement. The overview must identify the <em>most striking</em> features — not just repeat facts.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🔤</span> Basic Vocabulary for Reading Graphs</h2>
+    <table class="vocab-table">
+      <tr><th>Term</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><strong>Title</strong></td><td>Name of the graph</td><td>"Number of tourists visiting Spain"</td></tr>
+      <tr><td><strong>Key / Legend</strong></td><td>Colour/symbol guide</td><td>Blue = Male, Red = Female</td></tr>
+      <tr><td><strong>Horizontal axis (x-axis)</strong></td><td>Bottom axis</td><td>Usually: years, countries, categories</td></tr>
+      <tr><td><strong>Vertical axis (y-axis)</strong></td><td>Side axis</td><td>Usually: numbers, percentages, amounts</td></tr>
+      <tr><td><strong>Bar</strong></td><td>Rectangle in bar chart</td><td>—</td></tr>
+      <tr><td><strong>Segment / Slice</strong></td><td>Wedge in pie chart</td><td>—</td></tr>
+      <tr><td><strong>Column</strong></td><td>Vertical section in table</td><td>—</td></tr>
+      <tr><td><strong>Row</strong></td><td>Horizontal section in table</td><td>—</td></tr>
+      <tr><td><strong>Data point</strong></td><td>Single piece of data</td><td>In 2010, sales were 200 units</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📏</span> Band Score Criteria (Task 1)</h2>
+    <table class="band-table">
+      <tr><th>Criterion</th><th>Band 5</th><th>Band 6–7</th><th>Band 8–9</th></tr>
+      <tr><td><strong>Task Achievement</strong></td><td>Some key features</td><td>Key features highlighted</td><td class="band-9">Fully covers all key features with overview</td></tr>
+      <tr><td><strong>Coherence &amp; Cohesion</strong></td><td>Some organisation</td><td>Clear progression</td><td class="band-9">Skilful use of cohesive devices</td></tr>
+      <tr><td><strong>Lexical Resource</strong></td><td>Basic vocabulary</td><td>Good range</td><td class="band-9">Wide, precise, natural vocabulary</td></tr>
+      <tr><td><strong>Grammar</strong></td><td>Simple structures only</td><td>Mix of structures</td><td class="band-9">Wide range, rare errors</td></tr>
+    </table>
+  </div>
+
+  <!-- EXERCISES -->
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Overview Practice Exercises</h2>
+      <span class="exercise-type-badge">10 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — True / False</div>
+      <div class="question-text">You should write your opinion about why trends occurred in Task 1.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>FALSE.</strong> Task 1 is purely descriptive. Never include opinions, reasons, or solutions.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Multiple Choice</div>
+      <div class="question-text">Which paragraph is MOST important for a high band score in Task 1?<br>A) Introduction &nbsp; B) Overview &nbsp; C) Body Paragraph 1 &nbsp; D) Conclusion</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>B) Overview.</strong> Without a clear overview, you cannot achieve above Band 5 for Task Achievement.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Classification</div>
+      <div class="question-text">Classify each graph type as (A) Dynamic / Change over Time or (B) Static / Single Time Point:<br>1. Line graph showing tourist numbers 2000–2020<br>2. Pie chart showing market share in 2023<br>3. Bar chart comparing 5 countries' GDP in 2025<br>4. Table showing how sales changed from 2010 to 2024</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">1. <strong>A — Dynamic</strong> (trend vocabulary) &nbsp; 2. <strong>B — Static</strong> (comparison vocabulary) &nbsp; 3. <strong>B — Static</strong> (comparison) &nbsp; 4. <strong>A — Dynamic</strong> (trend vocabulary)</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Error Correction</div>
+      <div class="question-text">Find and correct the error: "The graph shows information about sales. I think this is because more people started using smartphones."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Remove "I think this is because more people started using smartphones." — Task 1 does NOT include opinions or reasons. The corrected version: <em>"The graph shows information about sales."</em> (End there or continue with descriptive details.)</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Complete the Sentence</div>
+      <div class="question-text">An IELTS Writing Task 1 response must be at least _____ words and should take approximately _____ minutes.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>150 words; 20 minutes.</strong></div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Overview Writing</div>
+      <div class="question-text">A graph shows: UK coffee consumption rose from 2kg to 8kg per person (1990–2020). Tea fell from 10kg to 4kg. Overall coffee is now more popular. Write ONE overview sentence using this data.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model answer:</strong> "Overall, while coffee consumption increased significantly over the period, tea drinking declined, and by 2020 coffee had become the more popular beverage."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Identify the Error</div>
+      <div class="question-text">Which part of this introduction is wrong? "The line graph shows the number of tourists who visited Spain from 2000 to 2020. In conclusion, tourism grew steadily."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"In conclusion" belongs in the Overview or a conclusion, NOT in the introduction. The introduction should only rephrase what the graph shows — no summary of results. Also, <em>"In conclusion"</em> is inappropriate phrasing for Task 1.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — Matching</div>
+      <div class="question-text">Match each graph term with its definition:<br>1. Key &nbsp; 2. Y-axis &nbsp; 3. Segment &nbsp; 4. Row<br>A. Horizontal section in a table<br>B. Vertical measurement axis<br>C. A wedge-shaped section of a pie chart<br>D. Legend showing what colours/symbols mean</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">1–D &nbsp;|&nbsp; 2–B &nbsp;|&nbsp; 3–C &nbsp;|&nbsp; 4–A</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Structure Ordering</div>
+      <div class="question-text">Put these essay parts in the correct order for IELTS Task 1:<br>A) Specific data with numbers for the second group of features<br>B) General overview of main trends<br>C) Rephrase the question as an introduction<br>D) Specific data with numbers for the first group of features</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>C → B → D → A</strong> &nbsp; (Introduction → Overview → Body 1 → Body 2)</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Band Score Knowledge</div>
+      <div class="question-text">A student writes 148 words for Task 1. What will happen to their Task Achievement score?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Their Task Achievement score will be penalised — IELTS examiners apply an <strong>automatic penalty</strong> for falling under 150 words. The student should aim for 160–180 words to be safe.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==================== LINE GRAPH ==================== -->
+<section id="linegraph" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#1e3a5f,#1e40af)">
+    <div class="section-tag" style="background:rgba(59,130,246,0.3);color:#93c5fd">Dynamic Graph</div>
+    <h1>📈 Line Graph</h1>
+    <p>Show trends over time — the most common Task 1 type</p>
+    <div class="section-accent" style="background:var(--c-line)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">🏗️</span> Essay Structure</h2>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>Introduction</strong><small>Rephrase: type of info + what/where/when</small></div>
+      <div class="struct-part struct-o"><strong>Overview</strong><small>Overall trend + highest/lowest OR most striking features</small></div>
+      <div class="struct-part struct-b"><strong>Body 1</strong><small>First category or time period with specific data</small></div>
+      <div class="struct-part struct-b" style="border-color:#a78bfa"><strong>Body 2</strong><small>Second category/time period with comparisons</small></div>
+    </div>
+
+    <h3>Writing the Introduction</h3>
+    <p>Rephrase the question — do NOT copy it. Change key words using synonyms.</p>
+    <table class="vocab-table">
+      <tr><th>Element</th><th>How to Rephrase</th></tr>
+      <tr><td>Type of graph</td><td>line graph → the graph/chart; bar chart → the diagram</td></tr>
+      <tr><td>"shows"</td><td>illustrates, presents, compares, reveals, depicts, provides information about</td></tr>
+      <tr><td>"the number of"</td><td>the amount of, the figure for, the quantity of, the proportion of</td></tr>
+      <tr><td>Time phrase</td><td>between 2000 and 2020 → over a 20-year period / during a two-decade span</td></tr>
+    </table>
+
+    <div class="example-box">
+      <span class="label">Question Task</span>
+      "The line graph shows the number of tourists visiting Spain from 2000 to 2020."
+    </div>
+    <div class="example-box">
+      <span class="label">Introduction (rephrased)</span>
+      "The graph illustrates how the number of tourists travelling to Spain changed over a 20-year period from 2000 to 2020."
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">📖</span> Writing the Overview</h2>
+    <p>Cover the 2–3 most important features. Do NOT use numbers. Do NOT say "In conclusion".</p>
+    <div class="highlight-box">
+      <div class="hl-title">✅ What to include in an Overview:</div>
+      <ul>
+        <li>Overall trend (rose, fell, fluctuated, remained stable)</li>
+        <li>Highest and/or lowest points</li>
+        <li>Any crossover or reversal of trends</li>
+        <li>Any dramatic change worth noting</li>
+      </ul>
+    </div>
+    <p><strong>Useful overview starters:</strong></p>
+    <p>Overall, ... &nbsp;|&nbsp; In general, ... &nbsp;|&nbsp; As can be seen, ... &nbsp;|&nbsp; It is clear that ...</p>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">📈</span> Trend Vocabulary — Verbs</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="color:#16a34a">↑ Increase Verbs</h3>
+        <table class="vocab-table">
+          <tr><th>Verb</th><th>Strength</th></tr>
+          <tr><td>rise / increase / grow</td><td>Neutral</td></tr>
+          <tr><td>climb / go up</td><td>Neutral/slow</td></tr>
+          <tr><td>jump / surge</td><td>Sudden / strong</td></tr>
+          <tr><td>soar / shoot up / rocket</td><td>Very fast &amp; dramatic</td></tr>
+          <tr><td>skyrocket</td><td>Extremely rapid</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:#dc2626">↓ Decrease Verbs</h3>
+        <table class="vocab-table">
+          <tr><th>Verb</th><th>Strength</th></tr>
+          <tr><td>fall / decrease / decline</td><td>Neutral</td></tr>
+          <tr><td>drop / go down / dip</td><td>Neutral/small</td></tr>
+          <tr><td>slide / slip</td><td>Gradual</td></tr>
+          <tr><td>plummet / plunge</td><td>Sudden &amp; dramatic</td></tr>
+          <tr><td>collapse / nosedive</td><td>Extremely rapid</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3 style="color:#92400e">↔️ Stable / Other Movement Verbs</h3>
+    <table class="vocab-table">
+      <tr><th>Verb / Phrase</th><th>Meaning</th></tr>
+      <tr><td>remain stable / stay constant / level off</td><td>No change over a period</td></tr>
+      <tr><td>fluctuate (between X and Y)</td><td>Go up and down irregularly</td></tr>
+      <tr><td>hit / reach a peak (at)</td><td>Reach the highest point</td></tr>
+      <tr><td>hit / reach a trough (at)</td><td>Reach the lowest point</td></tr>
+      <tr><td>recover / bounce back</td><td>Rise again after a fall</td></tr>
+      <tr><td>plateau (at)</td><td>Stay flat at a level for a period</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">🎯</span> Adverbs of Degree</h2>
+    <table class="vocab-table">
+      <tr><th>Adverb</th><th>Adjective Form</th><th>Degree</th></tr>
+      <tr><td>dramatically</td><td>dramatic</td><td>Very large change</td></tr>
+      <tr><td>sharply</td><td>sharp</td><td>Large, sudden change</td></tr>
+      <tr><td>significantly</td><td>significant</td><td>Noticeable change</td></tr>
+      <tr><td>considerably</td><td>considerable</td><td>Large change</td></tr>
+      <tr><td>rapidly</td><td>rapid</td><td>Fast change</td></tr>
+      <tr><td>steeply</td><td>steep</td><td>Very large &amp; fast</td></tr>
+      <tr><td>steadily</td><td>steady</td><td>Slow, consistent change</td></tr>
+      <tr><td>gradually</td><td>gradual</td><td>Slow change</td></tr>
+      <tr><td>slightly</td><td>slight</td><td>Small change</td></tr>
+      <tr><td>marginally</td><td>marginal</td><td>Very small change</td></tr>
+      <tr><td>negligibly</td><td>negligible</td><td>Almost no change</td></tr>
+    </table>
+    <div class="highlight-box">
+      <div class="hl-title">🔄 Verb+Adverb ↔ Adjective+Noun (Both are correct)</div>
+      <p>"Sales <strong>rose sharply</strong>" = "There was a <strong>sharp rise</strong> in sales" = "Sales <strong>saw a sharp rise</strong>"</p>
+      <p>"The figure <strong>declined gradually</strong>" = "There was a <strong>gradual decline</strong> in the figure"</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">⏰</span> Time Expressions &amp; Prepositions</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Time Connectors</h3>
+        <table class="vocab-table">
+          <tr><th>Expression</th><th>Use</th></tr>
+          <tr><td>from 2000 to 2020</td><td>Period with start/end</td></tr>
+          <tr><td>between 2000 and 2020</td><td>Period (interchangeable)</td></tr>
+          <tr><td>over the next 5 years</td><td>After a point already mentioned</td></tr>
+          <tr><td>for the following decade</td><td>For a duration</td></tr>
+          <tr><td>thereafter / after that</td><td>After the previous period</td></tr>
+          <tr><td>until 2015</td><td>Up to a point</td></tr>
+          <tr><td>by 2020</td><td>At or before a future/past time</td></tr>
+          <tr><td>in the early/mid/late 2010s</td><td>Approximate decade position</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Prepositions with Numbers</h3>
+        <table class="vocab-table">
+          <tr><th>Preposition</th><th>Use</th><th>Example</th></tr>
+          <tr><td><strong>at</strong></td><td>Start/end/stable/peak value</td><td>Sales stood <em>at</em> 200</td></tr>
+          <tr><td><strong>to</strong></td><td>Direction of change</td><td>rose <em>to</em> 500</td></tr>
+          <tr><td><strong>by</strong></td><td>Amount of change</td><td>fell <em>by</em> 30%</td></tr>
+          <tr><td><strong>from</strong></td><td>Starting point</td><td><em>from</em> 100 to 200</td></tr>
+          <tr><td><strong>of</strong></td><td>Exact value (nouns)</td><td>a rise <em>of</em> 20%</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">🔗</span> Linking Multiple Changes</h2>
+    <table class="vocab-table">
+      <tr><th>Connector</th><th>Use</th><th>Example</th></tr>
+      <tr><td>...and then / ...before</td><td>Two consecutive changes</td><td>Sales rose to 400, <em>and then</em> fell slightly.</td></tr>
+      <tr><td>...followed by a decline</td><td>After a noun phrase</td><td>There was a sharp rise, <em>followed by a steady decline</em>.</td></tr>
+      <tr><td>despite + V-ing</td><td>Contrast — still happened</td><td><em>Despite falling</em> in 2010, sales recovered by 2015.</td></tr>
+      <tr><td>having + past participle</td><td>Sequence — before another action</td><td><em>Having peaked</em> in 2015, numbers then decreased.</td></tr>
+      <tr><td>after + -ing</td><td>Sequence</td><td><em>After peaking</em> at 800, the figure dropped sharply.</td></tr>
+      <tr><td>while / whereas</td><td>Contrast between two lines</td><td><em>While</em> UK figures rose, French data fell.</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-line)">
+    <h2><span class="icon">🔮</span> Future Trends (Projected Data)</h2>
+    <p>If a graph includes future projections (dotted lines), use these structures:</p>
+    <table class="vocab-table">
+      <tr><th>Structure</th><th>Example</th></tr>
+      <tr><td>will + verb</td><td>Sales <strong>will reach</strong> 500 by 2030.</td></tr>
+      <tr><td>is set to + verb</td><td>The figure <strong>is set to rise</strong> sharply.</td></tr>
+      <tr><td>is likely / expected to + verb</td><td>Numbers <strong>are expected to fall</strong> by 2030.</td></tr>
+      <tr><td>is predicted to + verb</td><td>Consumption <strong>is predicted to double</strong>.</td></tr>
+      <tr><td>projections show that</td><td><strong>Projections show that</strong> sales will plateau.</td></tr>
+      <tr><td>will have + past participle</td><td>By 2030, it <strong>will have risen</strong> by 40%.</td></tr>
+    </table>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Line Graph Practice Exercises</h2>
+      <span class="exercise-type-badge">12 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Verb Selection</div>
+      <div class="question-text">Choose the correct verb: Sales _____ from 200 to 800 between 2010 and 2015 — an extremely rapid change.<br>A) rose &nbsp; B) rocketed &nbsp; C) dipped &nbsp; D) levelled off</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>B) rocketed</strong> (or soared/skyrocketed) — "extremely rapid" indicates a very dramatic rise, needing a strong verb.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Sentence Transformation</div>
+      <div class="question-text">Rewrite using adjective+noun structure: "The number of visitors <strong>declined steadily</strong> over the decade."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"There was a <strong>steady decline</strong> in the number of visitors over the decade." — OR — "The number of visitors <strong>experienced a steady decline</strong> over the decade."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Preposition Gap-fill</div>
+      <div class="question-text">Complete: "The figure rose _____ 200 _____ 450, an increase _____ 250 units."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The figure rose <strong>from</strong> 200 <strong>to</strong> 450, an increase <strong>of</strong> 250 units."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Introduction Rewriting</div>
+      <div class="question-text">Rewrite this introduction using different vocabulary: "The line graph shows the number of cars sold in Japan from 2000 to 2020."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The graph illustrates the changes in car sales figures in Japan over a 20-year period beginning in 2000." — Key changes: "illustrates" for "shows", "changes in" added, "sales figures" for "number of cars sold", "over a 20-year period" for "from 2000 to 2020"</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Adverb Degree</div>
+      <div class="question-text">Sales fell from 500 to 495. Which adverb is most appropriate?<br>A) dramatically &nbsp; B) sharply &nbsp; C) marginally &nbsp; D) considerably</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>C) marginally</strong> (or negligibly / slightly). A drop of only 5 units from 500 is extremely small — use a weak adverb.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Overview Writing</div>
+      <div class="question-text">Data: Country A's exports rose from $10bn to $80bn (2000–2020). Country B's fell from $60bn to $20bn. They crossed in 2012. Write an overview sentence.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, while Country A's exports grew dramatically over the period, those of Country B declined significantly, and the two figures crossed in 2012, after which Country A became the larger exporter."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Time Expression</div>
+      <div class="question-text">Which time expression correctly describes data from 2005 moving forward 5 years?<br>A) from 2005 to 2010 &nbsp; B) over the next five years &nbsp; C) until 2005 &nbsp; D) Both A and B</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>D) Both A and B.</strong> "From 2005 to 2010" and "over the next five years" (if 2005 has been mentioned) are both correct.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — Sentence Linking</div>
+      <div class="question-text">Combine these two sentences using "despite + V-ing": "Sales fell in 2010. They recovered strongly by 2015."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Despite falling</strong> in 2010, sales recovered strongly by 2015." — OR — "Sales recovered strongly by 2015, <strong>despite having fallen</strong> in 2010."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Projected Data</div>
+      <div class="question-text">A graph shows a dotted line projecting figures to double by 2030. Choose the correct language:<br>A) "The figure doubled in 2030." &nbsp; B) "The figure is predicted to double by 2030." &nbsp; C) "The figure has doubled by 2030."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>B)</strong> Use future modal language for projections: "is predicted/expected/set to..." Do not use simple past or present perfect for future projections.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Error Correction</div>
+      <div class="question-text">Find the error: "Sales reached to a peak of 500 in 2015, before declining by 2020."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Remove "to" — correct: "Sales <strong>reached a peak of</strong> 500 in 2015." ('Reach' does not need 'to'.) Also: "declining by 2020" should be "declining to [value] by 2020" or "declining until 2020".</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q11 — Grouping Data</div>
+      <div class="question-text">A line graph has 4 lines: UK and France rising throughout; Germany and Italy falling throughout. How should you organise your body paragraphs?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Group by trend:</strong> Body 1 = UK and France (both rising — describe and compare them). Body 2 = Germany and Italy (both falling — describe and compare them). This shows good analytical grouping rather than describing each line separately.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q12 — Vocabulary Range</div>
+      <div class="question-text">You have used "rose" three times in your essay. Write 4 alternative verbs/phrases you can use instead.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Any four from: <strong>increased, grew, climbed, surged, shot up, jumped, soared, went up, rocketed</strong> — also consider noun forms: "there was a rise in...", "experienced an increase"</div>
+    </div>
+  </div>
+
+  <!-- 2026 REAL EXAM QUESTION -->
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Line Graph — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The line graph below shows the number of international students enrolled in universities in three different countries (the UK, Australia, and Canada) over a 20-year period from 2005 to 2025.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Identify the overall trend for each country → find highest/lowest at start and end → note any crossover points → write I-O-B structure (2–3 min planning, 17 min writing)</div>
+  </div>
+</section>
+
+
+<!-- ==================== BAR CHART TREND ==================== -->
+<section id="barchart-trend" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#2d1f6e,#4c1d95)">
+    <div class="section-tag" style="background:rgba(139,92,246,0.3);color:#c4b5fd">Dynamic Graph</div>
+    <h1>📊 Bar Chart — Change Over Time</h1>
+    <p>A bar chart showing data across multiple years — use TREND vocabulary</p>
+    <div class="section-accent" style="background:var(--c-bar)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-bar)">
+    <h2><span class="icon">⚠️</span> How to Identify a Dynamic Bar Chart</h2>
+    <p>A bar chart is "dynamic" (change over time) when:</p>
+    <ul>
+      <li>The x-axis shows <strong>years / time periods</strong> (e.g., 2000, 2005, 2010, 2015)</li>
+      <li>The question asks you to describe <strong>changes</strong> over a period</li>
+      <li>You can trace a trend for each category across years</li>
+    </ul>
+    <div class="warning-box">
+      <div class="w-title">⚠️ Common Mistake</div>
+      If a bar chart shows data for one year across multiple countries → use COMPARISON (static) vocabulary. If it shows data across multiple years → use TREND vocabulary.
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-bar)">
+    <h2><span class="icon">📝</span> Essay Approach</h2>
+    <p>The approach is <strong>identical to a line graph</strong> — I-O-B structure with trend vocabulary. The only difference is how you refer to the graph:</p>
+    <div class="example-box">
+      <span class="label">Introduction options</span>
+      "The bar chart illustrates..." / "The diagram shows..." / "The chart compares the changes in..."
+    </div>
+    <h3>Grouping Strategy for Bar Charts</h3>
+    <table class="vocab-table">
+      <tr><th>Situation</th><th>How to group body paragraphs</th></tr>
+      <tr><td>2–3 categories, multiple years</td><td>Body 1: categories that rose. Body 2: categories that fell.</td></tr>
+      <tr><td>Many years, 1 category</td><td>Body 1: first half of period. Body 2: second half.</td></tr>
+      <tr><td>Two charts (e.g., two countries)</td><td>Body 1: Chart 1. Body 2: Chart 2. Compare in each paragraph.</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-bar)">
+    <h2><span class="icon">💡</span> Additional Language for Bar Charts</h2>
+    <p>Because you can see exact values more easily in a bar chart, ensure you include:</p>
+    <ul>
+      <li><strong>Starting and ending values:</strong> "In 2000, sales stood at 200 units, rising to 450 by 2020."</li>
+      <li><strong>Peak year:</strong> "Sales reached their highest point in 2015, at approximately 600 units."</li>
+      <li><strong>Comparing bars:</strong> "The figure for 2020 was more than double that of 2000."</li>
+    </ul>
+    <div class="example-box">
+      <span class="label">Model Body Paragraph</span>
+      "Turning to renewable energy consumption, solar power usage grew dramatically over the period, rising from just 5% in 2000 to 35% by 2020. Wind energy followed a similar upward trend, climbing from 8% to 28% over the same period. Both figures reached their highest points in 2020, having increased roughly four-fold over two decades."
+    </div>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Dynamic Bar Chart Exercises</h2>
+      <span class="exercise-type-badge">10 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Identification</div>
+      <div class="question-text">A bar chart shows energy production in Germany in 2000, 2005, 2010, 2015, 2020 for coal, gas, and renewables. Is this (A) dynamic or (B) static? What vocabulary should you use?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>A) Dynamic</strong> — multiple time points shown. Use TREND vocabulary: rise, fall, grow, decline, dramatic, gradual, etc.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Introduction Writing</div>
+      <div class="question-text">Write an introduction for: "The bar chart shows renewable energy consumption (solar, wind, hydro) in Germany from 2000 to 2020."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The bar chart illustrates how the consumption of three renewable energy sources — solar, wind, and hydroelectric — changed in Germany over a 20-year period from 2000 to 2020."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Describing Dramatic Change</div>
+      <div class="question-text">Solar energy: 2% in 2000, 38% in 2020. Write ONE sentence describing this change using both a verb and an adverb.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Solar energy consumption <strong>soared dramatically</strong> from just 2% in 2000 to 38% in 2020, representing a nineteen-fold increase over the period."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Transformation: verb → noun</div>
+      <div class="question-text">Rewrite: "Coal usage <strong>declined steadily</strong> from 60% to 15% between 2000 and 2020." (Use a noun form)</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"There was a <strong>steady decline</strong> in coal usage, from 60% to 15% between 2000 and 2020." — OR — "Coal usage <strong>experienced a steady decline</strong> from 60% to 15% over the period."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Grouping Decision</div>
+      <div class="question-text">Bar chart data: Solar (rose throughout), Wind (rose throughout), Coal (fell throughout), Gas (fell from 2010). How would you group your body paragraphs?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Body 1:</strong> Solar and Wind (both increased — compare them). <strong>Body 2:</strong> Coal and Gas (both declined, though Gas only from 2010 — note this difference).</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Crossover Description</div>
+      <div class="question-text">In 2010, solar (15%) overtook coal (12%) for the first time. Write a sentence describing this crossover.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Notably, in 2010 solar energy consumption overtook coal for the first time, standing at 15% compared to coal's 12%." — OR — "By 2010, solar had surpassed coal, reaching 15% as coal fell to 12%."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Overview Writing</div>
+      <div class="question-text">Write an overview for this data: Solar and wind both grew massively; coal and gas declined; renewables became dominant by 2020.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, renewable energy sources — particularly solar and wind — grew substantially over the two decades, while fossil fuels declined considerably. By 2020, renewables had become the dominant form of energy production in Germany."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — Preposition Practice</div>
+      <div class="question-text">Fill in: "Wind energy production climbed ___ 8% ___ 28%, an increase ___ 20 percentage points, ___ the period 2000 to 2020."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"Wind energy production climbed <strong>from</strong> 8% <strong>to</strong> 28%, an increase <strong>of</strong> 20 percentage points, <strong>over</strong> the period 2000 to 2020."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Error Correction</div>
+      <div class="question-text">Correct this sentence: "The bar chart shows that solar energy experienced a dramatic rise. This is because solar panels became cheaper."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Remove "This is because solar panels became cheaper." — Never explain WHY changes happened. Only describe what the data shows. Corrected: "The bar chart shows that solar energy experienced a dramatic rise."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Complex Sentence Building</div>
+      <div class="question-text">Combine into one sentence: "Hydro energy stayed roughly constant. It remained between 18% and 22%. This was throughout the period."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Hydro energy, by contrast, remained relatively stable throughout the period, fluctuating marginally between 18% and 22%."</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Bar Chart (Dynamic) — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The bar chart below compares renewable energy consumption (solar, wind, and hydro) across four European countries (Germany, France, Spain, and the UK) in 2015 and 2025.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Compare within each country (2015 vs 2025) AND between countries. Identify which energy source grew most. Group by energy type or by country depending on the clearest pattern.</div>
+  </div>
+</section>
+
+
+<!-- ==================== BAR CHART STATIC ==================== -->
+<section id="barchart-static" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#1e1b4b,#4338ca)">
+    <div class="section-tag" style="background:rgba(99,102,241,0.3);color:#a5b4fc">Static / Comparative</div>
+    <h1>📊 Bar Chart — Comparative (Static)</h1>
+    <p>Comparing different categories at one or two points in time</p>
+    <div class="section-accent" style="background:#818cf8"></div>
+  </div>
+
+  <div class="card" style="border-left-color:#818cf8">
+    <h2><span class="icon">🔤</span> Comparatives &amp; Superlatives</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Forming Comparatives</h3>
+        <table class="vocab-table">
+          <tr><th>Adjective</th><th>Comparative</th><th>Superlative</th></tr>
+          <tr><td>high</td><td>higher than</td><td>the highest</td></tr>
+          <tr><td>low</td><td>lower than</td><td>the lowest</td></tr>
+          <tr><td>popular</td><td>more popular than</td><td>the most popular</td></tr>
+          <tr><td>expensive</td><td>more expensive than</td><td>the most expensive</td></tr>
+          <tr><td>significant</td><td>more significant than</td><td>the most significant</td></tr>
+          <tr><td>common</td><td>more common than</td><td>the most common</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Degree Modifiers</h3>
+        <table class="vocab-table">
+          <tr><th>Modifier</th><th>Degree</th></tr>
+          <tr><td>much / far / considerably</td><td>Big difference</td></tr>
+          <tr><td>significantly / notably</td><td>Noticeable difference</td></tr>
+          <tr><td>slightly / a bit / a little</td><td>Small difference</td></tr>
+          <tr><td>marginally / barely</td><td>Very small difference</td></tr>
+          <tr><td>almost / nearly / roughly</td><td>Approximate equality</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="example-box">
+      <span class="label">Examples in context</span>
+      "Country A's sales were <strong>considerably higher than</strong> those of Country B." |
+      "Product X was only <strong>slightly more popular than</strong> Product Y." |
+      "At 85%, the UK had <strong>by far the highest</strong> rate of internet usage."
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:#818cf8">
+    <h2><span class="icon">🔄</span> "Not as...as" Structures</h2>
+    <p>A more sophisticated alternative to comparatives:</p>
+    <table class="vocab-table">
+      <tr><th>Structure</th><th>Example</th></tr>
+      <tr><td>not as + adj + as</td><td>France was <strong>not as expensive as</strong> Germany.</td></tr>
+      <tr><td>nowhere near as + adj + as</td><td>Spain was <strong>nowhere near as popular as</strong> Italy.</td></tr>
+      <tr><td>not nearly as + adj + as</td><td>UK sales were <strong>not nearly as high as</strong> US sales.</td></tr>
+      <tr><td>not quite as + adj + as</td><td>Tea was <strong>not quite as popular as</strong> coffee.</td></tr>
+      <tr><td>almost as + adj + as</td><td>France was <strong>almost as expensive as</strong> Germany.</td></tr>
+    </table>
+    <h3>Not + Verb + as + Noun Phrase + as</h3>
+    <table class="vocab-table">
+      <tr><th>Pattern</th><th>Example</th></tr>
+      <tr><td>did not sell as many [noun] as</td><td>France <strong>did not sell as many cars as</strong> Germany.</td></tr>
+      <tr><td>does not cost as much as</td><td>This product <strong>does not cost as much as</strong> the other.</td></tr>
+      <tr><td>did not attract as many [noun] as</td><td>Spain <strong>did not attract as many tourists as</strong> France.</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:#818cf8">
+    <h2><span class="icon">🔢</span> Numerical Comparisons</h2>
+    <table class="vocab-table">
+      <tr><th>Structure</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td>twice as many/much as</td><td>2× more</td><td>"Country A spent <strong>twice as much as</strong> Country B."</td></tr>
+      <tr><td>three times higher/more than</td><td>3× more</td><td>"Sales were <strong>three times higher than</strong> in 2000."</td></tr>
+      <tr><td>half as much/many as</td><td>0.5× (50%)</td><td>"France spent <strong>half as much as</strong> Germany."</td></tr>
+      <tr><td>four times the figure of</td><td>4×</td><td>"The UK produced <strong>four times the amount of</strong> waste."</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:#818cf8">
+    <h2><span class="icon">%</span> Describing Percentages &amp; Fractions</h2>
+    <table class="vocab-table">
+      <tr><th>%</th><th>Fraction Word</th><th>Other Forms</th></tr>
+      <tr><td>50%</td><td>half</td><td>one in two</td></tr>
+      <tr><td>33.3%</td><td>one-third / a third</td><td>one in three</td></tr>
+      <tr><td>25%</td><td>a quarter / one-quarter</td><td>one in four</td></tr>
+      <tr><td>75%</td><td>three-quarters</td><td>three in four</td></tr>
+      <tr><td>20%</td><td>one-fifth</td><td>one in five / one out of every five</td></tr>
+      <tr><td>40%</td><td>two-fifths</td><td>two out of five</td></tr>
+      <tr><td>10%</td><td>one-tenth</td><td>one in ten</td></tr>
+      <tr><td>66.6%</td><td>two-thirds</td><td>two in three</td></tr>
+    </table>
+    <h3>Approximation Language</h3>
+    <p>
+      <span class="pill pill-gold">approximately</span>
+      <span class="pill pill-gold">about</span>
+      <span class="pill pill-gold">around</span>
+      <span class="pill pill-gold">roughly</span>
+      <span class="pill pill-gold">just over</span>
+      <span class="pill pill-gold">just under</span>
+      <span class="pill pill-gold">almost</span>
+      <span class="pill pill-gold">nearly</span>
+      <span class="pill pill-gold">more than</span>
+      <span class="pill pill-gold">fewer than</span>
+    </p>
+    <div class="example-box">
+      <span class="label">Combining fraction + approximation</span>
+      "Just over three-quarters (78%) of respondents preferred X." |
+      "Nearly a third of participants (31%) chose Y." |
+      "Roughly one in ten people (9%) had never tried it."
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:#818cf8">
+    <h2><span class="icon">🏆</span> Ranking Language</h2>
+    <table class="vocab-table">
+      <tr><th>Rank</th><th>Formal Phrase</th><th>Natural Alternative</th></tr>
+      <tr><td>1st (highest)</td><td>the most + adj</td><td>headed the list; ranked first; topped the chart</td></tr>
+      <tr><td>2nd</td><td>the second most + adj</td><td>ranked second; came second</td></tr>
+      <tr><td>3rd</td><td>the third most + adj</td><td>ranked third</td></tr>
+      <tr><td>Last (lowest)</td><td>the least + adj</td><td>came last; ranked bottom; was at the foot of the list</td></tr>
+    </table>
+    <div class="example-box">
+      <span class="label">Linking rank comparisons</span>
+      "Making it the most popular choice..." | "just ahead of X with 35%..." | "although this was much less popular than..."
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:#818cf8">
+    <h2><span class="icon">📋</span> Survey / Questionnaire Language</h2>
+    <table class="vocab-table">
+      <tr><th>Formal Expression</th><th>Meaning</th></tr>
+      <tr><td>Over half of the respondents said that...</td><td>More than 50% answered...</td></tr>
+      <tr><td>Around a third of participants...</td><td>Approximately 33%...</td></tr>
+      <tr><td>Just 10% of people asked said that...</td><td>Only 10% responded that...</td></tr>
+      <tr><td>The majority of those surveyed...</td><td>Most people in the survey...</td></tr>
+      <tr><td>According to the data, X was preferred by...</td><td>The data shows X was chosen by...</td></tr>
+    </table>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Comparative Bar Chart Exercises</h2>
+      <span class="exercise-type-badge">12 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Transformation: Comparative → "not as...as"</div>
+      <div class="question-text">Rewrite using "not as...as": "France was less popular than Italy as a tourist destination."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"France was <strong>not as popular as</strong> Italy as a tourist destination."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Numerical Comparison</div>
+      <div class="question-text">Country A: $200bn. Country B: $400bn. Write a sentence using "twice".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"Country B's GDP was <strong>twice as large as</strong> that of Country A." — OR — "Country B spent <strong>twice as much as</strong> Country A."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Fraction Writing</div>
+      <div class="question-text">Express 75% as a fraction word in a sentence about survey respondents.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Three-quarters</strong> of respondents preferred online shopping." — OR — "Roughly <strong>three in four</strong> participants chose this option."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Degree Modifier Choice</div>
+      <div class="question-text">France: 80%. Germany: 79%. Which modifier is correct?<br>A) France was <strong>far higher</strong> than Germany. &nbsp; B) France was <strong>marginally higher</strong> than Germany.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>B) marginally higher</strong> — only a 1% difference, so use a weak modifier (marginally, slightly, barely).</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Survey Language</div>
+      <div class="question-text">52% of people in a survey said they preferred walking. Write this using formal survey language.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Just over half of the respondents</strong> (52%) said they preferred walking as a mode of transport." — OR — "<strong>The majority of those surveyed</strong> indicated a preference for walking."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Ranking</div>
+      <div class="question-text">Data: cycling 45%, swimming 30%, running 20%, yoga 5%. Write TWO sentences using ranking language.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"Cycling was <strong>the most popular</strong> activity, chosen by 45% of respondents, <strong>just ahead of</strong> swimming at 30%. Yoga, by contrast, <strong>ranked last</strong>, attracting only 5% of participants."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Contrast Linking</div>
+      <div class="question-text">UK: 70% used public transport. USA: 20% used public transport. Write ONE sentence using "whereas" or "while".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>While</strong> 70% of UK residents used public transport, the figure for the USA was considerably lower, at just 20%." — OR — "The UK had a public transport usage rate of 70%, <strong>whereas</strong> in the USA this figure stood at only 20%."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — "Not + verb + as + noun phrase + as"</div>
+      <div class="question-text">Germany sold 500,000 cars; France sold 300,000. Write a sentence using "did not sell as many...as".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"France <strong>did not sell as many cars as</strong> Germany, with 300,000 compared to Germany's 500,000."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Approximation Language</div>
+      <div class="question-text">Add appropriate approximation language to: "67% of people chose option A." (Write 3 different versions)</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">1. "<strong>Approximately</strong> 67%, or <strong>two-thirds</strong>, of people chose option A." &nbsp; 2. "<strong>Just over</strong> two-thirds of respondents (67%) favoured option A." &nbsp; 3. "<strong>Roughly</strong> 67% — <strong>around</strong> two in three — selected option A."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Introduction Rewriting</div>
+      <div class="question-text">Rephrase: "The bar chart shows the percentage of male and female graduates in six subjects at a UK university in 2025."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The bar chart compares the proportions of male and female graduates across six academic disciplines at a UK university in 2025."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q11 — Overview Writing</div>
+      <div class="question-text">A bar chart shows: Male graduates dominated engineering and computer science; Female graduates dominated education, nursing, and arts; Business was roughly equal. Write an overview.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, there were clear gender imbalances across most subjects, with males dominating the STEM fields of engineering and computer science, while females were in the majority in education, nursing, and arts. Business was the most evenly balanced subject."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q12 — Full Sentence Practice</div>
+      <div class="question-text">Write a comparison sentence: Engineering: male 85%, female 15%. Use superlative + numerical comparison.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Engineering showed <strong>the greatest gender disparity</strong>, with male graduates accounting for 85% — <strong>more than five times</strong> the proportion of their female counterparts at 15%."</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Bar Chart (Comparative) — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The double bar chart below compares the percentage of male and female graduates in six different subjects (Engineering, Computer Science, Medicine, Education, Arts, and Business) at a UK university in 2025.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Group by pattern — subjects where males dominate vs. females dominate vs. equal. Use comparatives, "not as...as", ranking language, and fractions where appropriate.</div>
+  </div>
+</section>
+
+
+<!-- ==================== PIE CHART ==================== -->
+<section id="piechart" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#701a44,#be185d)">
+    <div class="section-tag" style="background:rgba(236,72,153,0.3);color:#f9a8d4">Static / Comparative</div>
+    <h1>🥧 Pie Chart</h1>
+    <p>Describing proportions and comparing distributions</p>
+    <div class="section-accent" style="background:var(--c-pie)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-pie)">
+    <h2><span class="icon">🏗️</span> Essay Structure</h2>
+    <p>Pie charts are always static (show one time point OR compare two time points).</p>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>Introduction</strong><small>Rephrase: type of info + categories + time(s)</small></div>
+      <div class="struct-part struct-o"><strong>Overview</strong><small>Largest/smallest category; any striking change (if 2 charts)</small></div>
+      <div class="struct-part struct-b"><strong>Body 1</strong><small>Major categories with % data &amp; comparisons</small></div>
+      <div class="struct-part struct-b" style="border-color:#f9a8d4"><strong>Body 2</strong><small>Minor categories OR second pie chart data</small></div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="hl-title">📌 If you have TWO pie charts (different years):</div>
+      <p>Treat them as a dynamic task — use language like "grew from X% to Y%", "the proportion of X increased", "X's share declined". Your overview should note the biggest changes between the two.</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-pie)">
+    <h2><span class="icon">💬</span> Key Language for Pie Charts</h2>
+    <table class="vocab-table">
+      <tr><th>Function</th><th>Expressions</th></tr>
+      <tr><td><strong>Largest category</strong></td><td>"The largest share / segment was X, accounting for..."<br>"X made up the biggest proportion, at..."<br>"X constituted the majority, with..."</td></tr>
+      <tr><td><strong>Smallest category</strong></td><td>"The smallest segment was Y, representing only..."<br>"Y had the least significant share at..."</td></tr>
+      <tr><td><strong>Comparing two</strong></td><td>"X was twice as large as Y" / "X accounted for nearly three times as much as Y"</td></tr>
+      <tr><td><strong>Combined categories</strong></td><td>"Together, X and Y made up over half..." / "Combined, these two categories represented..."</td></tr>
+      <tr><td><strong>Change (2 pie charts)</strong></td><td>"The proportion of X grew/declined from...to..."<br>"X's share increased significantly / fell slightly"</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-pie)">
+    <h2><span class="icon">📐</span> Useful Verbs for Pie Charts</h2>
+    <p><strong>Proportion verbs:</strong></p>
+    <p>
+      <span class="pill pill-blue">account for</span>
+      <span class="pill pill-blue">make up</span>
+      <span class="pill pill-blue">represent</span>
+      <span class="pill pill-blue">constitute</span>
+      <span class="pill pill-blue">comprise</span>
+      <span class="pill pill-blue">form</span>
+      <span class="pill pill-blue">take up</span>
+    </p>
+    <div class="example-box">
+      <span class="label">All of these mean the same thing — vary your vocabulary!</span>
+      "Rent <strong>accounted for</strong> 35% of expenditure." = "Rent <strong>made up</strong> 35% of expenditure." = "Rent <strong>constituted</strong> 35% of expenditure." = "35% of expenditure <strong>was comprised of</strong> rent."
+    </div>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Pie Chart Practice Exercises</h2>
+      <span class="exercise-type-badge">11 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Vocabulary Choice</div>
+      <div class="question-text">Rewrite 4 times using different "proportion verbs": "Housing costs were 40% of total spending."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">1. "Housing costs <strong>accounted for</strong> 40% of total spending." &nbsp; 2. "Housing costs <strong>made up</strong> 40% of total spending." &nbsp; 3. "Housing costs <strong>constituted</strong> 40% of total spending." &nbsp; 4. "Housing costs <strong>represented</strong> 40% of total spending."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Fractions in Context</div>
+      <div class="question-text">Write a sentence for: Transport = 25% of budget.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"Transport accounted for <strong>a quarter</strong> of the total budget, representing 25% of all expenditure."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Introduction Writing</div>
+      <div class="question-text">Write an introduction for: "Two pie charts show why people chose to move to a city in 1990 and 2020."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The two pie charts compare the main reasons why people decided to relocate to a particular city, contrasting data from 1990 with that of 2020."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Comparing Two Pie Charts</div>
+      <div class="question-text">Work: 1990 = 50%, 2020 = 25%. Write a dynamic sentence showing change.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The proportion of people who moved for work-related reasons <strong>fell significantly</strong>, from <strong>half</strong> of all movers in 1990 to just <strong>a quarter</strong> by 2020."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Combining Categories</div>
+      <div class="question-text">Recreation = 15%, Family reasons = 20%. Write a sentence combining them.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Together</strong>, recreation (15%) and family reasons (20%) <strong>accounted for</strong> 35% of responses, <strong>making up</strong> just over a third of the total."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Overview for Two Pie Charts</div>
+      <div class="question-text">Largest 1990: Work 50%. Largest 2020: Quality of life 40%. Smallest both years: Education (under 10%). Write an overview.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, the most notable change over the 30-year period was a significant shift away from work as the primary motivation for relocation, while quality of life became the dominant reason by 2020. Education remained the least significant factor throughout."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Numerical Comparison in Pie Charts</div>
+      <div class="question-text">Work = 50%, Education = 10%. Write a sentence showing the ratio.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"Work was <strong>five times more significant</strong> than education as a reason for moving, accounting for 50% and 10% respectively."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — Tense Check (Two Pie Charts)</div>
+      <div class="question-text">You are describing a pie chart from 1990 and another from 2020 (today is 2026). Which tenses should you use?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Use <strong>past simple</strong> for both (both are in the past). "In 1990, work <strong>accounted for</strong>..." and "By 2020, quality of life <strong>had become</strong> the largest segment..." (past perfect can also be used to show the earlier 1990 data relative to 2020).</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Error Correction</div>
+      <div class="question-text">Correct: "35% of people was chose work as main reason. This is very high percentage."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"35% of people <strong>chose</strong> work as the main reason." — Remove "was" (wrong grammar). Remove "This is very high percentage" (opinion/evaluation — not appropriate in Task 1). Just describe: "...representing just over a third of all respondents."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Complex Sentence</div>
+      <div class="question-text">Combine: "Quality of life was 10% in 1990. It became 40% in 2020. This was the biggest change."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The most dramatic change was seen in quality of life, whose share <strong>quadrupled</strong> from just 10% in 1990 to 40% in 2020, making it the single largest category by the end of the period."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q11 — "Respectively" Usage</div>
+      <div class="question-text">Write a sentence using "respectively" for: Work = 50%, Family = 20%, Education = 10% in 1990.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"In 1990, work, family reasons, and education accounted for 50%, 20%, and 10% of reasons for moving, <strong>respectively</strong>."</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Pie Chart — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The two pie charts below show the reasons why people chose to move to a specific city in 1990 and 2020. The main categories are: work opportunities, quality of life, family reasons, education, and other.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Since there are TWO charts (different years), describe CHANGES — what grew, what shrank. Use fraction language for large segments. Group: categories that increased vs. categories that decreased.</div>
+  </div>
+</section>
+
+
+<!-- ==================== TABLE ==================== -->
+<section id="table" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#064e3b,#065f46)">
+    <div class="section-tag" style="background:rgba(16,185,129,0.3);color:#6ee7b7">Static / Comparative</div>
+    <h1>📋 Table</h1>
+    <p>Selecting, comparing, and organising tabular data</p>
+    <div class="section-accent" style="background:var(--c-table)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-table)">
+    <h2><span class="icon">🔍</span> How to Read a Table</h2>
+    <p>A table has <strong>rows</strong> (horizontal) and <strong>columns</strong> (vertical). It may show:</p>
+    <ul>
+      <li><strong>Static data</strong> (one time point — e.g., statistics for 5 countries in 2026)</li>
+      <li><strong>Dynamic data</strong> (multiple years — use trend vocabulary)</li>
+    </ul>
+    <div class="highlight-box">
+      <div class="hl-title">⭐ Key Skill: Data Selection</div>
+      Tables often have a LOT of data. Do NOT describe every cell. Select the most striking features: highest, lowest, biggest contrast, most interesting comparison. Group related data in the same paragraph.
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-table)">
+    <h2><span class="icon">📝</span> Essay Strategy for Tables</h2>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>Introduction</strong><small>What the table shows (rephrase)</small></div>
+      <div class="struct-part struct-o"><strong>Overview</strong><small>2–3 most striking facts, no numbers</small></div>
+      <div class="struct-part struct-b"><strong>Body 1</strong><small>Select highest/most notable rows or columns + compare</small></div>
+      <div class="struct-part struct-b" style="border-color:#6ee7b7"><strong>Body 2</strong><small>Remaining notable data + further comparisons</small></div>
+    </div>
+    <h3>Grouping Strategies</h3>
+    <table class="vocab-table">
+      <tr><th>Table Type</th><th>Best Grouping</th></tr>
+      <tr><td>Countries × categories</td><td>Group countries with similar profiles OR group by highest/lowest category</td></tr>
+      <tr><td>Years × categories</td><td>Treat like a dynamic graph — group by trend</td></tr>
+      <tr><td>Large table (many rows)</td><td>Body 1 = top 2–3 rows. Body 2 = bottom rows. Always compare.</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-table)">
+    <h2><span class="icon">💬</span> Language for Tables</h2>
+    <table class="vocab-table">
+      <tr><th>Function</th><th>Phrase</th></tr>
+      <tr><td>Introducing a row/column</td><td>"Looking at [country/category]..." / "With regard to [transport mode]..."</td></tr>
+      <tr><td>Highest value</td><td>"[City] recorded the highest figure for X, at..."</td></tr>
+      <tr><td>Lowest value</td><td>"[City] had the lowest rate of X, standing at just..."</td></tr>
+      <tr><td>Comparing two items</td><td>"In contrast to [A], [B] showed..." / "While [A] had..., [B]..."</td></tr>
+      <tr><td>Similarity</td><td>"Both [A] and [B] had similar figures for..." / "[A] and [B] were comparable in terms of..."</td></tr>
+      <tr><td>Noteworthy data point</td><td>"Notably, [city] was the only one to..." / "Interestingly,..."</td></tr>
+    </table>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Table Practice Exercises</h2>
+      <span class="exercise-type-badge">11 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Introduction Writing</div>
+      <div class="question-text">Write an introduction for: "The table shows the percentage of population using various transport modes in five major cities in 2026."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The table presents data on the proportion of residents using different modes of transport in five major cities around the world in 2026."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Data Selection</div>
+      <div class="question-text">A table has data for 6 cities × 5 transport modes = 30 data points. Should you describe all 30? What should you do instead?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>NO</strong> — never describe every cell. Select the 6–8 most interesting/extreme/comparable data points. Focus on: highest, lowest, most surprising contrast, cities/modes with similar patterns.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Comparison Language</div>
+      <div class="question-text">Tokyo: cycling 45%, New York: cycling 3%. Write ONE comparison sentence.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Tokyo had by far the highest cycling rate at 45%, <strong>compared to</strong> New York where only 3% of residents cycled — <strong>fifteen times lower</strong>."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Overview Writing</div>
+      <div class="question-text">Table: Tokyo and Amsterdam had highest cycling rates; New York and Cairo had almost no cycling; Public transport was most used overall across all 5 cities. Write an overview.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, public transport was the dominant mode across all five cities, while there were significant differences in cycling rates, with Tokyo and Amsterdam recording the highest figures and cities such as New York and Cairo showing minimal usage."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Linking Data Points</div>
+      <div class="question-text">London: bus 40%, underground 35%, cycling 5%, private car 20%. How would you present this in a sentence or two?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "In London, bus and underground services were by far the most popular forms of transport, accounting for 40% and 35% respectively, while private car use stood at 20%. Cycling, at just 5%, was the least favoured option."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Similarity Language</div>
+      <div class="question-text">Paris: public transport 68%. Berlin: public transport 65%. Write a sentence about their similarity.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"Paris and Berlin had <strong>comparable</strong> levels of public transport usage, at 68% and 65% respectively — <strong>both well above</strong> the figures for the other cities surveyed."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — "Notably" Usage</div>
+      <div class="question-text">Cairo: private car = 72% (by far the highest). Write a sentence using "notably" or "interestingly".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Notably</strong>, Cairo stood out from all other cities, with private car use accounting for 72% of all journeys — by far the highest figure in the table."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — "With regard to" Practice</div>
+      <div class="question-text">Begin a sentence about walking in Amsterdam (walking = 25%) using "With regard to".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>With regard to</strong> walking, Amsterdam recorded the highest figure at 25%, reflecting its reputation as a pedestrian-friendly city."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Grouping Practice</div>
+      <div class="question-text">How would you group these 5 cities into 2 body paragraphs? Tokyo (public transport dominant), London (public transport dominant), Paris (public transport dominant), New York (car dominant), Cairo (car dominant)</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Body 1:</strong> Tokyo, London, Paris — cities where public transport dominates (compare their specific figures). <strong>Body 2:</strong> New York and Cairo — car-dominant cities (compare and contrast with Body 1 cities).</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Tense for 2026 Data</div>
+      <div class="question-text">The table shows data from 2026 and you are writing in 2026. What tense should you use?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Present simple</strong> (as it is current data): "Tokyo <strong>has</strong> the highest cycling rate at 45%." / "Public transport <strong>is</strong> the most used mode in London." Note: for recent past data, past simple is also acceptable.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q11 — Error Correction</div>
+      <div class="question-text">Correct: "The table shows many interesting statistics. In my opinion, Tokyo is the best city because it has good public transport."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Remove the opinion entirely: "In my opinion, Tokyo is the best city because it has good public transport." → This is an evaluation/opinion. In Task 1, ONLY describe what the data shows. Corrected: "The table reveals a number of interesting differences between the five cities regarding transport usage."</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Table — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The table below shows statistical data regarding the percentage of the population using various modes of transport (public transport, private car, cycling, walking, and other) in five major cities (Tokyo, London, Paris, New York, and Cairo) in 2026.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Do NOT describe every cell. Group cities with similar transport profiles. Use the highest/lowest figures in your overview. Present simple tense for current data.</div>
+  </div>
+</section>
+
+
+<!-- ==================== MIXED GRAPHS ==================== -->
+<section id="mixed" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#78350f,#b45309)">
+    <div class="section-tag" style="background:rgba(245,158,11,0.3);color:#fde68a">Mixed Task</div>
+    <h1>🔀 Mixed / Two Graphs</h1>
+    <p>Combining and linking two different types of visual data</p>
+    <div class="section-accent" style="background:var(--c-mixed)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-mixed)">
+    <h2><span class="icon">📊</span> Common Mixed Combinations</h2>
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>Most Common</h4>
+        <ul>
+          <li>Line graph + bar chart</li>
+          <li>Pie chart + table</li>
+          <li>Bar chart + line graph</li>
+          <li>Two pie charts (different years)</li>
+          <li>Bar chart + pie chart</li>
+        </ul>
+      </div>
+      <div class="mini-card">
+        <h4>Key Challenges</h4>
+        <ul>
+          <li>Managing two different data types</li>
+          <li>Deciding how much space to give each</li>
+          <li>Finding a meaningful link between them</li>
+          <li>Not spending too long on one graph</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-mixed)">
+    <h2><span class="icon">🏗️</span> Essay Structure</h2>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>Introduction</strong><small>Mention BOTH graphs in one sentence</small></div>
+      <div class="struct-part struct-o"><strong>Overview</strong><small>Main features from BOTH graphs — most striking points</small></div>
+      <div class="struct-part struct-b"><strong>Body 1</strong><small>First graph — key data with comparisons</small></div>
+      <div class="struct-part struct-b" style="border-color:#fde68a"><strong>Body 2</strong><small>Second graph — key data + link to Graph 1 if possible</small></div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">⭐ Expert Tip: Linking the Two Graphs</div>
+      <p>For a Band 7+ response, find a connection between the two graphs. For example: "This rise in energy consumption (shown in the line graph) is reflected in the pie chart data, which shows coal's dominance in the energy mix." The IELTS question says "make comparisons where relevant" — this includes comparisons between the two visuals.</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-mixed)">
+    <h2><span class="icon">🔗</span> Linking Language Between Two Graphs</h2>
+    <table class="vocab-table">
+      <tr><th>Function</th><th>Phrase</th></tr>
+      <tr><td>Introduce second graph</td><td>"Turning to the [pie chart / table]..." / "The [table] shows that..."</td></tr>
+      <tr><td>Link back to first</td><td>"This is reflected in the [line graph], which shows..."</td></tr>
+      <tr><td>Correlate data</td><td>"Correspondingly, ..." / "This corresponds with the trend shown in..."</td></tr>
+      <tr><td>Contrast between graphs</td><td>"While the [bar chart] shows X, the [pie chart] reveals Y..."</td></tr>
+      <tr><td>Combine into overview</td><td>"Taken together, the two visuals suggest that..."</td></tr>
+    </table>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Mixed Graphs Practice Exercises</h2>
+      <span class="exercise-type-badge">10 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Introduction Writing</div>
+      <div class="question-text">Write an introduction for: A pie chart (energy sources 2010) + a table (projected energy usage 2030).</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The pie chart illustrates the breakdown of energy sources used in a country in 2010, while the table presents projected figures for energy usage in 2030."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Space Allocation</div>
+      <div class="question-text">You have a line graph showing 20 years of data and a small pie chart with 3 segments. How should you allocate word count?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">Give <strong>more space to the more complex graph</strong> (the line graph). A rough split: 55–60% for line graph, 35–40% for pie chart. Both must receive attention — do not ignore either graph.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Transition Language</div>
+      <div class="question-text">Write the first sentence of your Body Paragraph 2, transitioning from a bar chart to a line graph analysis.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "<strong>Turning to</strong> the line graph, which tracks changes over the same period, a similar pattern of growth can be observed..." — OR — "The line graph, meanwhile, reveals that..."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Overview for Two Graphs</div>
+      <div class="question-text">Pie chart 2010: coal = 65%, renewables = 10%. Table 2030: coal projected = 20%, renewables = 55%. Write an overview sentence.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, the data suggests a dramatic shift in the energy mix over the 20-year period, with coal's dominance expected to decline sharply while renewable energy is projected to become the primary source by 2030."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — Linking Two Graphs</div>
+      <div class="question-text">Write a sentence linking a line graph (total energy use rose 40%, 2010–2030) to a pie chart (renewables went from 10% to 55%). How are they connected?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The projected growth in total energy consumption shown in the line graph is <strong>accompanied by</strong> a significant change in the energy mix, with renewable sources <strong>expected to account for</strong> over half of all energy produced by 2030."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Vocabulary for Projected Data (Table)</div>
+      <div class="question-text">A table shows projected 2030 data. Rewrite: "In 2030, renewables will be 55%." using three different structures.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">1. "Renewables <strong>are projected to account for</strong> 55% by 2030." &nbsp; 2. "The proportion of renewables <strong>is expected to reach</strong> 55% in 2030." &nbsp; 3. "Projections indicate that renewables <strong>will constitute</strong> 55% of the energy mix in 2030."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Error: Ignoring One Graph</div>
+      <div class="question-text">A student writes 160 words, all about the pie chart, with only one sentence about the table. What are the consequences?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">This fails <strong>Task Achievement</strong> — the student must address BOTH visuals adequately. Both graphs must be covered in the body paragraphs, even if unequally. Ignoring one will result in a Band 5 or lower for TA.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — Describe Proportions (Pie)</div>
+      <div class="question-text">Pie chart 2010: Coal 65%, Gas 20%, Renewables 10%, Nuclear 5%. Write a body paragraph for this chart (3–4 sentences).</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "In 2010, coal was by far the dominant energy source, accounting for 65% of total production — nearly two-thirds of the national energy supply. Gas represented the second largest share at 20%, while renewable energy made up just one-tenth of the total. Nuclear power was the least significant source, contributing only 5% to the overall energy mix."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Contrast Between 2010 and 2030</div>
+      <div class="question-text">Write a sentence contrasting coal in 2010 (65%) with its projected share in 2030 (20%).</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>In stark contrast</strong> to its dominant position in 2010 when it accounted for 65%, coal is projected to represent only 20% of total energy production by 2030 — a decline of 45 percentage points."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — "Taken Together" Summary</div>
+      <div class="question-text">Write a final sentence that draws a conclusion from both visuals about the energy transition.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "<strong>Taken together</strong>, the two visuals paint a picture of a major energy transition underway, with fossil fuels set to give way to renewable energy sources over the two-decade period."</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Mixed Graphs (Pie + Table) — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The pie chart below shows the different energy sources used in a country in 2010. The table shows projected energy usage by source for 2030.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Intro = mention both. Overview = biggest change (e.g. coal decline, renewables rise). Body 1 = pie chart (2010 breakdown). Body 2 = table (2030 projections + link back to 2010 where relevant).</div>
+  </div>
+</section>
+
+
+<!-- ==================== PROCESS ==================== -->
+<section id="process" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#0c4a6e,#0369a1)">
+    <div class="section-tag" style="background:rgba(6,182,212,0.3);color:#67e8f9">Non-graph Task</div>
+    <h1>⚙️ Process Diagram</h1>
+    <p>Describing stages in a manufacturing or natural process</p>
+    <div class="section-accent" style="background:var(--c-process)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-process)">
+    <h2><span class="icon">🏗️</span> Essay Structure</h2>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>Introduction</strong><small>Rephrase: what is produced + number of stages + first/last stage</small></div>
+      <div class="struct-part struct-b"><strong>Body 1</strong><small>First half of process (sequential stages with linking)</small></div>
+      <div class="struct-part struct-b" style="border-color:#67e8f9"><strong>Body 2</strong><small>Second half of process (continue sequence to end)</small></div>
+    </div>
+    <div class="warning-box">
+      <div class="w-title">⚠️ Process essays do NOT have a traditional "Overview" paragraph.</div>
+      The mini-overview is embedded in the introduction (number of stages + first + last stage). Some teachers add a short overview after the intro — both approaches are acceptable.
+    </div>
+    <h3>Introduction Phrases</h3>
+    <table class="vocab-table">
+      <tr><th>Phrase</th><th>Use</th></tr>
+      <tr><td>"The diagram illustrates how X is produced."</td><td>Manufacturing process</td></tr>
+      <tr><td>"The diagram shows the steps involved in making X."</td><td>General</td></tr>
+      <tr><td>"The pictures illustrate the process by which X is produced."</td><td>Multiple diagrams</td></tr>
+      <tr><td>"The flow chart outlines the [number] stages in the production/life cycle of X."</td><td>With stage count</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-process)">
+    <h2><span class="icon">📖</span> Present Simple Passive — The Core Grammar</h2>
+    <p><strong>Formula: Object + is/are + past participle (+ by agent)</strong></p>
+    <table class="vocab-table">
+      <tr><th>Active</th><th>Passive</th></tr>
+      <tr><td>Workers pick the leaves.</td><td>The leaves <strong>are picked</strong>.</td></tr>
+      <tr><td>The machine grinds the beans.</td><td>The beans <strong>are ground</strong> by the machine.</td></tr>
+      <tr><td>They pack the product into boxes.</td><td>The product <strong>is packed</strong> into boxes.</td></tr>
+      <tr><td>Sunlight dries the material.</td><td>The material <strong>is dried</strong> in sunlight.</td></tr>
+    </table>
+    <div class="highlight-box">
+      <div class="hl-title">⚠️ When to use ACTIVE voice</div>
+      Use active for <strong>natural processes</strong> where nature is the subject: "The sun <strong>heats</strong> the water." / "The larvae <strong>develop</strong> into pupae." / "Rain <strong>falls</strong> on the mountains."
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-process)">
+    <h2><span class="icon">🔤</span> Irregular Past Participles (for Process)</h2>
+    <div class="grid-3">
+      <table class="vocab-table">
+        <tr><th>Verb</th><th>Past Participle</th></tr>
+        <tr><td>grow</td><td>grown</td></tr>
+        <tr><td>sow</td><td>sown</td></tr>
+        <tr><td>sell</td><td>sold</td></tr>
+        <tr><td>take</td><td>taken</td></tr>
+      </table>
+      <table class="vocab-table">
+        <tr><th>Verb</th><th>Past Participle</th></tr>
+        <tr><td>hold</td><td>held</td></tr>
+        <tr><td>grind</td><td>ground</td></tr>
+        <tr><td>weave</td><td>woven</td></tr>
+        <tr><td>cut</td><td>cut</td></tr>
+      </table>
+      <table class="vocab-table">
+        <tr><th>Verb</th><th>Past Participle</th></tr>
+        <tr><td>put</td><td>put</td></tr>
+        <tr><td>wrap</td><td>wrapped</td></tr>
+        <tr><td>crush</td><td>crushed</td></tr>
+        <tr><td>melt</td><td>melted</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-process)">
+    <h2><span class="icon">🔗</span> Sequence Vocabulary</h2>
+    <div class="grid-2">
+      <div>
+        <h3>First Step</h3>
+        <p>
+          <span class="pill pill-blue">First of all,</span>
+          <span class="pill pill-blue">To begin with,</span>
+          <span class="pill pill-blue">Initially,</span>
+          <span class="pill pill-blue">The first step is that</span>
+          <span class="pill pill-blue">The process begins when</span>
+        </p>
+        <h3 style="margin-top:14px">Middle Steps</h3>
+        <p>
+          <span class="pill pill-gold">Then,</span>
+          <span class="pill pill-gold">Subsequently,</span>
+          <span class="pill pill-gold">Following this,</span>
+          <span class="pill pill-gold">The next step is that</span>
+          <span class="pill pill-gold">At this point,</span>
+          <span class="pill pill-gold">After that,</span>
+          <span class="pill pill-gold">and then</span>
+          <span class="pill pill-gold">after which</span>
+        </p>
+      </div>
+      <div>
+        <h3>Last Step</h3>
+        <p>
+          <span class="pill pill-green">Finally,</span>
+          <span class="pill pill-green">The last step is</span>
+          <span class="pill pill-green">The final stage is</span>
+          <span class="pill pill-green">At the end of the process,</span>
+          <span class="pill pill-green">The process concludes when</span>
+        </p>
+        <h3 style="margin-top:14px">Extra Information</h3>
+        <p>
+          <span class="pill pill-purple">so that (purpose)</span>
+          <span class="pill pill-purple">in order to (purpose)</span>
+          <span class="pill pill-purple">where (location)</span>
+          <span class="pill pill-purple">which (relative clause)</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-process)">
+    <h2><span class="icon">⚡</span> Advanced Linking Structures</h2>
+    <h3>1. Once/When/After + Present Perfect</h3>
+    <div class="example-box">
+      <span class="label">Pattern: once/when/after + subject + have/has been + past participle, ...</span>
+      "Once the tea leaves <strong>have been picked</strong>, they are then spread out in the sun to dry."<br>
+      "After the bottles <strong>have been cleaned</strong>, they are filled with the liquid."<br>
+      "When the mixture <strong>has cooled</strong>, it is poured into moulds."
+    </div>
+    <h3>2. After + Being + Past Participle (Passive -ing)</h3>
+    <div class="example-box">
+      <span class="label">Pattern: After being + past participle, subject + is/are + past participle</span>
+      "<strong>After being picked</strong>, the tea leaves are put in the sun to dry."<br>
+      "<strong>After being sorted</strong>, the bottles are sent to the washing facility."<br>
+      "<strong>After being heated</strong>, the material is shaped by a machine."
+    </div>
+    <h3>3. Having + Past Participle</h3>
+    <div class="example-box">
+      <span class="label">Shows that one action is completed before the next</span>
+      "<strong>Having been dried</strong>, the leaves are then packed into boxes."<br>
+      "<strong>Having been treated</strong>, the water is safe to drink."
+    </div>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Process Diagram Practice Exercises</h2>
+      <span class="exercise-type-badge">12 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Active → Passive Transformation</div>
+      <div class="question-text">Change to passive: "Workers collect the plastic bottles from recycling bins."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The plastic bottles <strong>are collected</strong> from recycling bins." (No need to mention "by workers" unless it's important information.)</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Passive with Irregular Verb</div>
+      <div class="question-text">Change to passive: "They grind the coffee beans into fine powder."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The coffee beans <strong>are ground</strong> into fine powder." (Irregular: grind → ground)</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Introduction Writing</div>
+      <div class="question-text">Write an introduction for a process showing 6 stages of glass bottle recycling, starting with collection and ending with new bottles.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The diagram illustrates the six-stage process by which glass bottles are recycled into new ones, beginning with their collection and concluding with the distribution of finished products."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — "Once + Present Perfect" Structure</div>
+      <div class="question-text">Combine: "The bottles are cleaned. Then they are inspected for damage." Use "Once + present perfect".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Once the bottles have been cleaned</strong>, they are inspected for damage."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — "After being..." Structure</div>
+      <div class="question-text">Combine: "The glass is melted. Then it is poured into moulds." Use "After being..."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>After being melted</strong>, the glass is poured into moulds." — OR — "The glass, <strong>having been melted</strong>, is then poured into moulds."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Sequence Vocabulary</div>
+      <div class="question-text">Stage 1: collection. Stage 2: sorting. Stage 3: washing. Stage 4: crushing. Write these 4 stages in one paragraph using sequence words. Use passive voice.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Initially, glass bottles are collected from households and businesses. <strong>Following this</strong>, they are sorted by colour — clear, green, and brown. <strong>Subsequently</strong>, the bottles are washed to remove any impurities, <strong>after which</strong> they are crushed into small pieces called cullet."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — "So that" Purpose Clause</div>
+      <div class="question-text">Add a purpose clause: "The leaves are dried in the sun."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The leaves are dried in the sun <strong>so that</strong> any remaining moisture is removed." — OR — "The leaves are dried in the sun <strong>in order to</strong> reduce their moisture content."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — Natural Process: Active or Passive?</div>
+      <div class="question-text">In a water cycle diagram: "Rain falls on mountains → water flows into rivers → sun heats water → water evaporates." Should you use active or passive?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>ACTIVE voice</strong> for natural processes: "Rain <strong>falls</strong> on mountains, and the water <strong>flows</strong> down into rivers. The sun then <strong>heats</strong> the water, causing it to <strong>evaporate</strong> back into the atmosphere."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Error Correction</div>
+      <div class="question-text">Correct: "First of all, the bottles are collect and then they sorting by the workers."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"First of all, the bottles are <strong>collected</strong>, and then they <strong>are sorted</strong> by the workers." — Two errors: 1) "collect" → "collected" (passive needs past participle). 2) "sorting" → "are sorted" (passive form needed).</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — Stage Count in Introduction</div>
+      <div class="question-text">A process diagram has 8 stages. The first stage is "growing tomatoes" and the last is "bottling ketchup". Write the introduction.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The diagram illustrates the eight stages involved in the production of ketchup, from the initial growing of tomatoes through to the final bottling of the finished product."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q11 — "Which" Relative Clause</div>
+      <div class="question-text">Add a relative clause: "The material is heated to 1500°C. This melts it completely."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The material is heated to 1500°C, <strong>which melts it completely</strong>." — OR — "The material is heated to 1500°C, a temperature <strong>at which</strong> it becomes fully molten."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q12 — "Having been" Structure</div>
+      <div class="question-text">Rewrite using "having been + past participle": "The bottles are cleaned. After that, they are transported to the factory."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>Having been cleaned</strong>, the bottles are then transported to the factory."</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Process Diagram — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The diagram below shows the stages involved in the recycling of plastic bottles into new products. The process consists of 8 stages, beginning with the collection of used bottles and ending with the production of recycled plastic items.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Count stages first. Write intro with stage count + first + last. Split stages into 2 body paragraphs. Use passive voice throughout. Use at least 2 "once/after + present perfect" or "after being" structures for Band 7+.</div>
+  </div>
+</section>
+
+
+<!-- ==================== MAP ==================== -->
+<section id="map" class="section">
+  <div class="section-header" style="background:linear-gradient(135deg,#7f1d1d,#b91c1c)">
+    <div class="section-tag" style="background:rgba(239,68,68,0.3);color:#fca5a5">Non-graph Task</div>
+    <h1>🗺️ Map / Town Plan</h1>
+    <p>Describing how a place has changed over time</p>
+    <div class="section-accent" style="background:var(--c-map)"></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-map)">
+    <h2><span class="icon">🏗️</span> Essay Structure</h2>
+    <div class="structure-box">
+      <div class="struct-part struct-i"><strong>Introduction</strong><small>What the maps show + the two time periods</small></div>
+      <div class="struct-part struct-o"><strong>Overview</strong><small>General changes — more/less developed? urbanised? expanded?</small></div>
+      <div class="struct-part struct-b"><strong>Body 1</strong><small>Changes in one area (e.g., north/centre) with specific details</small></div>
+      <div class="struct-part struct-b" style="border-color:#fca5a5"><strong>Body 2</strong><small>Changes in another area (e.g., south/outskirts) with specific details</small></div>
+    </div>
+    <div class="highlight-box">
+      <div class="hl-title">📌 Key Tense Rule</div>
+      If the maps show PAST → NOW (e.g., 2000 and today): Use <strong>Present Perfect Passive</strong> throughout.<br>
+      If the maps show TWO PAST dates (e.g., 1950 and 2000): Use <strong>Past Simple Passive</strong>.<br>
+      If the task asks about a PLAN (proposed future): Use <strong>Future Passive</strong> (will be built, etc.)
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-map)">
+    <h2><span class="icon">📖</span> Core Tense: Present Perfect Passive</h2>
+    <p><strong>Formula: Subject + has/have been + past participle</strong></p>
+    <table class="vocab-table">
+      <tr><th>Active (not used)</th><th>Present Perfect Passive</th></tr>
+      <tr><td>They have built a new school.</td><td>A new school <strong>has been built</strong>.</td></tr>
+      <tr><td>They have demolished the old factory.</td><td>The old factory <strong>has been demolished</strong>.</td></tr>
+      <tr><td>They have converted the hotel into flats.</td><td>The hotel <strong>has been converted into</strong> flats.</td></tr>
+      <tr><td>They have extended the road.</td><td>The road <strong>has been extended</strong>.</td></tr>
+    </table>
+    <div class="warning-box">
+      <div class="w-title">⚠️ Verbs that CANNOT use passive (no passive form):</div>
+      <p><strong>take place, become, change, make way for, appear, disappear</strong></p>
+      <p>Example: "A park <strong>has appeared</strong> in the centre." (NOT "A park has been appeared.") | "The area <strong>has become</strong> more residential."</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-map)">
+    <h2><span class="icon">🔨</span> Change Verbs (Active Infinitives → Passive Past Participle)</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="color:#16a34a">➕ Adding / Making Bigger</h3>
+        <table class="vocab-table">
+          <tr><th>Verb</th><th>Noun Form</th></tr>
+          <tr><td>build / construct / erect</td><td>building / construction / erection</td></tr>
+          <tr><td>introduce</td><td>introduction</td></tr>
+          <tr><td>open</td><td>opening</td></tr>
+          <tr><td>enlarge / expand / extend</td><td>enlargement / expansion / extension</td></tr>
+          <tr><td>develop / redevelop</td><td>development / redevelopment</td></tr>
+        </table>
+        <h3 style="color:#7c3aed; margin-top:12px">🔄 Changing Function</h3>
+        <table class="vocab-table">
+          <tr><th>Verb</th><th>Noun Form</th></tr>
+          <tr><td>convert (into)</td><td>conversion</td></tr>
+          <tr><td>transform (into)</td><td>transformation</td></tr>
+          <tr><td>turn into / make into</td><td>—</td></tr>
+          <tr><td>replace</td><td>replacement</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:#dc2626">➖ Removing</h3>
+        <table class="vocab-table">
+          <tr><th>Verb</th><th>Noun Form</th></tr>
+          <tr><td>demolish / knock down</td><td>demolition</td></tr>
+          <tr><td>pull down / tear down</td><td>—</td></tr>
+          <tr><td>remove / clear</td><td>removal / clearing</td></tr>
+          <tr><td>cut down (trees)</td><td>—</td></tr>
+        </table>
+        <h3 style="color:#0369a1; margin-top:12px">🏙️ General Change Verbs</h3>
+        <table class="vocab-table">
+          <tr><th>Verb</th><th>Meaning</th></tr>
+          <tr><td>urbanise / industrialise</td><td>Become urban/industrial</td></tr>
+          <tr><td>modernise</td><td>Update/improve</td></tr>
+          <tr><td>pedestrianise</td><td>Make road for people only</td></tr>
+          <tr><td>commercialise</td><td>Add shops/businesses</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-map)">
+    <h2><span class="icon">📍</span> Location Vocabulary</h2>
+    <div class="grid-2">
+      <div>
+        <h3>Cardinal Directions</h3>
+        <p>
+          <span class="pill pill-blue">in the north</span>
+          <span class="pill pill-blue">in the south</span>
+          <span class="pill pill-blue">in the east</span>
+          <span class="pill pill-blue">in the west</span>
+          <span class="pill pill-blue">in the north-east</span>
+          <span class="pill pill-blue">in the south-west</span>
+          <span class="pill pill-blue">in the centre / central area</span>
+          <span class="pill pill-blue">in the middle</span>
+        </p>
+      </div>
+      <div>
+        <h3>Relative Position</h3>
+        <p>
+          <span class="pill pill-gold">to the north of [the station]</span>
+          <span class="pill pill-gold">adjacent to / next to</span>
+          <span class="pill pill-gold">opposite / across from</span>
+          <span class="pill pill-gold">along [the river]</span>
+          <span class="pill pill-gold">on the outskirts</span>
+          <span class="pill pill-gold">on the other side of [the road]</span>
+          <span class="pill pill-gold">near / close to</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-map)">
+    <h2><span class="icon">💬</span> Introducing Changes (Discourse Phrases)</h2>
+    <table class="vocab-table">
+      <tr><th>Phrase</th><th>Use</th></tr>
+      <tr><td>"Another striking change is..."</td><td>Introduce the next major change</td></tr>
+      <tr><td>"A notable development has been..."</td><td>Introduce a significant change</td></tr>
+      <tr><td>"The most significant change concerns..."</td><td>Highlight the biggest change</td></tr>
+      <tr><td>"There didn't use to be..."</td><td>Highlight something completely new</td></tr>
+      <tr><td>"The last few years have seen the building of..."</td><td>Recent construction</td></tr>
+      <tr><td>"The area has undergone significant modernisation..."</td><td>General transformation</td></tr>
+      <tr><td>"What was once a [farm] has now been converted into..."</td><td>Complete change of use</td></tr>
+      <tr><td>"The [forest] that previously stood in the north has been cleared..."</td><td>Removal of a feature</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="border-left-color:var(--c-map)">
+    <h2><span class="icon">📝</span> Noun Form Usage (For Variety)</h2>
+    <p>Use noun forms to avoid starting every sentence with a verb:</p>
+    <div class="example-box">
+      <span class="label">Verb form</span>
+      "A hospital has been built in the north of the town."
+    </div>
+    <div class="example-box">
+      <span class="label">Noun form (more sophisticated)</span>
+      "<strong>The construction of a hospital</strong> in the north of the town is another notable change." OR "A new hospital has appeared in the north, <strong>its construction</strong> being one of the most significant developments."
+    </div>
+    <p>Key noun forms: <span class="pill pill-purple">construction</span> <span class="pill pill-purple">demolition</span> <span class="pill pill-purple">expansion</span> <span class="pill pill-purple">conversion</span> <span class="pill pill-purple">introduction</span> <span class="pill pill-purple">replacement</span> <span class="pill pill-purple">extension</span> <span class="pill pill-purple">development</span></p>
+  </div>
+
+  <div class="exercise-card">
+    <div class="exercise-header">
+      <h2>📝 Map Practice Exercises</h2>
+      <span class="exercise-type-badge">12 Questions</span>
+    </div>
+    <button class="show-all-btn" onclick="showAll(this)">Show All Answers</button>
+
+    <div class="question">
+      <div class="question-num">Q1 — Tense Identification</div>
+      <div class="question-text">Maps show: 2015 → today (2026). What tense should you use?</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Present Perfect Passive:</strong> "has/have been + past participle". E.g., "A new road <strong>has been built</strong>." / "The factory <strong>has been converted</strong> into flats."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q2 — Active → Present Perfect Passive</div>
+      <div class="question-text">Change to present perfect passive: "They have knocked down the old church."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The old church <strong>has been knocked down</strong>." — OR — "The old church <strong>has been demolished</strong>."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q3 — Introduction Writing</div>
+      <div class="question-text">Write an introduction for: "Two maps show changes to a coastal village transformed into a tourist resort between 2015 and today."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "The two maps illustrate the changes that have taken place in a small coastal village as it was developed into a tourist resort, comparing its layout in 2015 with its current appearance."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q4 — Verb Selection</div>
+      <div class="question-text">The old farmhouse is now a hotel. Choose the best verb: A) built B) converted C) demolished D) extended</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>B) converted</strong> — "The old farmhouse <strong>has been converted into</strong> a hotel." Convert/transform is used when a building changes function but the structure remains.</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q5 — No Passive Possible</div>
+      <div class="question-text">Choose the correct form: "The area ___ much more commercialised since 2015." A) has become &nbsp; B) has been become</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>A) has become</strong> — "Become" cannot be used in the passive. Correct: "The area <strong>has become</strong> much more commercialised since 2015."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q6 — Location Vocabulary</div>
+      <div class="question-text">A hotel was built north of the beach. Write a sentence using location vocabulary.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"A new hotel <strong>has been constructed to the north of</strong> the beach." — OR — "A hotel <strong>has been erected adjacent to</strong> the beach, <strong>on its northern side</strong>."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q7 — Overview Writing</div>
+      <div class="question-text">A coastal village in 2015 had: farmland, a small beach, a few houses. Today it has: hotels, restaurants, shops, a car park, a pier. Write an overview (no specific details).</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal"><strong>Model:</strong> "Overall, the village has undergone a dramatic transformation, changing from a quiet rural settlement into a busy tourist destination. The most significant changes involve the replacement of farmland with commercial facilities and the addition of tourist infrastructure."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q8 — "What was once..." Structure</div>
+      <div class="question-text">A farm in 2015 is now a hotel complex. Use "What was once..." to describe this.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>What was once a farm</strong> in the eastern part of the village has now been converted into a large hotel complex."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q9 — Noun Form Usage</div>
+      <div class="question-text">Rewrite using a noun form: "A car park has been built in the south."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>The construction of a car park</strong> in the south is another notable development." — OR — "A new car park has appeared in the south, <strong>its introduction</strong> catering to the growing number of tourists."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q10 — "There didn't use to be..."</div>
+      <div class="question-text">2015: no pier. Today: a pier. Write a sentence using "there didn't use to be".</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"<strong>There didn't use to be</strong> any pier in the village; however, a substantial one <strong>has now been constructed</strong> along the seafront."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q11 — Multiple Changes in One Sentence</div>
+      <div class="question-text">Combine: "The forest was cleared. A road was built through the area. The road connects the hotel to the town centre." Use appropriate grammar and linking.</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"The forest that previously occupied the western area <strong>has been cleared</strong> to make way for a new road, <strong>which now connects</strong> the hotel complex to the town centre."</div>
+    </div>
+
+    <div class="question">
+      <div class="question-num">Q12 — Error Correction</div>
+      <div class="question-text">Correct: "In 2015, there are many farms. Today, all the farms have been demolish and new hotels have built."</div>
+      <button class="answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">"In 2015, there <strong>were</strong> many farms. Today, all the farms <strong>have been demolished</strong> and new hotels <strong>have been built</strong>." — Errors: 1) "are" → "were" (past). 2) "demolish" → "demolished" (past participle). 3) "have built" → "have been built" (passive).</div>
+    </div>
+  </div>
+
+  <div class="exam-question-card">
+    <div class="exam-tag">🏆 REAL IELTS 2026 EXAM QUESTION</div>
+    <h2>Map / Town Plan — Practice with Authentic Task</h2>
+    <div class="exam-question-text">
+      <strong>You should spend about 20 minutes on this task.</strong><br><br>
+      The two maps below show the changes made to a coastal village in order to turn it into a tourist resort between 2015 and today. Key changes include the development of accommodation, leisure facilities, transport infrastructure, and commercial areas.<br><br>
+      <strong>Summarise the information by selecting and reporting the main features, and make comparisons where relevant.</strong><br><br>
+      Write at least <strong>150 words</strong>.
+    </div>
+    <div class="exam-tip">💡 <strong>Strategy:</strong> Group by area (north/south/centre) OR by type of change (additions, demolitions, conversions). Use present perfect passive throughout. Mention 4–6 specific changes with location vocabulary. Start overview with "Overall, the village has undergone..."</div>
+  </div>
+</section>
+
+
+<!-- ==================== QUICK REFERENCE ==================== -->
+<section id="quickref" class="section">
+  <div class="section-header">
+    <div class="section-tag">Reference</div>
+    <h1>📚 Vocabulary Master List</h1>
+    <p>All key vocabulary in one place — your quick-access cheat sheet</p>
+    <div class="section-accent"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">📈</span> Complete Trend Vocabulary</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="color:#16a34a">Increase Verbs</h3>
+        <table class="vocab-table">
+          <tr><th>Weak → Strong</th><th>Notes</th></tr>
+          <tr><td>inch up, edge upwards</td><td>Very slight, slow rise</td></tr>
+          <tr><td>climb, go up</td><td>Gradual increase</td></tr>
+          <tr><td>rise, increase, grow</td><td>General increase</td></tr>
+          <tr><td>jump, surge, shoot up</td><td>Sudden increase</td></tr>
+          <tr><td>soar, skyrocket, rocket</td><td>Very rapid large increase</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:#dc2626">Decrease Verbs</h3>
+        <table class="vocab-table">
+          <tr><th>Weak → Strong</th><th>Notes</th></tr>
+          <tr><td>dip, edge downwards</td><td>Very slight, slow fall</td></tr>
+          <tr><td>slide, slip, ease down</td><td>Gradual fall</td></tr>
+          <tr><td>fall, drop, decline, decrease</td><td>General decrease</td></tr>
+          <tr><td>tumble, sink, nosedive</td><td>Moderate-large fall</td></tr>
+          <tr><td>plummet, plunge, collapse</td><td>Very rapid large fall</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3 style="color:#92400e; margin-top:14px">Stable / Other</h3>
+    <p>
+      <span class="pill pill-gold">remain stable / constant</span>
+      <span class="pill pill-gold">level off</span>
+      <span class="pill pill-gold">plateau at</span>
+      <span class="pill pill-gold">fluctuate (between X and Y)</span>
+      <span class="pill pill-gold">reach / hit a peak (at)</span>
+      <span class="pill pill-gold">reach / hit a trough</span>
+      <span class="pill pill-gold">recover / bounce back</span>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🎯</span> Complete Adverb-Adjective Pairs</h2>
+    <table class="vocab-table">
+      <tr><th>Adverb (with verb)</th><th>Adjective (with noun)</th><th>Degree</th></tr>
+      <tr><td>rose <strong>dramatically</strong></td><td>a <strong>dramatic</strong> rise</td><td>Very large</td></tr>
+      <tr><td>fell <strong>sharply</strong></td><td>a <strong>sharp</strong> fall</td><td>Sudden, large</td></tr>
+      <tr><td>grew <strong>significantly</strong></td><td>a <strong>significant</strong> growth</td><td>Noticeable</td></tr>
+      <tr><td>increased <strong>considerably</strong></td><td>a <strong>considerable</strong> increase</td><td>Large</td></tr>
+      <tr><td>rose <strong>steeply</strong></td><td>a <strong>steep</strong> rise</td><td>Fast and large</td></tr>
+      <tr><td>grew <strong>steadily</strong></td><td>a <strong>steady</strong> growth</td><td>Consistent</td></tr>
+      <tr><td>fell <strong>gradually</strong></td><td>a <strong>gradual</strong> fall</td><td>Slow</td></tr>
+      <tr><td>declined <strong>slightly</strong></td><td>a <strong>slight</strong> decline</td><td>Small</td></tr>
+      <tr><td>dropped <strong>marginally</strong></td><td>a <strong>marginal</strong> drop</td><td>Very small</td></tr>
+      <tr><td>rose <strong>negligibly</strong></td><td>a <strong>negligible</strong> rise</td><td>Almost zero</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">%</span> Fraction &amp; Percentage Reference</h2>
+    <table class="vocab-table">
+      <tr><th>Percentage</th><th>Fraction Word</th><th>Alternative</th><th>Example</th></tr>
+      <tr><td>10%</td><td>one-tenth / a tenth</td><td>one in ten</td><td>"one out of every ten respondents"</td></tr>
+      <tr><td>20%</td><td>one-fifth / a fifth</td><td>one in five</td><td>"a fifth of participants"</td></tr>
+      <tr><td>25%</td><td>a quarter / one-quarter</td><td>one in four</td><td>"roughly a quarter of those surveyed"</td></tr>
+      <tr><td>33%</td><td>a third / one-third</td><td>one in three</td><td>"just over a third"</td></tr>
+      <tr><td>40%</td><td>two-fifths</td><td>two in five</td><td>"approximately two-fifths"</td></tr>
+      <tr><td>50%</td><td>half</td><td>one in two</td><td>"over half / just under half"</td></tr>
+      <tr><td>60%</td><td>three-fifths</td><td>three in five</td><td>"nearly three-fifths"</td></tr>
+      <tr><td>66%</td><td>two-thirds</td><td>two in three</td><td>"roughly two-thirds"</td></tr>
+      <tr><td>75%</td><td>three-quarters</td><td>three in four</td><td>"just over three-quarters"</td></tr>
+      <tr><td>80%</td><td>four-fifths</td><td>four in five</td><td>"nearly four-fifths"</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🔗</span> Introduction Synonyms</h2>
+    <table class="vocab-table">
+      <tr><th>Original Word</th><th>Synonyms for Introduction</th></tr>
+      <tr><td>shows</td><td>illustrates, presents, compares, depicts, reveals, provides information about, outlines</td></tr>
+      <tr><td>the number of</td><td>the figure for, the amount of, the quantity of, the proportion of, the rate of</td></tr>
+      <tr><td>from 2000 to 2020</td><td>over a 20-year period, during a two-decade span, between 2000 and 2020</td></tr>
+      <tr><td>in different countries</td><td>across various nations, in a number of countries, throughout several regions</td></tr>
+      <tr><td>changes</td><td>developments, shifts, fluctuations, variations, trends</td></tr>
+      <tr><td>information</td><td>data, statistics, figures, details</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🗺️</span> Map Change Verbs Summary</h2>
+    <div class="grid-2">
+      <table class="vocab-table">
+        <tr><th colspan="2" style="background:#166534;color:white">ADD / BUILD</th></tr>
+        <tr><td>build / construct</td><td>→ has been built/constructed</td></tr>
+        <tr><td>erect</td><td>→ has been erected</td></tr>
+        <tr><td>introduce</td><td>→ has been introduced</td></tr>
+        <tr><td>open</td><td>→ has been opened</td></tr>
+        <tr><th colspan="2" style="background:#7c3aed;color:white">CHANGE FUNCTION</th></tr>
+        <tr><td>convert (into)</td><td>→ has been converted (into)</td></tr>
+        <tr><td>transform (into)</td><td>→ has been transformed (into)</td></tr>
+        <tr><td>replace</td><td>→ has been replaced (by)</td></tr>
+      </table>
+      <table class="vocab-table">
+        <tr><th colspan="2" style="background:#991b1b;color:white">REMOVE</th></tr>
+        <tr><td>demolish</td><td>→ has been demolished</td></tr>
+        <tr><td>knock down</td><td>→ has been knocked down</td></tr>
+        <tr><td>clear</td><td>→ has been cleared</td></tr>
+        <tr><th colspan="2" style="background:#1d4ed8;color:white">MAKE BIGGER</th></tr>
+        <tr><td>enlarge / expand</td><td>→ has been enlarged/expanded</td></tr>
+        <tr><td>extend</td><td>→ has been extended</td></tr>
+        <tr><th colspan="2" style="background:#0369a1;color:white">NO PASSIVE</th></tr>
+        <tr><td>become</td><td>→ has become</td></tr>
+        <tr><td>appear</td><td>→ has appeared</td></tr>
+        <tr><td>take place</td><td>→ has taken place</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">⚙️</span> Process Sequence Words</h2>
+    <table class="vocab-table">
+      <tr><th>Position</th><th>Words</th></tr>
+      <tr><td><strong>First</strong></td><td>First of all, Initially, To begin with, The first stage is, The process starts when</td></tr>
+      <tr><td><strong>Middle</strong></td><td>Then, Subsequently, Following this, The next step is, At this point, After that, and then, after which</td></tr>
+      <tr><td><strong>Last</strong></td><td>Finally, The last step is, The final stage is, At the end of the process, The process concludes when</td></tr>
+      <tr><td><strong>Simultaneous</strong></td><td>Meanwhile, At the same time, Simultaneously, While</td></tr>
+      <tr><td><strong>Result</strong></td><td>As a result, This results in, Which produces, so that</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">⚡</span> Band 9 Language Checklist</h2>
+    <div class="grid-2">
+      <div class="mini-card" style="border:2px solid #16a34a">
+        <h4 style="color:#16a34a">✅ DO</h4>
+        <ul>
+          <li>Vary your vocabulary — never use the same word twice</li>
+          <li>Use both verb forms AND noun forms</li>
+          <li>Group data meaningfully in body paragraphs</li>
+          <li>Include a clear overview without specific numbers</li>
+          <li>Use approximation language (about, roughly, just over)</li>
+          <li>Include specific data (%, figures) in body paragraphs</li>
+          <li>Make comparisons between categories</li>
+          <li>Use a range of sentence structures (simple, complex, compound)</li>
+        </ul>
+      </div>
+      <div class="mini-card" style="border:2px solid #dc2626">
+        <h4 style="color:#dc2626">❌ DON'T</h4>
+        <ul>
+          <li>Write opinions or explanations ("I think this is because...")</li>
+          <li>Include specific numbers in the overview</li>
+          <li>Describe every single data point</li>
+          <li>Copy the question word for word as your introduction</li>
+          <li>Use "In conclusion" in a Task 1 essay</li>
+          <li>Write under 150 words</li>
+          <li>Use the same word more than twice</li>
+          <li>Forget to compare data between categories/countries</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// Navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  // Find and activate the clicked sidebar item
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(id)) {
+      item.classList.add('active');
+    }
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Toggle individual answer
+function toggleAnswer(btn) {
+  const reveal = btn.nextElementSibling;
+  if (reveal) {
+    reveal.classList.toggle('show');
+    btn.textContent = reveal.classList.contains('show') ? 'Hide Answer' : 'Show Answer';
+  }
+}
+
+// Show all answers in an exercise card
+function showAll(btn) {
+  const card = btn.closest('.exercise-card');
+  const reveals = card.querySelectorAll('.answer-reveal');
+  const allShown = [...reveals].every(r => r.classList.contains('show'));
+  reveals.forEach(r => r.classList.toggle('show', !allShown));
+  const answerBtns = card.querySelectorAll('.answer-btn');
+  answerBtns.forEach(b => b.textContent = allShown ? 'Show Answer' : 'Hide Answer');
+  btn.textContent = allShown ? 'Show All Answers' : 'Hide All Answers';
+}
+
+// Tab system (for future use)
+function showTab(tabId, groupClass) {
+  const group = document.querySelectorAll('.' + groupClass);
+  group.forEach(el => el.classList.remove('active'));
+  const tab = document.getElementById(tabId);
+  if (tab) tab.classList.add('active');
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+  const sections = ['overview','linegraph','barchart-trend','barchart-static','piechart','table','mixed','process','map','quickref'];
+  const active = document.querySelector('.section.active');
+  if (!active) return;
+  const idx = sections.indexOf(active.id);
+  if (e.key === 'ArrowRight' && idx < sections.length - 1) showSection(sections[idx + 1]);
+  if (e.key === 'ArrowLeft' && idx > 0) showSection(sections[idx - 1]);
+});
+
+// Smooth reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card, .exercise-card').forEach(card => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(16px)';
+  card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+  observer.observe(card);
+});
+</script>
+</body>
+</html>
