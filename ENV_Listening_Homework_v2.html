@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IELTS Environment — Listening Part 4 Homework</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0fdf4;color:#1a2e1a;min-height:100vh}
+:root{--g:#166534;--gl:#dcfce7;--gm:#16a34a;--gd:#14532d;--border:#d1fae5;--gray:#64748b;--navy:#0f172a}
+#nav{background:var(--gd);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.brand-tag{font-size:10px;color:#86efac;font-family:monospace;letter-spacing:.15em;text-transform:uppercase}
+.brand-name{font-size:18px;font-weight:700;color:#fff;margin-top:2px}
+.nav-right{display:flex;gap:10px;align-items:center}
+.btn-admin{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#d1fae5;padding:7px 15px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600}
+.btn-admin:hover{background:rgba(255,255,255,.18)}
+.page{display:none;animation:fadeIn .25s ease}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.home-wrap{max-width:820px;margin:0 auto;padding:36px 20px 80px}
+.home-hero{text-align:center;margin-bottom:36px;padding:32px 24px;background:linear-gradient(135deg,var(--gd),var(--g));border-radius:20px;color:#fff}
+.hero-label{font-size:11px;letter-spacing:.2em;font-family:monospace;color:#86efac;text-transform:uppercase;margin-bottom:8px}
+.hero-title{font-size:28px;font-weight:800;margin-bottom:6px}
+.hero-sub{font-size:14px;color:#bbf7d0;opacity:.9}
+.info-form{background:#fff;border-radius:14px;padding:24px;margin-bottom:28px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.info-form h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);margin-bottom:16px}
+.form-row{display:flex;gap:14px;margin-bottom:14px}
+.form-group{flex:1}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.form-group input{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid #d1fae5;font-size:15px;outline:none;transition:.2s;background:#f0fdf4}
+.form-group input:focus{border-color:var(--gm);background:#fff}
+.section-head{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--gray);margin-bottom:14px}
+.test-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:14px;cursor:pointer;display:flex;align-items:flex-start;gap:18px;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.test-card:hover{border-color:var(--gm);box-shadow:0 6px 16px rgba(22,163,74,.12);transform:translateY(-2px)}
+.tc-num{width:46px;height:46px;border-radius:12px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--g);flex-shrink:0;margin-top:2px}
+.tc-info{flex:1;min-width:0}
+.tc-src{font-size:11px;color:var(--gray);font-family:monospace;letter-spacing:.08em;margin-bottom:3px}
+.tc-title{font-size:15px;font-weight:700;color:#0f172a}
+.tc-desc{font-size:12px;color:var(--gray);margin-top:3px;line-height:1.4}
+.tc-tags{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap;align-items:center}
+.tc-arrow{font-size:22px;color:#bbf7d0;flex-shrink:0;margin-top:12px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:monospace;letter-spacing:.03em;white-space:nowrap}
+.b-match{background:#1e40af;color:#fff}.b-tfng,.b-yng{background:#065f46;color:#fff}
+.b-mcs{background:#6d28d9;color:#fff}.b-mcm{background:#9d174d;color:#fff}
+.b-fill{background:#374151;color:#fff}.b-fillb{background:#374151;color:#fff}
+#test-topbar{background:var(--gd);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2);gap:12px;flex-wrap:wrap}
+.tb-src{font-size:11px;color:#86efac;font-family:monospace;letter-spacing:.08em}
+.tb-ttl{font-size:14px;font-weight:700;color:#fff;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+#progress-txt{font-size:13px;color:#86efac;font-weight:600}
+.top-link{font-size:13px;color:#86efac;text-decoration:none;padding:6px 12px;border:1px solid #166534;border-radius:7px;background:rgba(255,255,255,.08);white-space:nowrap}
+.top-link:hover{background:rgba(255,255,255,.15)}
+.test-wrap{max-width:780px;margin:0 auto;padding:28px 16px 80px}
+.intro-box{background:#fff;border-radius:12px;padding:16px 20px;margin-bottom:24px;border:1px solid var(--border);font-size:14px;color:#374151;line-height:1.6;border-left:4px solid var(--gm)}
+.q-section{margin-bottom:8px}
+.q-section-head{background:var(--gl);border:1px solid var(--border);border-radius:10px 10px 0 0;padding:12px 16px;border-bottom:none}
+.q-section-head .section-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g);margin-bottom:4px}
+.q-section-head .section-instruction{font-size:13px;color:#374151;font-style:italic;line-height:1.5}
+.q-section-head .section-instruction strong{font-style:normal;color:var(--gd)}
+.q-block{background:#fff;border:1px solid var(--border);padding:14px 16px;border-bottom:none;transition:.2s}
+.q-block:last-child{border-bottom:1px solid var(--border);border-radius:0 0 10px 10px}
+.q-block.standalone{border-radius:10px;border:1.5px solid var(--border);margin-bottom:10px}
+.q-block.correct{border-color:#16a34a!important;background:#f0fdf4}
+.q-block.wrong{border-color:#dc2626!important;background:#fef2f2}
+.q-block.partial{border-color:#d97706!important;background:#fffbeb}
+.q-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.q-num-label{font-size:13px;font-weight:800;color:var(--g);min-width:24px}
+.q-result-tag{font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px}
+.q-result-tag.c{background:#dcfce7;color:#166534}.q-result-tag.w{background:#fee2e2;color:#dc2626}
+.q-result-tag.p{background:#fef3c7;color:#d97706}
+.q-text{font-size:14px;color:#1f2937;line-height:1.7;margin-bottom:12px}
+.q-text mark{background:#fef9c3;border-radius:3px;padding:0 3px}
+.opts-row{display:flex;gap:7px;flex-wrap:wrap}
+.opt-pill{padding:8px 16px;border-radius:8px;border:2px solid var(--border);background:#f8fafc;color:#374151;font-weight:700;font-size:14px;cursor:pointer;transition:.15s;min-width:44px;text-align:center}
+.opt-pill:hover:not(:disabled){border-color:var(--gm);background:var(--gl)}
+.opt-pill.sel{border-color:var(--g);background:var(--g);color:#fff}
+.opt-pill:disabled{cursor:default}
+.opts-stack{display:flex;flex-direction:column;gap:7px}
+.opt-block{width:100%;text-align:left;padding:10px 14px;border-radius:9px;border:1.5px solid var(--border);background:#fff;color:#1f2937;font-size:14px;cursor:pointer;transition:.15s;line-height:1.45}
+.opt-block:hover:not(:disabled){border-color:var(--gm);background:var(--gl)}
+.opt-block.sel{border-color:var(--g);background:var(--gl);font-weight:600}
+.opt-block.sel-multi{border-color:#7c3aed;background:#f5f3ff;font-weight:600}
+.opt-block:disabled{cursor:default}
+.mc-multi-hint{font-size:12px;color:#6d28d9;font-style:italic;margin-bottom:8px;padding:5px 10px;background:#faf5ff;border-radius:6px;border-left:3px solid #7c3aed}
+.fill-inp{width:100%;padding:10px 14px;border-radius:9px;border:1.5px solid var(--border);font-size:14px;outline:none;transition:.2s;background:#fff}
+.fill-inp:focus{border-color:var(--gm)}
+.answer-reveal{margin-top:10px;padding:8px 13px;background:#fef9c3;border-radius:7px;border:1px solid #fde68a;font-size:13px;color:#92400e;line-height:1.5}
+.submit-bar{margin-top:36px;display:flex;gap:12px;padding-top:20px;border-top:1px solid var(--border)}
+.btn-back{padding:13px 22px;border-radius:10px;border:1.5px solid var(--border);background:#fff;color:var(--gray);font-size:15px;cursor:pointer;font-weight:600}
+.btn-back:hover{border-color:#94a3b8;background:#f8fafc}
+.btn-submit{flex:1;padding:13px 22px;border-radius:10px;border:none;background:var(--gd);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-submit:hover{background:var(--g)}
+#page-result .result-head{background:linear-gradient(135deg,var(--gd),var(--g));padding:40px 24px;text-align:center}
+.score-ring-wrap{width:130px;height:130px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center}
+.score-inner{width:100px;height:100px;border-radius:50%;background:rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-pct{font-size:28px;font-weight:800;color:#fff}
+.score-frac{font-size:12px;color:#bbf7d0}
+.band-val{font-size:32px;font-weight:800;color:#fff;margin-bottom:6px}
+.result-name{font-size:15px;color:#bbf7d0}
+.scoring-breakdown{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.score-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:5px 14px;font-size:13px;color:#d1fae5}
+.detail-wrap{max-width:780px;margin:0 auto;padding:28px 16px 60px}
+.detail-head{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.result-actions{display:flex;gap:12px;margin-top:32px}
+.btn-home{flex:1;padding:13px 22px;border-radius:10px;border:none;background:var(--gd);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.btn-retry{flex:1;padding:13px 22px;border-radius:10px;border:1.5px solid var(--gd);background:#fff;color:var(--gd);font-size:15px;font-weight:600;cursor:pointer}
+#admin-panel{background:#fff;border-radius:14px;padding:24px;margin:20px 24px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.admin-header h3{font-size:16px;font-weight:700;color:#0f172a}
+.admin-note{font-size:12px;color:#16a34a;background:#dcfce7;padding:4px 10px;border-radius:20px;font-weight:600}
+.btn-export{background:#16a34a;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px}
+.btn-export:hover{background:#166534}
+.btn-export:disabled{background:#9ca3af;cursor:not-allowed}
+.rtable{width:100%;border-collapse:collapse;font-size:13px}
+.rtable th{padding:9px 12px;color:var(--gray);text-align:left;font-weight:700;border-bottom:1.5px solid var(--border);background:#f8fafc;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.rtable td{padding:8px 12px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.pct-h{color:#16a34a;font-weight:700}.pct-m{color:#d97706;font-weight:700}.pct-l{color:#dc2626;font-weight:700}
+.band-td{color:#7c3aed;font-weight:700}
+.no-data{color:var(--gray);font-size:14px;padding:12px 0}
+@media(max-width:600px){.form-row{flex-direction:column}}
+
+/* Note completion format */
+.notes-table{width:100%;border-collapse:collapse;margin-top:4px}
+.notes-table td{padding:6px 4px;vertical-align:top;font-size:14px;line-height:1.8}
+.fill-inp{display:inline-block;width:160px;padding:4px 10px;border-radius:7px;border:1.5px solid var(--border);font-size:14px;outline:none;vertical-align:middle;transition:.2s;background:#fff}
+.fill-inp:focus{border-color:var(--gm)}
+</style>
+</head>
+<body>
+<div id="nav">
+  <div>
+    <div class="brand-tag">IESS* (STELLA) · Environment · Listening</div>
+    <div class="brand-name">IELTS Listening — Part 4 Homework</div>
+  </div>
+  <div class="nav-right">
+    <button class="btn-admin" onclick="toggleAdmin()">⚙ Kết quả lớp</button>
+  </div>
+</div>
+
+<div id="admin-panel" style="display:none">
+  <div class="admin-header">
+    <div>
+      <h3>📊 Kết quả nộp bài — <span id="sub-count">0</span> submissions</h3>
+      <div class="admin-note" id="admin-note">🔒 Chỉ admin</div>
+    </div>
+    <button class="btn-export" id="export-btn" onclick="exportExcel()" disabled>⬇ Xuất Excel</button>
+  </div>
+  <div id="admin-body"><p class="no-data">Chưa có bài nộp.</p></div>
+</div>
+
+<div id="page-home" class="page active">
+  <div class="home-wrap">
+    <div class="home-hero">
+      <div class="hero-label">🎧 IELTS Academic Listening · Part 4 · Chủ đề Môi Trường</div>
+      <div class="hero-title">Environment Listening — Part 4</div>
+      <div class="hero-sub">5 bài giảng từ Cambridge IELTS 11/12/17/19/20 · Fill-in-blank · Tự chấm ngay sau khi nộp</div>
+    </div>
+    <div class="info-form">
+      <h3>Thông tin học viên</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Họ và tên *</label><input id="inp-name" type="text" placeholder="Nhập họ tên đầy đủ..." autocomplete="name"></div>
+        <div class="form-group"><label>Email *</label><input id="inp-email" type="email" placeholder="email@example.com" autocomplete="email"></div>
+      </div>
+      <p style="font-size:12px;color:var(--gray)">* Bắt buộc. Email dùng để xác thực khi xem kết quả lớp.</p>
+    </div>
+    <p class="section-head">Chọn bài — Part 4 only (Questions 31–40)</p>
+    <div id="test-list"></div>
+  </div>
+</div>
+
+<div id="page-test" class="page">
+  <div id="test-topbar">
+    <div><div class="tb-src" id="tb-src"></div><div class="tb-ttl" id="tb-ttl"></div></div>
+    <div class="tb-right" id="tb-right"><span id="progress-txt">0/10</span></div>
+  </div>
+  <div class="test-wrap">
+    <div class="intro-box" id="test-intro"></div>
+    <div id="q-wrap"></div>
+    <div class="submit-bar">
+      <button class="btn-back" onclick="goHome()">← Quay lại</button>
+      <button class="btn-submit" id="submit-btn" onclick="doSubmit()">Nộp bài (0/10 câu)</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-result" class="page">
+  <div class="result-head">
+    <div class="score-ring-wrap" id="score-ring">
+      <div class="score-inner">
+        <div class="score-pct" id="s-pct">0%</div>
+        <div class="score-frac" id="s-frac">0/10</div>
+      </div>
+    </div>
+    <div class="band-val" id="s-band">Band —</div>
+    <div class="result-name" id="s-name"></div>
+    <div class="scoring-breakdown" id="s-breakdown"></div>
+  </div>
+  <div class="detail-wrap">
+    <div class="detail-head">📋 Chữa bài chi tiết</div>
+    <div id="result-detail"></div>
+    <div class="result-actions">
+      <button class="btn-home" onclick="goHome()">← Chọn bài khác</button>
+      <button class="btn-retry" onclick="retryTest()">↺ Làm lại</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TESTS = [
+{
+  id:"C11L4P4", label:"Cambridge IELTS 11 — Listening Test 4",
+  title:"Part 4: Using Soil to Reduce CO₂",
+  desc:"Bài giảng về nông nghiệp tái sinh — hấp thụ CO₂ từ khí quyển vào đất",
+  audio:"https://drive.google.com/file/d/1DpTF0GkVZdLA3RrnYxAumqWBq3a1GFjm/view?usp=drive_link",
+  totalQ:10,
+  groups:[{
+    type:"fill",
+    instruction:"<strong>Questions 31–40</strong> — Complete the notes below. Write <strong>ONE WORD ONLY</strong> for each answer.",
+    questions:[
+      {id:"q31",num:31,text:"31. Erosion is more likely in soil that is <mark>....................</mark>",answer:"bare"},
+      {id:"q32",num:32,text:"32. Rattan Lal found soil in Africa that was very <mark>....................</mark>",answer:"rich"},
+      {id:"q33",num:33,text:"33. Plants turn CO₂ from the air into carbon-based substances such as <mark>....................</mark>",answer:"sugar"},
+      {id:"q34",num:34,text:"34. Some CO₂ moves from the <mark>....................</mark> of plants to microbes in the soil",answer:"roots"},
+      {id:"q35",num:35,text:"35. Uses established practices to make sure soil remains fertile and <mark>....................</mark>",answer:"healthy"},
+      {id:"q36",num:36,text:"36. Through year-round planting and increasing the <mark>....................</mark> of plants",answer:"diversity"},
+      {id:"q37",num:37,text:"37. Taking place on a big <mark>....................</mark> farm",answer:"research"},
+      {id:"q38",num:38,text:"38. Uses compost made from waste from agriculture and <mark>....................</mark>",answer:"sewage"},
+      {id:"q39",num:39,text:"39. Aims to increase soil carbon by using <mark>....................</mark> that are always green",answer:"plants"},
+      {id:"q40",num:40,text:"40. Giving farmers <mark>....................</mark> for carbon storage, as well as their produce",answer:"credit"}
+    ]
+  }]
+},
+{
+  id:"C12L7P4", label:"Cambridge IELTS 12 — Listening Test 7 ⭐",
+  title:"Part 4: Environmental Change & Birds (Mercury)",
+  desc:"Bài giảng về tác động của thuỷ ngân (Hg) đến hành vi và sinh sản của chim",
+  audio:"https://drive.google.com/file/d/1j0ege6u3ULg5B4NI2ZLAEmie2Hpd0Y5G/view?usp=drive_link",
+  totalQ:10,
+  groups:[{
+    type:"fill",
+    instruction:"<strong>Questions 31–40</strong> — Complete the notes below. Write <strong>ONE WORD ONLY</strong> for each answer.",
+    questions:[
+      {id:"q31b",num:31,text:"31. Mercury has recently been found to affect birds which feed on <mark>....................</mark>",answer:"insects"},
+      {id:"q32b",num:32,text:"32. Claire Varian-Ramos investigates: the effects on birds' <mark>....................</mark> or migration",answer:"behaviour"},
+      {id:"q33b",num:33,text:"33. The effects on bird song (usually learned from a bird's <mark>....................</mark>)",answer:"father"},
+      {id:"q34b",num:34,text:"34. Songs learned by birds exposed to mercury are less <mark>....................</mark>",answer:"complex"},
+      {id:"q35b",num:35,text:"35. This may have a negative effect on birds' <mark>....................</mark>",answer:"reproduction"},
+      {id:"q36b",num:36,text:"36. Lab studies allow more <mark>....................</mark> for the experimenter",answer:"control"},
+      {id:"q37b",num:37,text:"37. Migrating birds such as <mark>....................</mark> containing mercury may be eaten by humans",answer:"ducks"},
+      {id:"q38b",num:38,text:"38. Mercury also causes problems in learning <mark>....................</mark>",answer:"language"},
+      {id:"q39b",num:39,text:"39. Mercury in a mother's body from <mark>....................</mark> may affect the unborn child",answer:"food"},
+      {id:"q40b",num:40,text:"40. New regulations for mercury emissions will affect everyone's energy <mark>....................</mark>",answer:"costs"}
+    ]
+  }]
+},
+{
+  id:"C17L3P4", label:"Cambridge IELTS 17 — Listening Test 3",
+  title:"Part 4: Bird Migration Theory",
+  desc:"Bài giảng về lịch sử nghiên cứu di trú chim — từ thế kỷ 17 đến nay",
+  audio:"https://drive.google.com/file/d/1GZ-SNllVL1Us31658o1CQpxOO1nwAdQT/view?usp=drive_link",
+  totalQ:10,
+  groups:[{
+    type:"fill",
+    instruction:"<strong>Questions 31–40</strong> — Complete the notes below. Write <strong>ONE WORD ONLY</strong> for each answer.",
+    questions:[
+      {id:"q31c",num:31,text:"31. Hibernation theory: birds were believed to hibernate underwater or buried in <mark>....................</mark>",answer:"mud"},
+      {id:"q32c",num:32,text:"32. Transmutation theory: Aristotle believed the two species had similar <mark>....................</mark>",answer:"feathers"},
+      {id:"q33c",num:33,text:"33. Aristotle's assumptions were logical because the two species had a similar <mark>....................</mark>",answer:"shape"},
+      {id:"q34c",num:34,text:"34. 17th century: Charles Morton popularised the idea that birds fly to the <mark>....................</mark>",answer:"moon"},
+      {id:"q35c",num:35,text:"35. Scientific developments: In 1822, a stork was found with an African spear through its <mark>....................</mark>",answer:"neck"},
+      {id:"q36c",num:36,text:"36. Previously there had been no <mark>....................</mark> that storks migrate to Africa",answer:"evidence"},
+      {id:"q37c",num:37,text:"37. Little was known about the <mark>....................</mark> and journeys of migrating birds",answer:"destinations"},
+      {id:"q38c",num:38,text:"38. Large birds were thought to carry small birds across <mark>....................</mark>",answer:"oceans"},
+      {id:"q39c",num:39,text:"39. Ringing depended on what is called the '<mark>....................</mark>' of dead birds",answer:"recovery"},
+      {id:"q40c",num:40,text:"40. In 1931, the first bird migration <mark>....................</mark> was printed.",answer:"atlas"}
+    ]
+  }]
+},
+{
+  id:"C20L4P4", label:"Cambridge IELTS 20 — Listening Test 4",
+  title:"Part 4: Chembe Bird Sanctuary",
+  desc:"Bài giảng về chim săn mồi tại khu bảo tồn Chembe — lợi ích, mối đe doạ và biện pháp bảo vệ",
+  audio:"https://drive.google.com/file/d/15ulQBGQ_qFRd51fjse3ya96nZiIQOq9x/view?usp=drive_link",
+  totalQ:10,
+  groups:[{
+    type:"fill",
+    instruction:"<strong>Questions 31–40</strong> — Complete the notes below. Write <strong>ONE WORD ONLY</strong> for each answer.",
+    questions:[
+      {id:"q31d",num:31,text:"31. They destroy <mark>....................</mark> and other rodents.",answer:"rats"},
+      {id:"q32d",num:32,text:"32. They help prevent farmers from being bitten by <mark>....................</mark>",answer:"snakes"},
+      {id:"q33d",num:33,text:"33. They support the economy by encouraging <mark>....................</mark> in the area.",answer:"tourism"},
+      {id:"q34d",num:34,text:"34. The birds may be accidentally killed by <mark>....................</mark> when hunting or sleeping",answer:"traffic"},
+      {id:"q35d",num:35,text:"35. By electrocution from power lines, especially when there is a lot of <mark>....................</mark>",answer:"rain"},
+      {id:"q36d",num:36,text:"36. Local farmers may illegally shoot or <mark>....................</mark> them.",answer:"poison"},
+      {id:"q37d",num:37,text:"37. Providing a <mark>....................</mark> for chickens (expensive solution)",answer:"building"},
+      {id:"q38d",num:38,text:"38. Frightening birds of prey by keeping a <mark>....................</mark>",answer:"dog"},
+      {id:"q39d",num:39,text:"39. Making a <mark>....................</mark> — e.g. with metal objects",answer:"noise"},
+      {id:"q40d",num:40,text:"40. A <mark>....................</mark> of methods is usually most effective.",answer:"combination"}
+    ]
+  }]
+},
+{
+  id:"C19L4P4", label:"Cambridge IELTS 19 — Listening Test 4",
+  title:"Part 4: Tree Planting & Reforestation",
+  desc:"Bài giảng về dự án trồng rừng — nguyên tắc, thách thức và các case study thực tế",
+  audio:"https://drive.google.com/file/d/1fO4arSqGWPZCY_FPFl9SQ08bcklT-pfx/view?usp=drive_link",
+  totalQ:10,
+  groups:[{
+    type:"fill",
+    instruction:"<strong>Questions 31–40</strong> — Complete the notes below. Write <strong>ONE WORD ONLY</strong> for each answer.",
+    questions:[
+      {id:"q31e",num:31,text:"31. Don't include invasive species that cause <mark>....................</mark> to native species",answer:"competition"},
+      {id:"q32e",num:32,text:"32. Provide sustainable sources of <mark>....................</mark> for local communities",answer:"food"},
+      {id:"q33e",num:33,text:"33. Use seeds with high genetic diversity to increase resistance to <mark>....................</mark>",answer:"disease"},
+      {id:"q34e",num:34,text:"34. Plant on previously forested land, not land suitable for <mark>....................</mark>",answer:"agriculture"},
+      {id:"q35e",num:35,text:"35. Base planning decisions on information from accurate <mark>....................</mark>",answer:"maps"},
+      {id:"q36e",num:36,text:"36. Drones identify areas in Brazil endangered by <mark>....................</mark> ranching",answer:"cattle"},
+      {id:"q37e",num:37,text:"37. A forest in Thailand was restored at a surprising <mark>....................</mark>",answer:"speed"},
+      {id:"q38e",num:38,text:"38. <mark>....................</mark> were soon attracted to the restored forest area.",answer:"monkeys"},
+      {id:"q39e",num:39,text:"39. Destruction of mangroves in Madagascar made <mark>....................</mark> difficult",answer:"fishing"},
+      {id:"q40e",num:40,text:"40. The mangrove project protects against higher risk of <mark>....................</mark>",answer:"flooding"}
+    ]
+  }]
+}
+];
+const ADMIN_EMAIL = "huongstella8@gmail.com";
+let curTest=null, userAns={}, subs=[], adminVisible=false, curStudentEmail='';
+
+function init(){
+  const list=document.getElementById('test-list');
+  TESTS.forEach((t,i)=>{
+    const types=[...new Set(t.groups.map(g=>g.type))];
+    const bmap={matching:'b-match',matching_heading:'b-match',tfng:'b-tfng',yng:'b-yng',mc_single:'b-mcs',mc_multiple:'b-mcm',fill:'b-fill',fill_bank:'b-fillb'};
+    const lmap={matching:'Matching',matching_heading:'Matching Headings',tfng:'T/F/NG',yng:'Y/N/NG',mc_single:'MC Single',mc_multiple:'MC Multiple',fill:'Fill-in-blank',fill_bank:'Word Bank'};
+    const tags=types.map(tp=>`<span class="badge ${bmap[tp]||'b-fill'}">${lmap[tp]||tp}</span>`).join('');
+    const audioBtn=t.audio?`<a href="${t.audio}" target="_blank" style="font-size:11px;color:#16a34a;font-weight:700;margin-left:6px;text-decoration:none;border:1px solid #bbf7d0;padding:2px 8px;border-radius:10px;background:#f0fdf4">🎧 Audio</a>`:'';
+    const pdfBtn=t.pdf?`<a href="${t.pdf}" target="_blank" style="font-size:11px;color:#1e40af;font-weight:700;margin-left:4px;text-decoration:none;border:1px solid #bfdbfe;padding:2px 8px;border-radius:10px;background:#eff6ff">📄 PDF</a>`:'';
+    list.innerHTML+=`<div class="test-card" onclick="startTest('${t.id}')">
+      <div class="tc-num">${i+1}</div>
+      <div class="tc-info">
+        <div class="tc-src">${t.label}</div>
+        <div class="tc-title">${t.title}</div>
+        ${t.desc?`<div class="tc-desc">${t.desc}</div>`:''}
+        <div class="tc-tags">${tags}<span style="font-size:11px;color:#94a3b8;margin-left:6px">${t.totalQ} câu</span>${audioBtn}${pdfBtn}</div>
+      </div>
+      <div class="tc-arrow">›</div>
+    </div>`;
+  });
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goHome(){showPage('home');}
+function toggleAdmin(){
+  adminVisible=!adminVisible;
+  document.getElementById('admin-panel').style.display=adminVisible?'block':'none';
+  document.querySelector('.btn-admin').textContent=adminVisible?'▲ Đóng':'⚙ Kết quả lớp';
+  if(adminVisible)renderAdmin();
+}
+
+function startTest(id){
+  const name=document.getElementById('inp-name').value.trim();
+  const email=document.getElementById('inp-email').value.trim();
+  if(!name){alert('Vui lòng nhập họ tên.');document.getElementById('inp-name').focus();return;}
+  if(!email||!email.includes('@')){alert('Vui lòng nhập email hợp lệ.');document.getElementById('inp-email').focus();return;}
+  curStudentEmail=email;
+  curTest=TESTS.find(t=>t.id===id);
+  userAns={};
+  document.getElementById('tb-src').textContent=curTest.label;
+  document.getElementById('tb-ttl').textContent=curTest.title;
+  // Build top-bar links
+  const tbRight=document.getElementById('tb-right');
+  tbRight.innerHTML=`<span id="progress-txt">0/${curTest.totalQ}</span>`;
+  if(curTest.audio) tbRight.innerHTML+=`<a class="top-link" href="${curTest.audio}" target="_blank" rel="noopener">🎧 Nghe audio</a>`;
+  if(curTest.pdf)   tbRight.innerHTML+=`<a class="top-link" href="${curTest.pdf}"   target="_blank" rel="noopener">📄 Bài đọc</a>`;
+  
+  let introMsg=`<strong>${name}</strong> — `;
+  if(curTest.audio) introMsg+=`Mở <a href="${curTest.audio}" target="_blank" style="color:var(--g);font-weight:700">🎧 file audio</a> và nghe, `;
+  if(curTest.pdf)   introMsg+=`mở <a href="${curTest.pdf}" target="_blank" style="color:var(--g);font-weight:700">📄 bài đọc</a>, `;
+  introMsg+=`rồi trả lời ${curTest.totalQ} câu hỏi bên dưới. Nhấn <strong>Nộp bài</strong> khi hoàn tất.`;
+  document.getElementById('test-intro').innerHTML=introMsg;
+  
+  if(curTest.audio) window.open(curTest.audio,'_blank');
+  else if(curTest.pdf) window.open(curTest.pdf,'_blank');
+  
+  buildQuestions(false,null);
+  updateProgress();
+  showPage('test');
+}
+
+// ── RENDER QUESTIONS ──────────────────────────────────────────
+function buildQuestions(submitted,detail){
+  const wrap=document.getElementById('q-wrap');
+  wrap.innerHTML='';
+  curTest.groups.forEach(g=>{wrap.innerHTML+=buildGroup(g,submitted,detail);});
+  if(!submitted){
+    curTest.groups.forEach(g=>{
+      if(g.type==='fill'){
+        g.questions.forEach(q=>{
+          const el=document.getElementById('fi_'+q.id);
+          if(el)el.addEventListener('input',e=>{userAns[q.id]=e.target.value.trim();updateProgress();});
+        });
+      }
+    });
+  }
+}
+
+function buildGroup(g,submitted,detail){
+  if(g.type==='mc_multiple') return buildMCMulti(g,submitted,detail);
+  if(g.type==='matching'||g.type==='matching_heading') return buildMatching(g,submitted,detail);
+  // mc_single, yng, tfng, fill — stacked blocks
+  const qBlocks=g.questions.map(q=>buildQBlock(q,g.type,submitted,detail)).join('');
+  return `<div class="q-section">
+    <div class="q-section-head">
+      <div class="section-type">${typeLabel(g.type)}</div>
+      <div class="section-instruction">${g.instruction}</div>
+    </div>${qBlocks}</div>`;
+}
+
+function buildMatching(g,submitted,detail){
+  const headingListHtml=g.headings?`<div style="margin-top:10px;background:#fff;border-radius:8px;padding:10px 14px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:700;color:var(--g);margin-bottom:6px">LIST OF HEADINGS</div><ul style="list-style:none;padding:0">${Object.entries(g.headings).map(([k,v])=>`<li style="margin-bottom:4px;font-size:13px"><strong>${k}</strong> — ${v}</li>`).join('')}</ul></div>`:'';
+  const opts=g.headings?Object.keys(g.headings):g.opts||[];
+  const optLabel=(k)=>g.headings?`${k} — ${g.headings[k]}`:k;
+  const qBlocks=g.questions.map(q=>{
+    const d=detail&&detail.find(x=>x.num===q.num);
+    const ok=d?d.correct:false;
+    const blk='q-block'+(submitted?(ok?' correct':' wrong'):'');
+    const rtag=submitted?`<span class="q-result-tag ${ok?'c':'w'}">${ok?'✓ Đúng':'✗ Sai'}</span>`:'';
+    const hint=submitted&&!ok?`<div class="answer-reveal">✏️ Đáp án đúng: <strong>${q.answer}${g.headings&&g.headings[q.answer]?' — '+g.headings[q.answer]:''}</strong></div>`:'';
+    const optBtns=opts.map(k=>{const sel=userAns[q.id]===k;
+      return `<button class="opt-pill${sel?' sel':''}" onclick="selOpt('${q.id}','${k}',this,${submitted})" ${submitted?'disabled':''}>${k}</button>`;
+    }).join('');
+    return `<div class="${blk}"><div class="q-header"><span class="q-num-label">${q.num}.</span>${rtag}</div>
+      <div class="q-text">${q.text}</div><div class="opts-row">${optBtns}</div>${hint}</div>`;
+  }).join('');
+  return `<div class="q-section"><div class="q-section-head">
+    <div class="section-type">${typeLabel(g.type)}</div>
+    <div class="section-instruction">${g.instruction}</div>${headingListHtml}
+  </div>${qBlocks}</div>`;
+}
+
+function buildMCMulti(g,submitted,detail){
+  const q=g.questions[0];
+  const pairNums=q.pairNums||[q.num,q.num+1];
+  const selected=userAns[q.id]||[];
+  const correctArr=g.correctAnswers||[];
+  let gScore=0;
+  if(submitted){pairNums.forEach((n,i)=>{const d=detail&&detail.find(x=>x.num===n);if(d&&d.correct)gScore++;});}
+  const allOk=submitted&&gScore===pairNums.length;
+  const partial=submitted&&gScore>0&&gScore<pairNums.length;
+  let rtag='';
+  if(submitted){
+    if(allOk) rtag=`<span class="q-result-tag c">✓ ${gScore}/${pairNums.length} đúng</span>`;
+    else if(partial) rtag=`<span class="q-result-tag p">⚡ ${gScore}/${pairNums.length} đúng</span>`;
+    else rtag=`<span class="q-result-tag w">✗ 0/${pairNums.length} đúng</span>`;
+  }
+  const blk='q-block'+(submitted?(allOk?' correct':partial?' partial':' wrong'):'');
+  const counter=!submitted?`<div style="font-size:12px;font-weight:600;color:#7c3aed;margin-top:6px">Đã chọn: ${selected.length}/2</div>`:'';
+  const hint=submitted&&!allOk?`<div class="answer-reveal">✏️ Đáp án đúng: <strong>${correctArr.join(' và ')}</strong>${partial?' (Bạn đúng '+gScore+'/2)':''}</div>`:'';
+  const optBtns=g.opts.map(o=>{
+    const l=o[0]; const isSel=selected.includes(l); const isOk=correctArr.includes(l);
+    let extra='';
+    if(submitted&&isSel&&isOk) extra='border-color:#16a34a;background:#dcfce7;';
+    else if(submitted&&isSel&&!isOk) extra='border-color:#dc2626;background:#fee2e2;';
+    else if(submitted&&!isSel&&isOk) extra='border-color:#d97706;background:#fef9c3;';
+    const sp=`<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:${isSel?'#7c3aed':'#e5e7eb'};color:${isSel?'#fff':'#6b7280'};font-size:12px;font-weight:700;margin-right:8px;flex-shrink:0;vertical-align:middle">${l}</span>`;
+    return `<button class="opt-block${isSel?' sel-multi':''}" style="${extra}" onclick="toggleMulti('${q.id}','${l}',this,${submitted},2)" ${submitted?'disabled':''}>${sp}${o.slice(3)}</button>`;
+  }).join('');
+  return `<div class="q-section"><div class="q-section-head">
+    <div class="section-type">Multiple Choice — Choose TWO letters</div>
+    <div class="section-instruction">${g.instruction}</div>
+  </div><div class="${blk}" style="border-bottom:1px solid var(--border);border-radius:0 0 10px 10px">
+    <div class="q-header"><span class="q-num-label">Q${pairNums.join(' & ')}</span>${rtag}</div>
+    <div class="mc-multi-hint">Chọn ĐÚNG 2 đáp án — mỗi đáp án đúng tính 1 điểm riêng</div>
+    <div class="opts-stack">${optBtns}</div>${counter}${hint}
+  </div></div>`;
+}
+
+function buildQBlock(q,type,submitted,detail){
+  const d=detail&&detail.find(x=>x.num===q.num);
+  const ok=d?d.correct:false;
+  const blk='q-block'+(submitted?(ok?' correct':' wrong'):'');
+  const rtag=submitted?`<span class="q-result-tag ${ok?'c':'w'}">${ok?'✓ Đúng':'✗ Sai'}</span>`:'';
+  const hint=submitted&&!ok?`<div class="answer-reveal">✏️ Đáp án đúng: <strong>${q.answer}</strong></div>`:'';
+  let body='';
+  if(type==='mc_single'){
+    body=`<div class="opts-stack">${q.opts.map(o=>{const l=o[0];const sel=userAns[q.id]===l;
+      return `<button class="opt-block${sel?' sel':''}" onclick="selOpt('${q.id}','${l}',this,${submitted})" ${submitted?'disabled':''}>${o}</button>`;
+    }).join('')}</div>`;
+  } else if(type==='yng'||type==='tfng'){
+    body=`<div class="opts-row">${q.opts.map(o=>{const sel=userAns[q.id]===o;
+      return `<button class="opt-pill${sel?' sel':''}" style="flex:1;min-width:80px" onclick="selOpt('${q.id}','${o}',this,${submitted})" ${submitted?'disabled':''}>${o}</button>`;
+    }).join('')}</div>`;
+  } else if(type==='fill'){
+    body=`<div class="q-text">${q.text}</div><input class="fill-inp" id="fi_${q.id}" type="text" value="${userAns[q.id]||''}" placeholder="Write ONE WORD ONLY..." ${submitted?'readonly':''}/>`;
+  }
+  return `<div class="${blk}"><div class="q-header"><span class="q-num-label">${q.num}.</span>${rtag}</div>
+    ${type!=='fill'?`<div class="q-text">${q.text}</div>`:''}${body}${hint}</div>`;
+}
+
+function typeLabel(t){return{matching:'Matching',matching_heading:'Matching Headings',tfng:'True/False/Not Given',
+  yng:'Yes/No/Not Given',mc_single:'Multiple Choice',mc_multiple:'MC — Choose TWO',fill:'Fill-in-blank',fill_bank:'Fill-in-blank (Word Bank)'}[t]||t;}
+
+// ── INTERACTIONS ──────────────────────────────────────────────
+function selOpt(qid,val,btn,submitted){
+  if(submitted)return;
+  userAns[qid]=val;
+  btn.closest('.q-block').querySelectorAll('.opt-pill,.opt-block').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  updateProgress();
+}
+function toggleMulti(qid,letter,btn,submitted,max){
+  if(submitted)return;
+  let sel=userAns[qid]||[];
+  if(sel.includes(letter))sel=sel.filter(x=>x!==letter);
+  else if(sel.length<max)sel=[...sel,letter];
+  userAns[qid]=sel;
+  const wrap=btn.closest('.q-block');
+  wrap.querySelectorAll('.opt-block').forEach(b=>{
+    const l=b.textContent.trim()[0];
+    const isSel=sel.includes(l);
+    b.className='opt-block'+(isSel?' sel-multi':'');
+    const sp=b.querySelector('span');
+    if(sp){sp.style.background=isSel?'#7c3aed':'#e5e7eb';sp.style.color=isSel?'#fff':'#6b7280';}
+  });
+  const ctr=wrap.querySelector('[data-counter]');
+  if(ctr)ctr.textContent=`Đã chọn: ${sel.length}/2`;
+  updateProgress();
+}
+
+function countAnswered(){
+  let n=0;
+  curTest.groups.forEach(g=>{
+    if(g.type==='mc_multiple'){const sel=userAns[g.questions[0].id]||[];n+=Math.min(sel.length,2);}
+    else g.questions.forEach(q=>{if(userAns[q.id]&&userAns[q.id].toString().trim())n++;});
+  });
+  return n;
+}
+function updateProgress(){
+  const done=countAnswered(),total=curTest.totalQ;
+  const pt=document.getElementById('progress-txt');
+  if(pt)pt.textContent=done+'/'+total;
+  document.getElementById('submit-btn').textContent=`Nộp bài (${done}/${total} câu)`;
+}
+
+// ── GRADE ─────────────────────────────────────────────────────
+function grade(){
+  let correct=0,total=0;
+  const detail=[];
+  curTest.groups.forEach(g=>{
+    if(g.type==='mc_multiple'){
+      const q=g.questions[0];
+      const pairNums=q.pairNums||[q.num,q.num+1];
+      const selected=userAns[q.id]||[];
+      const correctArr=g.correctAnswers||[];
+      pairNums.forEach((n,i)=>{
+        const ok=selected.includes(correctArr[i]);
+        total++;if(ok)correct++;
+        detail.push({num:n,type:'mc_multiple',user:selected.join(',')||'—',answer:correctArr[i],correct:ok});
+      });
+    } else {
+      g.questions.forEach(q=>{
+        const user=(userAns[q.id]||'').toString().trim().toUpperCase();
+        const ans=(q.answer||'').trim().toUpperCase();
+        const ok=user===ans;
+        total++;if(ok)correct++;
+        detail.push({num:q.num,type:g.type,user:userAns[q.id]||'—',answer:q.answer,correct:ok});
+      });
+    }
+  });
+  return{correct,total,pct:Math.round(correct/total*100),detail};
+}
+function bandEstimate(pct){
+  if(pct>=92)return'8.5+';if(pct>=85)return'8.0';if(pct>=77)return'7.5';
+  if(pct>=69)return'7.0';if(pct>=62)return'6.5';if(pct>=54)return'6.0';
+  if(pct>=46)return'5.5';if(pct>=38)return'5.0';return'< 5.0';
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────
+function doSubmit(){
+  const name=document.getElementById('inp-name').value.trim();
+  const email=document.getElementById('inp-email').value.trim();
+  const result=grade();
+  subs.push({name,email,testId:curTest.id,testLabel:curTest.label,testTitle:curTest.title,result,time:new Date().toLocaleString('vi-VN')});
+  document.getElementById('sub-count').textContent=subs.length;
+  if(adminVisible)renderAdmin();
+  showResult(result,name);
+}
+
+// ── RESULT ────────────────────────────────────────────────────
+function showResult(result,name){
+  const{pct,correct,total,detail}=result;
+  const color=pct>=70?'#16a34a':pct>=50?'#d97706':'#dc2626';
+  document.getElementById('score-ring').style.background=`conic-gradient(${color} ${pct}%, rgba(0,0,0,.3) ${pct}%)`;
+  document.getElementById('s-pct').textContent=pct+'%';
+  document.getElementById('s-frac').textContent=`${correct}/${total} câu đúng`;
+  document.getElementById('s-band').textContent='Band ước tính: '+bandEstimate(pct);
+  document.getElementById('s-name').textContent=name+' · '+curTest.title;
+  const byType={};
+  detail.forEach(d=>{if(!byType[d.type])byType[d.type]={c:0,t:0};byType[d.type].t++;if(d.correct)byType[d.type].c++;});
+  const tl={fill_bank:'Word Bank',mc_multiple:'MC×2',mc_single:'MC',matching:'Match',matching_heading:'Match',yng:'Y/N/NG',tfng:'T/F/NG',fill:'Fill'};
+  document.getElementById('s-breakdown').innerHTML=Object.entries(byType).map(([t,v])=>`<div class="score-pill">${tl[t]||t}: ${v.c}/${v.t}</div>`).join('');
+  buildQuestions(true,detail);
+  document.getElementById('result-detail').innerHTML=document.getElementById('q-wrap').innerHTML;
+  showPage('result');
+}
+function retryTest(){startTest(curTest.id);}
+
+// ── ADMIN ─────────────────────────────────────────────────────
+function renderAdmin(){
+  // Use stored email (from last submission) OR current input
+  const emailInput=document.getElementById('inp-email').value.trim().toLowerCase();
+  const effectiveEmail=emailInput||curStudentEmail.toLowerCase();
+  const isAdmin=effectiveEmail===ADMIN_EMAIL.toLowerCase();
+  
+  document.getElementById('export-btn').disabled=!isAdmin||subs.length===0;
+  document.getElementById('admin-note').innerHTML=isAdmin?'✅ Quyền admin':'🔒 Chỉ admin';
+  
+  if(!isAdmin){
+    document.getElementById('admin-body').innerHTML=`<div style="padding:28px;text-align:center;color:#64748b">
+      <div style="font-size:40px;margin-bottom:12px">🔒</div>
+      <div style="font-weight:700;color:#374151;margin-bottom:6px">Dữ liệu được bảo vệ</div>
+      <div style="font-size:13px">Nhập email <strong>huongstella8@gmail.com</strong> ở trang chủ rồi mở lại panel này để xem kết quả.</div>
+    </div>`;
+    return;
+  }
+  if(!subs.length){document.getElementById('admin-body').innerHTML='<p class="no-data">Chưa có bài nộp trong phiên này.</p>';return;}
+  const rows=subs.map((s,i)=>{
+    const pc=s.result.pct;
+    const cls=pc>=70?'pct-h':pc>=50?'pct-m':'pct-l';
+    return `<tr><td>${i+1}</td><td><strong>${s.name}</strong></td><td style="font-size:12px;color:#64748b">${s.email}</td>
+      <td style="font-size:12px;color:#64748b">${s.testLabel}</td>
+      <td style="color:#16a34a;font-weight:600">${s.result.correct}</td><td style="color:#64748b">${s.result.total}</td>
+      <td class="${cls}">${pc}%</td><td class="band-td">${bandEstimate(pc)}</td>
+      <td style="font-size:11px;color:#94a3b8">${s.time}</td></tr>`;
+  }).join('');
+  document.getElementById('admin-body').innerHTML=`<div style="overflow-x:auto"><table class="rtable">
+    <thead><tr><th>#</th><th>Họ tên</th><th>Email</th><th>Bài</th><th>Đúng</th><th>Tổng</th><th>%</th><th>Band</th><th>Thời gian</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+// ── EXCEL EXPORT ──────────────────────────────────────────────
+function exportExcel(){
+  const emailInput=document.getElementById('inp-email').value.trim().toLowerCase();
+  const effectiveEmail=emailInput||curStudentEmail.toLowerCase();
+  if(effectiveEmail!==ADMIN_EMAIL.toLowerCase()){alert('Không có quyền.');return;}
+  if(!window.XLSX){alert('XLSX chưa tải.');return;}
+  const wb=XLSX.utils.book_new();
+  const sum=[['#','Họ tên','Email','Bài','Nguồn','Đúng','Tổng','%','Band','Thời gian']];
+  subs.forEach((s,i)=>sum.push([i+1,s.name,s.email,s.testTitle,s.testLabel,s.result.correct,s.result.total,s.result.pct+'%',bandEstimate(s.result.pct),s.time]));
+  const ws0=XLSX.utils.aoa_to_sheet(sum);ws0['!cols']=[4,22,28,40,22,8,8,8,12,18].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws0,'Tổng hợp');
+  TESTS.forEach(test=>{
+    const ts=subs.filter(s=>s.testId===test.id);if(!ts.length)return;
+    const allNums=[];
+    test.groups.forEach(g=>{
+      if(g.type==='mc_multiple'){const q=g.questions[0];(q.pairNums||[q.num,q.num+1]).forEach(n=>allNums.push(n));}
+      else g.questions.forEach(q=>allNums.push(q.num));
+    });
+    const hdr=['Họ tên','Email',...allNums.map(n=>'Q'+n),'Đúng','Tổng','%'];
+    const ansRow=['ĐÁP ÁN','—',...allNums.map(n=>{
+      let found='?';
+      test.groups.forEach(g=>{
+        if(g.type==='mc_multiple'){const pn=g.questions[0].pairNums||[];const idx=pn.indexOf(n);if(idx>=0)found=g.correctAnswers[idx];}
+        else{const q=g.questions.find(q=>q.num===n);if(q)found=q.answer;}
+      });
+      return found;
+    }),'','',''];
+    const rows=ts.map(s=>{
+      const uA=allNums.map(n=>{const d=s.result.detail.find(d=>d.num===n);return d?d.user:'—';});
+      return[s.name,s.email,...uA,s.result.correct,s.result.total,s.result.pct+'%'];
+    });
+    const ws=XLSX.utils.aoa_to_sheet([hdr,ansRow,...rows]);
+    ws['!cols']=[{wch:22},{wch:28},...allNums.map(()=>({wch:12})),{wch:8},{wch:8},{wch:8}];
+    XLSX.utils.book_append_sheet(wb,ws,test.id.substring(0,31));
+  });
+  XLSX.writeFile(wb,'ENV_Results_'+new Date().toLocaleDateString('vi-VN').replace(/\//g,'-')+'.xlsx');
+}
+
+init();
+</script>
+</body>
+</html>
