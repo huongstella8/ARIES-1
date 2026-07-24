@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Writing Task 1 — Process | Ôn tập &amp; Luyện tập toàn diện</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#EEF2F5;
+  --paper:#FFFFFF;
+  --ink:#16324A;
+  --ink-soft:#45607A;
+  --accent:#2E8B8B;
+  --accent-dark:#1F6B6B;
+  --amber:#E8A33D;
+  --good:#2F9E52;
+  --good-bg:#E8F6ED;
+  --bad:#D1495B;
+  --bad-bg:#FBEAEC;
+  --basic:#4C9A72;
+  --inter:#3D7FBF;
+  --adv:#9C4E76;
+  --grid:rgba(22,50,74,0.09);
+  --shadow:0 2px 10px rgba(22,50,74,0.08), 0 1px 2px rgba(22,50,74,0.06);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'IBM Plex Serif', Georgia, serif;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+h1,h2,h3,h4,.ui,button,.tabbtn,.pill,.label,.mono{font-family:'IBM Plex Sans',sans-serif;}
+code,.mono,.answerbox input, .answerbox select{font-family:'IBM Plex Mono',monospace;}
+
+/* ===== Header ===== */
+header.top{
+  background:linear-gradient(135deg,var(--ink) 0%, #1d4463 55%, var(--accent-dark) 100%);
+  color:#fff; padding:22px 5vw 26px; position:relative; overflow:hidden;
+}
+header.top::after{
+  content:""; position:absolute; right:-40px; top:-40px; width:220px; height:220px;
+  border:2px dashed rgba(255,255,255,0.15); border-radius:50%;
+}
+.orgname{
+  font-family:'IBM Plex Mono',monospace; font-weight:600; letter-spacing:.22em; font-size:13px;
+  color:#fff; text-transform:uppercase; margin-bottom:10px; opacity:.92;
+  display:inline-block; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.35);
+}
+.brand{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+.brand .eyebrow{font-family:'IBM Plex Mono',monospace; letter-spacing:.12em; font-size:12px; color:var(--amber); text-transform:uppercase;}
+.brand h1{margin:2px 0 4px; font-size:clamp(22px,3.4vw,34px); font-weight:700; letter-spacing:-0.01em;}
+.brand p.sub{margin:0; color:#cfe3ea; font-family:'IBM Plex Serif',serif; font-style:italic; font-size:15px;}
+.headerbar{
+  display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+  margin-top:18px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+  border-radius:10px; padding:14px 18px; backdrop-filter:blur(2px);
+}
+.namefield label{display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--amber); margin-bottom:4px;}
+.namefield input{
+  font-size:16px; padding:8px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.95); color:var(--ink); min-width:230px; font-family:'IBM Plex Sans',sans-serif;
+}
+.progresswrap{display:flex; gap:22px; flex-wrap:wrap; align-items:center;}
+.progress-item{text-align:center; min-width:78px;}
+.progress-item .num{font-size:22px; font-weight:700; font-family:'IBM Plex Mono',monospace;}
+.progress-item .lbl{font-size:10.5px; color:#cfe3ea; text-transform:uppercase; letter-spacing:.06em;}
+.headerbtns{display:flex; gap:10px; flex-wrap:wrap;}
+.hbtn{
+  background:var(--amber); color:#1d2a1a; border:none; padding:9px 16px; border-radius:7px;
+  font-weight:600; cursor:pointer; font-size:13.5px; font-family:'IBM Plex Sans',sans-serif;
+  box-shadow:var(--shadow); transition:transform .12s ease;
+}
+.hbtn.secondary{background:rgba(255,255,255,0.92); color:var(--ink);}
+.hbtn:hover{transform:translateY(-1px);}
+
+/* ===== Tabs (process-stage style) ===== */
+nav.tabs{
+  display:flex; overflow-x:auto; gap:0; background:var(--paper); border-bottom:1px solid var(--grid);
+  position:sticky; top:0; z-index:50; box-shadow:var(--shadow); padding:0 4vw;
+}
+.tabbtn{
+  position:relative; padding:14px 22px 14px 30px; border:none; background:transparent; cursor:pointer;
+  font-size:14.5px; font-weight:600; color:var(--ink-soft); white-space:nowrap;
+  border-bottom:3px solid transparent;
+}
+.tabbtn .stagenum{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; color:#fff; background:var(--ink-soft);
+  border-radius:50%; width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center;
+  margin-right:7px;
+}
+.tabbtn::after{
+  content:"→"; position:absolute; right:2px; top:50%; transform:translateY(-50%); color:var(--grid); font-size:14px;
+}
+.tabbtn:last-child::after{content:"";}
+.tabbtn.active{color:var(--ink); border-bottom-color:var(--accent);}
+.tabbtn.active .stagenum{background:var(--accent);}
+.tabbtn[data-level="basic"].active{border-bottom-color:var(--basic);}
+.tabbtn[data-level="basic"].active .stagenum{background:var(--basic);}
+.tabbtn[data-level="inter"].active{border-bottom-color:var(--inter);}
+.tabbtn[data-level="inter"].active .stagenum{background:var(--inter);}
+.tabbtn[data-level="adv"].active{border-bottom-color:var(--adv);}
+.tabbtn[data-level="adv"].active .stagenum{background:var(--adv);}
+
+main{max-width:1080px; margin:0 auto; padding:28px 5vw 90px;}
+.tabpanel{display:none; animation:fade .25s ease;}
+.tabpanel.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1;}}
+
+/* ===== Generic content blocks ===== */
+.card{
+  background:var(--paper); border:1px solid var(--grid); border-radius:12px; padding:22px 24px;
+  margin-bottom:20px; box-shadow:var(--shadow);
+}
+.card h2{margin-top:0; font-size:21px; color:var(--ink);}
+.card h3{font-size:16.5px; color:var(--accent-dark); margin-bottom:8px;}
+.levelband{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; padding:3px 10px; border-radius:20px; color:#fff; margin-bottom:10px;}
+.levelband.basic{background:var(--basic);}
+.levelband.inter{background:var(--inter);}
+.levelband.adv{background:var(--adv);}
+
+table.reftable{width:100%; border-collapse:collapse; margin:10px 0 6px; font-size:14.5px;}
+table.reftable th{background:var(--ink); color:#fff; padding:8px 10px; text-align:left; font-family:'IBM Plex Sans',sans-serif; font-size:13px;}
+table.reftable td{padding:7px 10px; border-bottom:1px solid var(--grid); vertical-align:top;}
+table.reftable tr:nth-child(even) td{background:#F7FAFB;}
+
+.tipbox{
+  background:#FFF7E8; border-left:4px solid var(--amber); border-radius:6px; padding:12px 16px; margin:12px 0;
+  font-family:'IBM Plex Sans',sans-serif; font-size:14px;
+}
+.tipbox b{color:#8a5c11;}
+.flowdiagram{width:100%; height:auto; margin:14px 0; display:block; border-radius:10px; background:#FBFDFE; border:1px solid var(--grid);}
+
+/* ===== Exercise engine ===== */
+.exercise-card{border:1px solid var(--grid); border-radius:10px; padding:18px 20px; margin:16px 0; background:#FCFEFE;}
+.exercise-card h4{margin:0 0 6px; font-size:15.5px; font-family:'IBM Plex Sans',sans-serif;}
+.exercise-card .instructions{font-size:13.5px; color:var(--ink-soft); margin-bottom:12px; font-family:'IBM Plex Sans',sans-serif;}
+.exitem{margin:10px 0; font-size:15px; line-height:1.7;}
+.exitem .qnum{font-family:'IBM Plex Mono',monospace; font-weight:600; color:var(--accent-dark); margin-right:6px;}
+.answerbox input[type=text]{
+  border:1.5px solid #C7D4DC; border-radius:5px; padding:4px 8px; font-size:14.5px; min-width:150px;
+}
+.answerbox select{border:1.5px solid #C7D4DC; border-radius:5px; padding:4px 6px; font-size:14.5px;}
+.answerbox input.correct, .answerbox select.correct{border-color:var(--good); background:var(--good-bg);}
+.answerbox input.wrong, .answerbox select.wrong{border-color:var(--bad); background:var(--bad-bg);}
+.feedback-icon{font-weight:700; margin-left:6px;}
+.feedback-icon.ok{color:var(--good);}
+.feedback-icon.no{color:var(--bad);}
+.correctreveal{font-size:12.5px; color:var(--bad); font-family:'IBM Plex Sans',sans-serif; margin-left:6px;}
+.checkbtn, .resetbtn, .revealbtn{
+  font-family:'IBM Plex Sans',sans-serif; border:none; border-radius:6px; padding:8px 16px; cursor:pointer;
+  font-weight:600; font-size:13.5px; margin-top:8px; margin-right:8px;
+}
+.checkbtn{background:var(--accent); color:#fff;}
+.resetbtn{background:#E6EBEE; color:var(--ink);}
+.revealbtn{background:var(--amber); color:#402c05;}
+.scoreline{font-family:'IBM Plex Mono',monospace; font-size:13.5px; margin-top:10px; font-weight:600;}
+.scoreline.ok{color:var(--good);}
+.scoreline.mid{color:#a5760f;}
+.scoreline.low{color:var(--bad);}
+.attemptnote{font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Sans',sans-serif;}
+
+/* ===== Comprehensive practice ===== */
+.practicecard textarea{
+  width:100%; min-height:150px; border:1.5px solid #C7D4DC; border-radius:8px; padding:12px; font-size:14.5px;
+  font-family:'IBM Plex Serif',serif; resize:vertical;
+}
+.wordcount{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); margin-top:4px;}
+.checklist{font-family:'IBM Plex Sans',sans-serif; font-size:13.5px; margin:10px 0;}
+.checklist label{display:block; margin:4px 0; cursor:pointer;}
+.modelbox{background:#F2F8F6; border:1px dashed var(--accent); border-radius:8px; padding:14px 16px; margin-top:10px; display:none; font-size:14px;}
+.modelbox.show{display:block;}
+
+.legendchips{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 18px;}
+.chip{font-family:'IBM Plex Sans',sans-serif; font-size:12.5px; font-weight:600; padding:5px 14px; border-radius:20px;}
+.chip-seq{background:#E6F4EC; color:#1F6B45;}
+.chip-pass{background:#FBEADE; color:#B5551E; text-decoration:underline;}
+.chip-purpose{background:#F1E9F7; color:#6B3FA0;}
+.chip-rel{background:#E4EFFA; color:#2A5D8F;}
+.chip-ref{background:#FDF6DC; color:#8A6D13;}
+.sampletext{font-size:15px; line-height:1.9; margin:12px 0;}
+.hl-seq{background:#E6F4EC; color:#1F6B45; font-weight:600; padding:1px 4px; border-radius:4px;}
+.hl-pass{background:#FBEADE; color:#B5551E; font-weight:600; text-decoration:underline; padding:1px 4px; border-radius:4px;}
+.hl-purpose{background:#F1E9F7; color:#6B3FA0; font-weight:600; padding:1px 4px; border-radius:4px;}
+.hl-rel{background:#E4EFFA; color:#2A5D8F; font-weight:600; padding:1px 4px; border-radius:4px;}
+.hl-ref{background:#FDF6DC; color:#8A6D13; font-weight:700; padding:1px 4px; border-radius:4px;}
+
+/* ===== Glossary ===== */
+.glosgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px;}
+.glosgroup{background:#fff; border:1px solid var(--grid); border-radius:10px; padding:14px 16px;}
+.glosgroup h4{margin:0 0 8px; font-size:14.5px; color:var(--accent-dark); font-family:'IBM Plex Sans',sans-serif;}
+.glosgroup ul{margin:0; padding-left:18px; font-size:13.8px; line-height:1.75;}
+.glosgroup ul li b{color:var(--ink);}
+
+footer.appfoot{text-align:center; padding:26px; font-size:12.5px; color:var(--ink-soft); font-family:'IBM Plex Sans',sans-serif;}
+
+@media print{
+  header.top,nav.tabs,.hbtn,.checkbtn,.resetbtn,.revealbtn,footer.appfoot{display:none !important;}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="orgname">HUONG STELLA PARADIGM</div>
+  <div class="brand">
+    <span class="eyebrow">IELTS Writing · Task 1</span>
+  </div>
+  <h1>Process / Flow-chart Writing — Ôn tập &amp; Luyện tập toàn diện</h1>
+  <p class="sub">Hệ thống hoá lý thuyết, ngữ pháp, từ vựng và bài luyện theo 3 cấp độ Basic → Intermediate → Advanced.</p>
+
+  <div class="headerbar">
+    <div class="namefield">
+      <label for="studentName">Họ và tên học sinh</label>
+      <input type="text" id="studentName" placeholder="Nhập tên của bạn...">
+    </div>
+    <div class="progresswrap" id="progressWrap">
+      <div class="progress-item"><div class="num" id="pAttempted">0</div><div class="lbl">Bài đã làm</div></div>
+      <div class="progress-item"><div class="num" id="pScore">0%</div><div class="lbl">Điểm TB</div></div>
+      <div class="progress-item"><div class="num" id="pAttempts">0</div><div class="lbl">Tổng lượt làm</div></div>
+    </div>
+    <div class="headerbtns">
+      <button class="hbtn secondary" id="btnReset">↺ Xoá tiến trình</button>
+      <button class="hbtn" id="btnPdf">⬇ Xuất báo cáo PDF</button>
+      <button class="hbtn" id="btnMail">✉ Gửi cho giáo viên</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabNav"></nav>
+<main id="mainArea"></main>
+
+<footer class="appfoot">IELTS Writing Task 1 — Process Toolkit · Tổng hợp từ tài liệu ôn luyện nội bộ · Dữ liệu được lưu cục bộ trên trình duyệt của bạn.</footer>
+
+<script>
+/* ============================================================
+   SVG ILLUSTRATIONS (original simple schematic diagrams)
+   ============================================================ */
+function svgTeaProcess(){
+return svgBoxFlow([
+  {text:'Tea seeds\nsown'},
+  {text:'Sun shines,\nplants grow'},
+  {text:'Leaves picked\nby hand'},
+  {text:'Dried in\nthe sun'},
+  {text:'Packed &amp;\nloaded'},
+  {text:'Delivered &amp;\nsold'}
+]);
+}
+function svgWindTurbine(){
+return svgBoxFlow([
+  {text:'Air turns\nrotor blades'},
+  {text:'Generator\nproduces power'},
+  {text:'Cable carries\nelectricity'},
+  {text:'Substation\nchanges voltage'},
+  {text:'Houses receive\nelectricity'}
+]);
+}
+function svgFrogCycle(){
+return `<svg class="flowdiagram" viewBox="0 0 520 500" xmlns="http://www.w3.org/2000/svg">
+<style>
+  .b{fill:#F7FAFB;stroke:#16324A;stroke-width:2;}
+  .t{font-family:'IBM Plex Sans',sans-serif;font-size:15px;fill:#16324A;text-anchor:middle;}
+  .a{stroke:#9C4E76;stroke-width:3;marker-end:url(#arrow3);fill:none;stroke-linecap:round;}
+</style>
+<defs>
+  <marker id="arrow3" markerWidth="9" markerHeight="9" refX="6.5" refY="3.5" orient="auto">
+    <path d="M0,0 L7,3.5 L0,7 Z" fill="#9C4E76"/>
+  </marker>
+</defs>
+
+<!-- connecting arrows (drawn first, behind circles) -->
+<path class="a" d="M 323.1,120.8 Q 360.7,111.2 364.8,151.1"/>
+<path class="a" d="M 411.8,277.0 Q 432.7,309.8 395.9,326.0"/>
+<path class="a" d="M 290.7,409.7 Q 266.0,439.6 239.3,409.7"/>
+<path class="a" d="M 127.2,335.5 Q 91.0,321.2 111.2,286.5"/>
+<path class="a" d="M 147.2,157.0 Q 149.6,118.2 188.8,126.7"/>
+
+<!-- nodes -->
+<circle class="b" cx="260.0" cy="75.0" r="72"/>
+<text class="t" x="260.0" y="70"><tspan x="260.0" dy="0">Eggs float</tspan><tspan x="260.0" dy="20">on water</tspan></text>
+
+<circle class="b" cx="435.9" cy="202.8" r="72"/>
+<text class="t" x="435.9" y="198"><tspan x="435.9" dy="0">Tadpole</tspan><tspan x="435.9" dy="20">emerges</tspan></text>
+
+<circle class="b" cx="368.7" cy="409.7" r="72"/>
+<text class="t" x="368.7" y="405"><tspan x="368.7" dy="0">Tadpole</tspan><tspan x="368.7" dy="20">grows legs</tspan></text>
+
+<circle class="b" cx="151.3" cy="409.7" r="72"/>
+<text class="t" x="151.3" y="405"><tspan x="151.3" dy="0">Young frog</tspan><tspan x="151.3" dy="20">forms</tspan></text>
+
+<circle class="b" cx="84.1" cy="202.8" r="72"/>
+<text class="t" x="84.1" y="198"><tspan x="84.1" dy="0">Mature frog</tspan><tspan x="84.1" dy="20">on land</tspan></text>
+</svg>`;
+}
+function svgBoxFlow(boxes){
+  const palette = [
+    {fill:'#E6F4EC', stroke:'#2F7A57'},
+    {fill:'#FBEADD', stroke:'#C1662B'},
+    {fill:'#F1E9F7', stroke:'#8B5FB0'},
+    {fill:'#E4EFFA', stroke:'#3D7FBF'},
+    {fill:'#FDF6DC', stroke:'#C99A1F'},
+  ];
+  const boxW = 155, boxH = 84, gap = 34, top = 28, H = top + boxH + 28;
+  const n = boxes.length;
+  const totalW = n*boxW + (n-1)*gap + 40;
+  let x = 20;
+  let connectors = '', shapes = '';
+  boxes.forEach((b, i)=>{
+    const style = palette[i % palette.length];
+    if(i < n-1){
+      const x1 = x + boxW, x2 = x + boxW + gap;
+      const isLast = (i === n-2);
+      connectors += `<line x1="${x1}" y1="${top+boxH/2}" x2="${x2}" y2="${top+boxH/2}" stroke="#16324A" stroke-width="2" ${isLast?'marker-end="url(#bfArrow)"':''}/>`;
+    }
+    const lines = b.text.split(String.fromCharCode(10));
+    const startY = top + boxH/2 - (lines.length-1)*10 + 5;
+    let textEls = lines.map((line,li)=>`<text x="${x+boxW/2}" y="${startY+li*20}" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif" font-size="14" fill="#16324A">${line}</text>`).join('');
+    shapes += `<rect x="${x}" y="${top}" width="${boxW}" height="${boxH}" rx="14" fill="${style.fill}" stroke="${style.stroke}" stroke-width="2"/>${textEls}`;
+    x += boxW + gap;
+  });
+  return `<svg class="flowdiagram" viewBox="0 0 ${totalW} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <defs><marker id="bfArrow" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#16324A"/></marker></defs>
+    ${connectors}${shapes}
+  </svg>`;
+}
+
+/* ============================================================
+   EXERCISE DATA
+   Each exercise-set: {id, level, title, note, image(optional), items:[
+     {q, type:'text'|'select', options?, answers:[...], mode?:'contains'}
+   ]}
+   ============================================================ */
+const BASIC_EX = [
+{
+  id:'b1', title:'Sắp xếp quy trình làm bánh Stringhopper (Sri Lanka)',
+  note:'Đánh số thứ tự đúng (1–6) cho các bước sau để tạo thành quy trình hoàn chỉnh.',
+  items:[
+    {q:'Put the rice into the grinder and grind into flour', type:'select', options:['1','2','3','4','5','6'], answers:['1']},
+    {q:'Add water to the flour', type:'select', options:['1','2','3','4','5','6'], answers:['2']},
+    {q:'Mix well to form a dough', type:'select', options:['1','2','3','4','5','6'], answers:['3']},
+    {q:'Push through the stringhopper press onto the stringhopper mats', type:'select', options:['1','2','3','4','5','6'], answers:['4']},
+    {q:'Cook in a steamer', type:'select', options:['1','2','3','4','5','6'], answers:['5']},
+    {q:'Serve with spicy curries', type:'select', options:['1','2','3','4','5','6'], answers:['6']},
+  ]
+},
+{
+  id:'b2', title:'Ngữ pháp: Present Simple Passive — Tea',
+  note:'Điền dạng bị động đúng thì hiện tại đơn (is/are + V3) cho các động từ trong ngoặc.',
+  items:[
+    {q:'Tea leaves _____ (pick) by hand.', type:'text', answers:['are picked']},
+    {q:'Only the best leaves _____ (use).', type:'text', answers:['are used']},
+    {q:'A lot of water _____ (need) to grow tea plants successfully.', type:'text', answers:['is needed']},
+    {q:'A lot of tea _____ (grow) in China and India.', type:'text', answers:['is grown']},
+  ]
+},
+{
+  id:'b3', title:'Từ nối trình tự (Sequencing words) — Stringhoppers',
+  note:'Điền từ nối phù hợp: First / After / Then / The next stage / Finally.',
+  items:[
+    {q:'_____, the rice is put through a grinder.', type:'text', answers:['first']},
+    {q:'_____ that, water is added to the flour.', type:'text', answers:['after']},
+    {q:'_____ it is mixed and made into a dough.', type:'text', answers:['then']},
+    {q:'_____ is to push the dough through the stringhopper press.', type:'text', answers:['the next stage']},
+    {q:'_____ the stringhoppers are placed in a steamer.', type:'text', answers:['then','next']},
+    {q:'_____, they are served with spicy curries.', type:'text', answers:['finally']},
+  ]
+},
+{
+  id:'b4', title:'Động từ mô tả quy trình — Cherry Jam',
+  note:'Điền dạng bị động phù hợp của động từ trong ngân hàng từ: add, check, collect, cook, put, remove, shake, spread, stick, take, transport, wash.',
+  items:[
+    {q:'A sheet is _____ on the ground and the tree is _____ to get the cherries.', type:'text', answers:['spread'], },
+    {q:'(second blank) the tree is _____ to get the cherries.', type:'text', answers:['shaken']},
+    {q:'The cherries are _____ and are _____ to the processing plant.', type:'text', answers:['collected']},
+    {q:'(second blank) the cherries are _____ to the processing plant.', type:'text', answers:['transported']},
+    {q:'The leaves and stems are _____.', type:'text', answers:['removed']},
+    {q:'The cherries are _____ (with water).', type:'text', answers:['washed']},
+    {q:'The stone is _____ out of the middle of the cherry.', type:'text', answers:['removed','taken']},
+    {q:'The cherries are _____ and extra ingredients are _____.', type:'text', answers:['cooked']},
+    {q:'(second blank) extra ingredients are _____.', type:'text', answers:['added']},
+    {q:'The quality of the jam is _____.', type:'text', answers:['checked']},
+    {q:'The jam is _____ into jars.', type:'text', answers:['put']},
+    {q:'A label is _____ on the jars.', type:'text', answers:['stuck']},
+  ]
+},
+{
+  id:'b5', title:'Quá khứ phân từ bất quy tắc (Irregular Past Participles)',
+  note:'Điền dạng quá khứ phân từ (past participle) — dùng để tạo câu bị động is/are + V3.',
+  items:[
+    {q:'grow →', type:'text', answers:['grown']},
+    {q:'sow →', type:'text', answers:['sown']},
+    {q:'sell →', type:'text', answers:['sold']},
+    {q:'take →', type:'text', answers:['taken']},
+    {q:'wrap →', type:'text', answers:['wrapped']},
+    {q:'hold →', type:'text', answers:['held']},
+    {q:'grind →', type:'text', answers:['ground']},
+    {q:'put →', type:'text', answers:['put']},
+    {q:'cut →', type:'text', answers:['cut']},
+    {q:'weave →', type:'text', answers:['woven']},
+  ]
+},
+{
+  id:'b6', title:'Đoạn văn hoàn chỉnh: Quy trình sản xuất Trà (Tea)',
+  note:'Điền động từ ở dạng phù hợp (chủ động hoặc bị động) — ngân hàng từ: deliver, grow, grow, load, pack, pick, put, put, shine, sow.',
+  items:[
+    {q:'Tea 1 is _____ in India and China. (given: is grown)', type:'text', answers:['grown']},
+    {q:'In the first stage, the tea seeds 2 are _____ by the farmer,', type:'text', answers:['sown']},
+    {q:'and then the sun 3 _____,', type:'text', answers:['shines']},
+    {q:'and the seeds 4 _____ into large tea plants.', type:'text', answers:['grow']},
+    {q:'At this point, the tea leaves 5 are _____', type:'text', answers:['picked']},
+    {q:'and 6 _____ in a basket,', type:'text', answers:['put']},
+    {q:'then they 7 are _____ on a tray in the sun to dry.', type:'text', answers:['put']},
+    {q:'The next step: the dried tea leaves 8 are _____ into boxes,', type:'text', answers:['packed']},
+    {q:'and then the boxes 9 are _____ onto a lorry,', type:'text', answers:['loaded']},
+    {q:'and then 10 _____ to supermarkets, where customers buy them.', type:'text', answers:['delivered']},
+  ]
+}
+];
+
+const INTER_EX = [
+{
+  id:'i1', title:'Chủ động vs Bị động — Cement &amp; Rain (quy trình nhân tạo vs tự nhiên)',
+  note:'Ghi nhớ: quy trình nhân tạo (manufacturing) → bị động; quy trình tự nhiên (natural) → chủ động.',
+  items:[
+    {q:'Manufacturing cement: Limestone 1 _____ (extract) from the ground.', type:'text', answers:['is extracted']},
+    {q:'Then, at the factory, it 2 _____ (heat) to a high temperature.', type:'text', answers:['is heated']},
+    {q:'After this, it 3 _____ (cool) with blasts of cold air.', type:'text', answers:['is cooled']},
+    {q:'How rain is formed: warm air reaches high ground (given, active). As a result, it 4 _____ (cool).', type:'text', answers:['cools']},
+    {q:'Moisture in the air 5 _____ (condense) to form rain.', type:'text', answers:['condenses']},
+  ]
+},
+{
+  id:'i2', title:'Quy trình tự nhiên — The Water Table',
+  note:'Điền động từ chia đúng (chủ động, hiện tại đơn — quy trình tự nhiên).',
+  items:[
+    {q:'Some rocks 1 _____ (hold) large amounts of water.', type:'text', answers:['hold']},
+    {q:'When it 2 _____ (rain),', type:'text', answers:['rains']},
+    {q:'the tiny spaces in the rock gradually 3 _____ (fill) with water', type:'text', answers:['fill']},
+    {q:'so that the rock 4 _____ (become) saturated.', type:'text', answers:['becomes']},
+    {q:'If long periods of rain 5 _____ (occur),', type:'text', answers:['occur']},
+    {q:'the water table 6 _____ (rise).', type:'text', answers:['rises']},
+    {q:'If there is no rain, the rock 7 _____ (begin) to dry out', type:'text', answers:['begins']},
+    {q:'and the water table 8 _____ (fall).', type:'text', answers:['falls']},
+  ]
+},
+{
+  id:'i3', title:'Quy trình sản xuất năng lượng từ than đá — chọn từ nối đúng',
+  note:'Chọn liên từ / cụm từ phù hợp nhất về mặt ngữ pháp &amp; ngữ nghĩa.',
+  items:[
+    {q:'"_____ the coal is delivered by lorry."', type:'select', options:['First of all','At first','Once'], answers:['first of all']},
+    {q:'"_____, it is carried along a conveyor belt to the power plant,"', type:'select', options:['Furthermore','After that','As a result'], answers:['after that']},
+    {q:'"...the power plant, _____ it is burned in a large furnace..."', type:'select', options:['when','then','where'], answers:['where']},
+    {q:'"_____, raw syngas is produced."', type:'select', options:['Otherwise','From this','Therefore'], answers:['therefore']},
+    {q:'"_____, the purified gas is used to drive a gas turbine."', type:'select', options:['Following that','Following','Subsequent'], answers:['following that']},
+    {q:'"The turbine _____ powers a generator..."', type:'select', options:['in turn','afterwards','therefore'], answers:['in turn']},
+    {q:'"...hot exhaust gases. These are _____ piped to a heat recovery steam generator,"', type:'select', options:['then','therefore','consequently'], answers:['then']},
+    {q:'"The steam is _____ used to power a steam turbine..."', type:'select', options:['consequently','subsequent','subsequently'], answers:['subsequently']},
+  ]
+},
+{
+  id:'i4', title:'Sắp xếp các bước viết tin bài báo (Newsroom)',
+  note:'Xếp thứ tự 1–7 cho quy trình viết một bài báo địa phương.',
+  items:[
+    {q:'First, think of a good idea! Choose a local and interesting news story.', type:'select', options:['1','2','3','4','5','6','7'], answers:['1']},
+    {q:'Secondly, accompany your story with a picture of a local person or attraction.', type:'select', options:['1','2','3','4','5','6','7'], answers:['2']},
+    {q:'Thirdly, think of a good first line: something which is attention-grabbing.', type:'select', options:['1','2','3','4','5','6','7'], answers:['3']},
+    {q:'Next, write the main body of the article, answering the four \'w\'s.', type:'select', options:['1','2','3','4','5','6','7'], answers:['4']},
+    {q:'Then, check your article for grammatical and spelling errors.', type:'select', options:['1','2','3','4','5','6','7'], answers:['5']},
+    {q:'After that, think of a good title for your piece.', type:'select', options:['1','2','3','4','5','6','7'], answers:['6']},
+    {q:'Finally, submit your article to your local newspaper via email.', type:'select', options:['1','2','3','4','5','6','7'], answers:['7']},
+  ]
+},
+{
+  id:'i5', title:'Chuyển sang câu bị động — Quy trình viết tin bài',
+  note:'Viết lại các câu chủ động sau ở dạng bị động (is/are + V3). Chấp nhận nếu câu trả lời chứa đúng cụm động từ bị động chính.',
+  items:[
+    {q:'Choose a local news story. →', type:'text', mode:'contains', answers:['is chosen']},
+    {q:'Accompany the story with a picture. →', type:'text', mode:'contains', answers:['is accompanied']},
+    {q:'Think of a good first line. →', type:'text', mode:'contains', answers:['is thought of']},
+    {q:'Write the main body of the article. →', type:'text', mode:'contains', answers:['is written']},
+    {q:'Check the article for errors. →', type:'text', mode:'contains', answers:['is checked']},
+    {q:'Invent a good title. →', type:'text', mode:'contains', answers:['is invented']},
+    {q:'Submit the article to a local newspaper. →', type:'text', mode:'contains', answers:['is submitted']},
+  ]
+},
+{
+  id:'i6', title:'Diễn đạt mục đích (Expressing Purpose) — Quy trình rau củ',
+  note:'Điền cụm từ diễn đạt mục đích: to / in order to / so as to / for / so that / in order that.',
+  items:[
+    {q:'There are a number of different stages undertaken _____ ensure the vegetables are in the correct condition.', type:'text', answers:['in order to']},
+    {q:'They are sorted by hand _____ remove any that are below standard.', type:'text', answers:['so as to']},
+    {q:'Some are pre-cut _____ market.', type:'text', answers:['for']},
+    {q:'They are put through a process of chilling _____ keep them fresh.', type:'text', answers:['to']},
+    {q:'The produce is put through a spinning machine _____ it is dry.', type:'text', answers:['so that']},
+    {q:'The product is packaged _____ it meets the standards required for selling.', type:'text', answers:['in order that']},
+  ]
+},
+{
+  id:'i7', title:'Ghép câu — Farmers\' Markets',
+  note:'Ghép các câu 1–5 với phần tiếp nối a–e phù hợp nhất.',
+  items:[
+    {q:'1. Originally, people farmed land →', type:'select', options:['a','b','c','d','e'], answers:['b']},
+    {q:'2. Eventually farmers\' markets evolved →', type:'select', options:['a','b','c','d','e'], answers:['c']},
+    {q:'3. Often the farmers would go to a central →', type:'select', options:['a','b','c','d','e'], answers:['d']},
+    {q:'4. Farmers\' markets declined when →', type:'select', options:['a','b','c','d','e'], answers:['e']},
+    {q:'5. Recent interest in organic food has led to →', type:'select', options:['a','b','c','d','e'], answers:['a']},
+  ]
+},
+{
+  id:'i8', title:'Cấu trúc bài Process essay — Ghép đoạn văn với chức năng',
+  note:'Ghép từng phần bài viết (introduction / first paragraph / second paragraph / conclusion) với chức năng của nó.',
+  items:[
+    {q:'a. Introduction →', type:'select', options:['i','ii','iii','iv'], answers:['iv']},
+    {q:'b. First paragraph →', type:'select', options:['i','ii','iii','iv'], answers:['iii']},
+    {q:'c. Second paragraph →', type:'select', options:['i','ii','iii','iv'], answers:['ii']},
+    {q:'d. Conclusion →', type:'select', options:['i','ii','iii','iv'], answers:['i']},
+  ]
+},
+{
+  id:'i9', title:'Từ vựng quy trình — Sản xuất Margarine',
+  note:'Điền động từ đúng dạng (chủ động/bị động) — ngân hàng từ: store, react, filter, distribute, extract, blend.',
+  items:[
+    {q:'Plant seeds are crushed 1 _____ the oil.', type:'text', answers:['to extract']},
+    {q:'Then this oil 2 _____ to take out the impurities.', type:'text', answers:['is filtered']},
+    {q:'This hydrogen 3 _____ with the oil and makes it hard.', type:'text', answers:['reacts']},
+    {q:'Following this, the oil 4 _____ with other vegetable oils.', type:'text', answers:['is blended']},
+    {q:'Finally, the margarine 5 _____ in tubs', type:'text', answers:['is stored']},
+    {q:'until it 6 _____ to the shops.', type:'text', answers:['is distributed']},
+  ]
+},
+{
+  id:'i10', title:'Từ vựng quy trình — Pasteurization (tiệt trùng sữa)',
+  note:'Điền động từ đúng dạng — ngân hàng từ: cool, destroy, heat, gain.',
+  items:[
+    {q:'Milk 18 _____ to a temperature of about 72°C.', type:'text', answers:['is heated']},
+    {q:'Then it 19 _____ immediately.', type:'text', answers:['is cooled']},
+    {q:'In this way, bacteria in the milk 20 _____', type:'text', answers:['is destroyed']},
+    {q:'and the milk 21 _____ a longer shelf life.', type:'text', answers:['gains']},
+  ]
+}
+];
+
+const ADV_EX = [
+{
+  id:'a1', title:'Wind Turbine — Xác định chủ động / bị động', image:'wind',
+  note:'',
+  items:[
+    {q:'"Electricity is produced by the generator." → dạng câu này là:', type:'select', options:['active','passive'], answers:['passive']},
+    {q:'"The electricity passes through a cable in the wind turbine." → dạng câu này là:', type:'select', options:['active','passive'], answers:['active']},
+  ]
+},
+{
+  id:'a2', title:'Wind Turbine — Sắp xếp thứ tự thành phần trong sơ đồ', image:'wind',
+  note:'Xếp đúng thứ tự các thành phần theo dòng chảy của quy trình (1 = đầu tiên).',
+  items:[
+    {q:'Air', type:'select', options:['1','2','3','4','5','6'], answers:['1']},
+    {q:'Rotor blades', type:'select', options:['1','2','3','4','5','6'], answers:['2']},
+    {q:'Generator', type:'select', options:['1','2','3','4','5','6'], answers:['3']},
+    {q:'Cable', type:'select', options:['1','2','3','4','5','6'], answers:['4']},
+    {q:'Substation', type:'select', options:['1','2','3','4','5','6'], answers:['5']},
+    {q:'Houses', type:'select', options:['1','2','3','4','5','6'], answers:['6']},
+  ]
+},
+{
+  id:'a3', title:'Wind Turbine — Sắp xếp câu mô tả quy trình',
+  note:'Xếp thứ tự 1–6 cho các câu mô tả quy trình phát điện từ tua-bin gió.',
+  items:[
+    {q:'The rotor blades are turned when air blows through them.', type:'select', options:['1','2','3','4','5','6'], answers:['1']},
+    {q:'The generator is turned by the rotor blades.', type:'select', options:['1','2','3','4','5','6'], answers:['2']},
+    {q:'Electricity is produced by the generator.', type:'select', options:['1','2','3','4','5','6'], answers:['3']},
+    {q:'The electricity passes through a cable in the wind turbine.', type:'select', options:['1','2','3','4','5','6'], answers:['4']},
+    {q:'The voltage of the electricity is changed in the substation.', type:'select', options:['1','2','3','4','5','6'], answers:['5']},
+    {q:'The low-voltage electricity is supplied to the houses.', type:'select', options:['1','2','3','4','5','6'], answers:['6']},
+  ]
+},
+{
+  id:'a4', title:'Supervolcano — Chọn động từ đúng',
+  note:'Chọn động từ phù hợp nhất theo sơ đồ hình thành siêu núi lửa.',
+  items:[
+    {q:'The chamber is _____ with magma.', type:'select', options:['filled','collapsed'], answers:['filled']},
+    {q:'The magma _____ to the surface.', type:'select', options:['rises','breaks'], answers:['rises']},
+    {q:'The eruption is _____ by pressure.', type:'select', options:['pushed','caused'], answers:['caused']},
+    {q:'The fissures _____.', type:'select', options:['reduce','separate'], answers:['separate']},
+    {q:'The surface is _____.', type:'select', options:['torn','expanded'], answers:['torn']},
+  ]
+},
+{
+  id:'a5', title:'Water Treatment — Điền từ vào đoạn văn',
+  note:'Ngân hàng từ: is taken, being cleaned, is called, via, passed through.',
+  items:[
+    {q:'The first stage 1 _____ abstraction,', type:'text', answers:['is called']},
+    {q:'where the water 2 _____ out of a river', type:'text', answers:['is taken']},
+    {q:'3 _____ a pumping station', type:'text', answers:['via']},
+    {q:'and is 4 _____ to a reservoir.', type:'text', answers:['passed through']},
+    {q:'The next major stage is clarification, with the water 5 _____ by passing it through a flash mixer.', type:'text', answers:['being cleaned']},
+  ]
+},
+{
+  id:'a6', title:'Water Treatment — Chọn động từ đúng theo sơ đồ',
+  items:[
+    {q:'Water is _____ forward.', type:'select', options:['pumped','passed'], answers:['pumped']},
+    {q:'Waste material is _____ into a holding tank.', type:'select', options:['pressed','pulled'], answers:['pressed']},
+    {q:'Water is _____ to the reservoir.', type:'select', options:['returned','cycled'], answers:['returned']},
+    {q:'Chlorine is _____.', type:'select', options:['treated','added'], answers:['added']},
+    {q:'Water is _____ in the storage reservoir.', type:'select', options:['stored','stocked'], answers:['stored']},
+  ]
+},
+{
+  id:'a8', title:'Phân tích bài mẫu — Frog Life Cycle (Natural process)', image:'frog',
+  note:'Dựa trên bài mẫu vòng đời ếch (6 giai đoạn, dùng thì hiện tại đơn chủ động vì là quy trình tự nhiên).',
+  items:[
+    {q:'Có bao nhiêu giai đoạn (stages) trong vòng đời của ếch theo bài mẫu?', type:'select', options:['4','5','6','7'], answers:['6']},
+    {q:'Từ/cụm từ nào trong bài diễn tả "diễn ra đồng thời" (at the same time)?', type:'text', answers:['while','at the same time']},
+    {q:'Cụm từ diễn đạt mục đích (purpose) được dùng ở giai đoạn cuối là gì?', type:'text', answers:['in order to']},
+    {q:'Quy trình tự nhiên (natural process) thường dùng thể nào — chủ động hay bị động?', type:'select', options:['chủ động (active)','bị động (passive)'], answers:['chủ động (active)']},
+  ]
+},
+{
+  id:'a9', title:'Wesak Lantern — Điền từ nối trình tự',
+  note:'Ngân hàng từ: after that, this, then, this stage, next, finally, to begin with, followed by, once. (có 1 từ không dùng đến)',
+  items:[
+    {q:'"...tying bamboo sticks together to form the frame, 1 _____ the cutting and pasting of coloured paper..."', type:'text', answers:['followed by']},
+    {q:'"2 _____, you need to cut 24 bamboo sticks to a length of 25cm each."', type:'text', answers:['to begin with']},
+    {q:'"Four of the sticks are 3 _____ tied together to make a square."', type:'text', answers:['then']},
+    {q:'"4 _____ of the process has to be repeated until you have made six squares."', type:'text', answers:['this stage']},
+    {q:'"5 _____, you have to tie the corners of four of the squares together."', type:'text', answers:['next']},
+    {q:'"6 _____ your frame is completed, take brightly coloured tissue paper..."', type:'text', answers:['once']},
+    {q:'"7 _____ the tissue paper shapes should be attached onto the frame."', type:'text', answers:['after that']},
+    {q:'"8 _____, fold and cut paper for the frills..."', type:'text', answers:['finally']},
+  ]
+},
+{
+  id:'a10', title:'Clog Making — Công dụng của từng dụng cụ',
+  note:'Ghép dụng cụ với công dụng của nó trong quy trình làm guốc gỗ (clogs).',
+  items:[
+    {q:'Saw (cưa) →', type:'select', options:['cắt gỗ theo chiều dài','tạo hình phác thảo','khoét rỗng bên trong','làm nhẵn bề mặt'], answers:['cắt gỗ theo chiều dài']},
+    {q:'Axe (rìu) →', type:'select', options:['cắt gỗ theo chiều dài','tạo hình phác thảo (outlining)','khoét rỗng bên trong','làm nhẵn bề mặt'], answers:['tạo hình phác thảo (outlining)']},
+    {q:'Knife (dao) →', type:'select', options:['tạo hình chi tiết/cắt tỉa','khoét rỗng bên trong','làm nhẵn bề mặt','trang trí'], answers:['tạo hình chi tiết/cắt tỉa']},
+    {q:'Spoon drill (khoan hình muỗng) →', type:'select', options:['cắt gỗ theo chiều dài','tạo hình phác thảo','khoét rỗng phần trong giày (boring out shoe interior)','trang trí'], answers:['khoét rỗng phần trong giày (boring out shoe interior)']},
+    {q:'Sandpaper (giấy nhám) →', type:'select', options:['cắt gỗ theo chiều dài','tạo hình phác thảo','khoét rỗng bên trong','làm nhẵn bề mặt trong &amp; ngoài (finishing)'], answers:['làm nhẵn bề mặt trong &amp; ngoài (finishing)']},
+  ]
+}
+];
+/* ============================================================
+   OVERVIEW TAB CONTENT
+   ============================================================ */
+function renderOverviewHTML(){
+return `
+<div class="card">
+  <h2>1. Process Task 1 là gì?</h2>
+  <p>Trong IELTS Writing Task 1 (Academic), một dạng đề phổ biến là <b>mô tả quy trình (process/flow-chart)</b>: thí sinh cần tóm tắt cách một vật được tạo ra, hoặc cách một hiện tượng tự nhiên diễn ra, dựa trên sơ đồ cho sẵn. Có 2 loại quy trình:</p>
+  <table class="reftable">
+    <tr><th>Loại</th><th>Đặc điểm</th><th>Ví dụ</th></tr>
+    <tr><td><b>Man-made process</b><br>(Quy trình nhân tạo)</td><td>Con người thực hiện các bước để <i>sản xuất/làm ra</i> một sản phẩm. Dùng <b>bị động, thì hiện tại đơn</b> (is/are + V3) vì ta không quan tâm ai làm, chỉ quan tâm việc gì xảy ra.</td><td>Sản xuất gạch, trà, giấy, xe hơi, xử lý nước…</td></tr>
+    <tr><td><b>Natural process</b><br>(Quy trình tự nhiên)</td><td>Diễn ra trong tự nhiên, thường là <b>vòng lặp (cycle)</b>, không có ai "thực hiện" hành động. Dùng chủ yếu <b>thể chủ động</b>.</td><td>Vòng đời ếch, vòng tuần hoàn nước, sự hình thành mưa, núi lửa…</td></tr>
+  </table>
+  <div class="tipbox"><b>Mẹo:</b> Với quy trình nhân tạo, có điểm bắt đầu và kết thúc rõ ràng (1st step … final step). Với quy trình tự nhiên, đó thường là một vòng lặp — cần chọn điểm bắt đầu hợp lý và có thể quay vòng lại ở cuối bài.</div>
+</div>
+
+<div class="card">
+  <h2>2. Cấu trúc bài viết chuẩn</h2>
+  <table class="reftable">
+    <tr><th>Phần</th><th>Nội dung</th></tr>
+    <tr><td><b>Introduction</b></td><td>Diễn giải lại đề bài bằng từ của mình (paraphrase), KHÔNG chép nguyên câu hỏi.</td></tr>
+    <tr><td><b>Overview</b></td><td>Tóm tắt tổng quan: có bao nhiêu giai đoạn (stages), giai đoạn đầu và giai đoạn cuối là gì.</td></tr>
+    <tr><td><b>Body 1 &amp; Body 2</b></td><td>Mô tả chi tiết từng giai đoạn theo đúng trình tự, dùng từ nối trình tự + bị động/chủ động phù hợp.</td></tr>
+    <tr><td><b>(Không cần Conclusion riêng)</b></td><td>Có thể lồng câu tổng kết ngắn vào cuối Body 2 nếu muốn, không bắt buộc như bài luận Task 2.</td></tr>
+  </table>
+  <h3>Ví dụ minh hoạ — Quy trình sản xuất trà (Tea)</h3>
+  ${svgTeaProcess()}
+</div>
+
+<div class="card">
+  <h2>3. Ngữ pháp trọng tâm</h2>
+  <h3>3.1 Bị động thì hiện tại đơn (Present Simple Passive)</h3>
+  <p>Công thức: <code>Object + is/are + Past Participle (V3)</code>. Ví dụ: <i>The tea leaves are picked, then dried, then packed into boxes.</i></p>
+  <h3>3.2 Bảng quá khứ phân từ bất quy tắc thường gặp</h3>
+  <table class="reftable">
+    <tr><th>V1</th><th>V3</th><th>V1</th><th>V3</th></tr>
+    <tr><td>grow</td><td>grown</td><td>hold</td><td>held</td></tr>
+    <tr><td>sow</td><td>sown</td><td>grind</td><td>ground</td></tr>
+    <tr><td>sell</td><td>sold</td><td>put</td><td>put</td></tr>
+    <tr><td>take</td><td>taken</td><td>cut</td><td>cut</td></tr>
+    <tr><td>wrap</td><td>wrapped</td><td>weave</td><td>woven</td></tr>
+  </table>
+  <h3>3.3 Diễn đạt mục đích (Expressing Purpose)</h3>
+  <table class="reftable">
+    <tr><th>Cấu trúc</th><th>Ví dụ</th></tr>
+    <tr><td>to / in order to / so as to + V (nguyên mẫu)</td><td>The paper is sorted <b>so as to remove</b> unsuitable material.</td></tr>
+    <tr><td>so as to be + V3 (bị động)</td><td>The pulp is cleaned <b>so as to be</b> free of ink.</td></tr>
+    <tr><td>so that / in order that + mệnh đề (S+V)</td><td>The sheets are dried <b>so that</b> the moisture is removed.</td></tr>
+    <tr><td>for + noun / V-ing</td><td>The dough is left <b>for rising</b>. / Sticks are cut <b>for the frame</b>.</td></tr>
+  </table>
+  <div class="tipbox"><b>Lưu ý:</b> Đừng lạm dụng "in order to" ở đầu mọi câu — hãy thay đổi linh hoạt giữa các cấu trúc để câu văn không bị đơn điệu.</div>
+
+  <h3>3.4 Mệnh đề quan hệ &amp; mệnh đề phân từ (thêm thông tin cho một giai đoạn)</h3>
+  <p>Đây là cách hiệu quả để nối 2 ý (giai đoạn + chi tiết bổ sung/kết quả) mà không cần tách thành câu riêng, giúp bài viết mạch lạc và đạt điểm Cohesion cao hơn.</p>
+  <table class="reftable">
+    <tr><th>Cấu trúc</th><th>Dùng khi nào</th><th>Ví dụ</th></tr>
+    <tr><td>…, which + V</td><td>Bổ sung thông tin/kết quả cho cả mệnh đề hoặc danh từ đứng trước (vật, không phải người)</td><td>The paper is pulped, <b>which removes</b> any ink.</td></tr>
+    <tr><td>…, where + S + V</td><td>Bổ sung thông tin về một địa điểm/nơi chốn</td><td>It is sent to a factory, <b>where it is processed</b>.</td></tr>
+    <tr><td>…, who + V</td><td>Bổ sung thông tin về người (ít gặp trong bài process nhưng vẫn có thể xuất hiện)</td><td>The tea is picked by farmers, <b>who sort it</b> by hand.</td></tr>
+    <tr><td>Having been + V3, S + V…</td><td>Mệnh đề phân từ hoàn thành (perfect participle) — nhấn mạnh một hành động đã <i>hoàn tất</i> trước khi hành động sau xảy ra</td><td><b>Having been sorted</b>, the paper is shredded into small pieces.</td></tr>
+    <tr><td>After being + V3, S + V…</td><td>Mệnh đề phân từ bị động — "sau khi bị/được làm gì đó"</td><td><b>After being cleaned</b>, the pulp is pressed into sheets.</td></tr>
+    <tr><td>S + V-ing, … (phân từ hiện tại chỉ kết quả)</td><td>Diễn tả kết quả tự nhiên xảy ra ngay sau hành động chính, chủ ngữ 2 mệnh đề trùng nhau</td><td>The generator rotates, <b>producing</b> electricity.</td></tr>
+  </table>
+
+  <h3>3.5 Từ thay thế để tránh lặp từ (Reference words)</h3>
+  <p>Việc lặp lại cùng một danh từ nhiều lần khiến bài viết kém tự nhiên. Dùng từ thay thế giúp câu văn liên kết chặt chẽ và thể hiện vốn từ vựng linh hoạt hơn.</p>
+  <table class="reftable">
+    <tr><th>Từ thay thế</th><th>Chức năng</th><th>Ví dụ</th></tr>
+    <tr><td>it / this</td><td>Thay thế danh từ số ít, hoặc cả một quá trình/ý vừa nhắc đến</td><td>The paper arrives at the plant. <b>It</b> is then sorted by hand. / <b>This</b> takes around two hours.</td></tr>
+    <tr><td>they / these / such</td><td>Thay thế danh từ số nhiều đã nhắc ở câu trước</td><td>The sheets are dried. <b>These</b> are then cut into smaller pieces. / <b>Such</b> methods are common in factories.</td></tr>
+    <tr><td>one</td><td>Thay thế một danh từ đếm được, số ít đã được nhắc (tránh lặp lại chính danh từ đó)</td><td>A new bottle is filled, and <b>one</b> is also labelled at this stage.</td></tr>
+    <tr><td>the former … the latter</td><td>Khi 2 danh từ được nhắc trước đó: <b>the former</b> = ý được nhắc đầu tiên, <b>the latter</b> = ý được nhắc thứ hai</td><td>Both wax and dye are added; <b>the former</b> hardens the surface, while <b>the latter</b> gives it colour.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>4. Từ nối trình tự (Sequencing Language)</h2>
+  <table class="reftable">
+    <tr><th>Giai đoạn đầu</th><th>Giai đoạn giữa</th><th>Giai đoạn cuối</th></tr>
+    <tr><td>To begin with / First of all / Firstly / The process commences with / Initially / The first stage is when…</td>
+        <td>Next / Then / After that / Subsequently / Following this / At this point / Once A has finished, B is able to start / Meanwhile / While / Eventually</td>
+        <td>Finally / Last / The final stage is when… / Having completed all of these steps…</td></tr>
+  </table>
+  <div class="tipbox"><b>Lưu ý:</b> Quy trình tự nhiên thường ưu tiên các từ diễn tả thời gian (gradually, over time, eventually) hơn là "first/next/finally" — vì nó không có bước 1, bước 2 rõ ràng như quy trình nhân tạo.</div>
+</div>
+
+<div class="card">
+  <h2>5. Checklist trước khi nộp bài</h2>
+  <ul>
+    <li>✅ Có câu giới thiệu diễn giải lại đề bài (không chép nguyên văn)?</li>
+    <li>✅ Có câu tổng quan (overview) nêu số giai đoạn, giai đoạn đầu/cuối?</li>
+    <li>✅ Các giai đoạn được trình bày đúng trình tự logic?</li>
+    <li>✅ Dùng bị động cho quy trình nhân tạo, chủ động cho quy trình tự nhiên?</li>
+    <li>✅ Từ nối trình tự đa dạng, không lặp lại "first, next, then" liên tục?</li>
+    <li>✅ Đã dùng ít nhất 1 mệnh đề quan hệ/phân từ và 1 từ thay thế để tránh lặp từ?</li>
+    <li>✅ Đủ số từ tối thiểu (thường 150 từ cho Task 1)?</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>6. Bài mẫu có chú thích màu</h2>
+  <p>Hai bài mẫu dưới đây (do hệ thống tự biên soạn) minh hoạ cách phối hợp tất cả các yếu tố ngữ pháp đã học ở trên trong một bài viết hoàn chỉnh. Di chuột không cần thiết — màu sắc đã được tô sẵn theo chú thích:</p>
+  <div class="legendchips">
+    <span class="chip chip-seq">Từ nối trình tự</span>
+    <span class="chip chip-pass">Bị động</span>
+    <span class="chip chip-purpose">Mục đích</span>
+    <span class="chip chip-rel">Mệnh đề phân từ / quan hệ</span>
+    <span class="chip chip-ref">Từ thay thế</span>
+  </div>
+
+  <h3>🏭 Mẫu 1 — Man-made process: "How Paper Is Recycled"</h3>
+  ${svgBoxFlow([
+    {text:'Collection'},{text:'Sorting &amp;\nshredding'},{text:'Pulping &amp;\ncleaning'},{text:'Pressing'},{text:'Drying'},{text:'Cutting &amp;\ndelivery'}
+  ])}
+  <p class="sampletext">The diagram illustrates the process by which waste paper is turned into new paper products. <span class="hl-seq">Overall</span>, there are six main stages in the process, beginning with the collection of used paper and ending with the delivery of recycled paper to customers.</p>
+  <p class="sampletext"><span class="hl-seq">To begin with</span>, used paper <span class="hl-pass">is collected</span> from homes, offices and schools, and <span class="hl-ref">it</span> <span class="hl-pass">is transported</span> to a recycling plant. <span class="hl-seq">Once</span> it has arrived, the paper <span class="hl-pass">is sorted</span> by hand or machine <span class="hl-purpose">so as to remove</span> any unsuitable material such as plastic or metal. <span class="hl-seq">Following this</span>, the sorted paper <span class="hl-pass">is shredded</span> into small pieces and mixed with water to form a pulp. This pulp is then cleaned, <span class="hl-rel">which removes</span> any remaining ink or glue.</p>
+  <p class="sampletext"><span class="hl-seq">After being cleaned</span>, the pulp <span class="hl-pass">is pressed</span> and rolled into large, thin sheets. These sheets are then dried using heated rollers <span class="hl-purpose">so that</span> all the moisture is removed. <span class="hl-seq">Finally</span>, once the paper has dried completely, <span class="hl-ref">it</span> <span class="hl-pass">is cut</span> into sheets, packaged and delivered to shops and offices.</p>
+
+  <h3>🦋 Mẫu 2 — Natural process: "The Life Cycle of a Butterfly"</h3>
+  ${svgBoxFlow([
+    {text:'Egg laid\non leaf'},{text:'Larva\n(caterpillar) hatches'},{text:'Chrysalis\nforms'},{text:'Adult butterfly\nemerges'}
+  ])}
+  <p class="sampletext">The diagram shows the four main stages in the life cycle of a butterfly, from the laying of eggs to the emergence of an adult butterfly.</p>
+  <p class="sampletext">The cycle begins when an adult female butterfly lays her eggs on the leaf of a plant. <span class="hl-seq">After several days</span>, a small larva, known as a caterpillar, hatches from each egg. The caterpillar then spends the next two to three weeks eating leaves almost continuously, growing rapidly in size.</p>
+  <p class="sampletext"><span class="hl-seq">Once</span> the caterpillar has grown to its full size, it attaches itself to a stem or leaf and forms a hard case around its body, <span class="hl-rel">which is called</span> a chrysalis. Inside <span class="hl-ref">this</span> case, the caterpillar <span class="hl-seq">gradually</span> changes shape over a period of one to two weeks, a process known as metamorphosis. <span class="hl-seq">Eventually</span>, an adult butterfly emerges from the chrysalis. Its wings are soft and damp at first, but after a few hours they harden, and the butterfly is then able to fly away and begin the cycle again by laying its own eggs.</p>
+</div>
+`;
+}
+
+/* ============================================================
+   GLOSSARY TAB CONTENT
+   ============================================================ */
+function renderGlossaryHTML(){
+return `
+<div class="card">
+  <h2>Glossary — Từ vựng theo chủ đề</h2>
+  <p>Tra cứu nhanh từ vựng thường dùng trong bài Process Task 1, chia theo nhóm.</p>
+  <div class="glosgrid">
+
+    <div class="glosgroup"><h4>🔧 General process words</h4><ul>
+      <li><b>device</b> — thiết bị</li><li><b>machine</b> — máy móc</li><li><b>structure</b> — cấu trúc</li>
+      <li><b>system</b> — hệ thống</li><li><b>process</b> — quy trình</li><li><b>stage / phase</b> — giai đoạn</li>
+      <li><b>diagram / flow chart</b> — sơ đồ</li><li><b>raw material</b> — nguyên liệu thô</li>
+      <li><b>by-product</b> — sản phẩm phụ</li><li><b>output / end product</b> — thành phẩm</li>
+      <li><b>component / part</b> — bộ phận, thành phần</li><li><b>cyclical process</b> — quy trình có tính chu kỳ</li>
+      <li><b>linear process</b> — quy trình tuyến tính (có điểm đầu-cuối rõ ràng)</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🏗️ Parts of structures / machines</h4><ul>
+      <li><b>base, foundation</b> — nền, móng</li><li><b>layer</b> — lớp</li><li><b>surface</b> — bề mặt</li>
+      <li><b>fan, filter, pump, motor, engine</b> — quạt, bộ lọc, bơm, mô-tơ, động cơ</li>
+      <li><b>conveyor belt</b> — băng chuyền</li><li><b>furnace / kiln</b> — lò nung</li>
+      <li><b>chamber / container / tank</b> — buồng/khoang, thùng chứa, bể chứa</li>
+      <li><b>valve</b> — van</li><li><b>nozzle</b> — vòi phun</li><li><b>mould</b> — khuôn</li>
+      <li><b>cable / wire</b> — dây cáp/dây điện</li><li><b>rotor blade</b> — cánh quạt (tua-bin)</li>
+      <li><b>generator / turbine</b> — máy phát điện / tua-bin</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>⚙️ Man-made process verbs</h4><ul>
+      <li><b>manufacture, produce</b> — sản xuất</li><li><b>extract</b> — chiết xuất</li>
+      <li><b>filter</b> — lọc</li><li><b>blend, combine, mix</b> — trộn/kết hợp</li>
+      <li><b>sort</b> — phân loại</li><li><b>peel, polish</b> — gọt vỏ, đánh bóng</li>
+      <li><b>chill, cool</b> — làm lạnh</li><li><b>package, pack</b> — đóng gói</li>
+      <li><b>distribute, deliver</b> — phân phối, giao hàng</li>
+      <li><b>ferment</b> — lên men</li><li><b>pasteurize</b> — tiệt trùng</li>
+      <li><b>load / unload</b> — chất/dỡ hàng</li><li><b>crush, grind</b> — nghiền</li>
+      <li><b>bend, force, remain, utilise, pass through</b> — uốn, ép/tạo lực, còn lại, sử dụng, đi qua</li>
+      <li><b>inject, inflate, ignite</b> — bơm/tiêm vào, thổi phồng, đốt cháy</li>
+      <li><b>assemble, attach, install</b> — lắp ráp, gắn vào, lắp đặt</li>
+      <li><b>dye, coat, seal</b> — nhuộm màu, phủ lớp, bịt kín</li>
+      <li><b>weave, spin, twist</b> — dệt, quay/kéo sợi, xoắn</li>
+      <li><b>reel, unwind</b> — cuộn/quay tơ, tháo cuộn ra</li>
+      <li><b>compress, expand</b> — nén lại, giãn nở</li>
+      <li><b>solidify, harden</b> — hoá rắn, làm cứng lại</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🌱 Natural process / life-cycle verbs</h4><ul>
+      <li><b>emerge</b> — xuất hiện, nhô ra</li><li><b>hatch</b> — nở (trứng)</li>
+      <li><b>mature</b> — trưởng thành</li><li><b>lay eggs / spawn</b> — đẻ trứng</li>
+      <li><b>germinate, sprout</b> — nảy mầm</li><li><b>rise</b> — dâng lên/bốc lên</li>
+      <li><b>erupt</b> — phun trào</li><li><b>evaporate, condense</b> — bốc hơi, ngưng tụ</li>
+      <li><b>gradually, over time, eventually</b> — dần dần, theo thời gian, cuối cùng</li>
+      <li><b>decompose, decay</b> — phân huỷ</li><li><b>absorb</b> — hấp thụ</li>
+      <li><b>weather, erode</b> — phong hoá, xói mòn</li><li><b>deposit, accumulate</b> — lắng đọng, tích tụ</li>
+      <li><b>melt / solidify</b> — tan chảy / đông cứng</li><li><b>expose</b> — phơi ra, tiếp xúc với</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🔗 Sequencing &amp; linking words</h4><ul>
+      <li><b>First of all / To begin with / Initially</b> — Trước tiên</li>
+      <li><b>Next / Then / After that / Subsequently / Following this</b> — Tiếp theo</li>
+      <li><b>At this point / Meanwhile / At the same time / While</b> — Vào lúc này/đồng thời</li>
+      <li><b>Finally / Last of all</b> — Cuối cùng</li>
+      <li><b>Once / After / When + present perfect passive</b> — Sau khi đã…</li>
+      <li><b>Gradually / Over time / Eventually / In turn</b> — Dần dần/theo thời gian/cuối cùng/đến lượt nó</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🎯 Expressing purpose</h4><ul>
+      <li><b>to / in order to / so as to</b> + V — để</li>
+      <li><b>so as to be + V3</b> — để được (bị động)</li>
+      <li><b>for</b> + N/V-ing — để, dùng cho</li>
+      <li><b>so that / in order that</b> + clause — để mà, sao cho</li>
+      <li><b>which is used to…</b> — cái mà được dùng để…</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🧩 Mệnh đề quan hệ &amp; phân từ</h4><ul>
+      <li><b>which + V</b> — bổ sung thông tin cho vật/ý vừa nhắc</li>
+      <li><b>where + S+V</b> — bổ sung thông tin về địa điểm</li>
+      <li><b>who + V</b> — bổ sung thông tin về người</li>
+      <li><b>Having been + V3, …</b> — sau khi đã được làm gì (phân từ hoàn thành)</li>
+      <li><b>After being + V3, …</b> — sau khi bị/được làm gì</li>
+      <li><b>…, V-ing</b> — diễn tả kết quả xảy ra ngay sau đó</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🔁 Từ thay thế tránh lặp từ</h4><ul>
+      <li><b>it / this</b> — thay danh từ số ít / cả một ý vừa nhắc</li>
+      <li><b>they / these / such</b> — thay danh từ số nhiều</li>
+      <li><b>one</b> — thay danh từ đếm được số ít đã nhắc</li>
+      <li><b>the former … the latter</b> — ý được nhắc trước … ý được nhắc sau (trong 2 ý)</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>📏 Số liệu, kích thước &amp; nhiệt độ</h4><ul>
+      <li><b>ranging from X to Y</b> — dao động từ X đến Y</li>
+      <li><b>approximately / roughly / around</b> — khoảng chừng</li>
+      <li><b>diameter / length / width / depth</b> — đường kính / chiều dài / chiều rộng / độ sâu</li>
+      <li><b>degrees Celsius (°C)</b> — độ C</li><li><b>a period of… / for + thời gian</b> — trong khoảng thời gian…</li>
+      <li><b>at a temperature of…</b> — ở nhiệt độ…</li><li><b>under pressure</b> — dưới áp suất</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🪨 Chủ đề ít gặp — Rock cycle (đá)</h4><ul>
+      <li><b>magma</b> — mắc-ma (đá nóng chảy trong lòng đất)</li>
+      <li><b>molten rock</b> — đá nóng chảy</li><li><b>lava</b> — dung nham (magma trào ra bề mặt)</li>
+      <li><b>cool, solidify</b> — nguội đi, hoá rắn</li><li><b>igneous rock</b> — đá mácma (đá lửa)</li>
+      <li><b>weathering, erosion</b> — phong hoá, xói mòn</li><li><b>sediment</b> — trầm tích</li>
+      <li><b>compaction, cementation</b> — nén chặt, kết dính (thành đá)</li>
+      <li><b>sedimentary rock</b> — đá trầm tích</li><li><b>heat and pressure</b> — nhiệt và áp suất</li>
+      <li><b>metamorphic rock</b> — đá biến chất</li><li><b>melt</b> — tan chảy</li>
+      <li><b>volcanic eruption</b> — sự phun trào núi lửa</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🎈 Chủ đề ít gặp — Hot air balloon (khinh khí cầu)</h4><ul>
+      <li><b>envelope</b> — vỏ khí cầu (phần túi khí lớn nhất)</li>
+      <li><b>gores, panels</b> — các múi vải dọc, các mảnh vải nhỏ ghép thành múi</li>
+      <li><b>skirt</b> — vòng đáy nối vỏ khí cầu với giỏ</li>
+      <li><b>basket</b> — giỏ (chở người/thiết bị)</li><li><b>burner</b> — bộ phận đốt tạo lửa</li>
+      <li><b>propane cylinder</b> — bình khí propane</li><li><b>ignite / flame</b> — đốt cháy / ngọn lửa</li>
+      <li><b>parachute valve</b> — van xả khí tự đóng</li><li><b>self-sealing flap</b> — nắp tự bịt kín</li>
+      <li><b>buoyancy</b> — lực đẩy nổi</li><li><b>ascend / descend</b> — bay lên / hạ xuống</li>
+    </ul></div>
+
+    <div class="glosgroup"><h4>🐛 Chủ đề ít gặp — Silk production (tơ tằm)</h4><ul>
+      <li><b>silkworm</b> — con tằm</li><li><b>mulberry leaves</b> — lá dâu tằm</li>
+      <li><b>larva</b> — ấu trùng</li><li><b>hatch</b> — nở ra</li>
+      <li><b>spin (a cocoon)</b> — nhả tơ (kén)</li><li><b>cocoon</b> — kén</li>
+      <li><b>moth</b> — con bướm/ngài</li><li><b>select, boil</b> — chọn lọc, luộc (kén)</li>
+      <li><b>unwind, unravel, reel</b> — tháo/quay sợi tơ</li><li><b>twist, dye, weave</b> — xoắn sợi, nhuộm, dệt</li>
+    </ul></div>
+
+  </div>
+</div>
+`;
+}
+/* ============================================================
+   COMPREHENSIVE PRACTICE TAB CONTENT
+   ============================================================ */
+const PRACTICE_ITEMS = [
+{
+  id:'p1', level:'Intermediate', title:'Shellfish Labelling Process (Practice Test)',
+  prompt:'The diagram shows the process for labelling shellfish for the international market. Summarize the information by selecting and reporting the main features. Write at least 150 words.',
+  tips:'Giai đoạn: GPS gắn trên thuyền đánh bắt thủ công → vệ tinh giám sát → trạm giám sát tại Santiago → hệ thống dán nhãn tạo mã vạch → chuyển đến nhà máy chế biến hải sản → sản phẩm được chứng nhận → phân phối trong nước &amp; quốc tế.',
+  hasModel:false
+},
+{
+  id:'p2', level:'Advanced', title:'How a Cup of Tea &amp; Ketchup Are Made',
+  prompt:'The pictures below show how tomato ketchup is made, from picking tomatoes to reaching the customer with a hamburger and fries. Summarize the information by selecting and reporting the main features. Write at least 150 words.',
+  tips:'15 bước: hái cà chua → phân loại → gửi đến nhà máy → tách vỏ/hạt/cuống → nghiền → thêm đường/giấm/muối → đun sôi → để nguội 2 giờ → đóng chai → dán nhãn → kiểm tra chất lượng → đóng hộp → phân phối đến siêu thị → sử dụng cùng đồ ăn.',
+  hasModel:true,
+  model:'The diagram illustrates how tomato ketchup is manufactured, from harvesting the tomatoes to the final product reaching consumers. Overall, there are fifteen stages in the process, beginning with picking the tomatoes and ending with the ketchup being served alongside food.\n\nFirst, tomatoes are picked and separated into good and bad ones before being sent by truck to the factory. There, the stalks, seeds and skin are removed, and the remaining fruit is crushed in a container. Sugar, vinegar and salt are then added to the mixture, which is boiled and left to stand for around two hours.\n\nFollowing this, the ketchup is poured into bottles, which are labelled and checked for quality before being packed into boxes. Finally, the boxes are transported to supermarkets, where the ketchup is bought by customers and typically eaten with hamburgers and fries.'
+},
+{
+  id:'p3', level:'Advanced', title:'Wind Turbine Electricity Generation', image:'wind',
+  prompt:'The diagram below shows how wind turbines produce electricity. Summarize the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.',
+  tips:'5 giai đoạn: gió làm quay cánh quạt → cánh quạt quay máy phát điện → điện đi qua cáp trong tua-bin → trạm biến áp đổi điện áp cao thành thấp → điện được truyền đến các ngôi nhà.',
+  hasModel:true,
+  model:'The diagram shows how electricity is generated by wind turbines. There are five main stages, starting with the movement of air and ending with electricity being supplied to houses.\n\nTo begin with, when air blows through the rotor blades, they are turned, which in turn causes the generator to rotate and produce electricity. This electricity then passes through a cable running down through the turbine.\n\nOnce it reaches the ground, the electricity is carried to a substation, where its voltage is transformed from high to low. Finally, the low-voltage electricity is transmitted along underground cables to nearby houses. Overall, the process converts the natural movement of air into electricity that can be used in homes.'
+},
+{
+  id:'p4', level:'Advanced', title:'Formation of a Supervolcano',
+  prompt:'The diagram below shows the formation of a supervolcano and the stages involved. Summarize the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.',
+  tips:'Đây là quy trình tự nhiên (cycle) — nên dùng chủ động và các từ như "gradually", "eventually", "as a result".',
+  hasModel:false
+},
+{
+  id:'p5', level:'Advanced', title:'Water Treatment Process',
+  prompt:'The diagram below shows how water is processed to make it drinkable. Summarize the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.',
+  tips:'5 giai đoạn: Abstraction (lấy nước từ sông) → Clarification (làm trong) → Filter (lọc) → Disinfection (khử trùng bằng clo) → Distribution (phân phối đến nhà dân); phần bùn thải được xử lý riêng và mang đi tiêu huỷ.',
+  hasModel:true,
+  model:'The diagram illustrates the process by which river water is treated to become safe for drinking. There are five main stages, beginning with abstraction and ending with distribution to homes.\n\nAt the first stage, known as abstraction, water is taken out of the river via an intake pumping station and pumped to a reservoir. It then passes to the clarification stage, where the water is cleaned by being passed through a flash mixer and clarification tanks; waste sludge produced here is sent for disposal.\n\nNext, the water is filtered through a rapid gravity filter before chlorine is added during disinfection to remove any remaining germs. In the final stage, distribution, the clean water is sent to homes, schools and workplaces.'
+},
+{
+  id:'p6', level:'Basic', title:'Making Stringhoppers (Sri Lankan Noodles)',
+  prompt:'The pictures show the process of making stringhoppers, a kind of noodle dish. Summarize the information by selecting and reporting the main features. Write at least 150 words.',
+  tips:'6 bước: xay gạo thành bột → trộn với nước → nhào bột → ép qua khuôn tạo sợi → hấp trong nồi hấp → phục vụ cùng cà ri.',
+  hasModel:true,
+  model:'The diagram demonstrates the process of preparing stringhoppers, a type of noodle dish popular in Sri Lanka. There are six stages in total, beginning with grinding rice into flour and ending with serving the finished dish.\n\nFirst, dry rice is put into a grinder to be turned into flour. Next, water is added and the mixture is formed into a dough. After that, the dough is pushed through a stringhopper press, a metal tool with two handles, so that it comes out as thin noodles.\n\nThese noodle \'nests\' are then placed onto round mats made of woven wood and cooked in a steamer. Finally, once ready, the stringhoppers are served with a variety of spicy curries.'
+},
+{
+  id:'p7', level:'Basic', title:'Making Cherry Jam',
+  prompt:'The pictures show the process of making cherry jam. Describe the process. Write at least 150 words.',
+  tips:'9 bước: rung cây hái quả → thu gom, vận chuyển → bỏ lá/cuống → rửa → tách hạt → nấu cùng đường/pectin/chanh → kiểm tra chất lượng → đóng lọ → dán nhãn.',
+  hasModel:false
+},
+{
+  id:'p8', level:'Intermediate', title:'How a Newsroom Works',
+  prompt:'The diagram below shows how news stories are created in a newsroom. Summarize the information by selecting and reporting the main features. Write at least 150 words.',
+  tips:'5 bước: tin đến từ nhà báo/thông cáo báo chí/công chúng → phóng viên được giao việc (phỏng vấn, tra cứu) → hình ảnh được thu thập (quay phim, chụp ảnh) → hình ảnh/bài viết được biên tập → biên tập viên kiểm tra bài trước khi đăng.',
+  hasModel:false
+},
+{
+  id:'p9', level:'Intermediate', title:'The Process of Lithography (Newspaper Printing)',
+  prompt:'The diagram illustrates the process of lithography, a method used for printing newspapers. Summarize the information by selecting and reporting the main features and make comparisons where necessary. Write at least 150 words.',
+  tips:'Từ vựng gợi ý: absorb, attach, build, convert, install, link, lift, make, provide, reflect, manufacture.',
+  hasModel:false
+},
+{
+  id:'p10', level:'Advanced', title:'Making Wesak Lanterns', image:null,
+  prompt:'The diagram shows the process of making Wesak lanterns, which Sri Lankans make to celebrate the festival of Wesak in May each year. Write at least 150 words.',
+  tips:'8 giai đoạn: buộc que tre thành khung → cắt giấy màu hình tam giác/vuông → dán giấy lên khung → gấp giấy làm tua rua → treo đèn lên bóng đèn.',
+  hasModel:false
+},
+{
+  id:'p11', level:'Advanced', title:'Making Traditional Wooden Clogs',
+  prompt:'The diagram illustrates the process of making traditional wooden shoes called clogs. Summarize the information by selecting and reporting the main features and make comparisons where relevant. Write at least 150 words.',
+  tips:'6 bước: cưa gỗ (poplar/willow) → tạo hình phác thảo bằng rìu → cắt tỉa chi tiết bằng dao → khoét rỗng bên trong bằng khoan hình muỗng → làm nhẵn bằng giấy nhám → trang trí (tuỳ chọn).',
+  hasModel:false
+},
+{
+  id:'p12', level:'Intermediate', title:'Industrial Bread Dough Process',
+  prompt:'The flow chart shows the first industrial process for making dough. Write a summary of the whole process, including why ingredients are mixed, divided and fermented. Write at least 150 words.',
+  tips:'Nguyên liệu: bột mì, men, nước → trộn trong máy trộn công nghiệp → lên men (tự nhiên hoặc phụ gia) → chia thành khối theo trọng lượng định sẵn bằng máy chia (divider) → tạo hình bằng trục xoay.',
+  hasModel:false
+}
+];
+/* ============================================================
+   IMAGE MAP
+   ============================================================ */
+const IMAGE_MAP = {wind: svgWindTurbine, frog: svgFrogCycle, tea: svgTeaProcess};
+// attach tea diagram to basic exercise b6 for visual support
+BASIC_EX.find(e=>e.id==='b6').image = 'tea';
+
+/* ============================================================
+   PROGRESS STORE
+   ============================================================ */
+const STORAGE_KEY = 'ieltsProcessProgress_v2';
+let PROGRESS = loadProgress();
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {studentName:'', exercises:{}, practice:{}};
+}
+function saveProgress(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(PROGRESS)); }catch(e){}
+}
+
+/* ============================================================
+   ANSWER CHECKING HELPERS
+   ============================================================ */
+function normalize(s){
+  return (s||'').toString().toLowerCase().trim().replace(/[.,;:!]+$/,'').replace(/\s+/g,' ');
+}
+function isCorrect(item, userVal){
+  const nv = normalize(userVal);
+  if(!nv) return false;
+  if(item.mode === 'contains'){
+    return item.answers.some(a => nv.includes(normalize(a)));
+  }
+  return item.answers.some(a => nv === normalize(a));
+}
+
+/* ============================================================
+   EXERCISE CARD RENDERING
+   ============================================================ */
+function renderExerciseSetCard(ex){
+  let imgHtml = ex.image && IMAGE_MAP[ex.image] ? IMAGE_MAP[ex.image]() : '';
+  let itemsHtml = ex.items.map((it, idx)=>{
+    const inputId = ex.id+'_i'+idx;
+    let field;
+    if(it.type === 'select'){
+      let opts = '<option value="">--</option>' + it.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+      field = `<select id="${inputId}" data-exid="${ex.id}" data-idx="${idx}">${opts}</select>`;
+    } else {
+      field = `<input type="text" id="${inputId}" data-exid="${ex.id}" data-idx="${idx}" autocomplete="off">`;
+    }
+    return `<div class="exitem"><span class="qnum">${idx+1}.</span> ${it.q}
+      <span class="answerbox">${field}<span class="feedback-icon" id="${inputId}_fb"></span><span class="correctreveal" id="${inputId}_rv"></span></span>
+    </div>`;
+  }).join('');
+
+  const prog = PROGRESS.exercises[ex.id];
+  const scoreLine = prog ? scoreLineHtml(ex.id, prog) : `<div class="scoreline" id="${ex.id}_score"></div>`;
+
+  return `<div class="exercise-card" id="card_${ex.id}">
+    <h4>${ex.title}</h4>
+    ${ex.note? `<div class="instructions">${ex.note}</div>`:''}
+    ${imgHtml}
+    ${itemsHtml}
+    <button class="checkbtn" onclick="checkExerciseSet('${ex.id}')">✔ Kiểm tra đáp án</button>
+    <button class="resetbtn" onclick="resetExerciseSet('${ex.id}')">↺ Làm lại</button>
+    <div id="${ex.id}_scorewrap">${scoreLine}</div>
+  </div>`;
+}
+
+function scoreLineHtml(exId, prog){
+  const pct = Math.round((prog.correct/prog.total)*100);
+  const cls = pct>=80?'ok':(pct>=50?'mid':'low');
+  return `<div class="scoreline ${cls}" id="${exId}_score">Điểm: ${prog.correct}/${prog.total} (${pct}%) &nbsp;·&nbsp; <span class="attemptnote">Số lần làm: ${prog.attempts}</span></div>`;
+}
+
+function checkExerciseSet(exId){
+  const allSets = [...BASIC_EX, ...INTER_EX, ...ADV_EX];
+  const ex = allSets.find(e=>e.id===exId);
+  if(!ex) return;
+  let correctCount = 0;
+  ex.items.forEach((it, idx)=>{
+    const inputId = exId+'_i'+idx;
+    const el = document.getElementById(inputId);
+    const fb = document.getElementById(inputId+'_fb');
+    const rv = document.getElementById(inputId+'_rv');
+    const val = el.value;
+    const ok = isCorrect(it, val);
+    el.classList.remove('correct','wrong');
+    el.classList.add(ok?'correct':'wrong');
+    fb.textContent = ok ? '✓' : '✗';
+    fb.className = 'feedback-icon ' + (ok?'ok':'no');
+    rv.textContent = ok ? '' : ('Đáp án đúng: ' + it.answers[0]);
+    if(ok) correctCount++;
+  });
+  const prevAttempts = (PROGRESS.exercises[exId] && PROGRESS.exercises[exId].attempts) || 0;
+  PROGRESS.exercises[exId] = { correct: correctCount, total: ex.items.length, attempts: prevAttempts+1 };
+  saveProgress();
+  document.getElementById(exId+'_scorewrap').innerHTML = scoreLineHtml(exId, PROGRESS.exercises[exId]);
+  updateHeaderStats();
+}
+
+function resetExerciseSet(exId){
+  const allSets = [...BASIC_EX, ...INTER_EX, ...ADV_EX];
+  const ex = allSets.find(e=>e.id===exId);
+  if(!ex) return;
+  ex.items.forEach((it, idx)=>{
+    const inputId = exId+'_i'+idx;
+    const el = document.getElementById(inputId);
+    el.value = '';
+    el.classList.remove('correct','wrong');
+    document.getElementById(inputId+'_fb').textContent='';
+    document.getElementById(inputId+'_rv').textContent='';
+  });
+}
+
+/* ============================================================
+   PRACTICE TAB RENDERING
+   ============================================================ */
+function renderPracticeHTML(){
+  let cards = PRACTICE_ITEMS.map(p=>{
+    let imgHtml = p.image && IMAGE_MAP[p.image] ? IMAGE_MAP[p.image]() : '';
+    let modelId = 'model_'+p.id;
+    return `<div class="card practicecard" id="practice_${p.id}">
+      <span class="levelband ${p.level==='Basic'?'basic':(p.level==='Advanced'?'adv':'inter')}">${p.level}</span>
+      <h3>${p.title}</h3>
+      <p style="font-style:italic;">${p.prompt}</p>
+      ${imgHtml}
+      <div class="tipbox"><b>Gợi ý nội dung:</b> ${p.tips}</div>
+      <textarea id="ta_${p.id}" placeholder="Viết bài của bạn tại đây..." oninput="updateWordCount('${p.id}')"></textarea>
+      <div class="wordcount" id="wc_${p.id}">0 từ</div>
+      <div class="checklist">
+        <label><input type="checkbox" data-pid="${p.id}" class="chk"> Đã có câu giới thiệu (paraphrase đề bài)</label>
+        <label><input type="checkbox" data-pid="${p.id}" class="chk"> Đã có câu tổng quan (overview)</label>
+        <label><input type="checkbox" data-pid="${p.id}" class="chk"> Các giai đoạn đúng trình tự logic</label>
+        <label><input type="checkbox" data-pid="${p.id}" class="chk"> Dùng đúng thể chủ động/bị động</label>
+        <label><input type="checkbox" data-pid="${p.id}" class="chk"> Từ nối trình tự đa dạng</label>
+        <label><input type="checkbox" data-pid="${p.id}" class="chk"> Đủ ≥150 từ</label>
+      </div>
+      ${p.hasModel? `<button class="revealbtn" onclick="toggleModel('${p.id}')">👁 Xem bài mẫu tham khảo</button>
+      <div class="modelbox" id="${modelId}">${p.model.replace(/\n/g,'<br><br>')}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="card"><h2>Luyện tập tổng hợp — Full Writing Practice</h2>
+    <p>Danh sách đầy đủ các đề bài Process Task 1 được hệ thống hoá theo cấp độ. Viết bài trực tiếp vào ô bên dưới, tự đánh giá bằng checklist, và có thể xem bài mẫu tham khảo (bài mẫu do hệ thống tự soạn, không sao chép nguyên văn từ sách).</p>
+    <div class="tipbox"><b>Lưu ý:</b> Hãy chọn 1–2 bài phù hợp với trình độ của mình để luyện viết thật kỹ thay vì làm dàn trải tất cả. Đề bài ở đây chỉ có mô tả bằng chữ (không kèm hình sơ đồ gốc) — nếu cần xem hình ảnh/sơ đồ minh hoạ chi tiết của từng đề, hãy liên hệ giáo viên để được cung cấp.</div>
+  </div>` + cards;
+}
+function toggleModel(pid){
+  document.getElementById('model_'+pid).classList.toggle('show');
+}
+function updateWordCount(pid){
+  const val = document.getElementById('ta_'+pid).value.trim();
+  const count = val ? val.split(/\s+/).length : 0;
+  document.getElementById('wc_'+pid).textContent = count + ' từ' + (count<150 && count>0 ? ' (cần tối thiểu 150 từ)':'');
+  if(!PROGRESS.practice[pid]) PROGRESS.practice[pid] = {};
+  PROGRESS.practice[pid].wordCount = count;
+  saveProgress();
+}
+/* ============================================================
+   TABS CONFIG & RENDERING
+   ============================================================ */
+const TABS = [
+  {id:'overview', label:'Tổng quan lý thuyết', level:'none'},
+  {id:'basic', label:'Basic', level:'basic'},
+  {id:'inter', label:'Intermediate', level:'inter'},
+  {id:'adv', label:'Advanced', level:'adv'},
+  {id:'practice', label:'Luyện tập tổng hợp', level:'none'},
+  {id:'glossary', label:'Glossary', level:'none'},
+];
+
+function renderLevelTabHTML(levelLabel, exArray, colorClass){
+  let header = `<div class="card"><span class="levelband ${colorClass}">${levelLabel}</span>
+    <h2>${levelLabel} — Bài luyện tập</h2>
+    <p>Hoàn thành các bài tập bên dưới rồi bấm "Kiểm tra đáp án". Hệ thống sẽ tự động chấm điểm và lưu tiến trình của bạn.</p></div>`;
+  let cards = exArray.map(renderExerciseSetCard).join('');
+  return header + cards;
+}
+
+function buildNav(){
+  const nav = document.getElementById('tabNav');
+  nav.innerHTML = TABS.map((t,i)=>`<button class="tabbtn" data-level="${t.level}" data-tab="${t.id}" onclick="switchTab('${t.id}')">
+      <span class="stagenum">${i+1}</span>${t.label}</button>`).join('');
+}
+
+function switchTab(tabId){
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tabId));
+  const main = document.getElementById('mainArea');
+  main.innerHTML = '<div class="tabpanel active"></div>';
+  const panel = main.querySelector('.tabpanel');
+  if(tabId==='overview') panel.innerHTML = renderOverviewHTML();
+  else if(tabId==='basic') panel.innerHTML = renderLevelTabHTML('Basic', BASIC_EX, 'basic');
+  else if(tabId==='inter') panel.innerHTML = renderLevelTabHTML('Intermediate', INTER_EX, 'inter');
+  else if(tabId==='adv') panel.innerHTML = renderLevelTabHTML('Advanced', ADV_EX, 'adv');
+  else if(tabId==='practice') panel.innerHTML = renderPracticeHTML();
+  else if(tabId==='glossary') panel.innerHTML = renderGlossaryHTML();
+
+  // restore practice textareas & checkboxes from progress
+  if(tabId==='practice'){
+    PRACTICE_ITEMS.forEach(p=>{
+      const saved = PROGRESS.practice[p.id];
+      if(saved){
+        if(saved.text){ const ta=document.getElementById('ta_'+p.id); if(ta) ta.value = saved.text; }
+        if(saved.wordCount!==undefined){ const wc=document.getElementById('wc_'+p.id); if(wc) wc.textContent = saved.wordCount+' từ'; }
+        if(saved.checklist){ document.querySelectorAll(`.chk[data-pid="${p.id}"]`).forEach((cb,i)=>{ cb.checked = !!saved.checklist[i]; }); }
+      }
+    });
+    document.querySelectorAll('.chk').forEach(cb=>{
+      cb.addEventListener('change', ()=>{
+        const pid = cb.dataset.pid;
+        const all = Array.from(document.querySelectorAll(`.chk[data-pid="${pid}"]`)).map(c=>c.checked);
+        if(!PROGRESS.practice[pid]) PROGRESS.practice[pid]={};
+        PROGRESS.practice[pid].checklist = all;
+        saveProgress();
+      });
+    });
+    document.querySelectorAll('textarea[id^="ta_"]').forEach(ta=>{
+      ta.addEventListener('blur', ()=>{
+        const pid = ta.id.replace('ta_','');
+        if(!PROGRESS.practice[pid]) PROGRESS.practice[pid]={};
+        PROGRESS.practice[pid].text = ta.value;
+        saveProgress();
+      });
+    });
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ============================================================
+   HEADER STATS
+   ============================================================ */
+function updateHeaderStats(){
+  const exIds = Object.keys(PROGRESS.exercises);
+  const totalSets = BASIC_EX.length + INTER_EX.length + ADV_EX.length;
+  let sumPct = 0, totalAttempts = 0;
+  exIds.forEach(id=>{
+    const p = PROGRESS.exercises[id];
+    sumPct += (p.correct/p.total)*100;
+    totalAttempts += p.attempts;
+  });
+  document.getElementById('pAttempted').textContent = exIds.length + '/' + totalSets;
+  document.getElementById('pScore').textContent = exIds.length ? Math.round(sumPct/exIds.length)+'%' : '0%';
+  document.getElementById('pAttempts').textContent = totalAttempts;
+}
+
+/* ============================================================
+   PDF EXPORT
+   ============================================================ */
+function exportPdf(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'pt', format:'a4'});
+  const name = document.getElementById('studentName').value.trim() || '(chưa nhập tên)';
+  const dateStr = new Date().toLocaleString('vi-VN');
+  let y = 50;
+  doc.setFont('helvetica','bold'); doc.setFontSize(17);
+  doc.text('BAO CAO KET QUA - IELTS WRITING TASK 1 (PROCESS)', 40, y); y+=24;
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text('Hoc sinh: ' + name, 40, y); y+=16;
+  doc.text('Ngay xuat bao cao: ' + dateStr, 40, y); y+=24;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('1. Ket qua bai tap trac nghiem / dien khuyet theo cap do', 40, y); y+=18;
+  doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+
+  function section(label, arr){
+    doc.setFont('helvetica','bold'); doc.text(label, 40, y); y+=14;
+    doc.setFont('helvetica','normal');
+    arr.forEach(ex=>{
+      const p = PROGRESS.exercises[ex.id];
+      let line;
+      if(p){
+        const pct = Math.round((p.correct/p.total)*100);
+        line = `- ${ex.title}: ${p.correct}/${p.total} (${pct}%) | So lan lam: ${p.attempts}`;
+      } else {
+        line = `- ${ex.title}: Chua lam`;
+      }
+      const wrapped = doc.splitTextToSize(line, 500);
+      doc.text(wrapped, 46, y); y += 13*wrapped.length;
+      if(y>760){ doc.addPage(); y=50; }
+    });
+    y+=8;
+  }
+  section('Basic:', BASIC_EX);
+  section('Intermediate:', INTER_EX);
+  section('Advanced:', ADV_EX);
+
+  if(y>700){ doc.addPage(); y=50; }
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('2. Tien do luyen viet tong hop (Comprehensive Practice)', 40, y); y+=18;
+  doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+  PRACTICE_ITEMS.forEach(p=>{
+    const saved = PROGRESS.practice[p.id];
+    const wc = saved && saved.wordCount ? saved.wordCount : 0;
+    const checked = saved && saved.checklist ? saved.checklist.filter(Boolean).length : 0;
+    const line = `- ${p.title} [${p.level}]: ${wc} tu da viet | Checklist: ${checked}/6 muc da tu danh gia`;
+    const wrapped = doc.splitTextToSize(line, 500);
+    doc.text(wrapped, 46, y); y += 13*wrapped.length;
+    if(y>760){ doc.addPage(); y=50; }
+  });
+
+  if(y>700){ doc.addPage(); y=50; }
+  y+=10;
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('3. Tong ket', 40, y); y+=18;
+  doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+  const exIds = Object.keys(PROGRESS.exercises);
+  const totalSets = BASIC_EX.length + INTER_EX.length + ADV_EX.length;
+  let sumPct=0, totalAttempts=0;
+  exIds.forEach(id=>{ const p=PROGRESS.exercises[id]; sumPct+=(p.correct/p.total)*100; totalAttempts+=p.attempts; });
+  const avg = exIds.length ? Math.round(sumPct/exIds.length) : 0;
+  doc.text(`So bai da lam: ${exIds.length}/${totalSets}`, 46, y); y+=14;
+  doc.text(`Diem trung binh: ${avg}%`, 46, y); y+=14;
+  doc.text(`Tong so luot lam bai (attempts): ${totalAttempts}`, 46, y); y+=14;
+
+  doc.save((name.replace(/\s+/g,'_')||'student') + '_IELTS_Process_Report.pdf');
+}
+
+/* ============================================================
+   MAIL TO TEACHER
+   ============================================================ */
+function mailToTeacher(){
+  const name = document.getElementById('studentName').value.trim() || '(chưa nhập tên)';
+  exportPdf();
+  const exIds = Object.keys(PROGRESS.exercises);
+  const totalSets = BASIC_EX.length + INTER_EX.length + ADV_EX.length;
+  let sumPct=0, totalAttempts=0;
+  exIds.forEach(id=>{ const p=PROGRESS.exercises[id]; sumPct+=(p.correct/p.total)*100; totalAttempts+=p.attempts; });
+  const avg = exIds.length ? Math.round(sumPct/exIds.length) : 0;
+  const subject = encodeURIComponent(`IELTS Writing Task 1 - Process - Bao cao cua ${name}`);
+  const body = encodeURIComponent(
+`Kinh gửi cô,
+
+Em gửi báo cáo kết quả ôn tập IELTS Writing Task 1 (Process) của em.
+
+Học sinh: ${name}
+Số bài đã hoàn thành: ${exIds.length}/${totalSets}
+Điểm trung bình: ${avg}%
+Tổng số lượt làm bài: ${totalAttempts}
+
+(Lưu ý: file PDF chi tiết vừa được tải xuống máy — vui lòng đính kèm file đó vào email này trước khi gửi.)
+
+Em cảm ơn cô.`);
+  window.location.href = `mailto:huongstella8@gmail.com?subject=${subject}&body=${body}`;
+  setTimeout(()=>{ alert('File PDF đã được tải xuống. Vui lòng ĐÍNH KÈM file PDF đó vào email vừa mở ra trước khi bấm Gửi (Send), vì trình duyệt không thể tự động đính kèm file.'); }, 400);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function initApp(){
+  buildNav();
+  const nameInput = document.getElementById('studentName');
+  nameInput.value = PROGRESS.studentName || '';
+  nameInput.addEventListener('input', ()=>{ PROGRESS.studentName = nameInput.value; saveProgress(); });
+
+  document.getElementById('btnReset').addEventListener('click', ()=>{
+    if(confirm('Bạn có chắc muốn xoá toàn bộ tiến trình đã lưu? Hành động này không thể hoàn tác.')){
+      localStorage.removeItem(STORAGE_KEY);
+      PROGRESS = {studentName:'', exercises:{}, practice:{}};
+      updateHeaderStats();
+      const activeTab = document.querySelector('.tabbtn.active');
+      switchTab(activeTab ? activeTab.dataset.tab : 'overview');
+    }
+  });
+  document.getElementById('btnPdf').addEventListener('click', exportPdf);
+  document.getElementById('btnMail').addEventListener('click', mailToTeacher);
+
+  updateHeaderStats();
+  switchTab('overview');
+  document.querySelector('.tabbtn[data-tab="overview"]').classList.add('active');
+}
+initApp();
+</script>
+</body>
+</html>
