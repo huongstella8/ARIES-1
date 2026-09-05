@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:1px 0 0;font-size:11.5px;opacity:.82;font-weight:500}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio</h1><p>Academic Reading · Strategy · Practice · Analytics</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategies</button>
+    <button data-tab="r1">📗 Reading 1</button>
+    <button data-tab="r2">📘 Reading 2</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+    <button data-tab="setup">⚙️ Sheet Sync</button>
+  </nav>
+
+  <!-- ============ STRATEGIES ============ -->
+  <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Reading strategies from your IELTS teacher</h2>
+      <p class="small">These are the exact habits I coach my Band 7–8+ students to build. Read them before you start, and return here whenever a question type keeps costing you marks. The two passages in this Studio use three high-frequency task types — master these and you cover roughly 60% of the Academic Reading paper.</p>
+    </div>
+
+    <div class="strat-grid">
+      <div class="strat">
+        <span class="tag">Global habits</span>
+        <h3>Before you answer a single question</h3>
+        <ol>
+          <li><b>Skim for structure, not detail (2 min).</b> Read the title, the first sentence of every paragraph, and the last sentence. Build a one-line mental label for each paragraph (A = "what/where the Sahel is", B = "desert spreading").</li>
+          <li><b>Read the instructions like a lawyer.</b> "NO MORE THAN TWO WORDS" means three words = zero marks, even if the meaning is right. "Choose TWO letters" means one letter or three letters = zero.</li>
+          <li><b>Questions follow the passage order</b> for gap-fill and T/F/NG. If you're hunting for Q5, it's after where you found Q4 — never jump backwards.</li>
+          <li><b>Underline the keywords in the question</b> that are hard to paraphrase: names, numbers, dates, technical nouns. These are your "anchors" for scanning.</li>
+        </ol>
+        <div class="tip">💡 Spend ~20 minutes per passage. Don't let one hard question eat 4 minutes — flag it, move on, come back.</div>
+      </div>
+
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Sentence / Summary Completion (gap-fill)</h3>
+        <ol>
+          <li><b>Predict the word class first.</b> Look at the gap: does the grammar need a noun, a verb, an adjective? "The climate is described as ____" needs an adjective (→ <i>semi-arid</i>).</li>
+          <li><b>Answers come straight from the passage</b> — copy the exact word(s). Never paraphrase, never change the form unless the instruction lets you.</li>
+          <li><b>Locate by paraphrase.</b> The question rewords the passage; the gap word is usually the one part <i>not</i> reworded. "no rainfall for more than ____" → the text says "the most recent lasting over <b>20 years</b>".</li>
+          <li><b>Respect the word limit and stay grammatical.</b> If "TWO WORDS" and both "population" and "increasing population" fit, pick the fuller phrase only if the grammar demands it — otherwise the shorter correct answer is safest.</li>
+          <li><b>Check spelling.</b> A correctly located but misspelled word scores zero.</li>
+        </ol>
+        <div class="trap">⚠️ Trap: writing a synonym instead of the passage's own word. The answer key is the text — not your vocabulary.</div>
+      </div>
+
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>True / False / Not Given</h3>
+        <p>Decide about the <b>statement vs. the passage</b> — never about the real world.</p>
+        <ul>
+          <li><b>TRUE</b> = the passage clearly states or directly implies the same idea.</li>
+          <li><b>FALSE</b> = the passage says the <i>opposite</i>, or contradicts the statement (e.g. text says "southwards", statement says "northwards" → FALSE).</li>
+          <li><b>NOT GIVEN</b> = the passage neither confirms nor contradicts it. Usually the statement adds a <b>comparison, cause, degree, or extra claim the text never makes</b> ("faster than", "more effective than", "minor cause").</li>
+        </ul>
+        <div class="tip">💡 The NG test: "Can I point to a sentence that proves this true, OR a sentence that proves it false?" If neither — it's NOT GIVEN. Comparatives (faster, larger, more effective) with no comparison in the text are a classic NG signal.</div>
+        <div class="trap">⚠️ Trap: using your own knowledge, or turning "the passage doesn't mention it" into FALSE. Missing ≠ false.</div>
+      </div>
+
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Multiple Choice — "Choose TWO letters"</h3>
+        <ol>
+          <li><b>Read all options first</b>, then scan the relevant section for each.</li>
+          <li><b>Match meaning, not words.</b> The correct option paraphrases something the text states as a real, faced danger.</li>
+          <li><b>Eliminate the "true but not asked" and "distorted" options.</b> The passage says long sea crossings are <i>avoided</i> — so they are not a danger the birds routinely face. That option is a trap.</li>
+          <li><b>You need both letters right</b> for the marks — verify each against the text, don't guess the second.</li>
+        </ol>
+        <div class="tip">💡 Cross out an option only when you can say <i>why</i> it's wrong (not mentioned / opposite / partly true). Confident elimination is faster than confident selection.</div>
+      </div>
+
+      <div class="strat">
+        <span class="tag">Vocabulary</span>
+        <h3>Academic collocation (the Vocab tab)</h3>
+        <ul>
+          <li><b>Learn nouns in their partnerships</b>, not alone: <i>have an impact on</i>, <i>play a role in</i>, <i>far-reaching consequences</i>, <i>underlying cause</i>. Examiners reward accurate collocation in Writing & Speaking too.</li>
+          <li><b>General nouns</b> (cause, effect, factor, result) need context and often adjectives to carry precise meaning.</li>
+          <li><b>Grade your adverbs of degree</b>: <i>completely/totally</i> (full), <i>highly/exceedingly</i> (very high), <i>vastly</i> (huge) vs. <i>marginally</i> (tiny), <i>partially</i> (part).</li>
+        </ul>
+        <div class="tip">💡 Every wrong answer you record automatically lands in your <b>Error Logbook</b> — review it weekly, that's where real score gains come from.</div>
+      </div>
+
+      <div class="strat">
+        <span class="tag">Exam-day timing</span>
+        <h3>How to use this Studio</h3>
+        <ol>
+          <li>Enter your <b>name & email</b> in the header (needed for your report and sheet sync).</li>
+          <li>Do a passage under the <b>timer</b>. Use <b>Highlight</b> to mark evidence in the text.</li>
+          <li>Hit <b>Submit &amp; Score</b> — each attempt is counted, feedback + explanations appear, and results sync to your teacher's Google Sheet.</li>
+          <li>Study the <b>Error Logbook</b>, then <b>export your PDF report</b>.</li>
+        </ol>
+        <div class="tip">💡 Your work autosaves every 10 seconds — you can close the file and return later on the same browser.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 1 ============ -->
+  <section class="panel" id="tab-r1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📗 Reading 1 · Deforestation and Desertification</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r1">🖍 Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r1">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r1">
+          <div class="para"><span class="plabel">A</span>The Sahel zone lies between the Sahara desert and the fertile savannahs of northern Nigeria and southern Sudan. The word <i>sahel</i> comes from Arabic and means marginal or transitional, and this is a good description of these semi-arid lands, which occupy much of the West African countries of Mali, Mauritania, Niger and Chad.</div>
+          <div class="para"><span class="plabel">B</span>Unfortunately, over the last century the Sahara desert has steadily crept southwards, eating into once productive Sahel lands. United Nations surveys show that over 70 per cent of the dry land in agricultural use in Africa has deteriorated over the last 30 years. Droughts have become more prolonged and more severe, the most recent lasting over 20 years in parts of the Sahel region. The same process of desertification is taking place across southern Africa as the Kalahari desert advances into Botswana and parts of South Africa.</div>
+          <div class="para"><span class="plabel">C</span>One of the major causes of this desert advance is poor agricultural land use, driven by the pressures of increasing population. Overgrazing — keeping too many farm animals on the land — means that grasses and other plants cannot recover, and scarce water supplies are exhausted. Overcultivation — trying to grow too many crops on poor land — results in the soil becoming even less fertile and drier, and beginning to break up. Soil erosion follows, and the land turns into desert.</div>
+          <div class="para"><span class="plabel">D</span>Another cause of desertification is loss of tree cover. Trees are cut down for use as fuel and to clear land for agricultural use. Tree roots help to bind the soil together, to conserve moisture and to provide a habitat for other plants and animals. When trees are cut down, the soil begins to dry and loosen, wind and rain erosion increase, other plant species die and eventually the fertile topsoil may be almost entirely lost, leaving only bare rock and dust.</div>
+          <div class="para"><span class="plabel">E</span>The effects of loss of topsoil and increased drought are irreversible. They are, however, preventable. Careful conservation of tree cover and sustainable agricultural land use have been shown to halt deterioration of soils and lessen the effects of shortage of rainfall. One project in Kita in south-west Mali funded by the UNDP has involved local communities in sustainable management of forest, while at the same time providing a viable agricultural economy based on the production of soaps, beekeeping and marketing shea nuts. This may be a model for similar projects in other West African countries.</div>
+        </div>
+      </div>
+
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 questions</span></div>
+        <div class="q-body" id="qbody-r1" data-test="r1">
+
+          <div class="qgroup">
+            <div class="ginstr"><b>Questions 1–6 · Sentence completion.</b> Complete each sentence with <b>NO MORE THAN TWO WORDS</b> from the passage.</div>
+            <div class="q" data-type="text" data-answers="semi-arid|semi arid"><div class="qnum">1</div><div class="qmain"><div class="qtext">The climate of the Sahel is described as ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="20 years|twenty years"><div class="qnum">2</div><div class="qmain"><div class="qtext">In some areas of the Sahel, there has been no rainfall for more than ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="increasing population|population"><div class="qnum">3</div><div class="qmain"><div class="qtext">Desertification is caused by overgrazing, but this in turn is due to the pressure from ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="plant species|other plant species"><div class="qnum">4</div><div class="qmain"><div class="qtext">When trees are cut down, the soil is affected, which leads to the death of the surrounding ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="preventable"><div class="qnum">5</div><div class="qmain"><div class="qtext">The consequences of the loss of topsoil cannot be reversed, but they are ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="rainfall"><div class="qnum">6</div><div class="qmain"><div class="qtext">Looking after trees reduces the consequences of a lack of ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+          </div>
+
+          <div class="qgroup">
+            <div class="ginstr"><b>Questions 7–13 · True / False / Not Given.</b> Do the statements agree with the information in the passage?</div>
+            <div class="q" data-type="tfng" data-answer="FALSE" data-exp="Paragraph B says the Sahara is creeping <b>southwards</b>, the opposite of &lsquo;northwards&rsquo;."><div class="qnum">7</div><div class="qmain"><div class="qtext">The Sahara has spread slowly northwards into the Sahel region.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="Paragraph B gives &lsquo;over 70 per cent&rsquo;. Nothing tells us whether it is &lsquo;just over&rsquo; or considerably more."><div class="qnum">8</div><div class="qmain"><div class="qtext">Just over 70 per cent of the dry land in agricultural use in Africa has deteriorated over the last 30 years.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="Paragraph B says the same process happens in southern Africa but never compares the <b>speed</b> of the two regions."><div class="qnum">9</div><div class="qmain"><div class="qtext">Desertification is taking place faster in southern Africa than in the Sahel.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="FALSE" data-exp="Paragraph C states poor agricultural land use <b>is</b> a major cause, so the negative statement is false."><div class="qnum">10</div><div class="qmain"><div class="qtext">The advance of the desert is not the result of poor agricultural land use.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="Paragraph D calls loss of tree cover &lsquo;another cause&rsquo; but never ranks it as &lsquo;minor&rsquo;."><div class="qnum">11</div><div class="qmain"><div class="qtext">The loss of tree cover is a minor cause of desertification.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="FALSE" data-exp="Paragraph E says <b>conservation</b> of tree cover halts deterioration; losing tree cover causes erosion (Paragraph D)."><div class="qnum">12</div><div class="qmain"><div class="qtext">If there is a loss of tree cover, the deterioration in the soil is halted.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="Paragraph E lists both measures together and never says one is &lsquo;more effective than&rsquo; the other."><div class="qnum">13</div><div class="qmain"><div class="qtext">Tree conservation is more effective than sustainable agricultural land use in reducing the consequences of lack of rain.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+          </div>
+
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r1">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r1">↺ Reset answers</button>
+            <div class="scorebox" id="score-r1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 2 ============ -->
+  <section class="panel" id="tab-r2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📘 Reading 2 · Swallows in Migration</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r2">🖍 Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r2">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r2">
+          <div class="para">Every April, along with many other species of birds, the swallow arrives to spend the summer months in northern Europe, in Russia, Iran and parts of Siberia. Here it will breed and raise its young.</div>
+          <div class="para">The swallow is well known for several reasons. Firstly, it is very distinctive, with its forked tail and characteristic acrobatic swooping flight. Secondly, it is very common, and, like its near relative the house martin, lives in close proximity to human habitation, at least in rural areas. It is, however, rarely to be encountered in towns or cities.</div>
+          <div class="para">For centuries, people have observed swallows, noted their arrival and their patterns of feeding. In several countries, these observations have passed into the language as proverbs or sayings. In England, people comment on unpredictable late spring weather by saying, 'one swallow does not a summer make'. Similarly, 'the swallows are flying low' was held to predict rainy, even stormy weather. There may be some truth in this observation, though it is the insects the swallows feed on that seem to be more susceptible to the fall in barometric pressure that heralds a storm. Insects keep low in these conditions, and so do the swallows that hunt them. At the end of the summer season, when the swallows are about to leave, they frequently flock together in large numbers on convenient high open perches, like roof ridges and telegraph wires. When people remark that 'the swallows are gathering', they mean that autumn has arrived.</div>
+          <div class="para">At some point in mid-September the swallows leave together, usually all on the same day. One day there are thousands, the next there are none, and none will be seen again until the following spring. For centuries, this was a complete mystery to people. The Hampshire naturalist Gilbert White, writing in the late eighteenth century, believed that the swallows dived into ponds and rivers in autumn and remained in the bottom mud the whole winter, re-emerging the following spring. This idea seems extraordinary to us, but White was not a stupid man: many of his other observations of natural life were informed and accurate. In this case, however, he simply had no means of determining the truth and was forced to make a random guess. The idea that swallows migrate to central or southern Africa would have seemed as fanciful to him as his theory seems to us.</div>
+          <div class="para">Although we now know that swallows migrate, there are still unanswered questions. Why do they go so far? Why not stay on the shores of the Mediterranean? The majority continue to equatorial Africa, and some even further south. Also it appears that populations of swallows that have bred in different countries also spend the winter in different areas. Those from France, Germany and much of western Europe have mostly been traced to East Africa, Kenya or Tanzania for example.</div>
+          <div class="para">Above all, how does a bird weighing approximately twenty grams find its way across mountain ranges, ocean and desert to winter in the south, and then return the following year to the very location it was born, in some cases to the very same nest? Birds can navigate by the Sun, and are also able to detect the magnetic field of the Earth. Species that migrate at night are also able to navigate by the stars. By these means, they travel long distances. The close navigation that brings them back to the same field or nest appears to be related to memory of local landmarks imprinted on the minds of young birds as they crisscross the area in the weeks before departure.</div>
+          <div class="para">Nevertheless, the journey is very dangerous. Long sea crossings, where there is little available food or water, are generally avoided. In western Europe, most swallows cross to Africa via the Straits of Gibraltar, or fly the length of Italy before tackling the relatively short crossing to Tunisia in North Africa. However, in storms they may be blown hundreds of kilometres off course. Exhausted swallows sometimes come to rest on ships way out in the Atlantic Ocean. They have to cross mountain ranges too, where again the weather may be unpredictable and food scarce. Along the coast of North Africa, many young swallows become the prey of Eleonora's falcons, which time their breeding to coincide with the migration of young birds southwards. But the most dangerous part of the journey is the crossing of the Sahara desert. Here, there is little food or water, sandstorms may delay and exhaust the already weakened birds, and many die. It is estimated that around 50 per cent of adult birds die, and up to 80 per cent of young birds, but enough survive to ensure the continuation of the species.</div>
+        </div>
+      </div>
+
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 questions</span></div>
+        <div class="q-body" id="qbody-r2" data-test="r2">
+
+          <div class="qgroup">
+            <div class="ginstr"><b>Questions 1–6 · True / False / Not Given.</b></div>
+            <div class="q" data-type="tfng" data-answer="FALSE" data-exp="The first line says the swallow arrives &lsquo;along with many other species of birds&rsquo;, so &lsquo;the only species&rsquo; is false."><div class="qnum">1</div><div class="qmain"><div class="qtext">The swallow is the only species of bird that migrates to spend the summer in northern Europe.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="TRUE" data-exp="&lsquo;Very distinctive, with its forked tail and characteristic acrobatic swooping flight.&rsquo;"><div class="qnum">2</div><div class="qmain"><div class="qtext">The swallow is easily noticeable because of its tail and the way it flies.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="FALSE" data-exp="&lsquo;It is, however, rarely to be encountered in towns or cities.&rsquo;"><div class="qnum">3</div><div class="qmain"><div class="qtext">The swallow is frequently seen in cities.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="TRUE" data-exp="&lsquo;It is the insects... that seem to be more susceptible to the fall in barometric pressure that heralds a storm.&rsquo;"><div class="qnum">4</div><div class="qmain"><div class="qtext">The insects, not the swallows themselves, appear to predict stormy weather.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="The text mentions large flocks but never compares them with other birds&rsquo; flocks."><div class="qnum">5</div><div class="qmain"><div class="qtext">Swallows form larger flocks than other birds when they depart in the autumn.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+            <div class="q" data-type="tfng" data-answer="TRUE" data-exp="&lsquo;This idea seems extraordinary to us&rsquo; — i.e. strange to people now."><div class="qnum">6</div><div class="qmain"><div class="qtext">White's theory seems strange to people now.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div>
+          </div>
+
+          <div class="qgroup">
+            <div class="ginstr"><b>Questions 7–12 · Sentence completion.</b> Complete each sentence with <b>NO MORE THAN TWO WORDS</b> from the passage.</div>
+            <div class="q" data-type="text" data-answers="complete mystery|mystery"><div class="qnum">7</div><div class="qmain"><div class="qtext">In the past, the destination of the swallows in autumn was a ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="random guess"><div class="qnum">8</div><div class="qmain"><div class="qtext">As White could not verify what happened to the swallows, he made a ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="unanswered questions"><div class="qnum">9</div><div class="qmain"><div class="qtext">Despite knowing that swallows migrate, we are still left with ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="same nest|very same nest"><div class="qnum">10</div><div class="qmain"><div class="qtext">Sometimes, swallows have been known to return not just to the same area, but even to the ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="stars|the stars"><div class="qnum">11</div><div class="qmain"><div class="qtext">Birds that travel by night can find their way using the ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="local landmarks|landmarks"><div class="qnum">12</div><div class="qmain"><div class="qtext">Bird navigation appears to be connected with the memory of ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+          </div>
+
+          <div class="qgroup">
+            <div class="ginstr"><b>Questions 13–14 · Multiple choice.</b> Which <b>TWO</b> of the following dangers faced by swallows during migration are mentioned in the text? Choose <b>TWO</b> letters.</div>
+            <div class="q mc" data-type="mc2" data-answer="A,E" data-exp="A — &lsquo;the most dangerous part of the journey is the crossing of the Sahara desert.&rsquo; E — &lsquo;many young swallows become the prey of Eleonora&rsquo;s falcons.&rsquo; (Long sea crossings are &lsquo;generally avoided&rsquo;, so B is a trap.)">
+              <div class="qnum">13–14</div>
+              <div class="qmain">
+                <div class="qtext">Select two:</div>
+                <label><input type="checkbox" value="A"> A. Crossing the Sahara desert</label>
+                <label><input type="checkbox" value="B"> B. Long sea crossings over open ocean</label>
+                <label><input type="checkbox" value="C"> C. Cold weather in northern Europe</label>
+                <label><input type="checkbox" value="D"> D. A shortage of nesting sites</label>
+                <label><input type="checkbox" value="E"> E. Eleonora's falcons</label>
+                <label><input type="checkbox" value="F"> F. Competition with house martins</label>
+                <div class="fb"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r2">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r2">↺ Reset answers</button>
+            <div class="scorebox" id="score-r2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOCABULARY ============ -->
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">🧩 Academic vocabulary — cause, effect & degree</h2>
+      <p class="small">Word bank practice built around the passages. Type answers exactly; some need the plural form. Submit to score — mistakes go to your Error Logbook.</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+
+        <div class="qgroup">
+          <div class="ginstr"><b>Exercise 1.</b> Identify the type of words in the box: (consequence, factor, change, result, impact, effect, cause, role). Are they (a) general nouns which need a context for their meaning, or (b) nouns which have specific meaning?</div>
+          <div class="q" data-type="mc1" data-answer="a" data-exp="They are general nouns (a) — abstract and needing context/collocation (e.g. &lsquo;the cause of the problem&rsquo;, &lsquo;play a role in&rsquo;) to carry precise meaning.">
+            <div class="qnum">1</div>
+            <div class="qmain"><div class="qtext">Choose one:</div>
+              <label><input type="radio" name="v-ex1" value="a"> (a) general nouns which need a context for their meaning</label>
+              <label><input type="radio" name="v-ex1" value="b"> (b) nouns which have specific meaning</label>
+              <div class="fb"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qgroup">
+          <div class="ginstr"><b>Exercise 2.</b> Complete with a word from the box. Some need the plural form. <span class="small">(consequence · factor · change · result · impact · effect · cause · role)</span></div>
+          <div class="q" data-type="text" data-answers="impact|effect"><div class="qnum">a</div><div class="qmain"><div class="qtext">Technology has had a huge ______ on our lives.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="changes"><div class="qnum">b</div><div class="qmain"><div class="qtext">The area has undergone many ______ in recent years.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="effect"><div class="qnum">c</div><div class="qmain"><div class="qtext">Planting trees can have a knock-on ______ on the economy of arid areas.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="consequences"><div class="qnum">d</div><div class="qmain"><div class="qtext">Deforestation can have unforeseen ______ for the ecology of a region.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="cause"><div class="qnum">e</div><div class="qmain"><div class="qtext">It is sometimes difficult to discover the exact ______ of a problem.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="result|results"><div class="qnum">f</div><div class="qmain"><div class="qtext">To achieve the best ______ it is important to initiate change at a local level.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="factor"><div class="qnum">g</div><div class="qmain"><div class="qtext">The main ______ contributing to success in any organization is a happy workforce.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="role"><div class="qnum">h</div><div class="qmain"><div class="qtext">The climate has played a major ______ in this region's economic history.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+        </div>
+
+        <div class="qgroup">
+          <div class="ginstr"><b>Exercise 3.</b> Complete with a phrase from the box. <span class="small">(gradual development · limited impact · far-reaching consequences · dramatic changes · favourable outcome · underlying cause · profound effect)</span></div>
+          <div class="q" data-type="text" data-answers="far-reaching consequences|far reaching consequences"><div class="qnum">a</div><div class="qmain"><div class="qtext">Government intervention has had ______ for regional growth.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="dramatic changes"><div class="qnum">b</div><div class="qmain"><div class="qtext">Shock tactics can bring about ______ in people's behaviour.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="gradual development"><div class="qnum">c</div><div class="qmain"><div class="qtext">______ is much more acceptable than rapid change.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="profound effect"><div class="qnum">d</div><div class="qmain"><div class="qtext">The introduction of new farming practices has had a ______ on people's lives.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="favourable outcome|favorable outcome"><div class="qnum">e</div><div class="qmain"><div class="qtext">To achieve the most ______ the countries involved need to negotiate.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="underlying cause"><div class="qnum">f</div><div class="qmain"><div class="qtext">The ______ in this particular case is not easy to find.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="limited impact"><div class="qnum">g</div><div class="qmain"><div class="qtext">The huge sums invested had only a ______ on the neighbourhood.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+        </div>
+
+        <div class="qgroup">
+          <div class="ginstr"><b>Exercise 4.</b> Does the word in brackets have the <b>same</b> or <b>opposite</b> meaning to the word in italics?</div>
+          <div class="q" data-type="so" data-answer="same" data-exp="&lsquo;completely&rsquo; = &lsquo;totally&rsquo; — same."><div class="qnum">a</div><div class="qmain"><div class="qtext">The wasteland was <i>completely</i> transformed. (<b>totally</b>)</div><select><option value="">— choose —</option><option value="same">Same meaning</option><option value="opposite">Opposite meaning</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="so" data-answer="opposite" data-exp="&lsquo;fully&rsquo; (entirely) vs &lsquo;partially&rsquo; (in part) — opposite."><div class="qnum">b</div><div class="qmain"><div class="qtext">The government <i>fully</i> accept the consequences of their actions. (<b>partially</b>)</div><select><option value="">— choose —</option><option value="same">Same meaning</option><option value="opposite">Opposite meaning</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="so" data-answer="same" data-exp="&lsquo;highly&rsquo; = &lsquo;exceedingly&rsquo; (very high degree) — same."><div class="qnum">c</div><div class="qmain"><div class="qtext">The marine life in the coral reef is <i>highly</i> sensitive to temperature fluctuations. (<b>exceedingly</b>)</div><select><option value="">— choose —</option><option value="same">Same meaning</option><option value="opposite">Opposite meaning</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="so" data-answer="opposite" data-exp="&lsquo;vastly&rsquo; (hugely) vs &lsquo;marginally&rsquo; (slightly) — opposite."><div class="qnum">d</div><div class="qmain"><div class="qtext">Alternative sources of energy like solar power can <i>vastly</i> improve life in remote communities. (<b>marginally</b>)</div><select><option value="">— choose —</option><option value="same">Same meaning</option><option value="opposite">Opposite meaning</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="so" data-answer="same" data-exp="&lsquo;greatly&rsquo; = &lsquo;considerably&rsquo; — same."><div class="qnum">e</div><div class="qmain"><div class="qtext">The rising sea level will <i>greatly</i> affect the livelihoods of people on some Pacific islands. (<b>considerably</b>)</div><select><option value="">— choose —</option><option value="same">Same meaning</option><option value="opposite">Opposite meaning</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">✔ Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">↺ Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ERROR LOGBOOK ============ -->
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong is recorded here with the correct answer and the reason. Review before your next attempt — this is where score gains come from.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+      <p class="small" style="margin-top:16px">The PDF includes student details, per-test scores, time spent, attempts, and the full error logbook.</p>
+    </div>
+  </section>
+
+  <!-- ============ SHEET SYNC SETUP ============ -->
+  <section class="panel" id="tab-setup">
+    <div class="card">
+      <h2 style="margin-top:0">⚙️ Google Sheet sync</h2>
+      <p>On every <b>Submit &amp; Score</b>, this Studio sends the student's name, email, test, score, time, attempt number and every answer to your Google Sheet. Because Google does not let a web page write to a Sheet directly, you connect it once through a free <b>Apps Script Web App</b>. Takes ~2 minutes.</p>
+      <div style="margin:14px 0">
+        <label class="small" style="font-weight:600">Your Web App URL (paste after step 5):</label><br>
+        <input id="webAppUrl" type="text" placeholder="https://script.google.com/macros/s/..../exec" style="width:100%;max-width:640px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;margin-top:6px;font-size:13px">
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary sm" id="saveUrl">Save URL</button>
+          <button class="btn ghost sm" id="testUrl">Send test row</button>
+          <span class="small" id="urlStatus"></span>
+        </div>
+      </div>
+
+      <ol class="setup-steps">
+        <li>Open your sheet → <b><a href="https://docs.google.com/spreadsheets/d/1hOKg9N3hdnltfZHNfE5vgdBNNaS66Yr8yE-AWA2acAI/edit" target="_blank" rel="noopener">this Google Sheet</a></b> → menu <b>Extensions → Apps Script</b>.</li>
+        <li>Delete anything in the editor and paste the code below.</li>
+        <li>Click <b>Deploy → New deployment</b> → gear icon → <b>Web app</b>.</li>
+        <li>Set <b>Execute as: Me</b> and <b>Who has access: Anyone</b>. Click <b>Deploy</b> and authorise.</li>
+        <li>Copy the <b>Web app URL</b> it gives you, paste it in the box above, and click <b>Save URL</b>.</li>
+        <li>Click <b>Send test row</b> — a row should appear in your sheet. Done!</li>
+      </ol>
+
+      <p class="small">Apps Script code (already set to your sheet ID — creates a header row automatically):</p>
+      <pre>function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(30000);
+  try {
+    var ss = SpreadsheetApp.openById('1hOKg9N3hdnltfZHNfE5vgdBNNaS66Yr8yE-AWA2acAI');
+    var sheet = ss.getSheetByName('Responses') || ss.insertSheet('Responses');
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['Timestamp','Name','Email','Test','Score','Total',
+                       'Percent','Attempt','Time (s)','Time (mm:ss)','Answer details']);
+    }
+    var d = JSON.parse(e.postData.contents);
+    sheet.appendRow([new Date(), d.name, d.email, d.test, d.score, d.total,
+                     d.percent, d.attempt, d.timeSec, d.timeFmt, d.details]);
+    return ContentService.createTextOutput(JSON.stringify({result:'ok'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({result:'error', message: err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}</pre>
+      <div class="notice">Tip: if the file is opened directly from disk, the browser sends the data in "no-cors" mode — the row still lands in your sheet, the page just can't read the reply back. That's normal and everything works. <span class="reset-link" id="resetAll">Reset all Studio data on this browser</span></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+"use strict";
+const LS_KEY = "ielts_reading_studio_v1";
+const TEST_META = {
+  r1:{label:"Reading 1 — Deforestation", pill:"r1"},
+  r2:{label:"Reading 2 — Swallows", pill:"r2"},
+  vocab:{label:"Vocabulary", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    webAppUrl:"",
+    tests:{
+      r1:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:""},
+      r2:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:""},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:21,best:null,answers:{},highlights:""}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  updateHeaderStats();
+}));
+
+// timer ticks for the currently-open test tab
+setInterval(()=>{
+  if(state.tests[activeTab]){
+    state.tests[activeTab].timeSec++;
+    updateHeaderStats();
+  }
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "—:—";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+
+// autosave every 10s
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- webAppUrl ----------
+const urlEl=$("#webAppUrl");urlEl.value=state.webAppUrl||"";
+$("#saveUrl").addEventListener("click",()=>{state.webAppUrl=urlEl.value.trim();save();$("#urlStatus").textContent="Saved ✓";});
+$("#testUrl").addEventListener("click",()=>{
+  if(!state.webAppUrl){$("#urlStatus").textContent="Enter & save a URL first.";return;}
+  syncToSheet({test:"TEST",score:0,total:0,percent:0,attempt:0,timeSec:0,timeFmt:"00:00",details:"connection test"},true);
+  $("#urlStatus").textContent="Test row sent — check your sheet.";
+});
+
+// ---------- highlighting ----------
+let hlMode={r1:false,r2:false};
+$$("[data-hl]").forEach(btn=>{
+  const id=btn.dataset.hl;
+  btn.addEventListener("click",()=>{
+    hlMode[id]=!hlMode[id];
+    btn.classList.toggle("on",hlMode[id]);
+    btn.querySelector("span").textContent=hlMode[id]?"ON":"OFF";
+  });
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+["r1","r2"].forEach(id=>{
+  const p=$("#passage-"+id);
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    if(!hlMode[id])return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){/* cross-node selection */}
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    if(state.tests[test].lastScore!=null)
+      $("#score-"+test).innerHTML=scoreText(state.tests[test].lastScore,state.tests[test].total);
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+// live-save on input
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="";
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");
+    correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));
+  }else if(type==="tfng"||type==="so"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;
+  }else if(type==="mc2"){
+    your=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).sort().join(",");
+    correct=q.dataset.answer.split(",").sort().join(",");
+    ok=your===correct;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||""};
+}
+function questionLabel(q,test){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  let score=0,total=0;
+  const detailArr=[];
+  const newErrors=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    total++;
+    const r=gradeQuestion(q);
+    const fb=q.querySelector(".fb");
+    q.classList.remove("correct","wrong");q.classList.add("res");
+    const {num,txt}=questionLabel(q,test);
+    if(r.ok){
+      score++;q.classList.add("correct");
+      fb.className="fb ok";fb.innerHTML="✔ Correct.";
+    }else{
+      q.classList.add("wrong");
+      fb.className="fb no";
+      fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");
+      newErrors.push({test,num,q:txt,your:r.your,correct:r.correct,exp:r.exp,time:Date.now()});
+    }
+    detailArr.push("Q"+num+": "+r.your+(r.ok?" [correct]":" [x -> "+r.correct+"]"));
+  });
+
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  // append errors (avoid duplicating same attempt errors already there? we keep every attempt's errors)
+  newErrors.forEach(e=>state.errorLog.push(e));
+  save();
+  updateHeaderStats();
+  $("#score-"+test).innerHTML=scoreText(score,total);
+  flash(TEST_META[test].label+": "+score+"/"+total+" — attempt "+t.attempts);
+
+  // sync
+  const details=detailArr.join(" | ");
+  syncToSheet({
+    test:TEST_META[test].label,score:score,total:total,
+    percent:Math.round(score/total*100),attempt:t.attempts,
+    timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
+  });
+  // scroll to top of question column
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  state.tests[test].answers={};save();
+  flash("Answers cleared (attempts & time kept).");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload,isTest){
+  if(!state.webAppUrl)return;
+  const full=Object.assign({
+    name:state.student.name||"(no name)",
+    email:state.student.email||"(no email)"
+  },payload);
+  fetch(state.webAppUrl,{
+    method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(full)
+  }).then(()=>{if(!isTest)$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check the Web App URL in ⚙️ Sheet Sync.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a test to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{label:e.test,pill:"r1"};
+    return '<tr><td><span class="pill '+meta.pill+'">'+meta.label.split(" —")[0]+'</span></td>'
+      +'<td><b>'+e.num+'</b></td>'
+      +'<td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Test</th><th>Q</th><th>Question</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=
+    metric("Student",state.student.name||"—")+
+    metric("Overall score",totMax?totScore+"/"+totMax:"—")+
+    metric("Total time",fmt(totTime))+
+    metric("Total attempts",totAtt)+
+    metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    return "<tr><td><b>"+meta.label+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595, M=40; let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);
+    doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(16);
+  doc.text("IELTS Reading Studio — Performance Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+
+  line("Results by test",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(meta.label,11,"bold");
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time: "+fmt(t.timeSec),10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{
+    state.errorLog.forEach((e,i)=>{
+      const meta=TEST_META[e.test]||{label:e.test};
+      line((i+1)+". ["+meta.label.split(" —")[0]+" Q"+e.num+"] "+e.q,10,"bold");
+      line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+      if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+      y+=2;
+    });
+  }
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_reading_report.pdf";
+  doc.save(fn);
+  flash("PDF report downloaded.");
+});
+
+// ---------- reset all ----------
+$("#resetAll").addEventListener("click",()=>{
+  if(confirm("This clears ALL saved answers, timers, attempts and the logbook on this browser. Continue?")){
+    localStorage.removeItem(LS_KEY);location.reload();
+  }
+});
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+save(true);
+})();
+</script>
+</body>
+</html>
