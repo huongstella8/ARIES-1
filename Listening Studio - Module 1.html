@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Listening Studio - Module 1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --paper:#F7F4EC;
+    --paper-dark:#EFEADC;
+    --ink:#1E2A32;
+    --ink-soft:#4A5760;
+    --rule:#C9C0A9;
+    --maroon:#7A2E2E;
+    --maroon-deep:#5C1F1F;
+    --gold:#A9832B;
+    --ok:#2F6B4F;
+    --bad:#A3372D;
+    --mark:#F4DFA1;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper-dark);
+    color:var(--ink);
+    font-family: "Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.5;
+  }
+  h1,h2,h3,h4{font-family:"Iowan Old Style",Georgia,serif; margin:0; font-weight:600;}
+  .sans{font-family:"Avenir Next","Segoe UI",Helvetica,Arial,sans-serif;}
+
+  /* ---------- Header / masthead ---------- */
+  .masthead{
+    background:var(--ink);
+    color:var(--paper);
+    padding:22px clamp(16px,4vw,48px);
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:6px solid var(--maroon);
+  }
+  .masthead .brand{max-width:520px;}
+  .masthead .brand .kicker{
+    font-family:"Avenir Next",sans-serif;
+    font-size:12.5px;
+    letter-spacing:.4px;
+    color:#D8CBB0;
+    margin-bottom:4px;
+  }
+  .masthead h1{font-size:clamp(24px,3vw,32px); font-style:italic; letter-spacing:.3px;}
+  .masthead .sub{font-family:"Avenir Next",sans-serif; font-size:13.5px; color:#C9BFA6; margin-top:4px;}
+
+  .student-box{
+    background:#26343D;
+    border:1px solid #3B4C57;
+    border-radius:4px;
+    padding:12px 16px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    font-family:"Avenir Next",sans-serif;
+  }
+  .student-field{display:flex; flex-direction:column; gap:4px;}
+  .student-field label{font-size:11px; color:#AEC0C9; letter-spacing:.3px;}
+  .student-field input{
+    background:#F7F4EC;
+    border:1px solid #14181B;
+    border-radius:3px;
+    padding:6px 8px;
+    font-size:13.5px;
+    font-family:"Avenir Next",sans-serif;
+    width:190px;
+    color:var(--ink);
+  }
+  .save-status{
+    font-size:11.5px;
+    color:#9FD8B5;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .save-dot{width:7px;height:7px;border-radius:50%;background:#9FD8B5;display:inline-block;}
+
+  /* ---------- Nav ---------- */
+  nav.tabs{
+    background:var(--paper);
+    display:flex;
+    gap:2px;
+    padding:0 clamp(16px,4vw,48px);
+    border-bottom:1px solid var(--rule);
+    overflow-x:auto;
+  }
+  nav.tabs button{
+    font-family:"Avenir Next",sans-serif;
+    background:transparent;
+    border:none;
+    padding:14px 18px;
+    font-size:13.5px;
+    letter-spacing:.2px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+  nav.tabs button.active{color:var(--maroon-deep); border-bottom-color:var(--maroon); font-weight:600;}
+  nav.tabs button .badge{
+    display:inline-block; margin-left:6px; font-size:10.5px;
+    background:var(--ok); color:#fff; padding:1px 6px; border-radius:9px;
+  }
+  nav.tabs button .badge.low{background:var(--bad);}
+
+  main{max-width:940px; margin:0 auto; padding:28px clamp(14px,4vw,20px) 80px;}
+
+  /* ---------- Exam sheet ---------- */
+  .sheet{
+    background:var(--paper);
+    border:1px solid var(--rule);
+    box-shadow:0 1px 0 var(--rule);
+  }
+  .sheet-head{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:20px 26px 14px; border-bottom:2px solid var(--ink);
+  }
+  .sheet-head .context{font-family:"Avenir Next",sans-serif; font-size:12px; letter-spacing:.3px; color:var(--ink-soft);}
+  .sheet-head h2{font-style:italic; font-size:26px; color:var(--maroon-deep); margin-top:2px;}
+  .sheet-head .audio-ref{
+    font-family:"Avenir Next",sans-serif; font-size:12.5px; color:var(--ink-soft);
+    background:var(--paper-dark); border:1px solid var(--rule); padding:4px 10px; border-radius:20px;
+    white-space:nowrap;
+  }
+
+  .tips{
+    margin:18px 26px 6px; padding:14px 16px 14px 18px;
+    background:#FBF2DE; border-left:4px solid var(--gold);
+    font-family:"Avenir Next",sans-serif; font-size:13.3px; color:#4A3B14;
+  }
+  .tips h4{font-family:"Avenir Next",sans-serif; font-size:12px; letter-spacing:.3px; color:#7A5B12; margin-bottom:6px;}
+  .tips ul{margin:0; padding-left:18px;}
+  .tips li{margin-bottom:6px;}
+  .tips li:last-child{margin-bottom:0;}
+
+  .group{margin:22px 26px;}
+  .group-instructions{
+    font-style:italic; color:var(--ink-soft); font-size:14.5px; margin-bottom:6px;
+  }
+  .group-prompt{font-weight:600; margin:8px 0 10px;}
+
+  .qrow{
+    display:flex; align-items:flex-start; gap:12px; padding:9px 0;
+    border-bottom:1px dotted var(--rule);
+  }
+  .qrow:last-child{border-bottom:none;}
+  .qnum{
+    flex:0 0 30px; font-weight:700; color:var(--maroon-deep);
+    font-family:"Avenir Next",sans-serif; font-size:13.5px; padding-top:6px;
+  }
+  .qbody{flex:1;}
+  .qtext{margin-bottom:6px;}
+  input.answer{
+    width:min(320px,100%);
+    padding:7px 9px;
+    border:none;
+    border-bottom:1.5px solid var(--ink-soft);
+    background:transparent;
+    font-family:"Iowan Old Style",Georgia,serif;
+    font-size:15px;
+    color:var(--ink);
+  }
+  input.answer:focus{outline:none; border-bottom-color:var(--maroon);}
+
+  .mcq-options{display:flex; flex-direction:column; gap:6px; margin-top:2px;}
+  .mcq-options label{
+    display:flex; gap:8px; align-items:center; font-size:14.5px; cursor:pointer;
+  }
+  .mcq-options input{accent-color:var(--maroon);}
+
+  .result-tag{
+    font-family:"Avenir Next",sans-serif; font-size:11.5px; font-weight:700;
+    padding:2px 8px; border-radius:10px; margin-left:4px;
+  }
+  .result-tag.correct{background:#DCEEE3; color:var(--ok);}
+  .result-tag.incorrect{background:#F6DEDB; color:var(--bad);}
+
+  .explain{
+    margin-top:8px; font-size:13.3px; background:#F1ECDD; border:1px solid var(--rule);
+    border-radius:3px; padding:9px 12px; color:#3C4750; display:none;
+  }
+  .explain mark{background:var(--mark); padding:0 2px; border-radius:2px;}
+  .explain .ca{font-weight:700; color:var(--maroon-deep);}
+
+  .submit-bar{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    padding:18px 26px 24px; border-top:2px solid var(--ink);
+    font-family:"Avenir Next",sans-serif;
+  }
+  button.primary{
+    background:var(--maroon); color:#fff; border:none; padding:11px 22px;
+    font-family:"Avenir Next",sans-serif; font-size:13.5px; letter-spacing:.2px;
+    border-radius:3px; cursor:pointer;
+  }
+  button.primary:hover{background:var(--maroon-deep);}
+  button.ghost{
+    background:transparent; border:1px solid var(--ink-soft); color:var(--ink-soft);
+    padding:10px 18px; font-family:"Avenir Next",sans-serif; font-size:13px;
+    border-radius:3px; cursor:pointer;
+  }
+  .score-line{font-size:14px;}
+  .score-line b{font-size:18px;}
+
+  .lock-note{
+    font-family:"Avenir Next",sans-serif; font-size:12.5px; color:var(--ink-soft);
+    padding:10px 26px 0;
+  }
+
+  /* ---------- Final report ---------- */
+  .report-card{
+    background:var(--paper); border:1px solid var(--rule); padding:26px;
+    font-family:"Avenir Next",sans-serif;
+  }
+  .report-card h2{font-family:"Iowan Old Style",Georgia,serif; font-style:italic; color:var(--maroon-deep); margin-bottom:4px;}
+  .report-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:18px 0;}
+  .report-cell{border:1px solid var(--rule); padding:14px; background:var(--paper-dark);}
+  .report-cell .label{font-size:11.5px; color:var(--ink-soft); letter-spacing:.3px;}
+  .report-cell .value{font-family:"Iowan Old Style",Georgia,serif; font-size:26px; margin-top:2px;}
+  .focus-list{margin-top:6px;}
+  .focus-list li{margin-bottom:8px; font-size:13.6px;}
+  .overall-band{
+    display:inline-block; padding:14px 22px; background:var(--ink); color:var(--paper);
+    font-family:"Iowan Old Style",Georgia,serif; font-size:15px; margin-bottom:4px;
+  }
+  .overall-band b{font-size:30px; margin-left:8px;}
+
+  footer.appfoot{
+    text-align:center; font-family:"Avenir Next",sans-serif; font-size:11.5px; color:#8D8368;
+    padding:20px 0 40px;
+  }
+
+  @media (max-width:640px){
+    .qrow{flex-direction:column;}
+    .qnum{padding-top:0;}
+    input.answer{width:100%;}
+  }
+
+  /* ---------- print / pdf ---------- */
+  @media print{
+    body *{visibility:hidden;}
+    #printReport, #printReport *{visibility:visible;}
+    #printReport{position:absolute; left:0; top:0; width:100%;}
+    .no-print{display:none !important;}
+  }
+  #printReport{display:none;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    <div class="kicker sans">IELTS LISTENING &middot; PRACTICE MODULE</div>
+    <h1>Listening Studio &mdash; Module 1</h1>
+    <div class="sub">Four full exam-format listening tests, scored automatically against the official answer key.</div>
+  </div>
+  <div class="student-box">
+    <div class="student-field">
+      <label for="studentName">Name</label>
+      <input id="studentName" type="text" placeholder="Your full name" autocomplete="name">
+    </div>
+    <div class="student-field">
+      <label for="studentEmail">Email</label>
+      <input id="studentEmail" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="save-status" id="saveStatus"><span class="save-dot"></span><span id="saveStatusText">Autosave on</span></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabBar"></nav>
+
+<main id="mainArea"></main>
+
+<footer class="appfoot">Listening Studio &middot; Module 1 &middot; content drawn from Units 1&ndash;4 Exam Listening sections</footer>
+
+<div id="printReport"></div>
+
+<script>
+/* ============================= DATA ============================= */
+const TESTS = [
+{
+  id:"u1", label:"Test 1 &middot; Unit 1", unit:"Unit 1 Exam Listening",
+  section:"SECTION 2", context:"Change and consequences &mdash; Library orientation talk",
+  audioRef:"Track 1.6 &ndash; 1.7",
+  tips:[
+    "Skim all ten questions before the recording starts. Questions 11&ndash;13 are one list item (three groups of people); 14 and 15 are separate short-answer questions &mdash; that structure tells you the talk will name three groups early on, then move into procedural detail.",
+    "Underline the word-limit instruction and hold yourself to it. Answers like &lsquo;Fieldhouse Library&rsquo; or &lsquo;ID card&rsquo; must be copied exactly as the speaker says them, not paraphrased into your own words.",
+    "Listen for the phrase that marks a pivot from &lsquo;finished&rsquo; to &lsquo;still in progress&rsquo; in Part 2 (&lsquo;there are two exceptions&rsquo;) &mdash; that single signpost tells you Questions 16&ndash;17 are coming."
+  ],
+  groups:[
+    {
+      id:"u1g1",
+      instructions:"Questions 11&ndash;15 &mdash; Write NO MORE THAN THREE WORDS for each answer.",
+      prompt:"What three kinds of people are listening to the talk?",
+      questions:[
+        {num:11, answer:["full-time students","full time students"],
+          explain:"The librarian names the groups one by one: <mark>&lsquo;The majority of you are full-time students&rsquo;</mark>. Notice the signpost &lsquo;the majority of you&rsquo; introducing the first group in the list."},
+        {num:12, answer:["part-time students","part time students"],
+          explain:"The second group follows immediately: <mark>&lsquo;those of you who are part-time students will no doubt require the services too&rsquo;</mark>."},
+        {num:13, answer:["distance learners"],
+          explain:"The third group is added almost as an afterthought: <mark>&lsquo;I forgot there may be a few distance learners on the tour today&rsquo;</mark> &mdash; a useful reminder that list items in IELTS talks aren&rsquo;t always announced with equal weight."},
+        {num:14, prompt:"What will you need to do to visit the Fieldhouse Library?", answer:["make an appointment"],
+          explain:"Stated directly: <mark>&lsquo;if you want to visit it you will need to make an appointment&rsquo;</mark> &mdash; &lsquo;it&rsquo; refers back to the Fieldhouse Library named the sentence before."},
+        {num:15, prompt:"What is necessary for gaining access to the library?", answer:["(your) id card","id card","your id card"],
+          explain:"The rule is repeated for emphasis at the end of the paragraph: <mark>&lsquo;to gain access to the facilities you must have your ID card &ndash; no ID card, no entry&rsquo;</mark>. A rule repeated twice in a talk is almost always tested."}
+      ]
+    },
+    {
+      id:"u1g2",
+      instructions:"Questions 16&ndash;20 &mdash; Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+      prompt:"What are the two collections which have not yet been fully moved in?",
+      questions:[
+        {num:16, answer:["economics"],
+          explain:"<mark>&lsquo;we are currently moving the Economics collection here&rsquo;</mark> &mdash; the present continuous signals a collection that isn&rsquo;t fully moved in yet."},
+        {num:17, answer:["french literature"],
+          explain:"<mark>&lsquo;we will be moving the French Literature collection into this building next week&rsquo;</mark> &mdash; future tense confirms this one hasn&rsquo;t arrived either."},
+        {num:18, prompt:"What is currently being built?", answer:["new restaurant","restaurant","the new restaurant"],
+          explain:"<mark>&lsquo;we are still building the new restaurant&rsquo;</mark> paraphrases the question&rsquo;s &lsquo;currently being built&rsquo;."},
+        {num:19, prompt:"How many computer places have been installed?", answer:["150"],
+          explain:"<mark>&lsquo;We have recently updated 150 computer stations&rsquo;</mark>. Careful: the script adds &lsquo;and will be adding another one hundred&rsquo; &mdash; that&rsquo;s a future number, not the one already installed."},
+        {num:20, prompt:"What else can you get from the librarians if you ask?", answer:["national newspapers"],
+          explain:"<mark>&lsquo;there is a wide range of national newspapers available from the librarians on request&rsquo;</mark> &mdash; &lsquo;on request&rsquo; paraphrases &lsquo;if you ask&rsquo;."}
+      ]
+    }
+  ],
+  categoryTip:{
+    "list/signpost":"When a question asks for a list (e.g. three types of people), listen for signpost phrases like &lsquo;the majority&rsquo;, &lsquo;those of you who&rsquo;, or &lsquo;I forgot&rsquo; &mdash; these often introduce each new list item, even when the items aren&rsquo;t numbered aloud.",
+    "exact wording":"For short-answer questions, write down the exact phrase the speaker uses rather than a synonym. Examiners accept the recording&rsquo;s own wording, not your paraphrase of it.",
+    "number accuracy":"When two numbers appear close together (a current total and a planned addition), pause your pen at the verb tense &mdash; &lsquo;have installed&rsquo; vs &lsquo;will be adding&rsquo; &mdash; to know which one the question wants."
+  }
+},
+{
+  id:"u2", label:"Test 2 &middot; Unit 2", unit:"Unit 2 Exam Listening",
+  section:"SECTION 3", context:"The importance of the past &mdash; Museums assignment discussion",
+  audioRef:"Track 1.16 &ndash; 1.17",
+  tips:[
+    "This is a Section 3 academic discussion between two students with different opinions. Track whose view belongs to whom as you listen &mdash; the matching task (26&ndash;30) depends entirely on correctly attributing each stance to Tom.",
+    "For 21&ndash;25, look at the grammar just before each gap: &lsquo;their ___ and ___&rsquo; wants two nouns, &lsquo;approximately ___ years old&rsquo; wants a number. Predict the word class before you listen, not just the topic.",
+    "Watch for hedging and agreement language (&lsquo;I&rsquo;m not so sure&rsquo;, &lsquo;I agree&rsquo;, &lsquo;Yes&rsquo;) &mdash; in a discussion task these words mark exactly the moment a speaker commits to a position, which is what 26&ndash;30 test."
+  ],
+  groups:[
+    {
+      id:"u2g1",
+      instructions:"Questions 21&ndash;25 &mdash; Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+      prompt:"The name of the assignment is &lsquo;Museums &ndash; their 21 ___ and ___.&rsquo;",
+      questions:[
+        {num:21, prompt:"Complete the assignment title: &lsquo;Museums &ndash; their ___ and ___&rsquo;", answer:["costs and benefits","costs, benefits","costs benefits"],
+          explain:"Tom states the title directly: <mark>&lsquo;Museums &ndash; their costs and benefits.&rsquo;</mark> Both nouns are needed for a full answer."},
+        {num:22, prompt:"The number one problem with local museums is ___.", answer:["size"],
+          explain:"Tom says plainly, <mark>&lsquo;I think the size is the number one problem&rsquo;</mark> &mdash; the question quotes his own phrase &lsquo;the number one problem&rsquo;."},
+        {num:23, prompt:"The purpose of the museum shop is to ___.", answer:["raise money"],
+          explain:"<mark>&lsquo;the shop is almost as big as the museum to try to raise money by selling souvenirs&rsquo;</mark> &mdash; the purpose is stated directly."},
+        {num:24, prompt:"The boat was approximately ___ years old.", answer:["100","a hundred","one hundred"],
+          explain:"Anne describes it as <mark>&lsquo;a real one, about a hundred years old&rsquo;</mark>."},
+        {num:25, prompt:"The ___ are dark.", answer:["display cabinets","(display) cabinets","cabinets"],
+          explain:"Tom&rsquo;s closing complaint: <mark>&lsquo;the display cabinets are so dark that you can hardly see the exhibits&rsquo;</mark>."}
+      ]
+    },
+    {
+      id:"u2g2",
+      instructions:"Questions 26&ndash;30 &mdash; How does Tom think the museums should be funded? Choose A (by the state), B (by local government), or C (by private funding), and match each museum type to a letter.",
+      prompt:"Write the correct letter A, B or C next to each museum type.",
+      questions:[
+        {num:26, prompt:"local history museums", type:"mcq", options:[["A","by the state"],["B","by local government"],["C","by private funding"]], answer:["B"],
+          explain:"Tom: <mark>&lsquo;that should come from the local authority&rsquo;</mark> &mdash; &lsquo;local authority&rsquo; paraphrases &lsquo;local government&rsquo; (B)."},
+        {num:27, prompt:"natural history museums", type:"mcq", options:[["A","by the state"],["B","by local government"],["C","by private funding"]], answer:["C"],
+          explain:"Anne proposes central government funding, but Tom counters: <mark>&lsquo;They could survive from donations&rsquo;</mark> &mdash; donations are a form of private funding (C)."},
+        {num:28, prompt:"science museums", type:"mcq", options:[["A","by the state"],["B","by local government"],["C","by private funding"]], answer:["A"],
+          explain:"Tom states directly: <mark>&lsquo;The state should spend more on science museums&rsquo;</mark> (A)."},
+        {num:29, prompt:"craft museums", type:"mcq", options:[["A","by the state"],["B","by local government"],["C","by private funding"]], answer:["C"],
+          explain:"Anne: <mark>&lsquo;a sort of museum which should not get public funds is the craft museum&rsquo;</mark>, and Tom agrees &mdash; ruling out state/local funding leaves private funding (C)."},
+        {num:30, prompt:"working farms", type:"mcq", options:[["A","by the state"],["B","by local government"],["C","by private funding"]], answer:["B"],
+          explain:"Tom: <mark>&lsquo;that&rsquo;s the sort of thing that the local government should be spending its money on&rsquo;</mark> &mdash; a direct match for B."}
+      ]
+    }
+  ],
+  categoryTip:{
+    "grammar prediction":"Before listening, look at the words immediately around each gap and decide what part of speech is missing &mdash; noun, number, or adjective. This narrows down what you&rsquo;re listening for well before the answer arrives.",
+    "opinion tracking":"In a two-speaker discussion, keep a running note of each speaker&rsquo;s stance. Matching tasks are won or lost on correctly remembering who said what, not on missing the vocabulary.",
+    "agreement signals":"Phrases like &lsquo;I agree&rsquo;, &lsquo;Yes&rsquo;, or a speaker simply repeating the other&rsquo;s idea confirm a final answer &mdash; don&rsquo;t lock in an opinion until you&rsquo;ve heard whether the other speaker challenges or accepts it."
+  }
+},
+{
+  id:"u3", label:"Test 3 &middot; Unit 3", unit:"Unit 3 Exam Listening",
+  section:"SECTION 4", context:"Machines, cycles and processes &mdash; Product Life Cycle lecture",
+  audioRef:"Track 1.22",
+  tips:[
+    "This is a Section 4 monologue describing a process, so expect linear signposts (&lsquo;the second stage&rsquo;, &lsquo;now we come to&rsquo;). Silently number each stage as it&rsquo;s introduced so you never lose your place if you miss a word.",
+    "Questions 31&ndash;35 are sentence completions that reuse the lecture&rsquo;s own stage names as anchors &mdash; listen for the stage name itself, then grab the single word that follows it.",
+    "The flow chart (36&ndash;40) mirrors the order of the talk exactly, so once you hear &lsquo;Disposal&rsquo; you know &lsquo;Reuse and recycle&rsquo; is next. Use the chart's existing labels to keep your place even if you mishear a gap."
+  ],
+  groups:[
+    {
+      id:"u3g1",
+      instructions:"Questions 31&ndash;35 &mdash; Complete the sentences below. Write ONE WORD ONLY for each answer.",
+      prompt:"",
+      questions:[
+        {num:31, prompt:"Recycling is principally the responsibility of ___.", answer:["designers"],
+          explain:"<mark>&lsquo;the major responsibility must be borne by designers&rsquo;</mark> answers this directly."},
+        {num:32, prompt:"The second stage in the cycle relates to ___ in general.", answer:["materials"],
+          explain:"<mark>&lsquo;the second stage is not Product Manufacturing, but rather that of Materials Acquisition&rsquo;</mark> &mdash; &lsquo;Materials&rsquo; is the key noun."},
+        {num:33, prompt:"Harvesting includes cutting down trees and ___.", answer:["fishing"],
+          explain:"<mark>&lsquo;there is harvesting, which includes the cutting down of trees&rsquo;</mark> &hellip; <mark>&lsquo;or fishing&rsquo;</mark> &mdash; the sentence joins two activities from the same list."},
+        {num:34, prompt:"Chemical processes create ___.", answer:["waste"],
+          explain:"<mark>&lsquo;as with all chemical processes, waste is produced&rsquo;</mark> is a near word-for-word match."},
+        {num:35, prompt:"A significant proportion of the ___ stage is unnecessary.", answer:["manufacturing"],
+          explain:"<mark>&lsquo;a lot of manufacturing seems unnecessary if we could only organize things better&rsquo;</mark> &mdash; &lsquo;a lot of&rsquo; paraphrases &lsquo;a significant proportion&rsquo;."}
+      ]
+    },
+    {
+      id:"u3g2",
+      instructions:"Questions 36&ndash;40 &mdash; Complete the flow chart. Write NO MORE THAN TWO WORDS for each answer.",
+      prompt:"",
+      questions:[
+        {num:36, prompt:"Packaging &mdash; in addition to the maintenance of freshness, one use of packaging is ___.", answer:["information","providing information"],
+          explain:"<mark>&lsquo;packaging serves a purpose &hellip; such as maintaining freshness and hygiene, as well as providing information&rsquo;</mark> &mdash; &lsquo;information&rsquo; is the missing noun."},
+        {num:37, prompt:"Product use &mdash; we should avoid products intended for ___ only.", answer:["single use"],
+          explain:"<mark>&lsquo;We should not encourage the purchase of single use products&rsquo;</mark> &mdash; almost a word-for-word match with the gap."},
+        {num:38, prompt:"Disposal &mdash; even in a landfill site, a product has a ___.", answer:["value"],
+          explain:"<mark>&lsquo;it does have a value even at this stage of its life, even in fact when it&rsquo;s actually in the landfill site&rsquo;</mark>."},
+        {num:39, prompt:"Reuse and recycle &mdash; paper can be recycled into ___.", answer:["cereal boxes"],
+          explain:"<mark>&lsquo;one pound of recycled paper can make six cereal boxes&rsquo;</mark>."},
+        {num:40, prompt:"The recycling of newspapers could result in a ___ of 40,000 trees.", answer:["saving"],
+          explain:"<mark>&lsquo;there could be a saving of 40,000 trees a day&rsquo;</mark> &mdash; &lsquo;saving&rsquo; is the missing noun, paired with the number already given on the chart."}
+      ]
+    }
+  ],
+  categoryTip:{
+    "sequence tracking":"For process lectures, jot a one-word label for each stage as it's announced (Design &rarr; Materials &rarr; Processing &rarr; &hellip;). If you lose a specific answer, the sequence itself tells you which gap you're on.",
+    "anchor words":"Sentence-completion gaps in a lecture are usually placed right after the lecture's own key term. Listen for that term, then take the very next content word as your answer.",
+    "chart mirroring":"A flow chart's box order always matches the talk's order. Trust the chart layout to relocate yourself in the audio rather than trying to remember the whole sentence."
+  }
+},
+{
+  id:"u4", label:"Test 4 &middot; Unit 4", unit:"Unit 4 Exam Listening",
+  section:"SECTION 4", context:"Education &mdash; The six-term school year lecture",
+  audioRef:"Track 1.28",
+  tips:[
+    "Both parts come from the same lecture, so build a mental timeline before listening: the six-term proposal &rarr; its effect on learning loss &rarr; the historical origin of today's terms &rarr; summer schools as an alternative model.",
+    "For the multiple-choice questions, listen for comparison language (&lsquo;reduced&rsquo;, &lsquo;an improvement on&rsquo;, &lsquo;lower than&rsquo;). The correct option is usually a synonym for the number or trend you hear, not the first figure mentioned.",
+    "In the summary completion, the topic shifts from a historical cause (&lsquo;worked in ___&rsquo;) to a modern solution (&lsquo;a different approach &hellip; the ___&rsquo;) &mdash; expect the word type to shift from an industry noun to an institution noun."
+  ],
+  groups:[
+    {
+      id:"u4g1",
+      instructions:"Questions 31&ndash;35 &mdash; Choose the correct letter A, B or C.",
+      prompt:"",
+      questions:[
+        {num:31, prompt:"How long would terms be under the six-term system?", type:"mcq", options:[["A","six weeks"],["B","seven weeks"],["C","thirteen weeks"]], answer:["B"],
+          explain:"<mark>&lsquo;a repeating pattern of seven weeks of term time plus two weeks of vacation&rsquo;</mark> &mdash; matches B directly."},
+        {num:32, prompt:"What would happen to the summer holiday?", type:"mcq", options:[["A","It would disappear."],["B","It would be shortened."],["C","It would be lengthened."]], answer:["B"],
+          explain:"<mark>&lsquo;the very long summer holiday would be reduced in length&rsquo;</mark> &mdash; &lsquo;reduced&rsquo; paraphrases &lsquo;shortened&rsquo; (B)."},
+        {num:33, prompt:"How much was the average learning loss in the summer?", type:"mcq", options:[["A","two weeks"],["B","three weeks"],["C","seven weeks"]], answer:["B"],
+          explain:"<mark>&lsquo;children&rsquo;s test scores were three weeks lower than when they left school&rsquo;</mark> &mdash; matches B."},
+        {num:34, prompt:"In which subject was learning loss greatest among disadvantaged children?", type:"mcq", options:[["A","maths"],["B","reading"],["C","writing"]], answer:["B"],
+          explain:"<mark>&lsquo;disadvantaged children showed even greater losses in reading skills&rsquo;</mark> &mdash; a direct statement matching B."},
+        {num:35, prompt:"According to Marchmont&rsquo;s research, in the six-term system pupils performed &hellip;", type:"mcq", options:[["A","better than under the existing system."],["B","worse than under the existing system."],["C","the same as under the existing system."]], answer:["A"],
+          explain:"<mark>&lsquo;This is certainly an improvement on the traditional system&rsquo;</mark> &mdash; &lsquo;improvement&rsquo; paraphrases &lsquo;performed better&rsquo; (A)."}
+      ]
+    },
+    {
+      id:"u4g2",
+      instructions:"Questions 36&ndash;40 &mdash; Complete the summary below. Write NO MORE THAN TWO WORDS for each answer.",
+      prompt:"The familiar school terms in use today originated when many people worked in 36 ___. Also, because of the heat, teaching children in July and August was difficult before the invention of 37 ___. A different approach can be provided by the 38 ___. An important factor in the success of these is the small 39 ___. Also, the element of 40 ___ is usually present, which contributes greatly.",
+      questions:[
+        {num:36, answer:["agriculture"],
+          explain:"<mark>&lsquo;In days when agriculture was of much greater importance in our working lives&rsquo;</mark>."},
+        {num:37, answer:["air-conditioning","air conditioning"],
+          explain:"<mark>&lsquo;Before air-conditioning, it was very impractical to try to teach children in the summer&rsquo;</mark> &mdash; &lsquo;the invention of&rsquo; in the question paraphrases &lsquo;before&rsquo;."},
+        {num:38, answer:["summer school","summer schools"],
+          explain:"<mark>&lsquo;One way of providing something different is the summer school&rsquo;</mark> &mdash; &lsquo;a different approach&rsquo; paraphrases &lsquo;something different&rsquo;."},
+        {num:39, answer:["class size","classes"],
+          explain:"<mark>&lsquo;Most summer schools &hellip; have small classes and class size was shown to have a positive effect&rsquo;</mark> &mdash; &lsquo;the small ___&rsquo; maps onto &lsquo;class size&rsquo;."},
+        {num:40, answer:["parental support"],
+          explain:"<mark>&lsquo;summer school children usually benefit from a great deal of parental support&rsquo;</mark> &mdash; &lsquo;the element of ___&rsquo; paraphrases &lsquo;a great deal of&rsquo;."}
+      ]
+    }
+  ],
+  categoryTip:{
+    "comparison language":"Multiple-choice questions in a lecture often hinge on a comparative word (reduced, improvement, lower). Write down the direction of change you hear (up/down/same) immediately &mdash; that alone often decides the correct option.",
+    "topic shift":"When a summary moves from a cause to a solution, expect the required word type to change too. Re-read the sentence around each gap rather than assuming every gap wants the same kind of word.",
+    "synonym matching":"The words in the question are rarely the exact words in the recording. Practise pairing common synonym sets (shortened/reduced, improvement/better, different/alternative) so you recognise them instantly."
+  }
+}
+];
+
+/* ============================= STATE ============================= */
+let STATE = {
+  student:{name:"", email:""},
+  answers:{},      // { "11": "value", ... } keyed by global question number string e.g. "u1-11"
+  results:{}       // { u1: {score, total, submitted, perQuestion:{11:true/false,...}} }
+};
+
+const PASS_THRESHOLD = 0.7;
+
+/* ============================= RENDER ============================= */
+function normalize(str){
+  return (str||"").toString().trim().toLowerCase()
+    .replace(/[.,;:!?'"()]/g,"")
+    .replace(/\s+/g," ")
+    .replace(/^(a|an|the|your)\s+/,"");
+}
+
+function isCorrect(q, userVal){
+  const uv = normalize(userVal);
+  if(!uv) return false;
+  return q.answer.some(a => normalize(a) === uv);
+}
+
+function buildTabs(){
+  const bar = document.getElementById("tabBar");
+  bar.innerHTML = "";
+  TESTS.forEach(t=>{
+    const b = document.createElement("button");
+    b.dataset.id = t.id;
+    b.innerHTML = t.label;
+    const res = STATE.results[t.id];
+    if(res && res.submitted){
+      const pct = Math.round((res.score/res.total)*100);
+      const span = document.createElement("span");
+      span.className = "badge" + (pct<70?" low":"");
+      span.textContent = pct+"%";
+      b.appendChild(span);
+    }
+    b.onclick = ()=>{ activeTab = t.id; render(); };
+    bar.appendChild(b);
+  });
+  const rb = document.createElement("button");
+  rb.dataset.id = "report";
+  rb.textContent = "Final report";
+  rb.onclick = ()=>{ activeTab = "report"; render(); };
+  bar.appendChild(rb);
+}
+
+let activeTab = "u1";
+
+function render(){
+  buildTabs();
+  document.querySelectorAll("#tabBar button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.id === activeTab);
+  });
+  const main = document.getElementById("mainArea");
+  main.innerHTML = "";
+  if(activeTab === "report"){
+    main.appendChild(renderReport());
+    return;
+  }
+  const test = TESTS.find(t=>t.id===activeTab);
+  main.appendChild(renderTest(test));
+}
+
+function renderTest(test){
+  const res = STATE.results[test.id] || {submitted:false};
+  const wrap = document.createElement("div");
+  wrap.className = "sheet";
+
+  wrap.innerHTML = `
+    <div class="sheet-head">
+      <div>
+        <div class="context sans">${test.context}</div>
+        <h2>Exam Listening &mdash; ${test.section}</h2>
+      </div>
+      <div class="audio-ref sans">&#9835; ${test.audioRef}</div>
+    </div>
+    <div class="tips">
+      <h4 class="sans">EXAMINER&rsquo;S TIPS</h4>
+      <ul>${test.tips.map(t=>`<li>${t}</li>`).join("")}</ul>
+    </div>
+  `;
+
+  test.groups.forEach(group=>{
+    const g = document.createElement("div");
+    g.className = "group";
+    g.innerHTML = `
+      <div class="group-instructions">${group.instructions}</div>
+      ${group.prompt ? `<div class="group-prompt">${group.prompt}</div>` : ""}
+    `;
+    group.questions.forEach(q=>{
+      const key = test.id+"-"+q.num;
+      const row = document.createElement("div");
+      row.className = "qrow";
+
+      let inputHtml = "";
+      if(q.type === "mcq"){
+        inputHtml = `<div class="mcq-options">` + q.options.map(([letter,text])=>{
+          const checked = STATE.answers[key]===letter ? "checked":"";
+          return `<label><input type="radio" name="${key}" value="${letter}" ${checked} ${res.submitted?"disabled":""}> <b>${letter}</b> &nbsp;${text}</label>`;
+        }).join("") + `</div>`;
+      } else {
+        const val = STATE.answers[key] || "";
+        inputHtml = `<input class="answer" type="text" data-key="${key}" value="${val}" placeholder="Your answer" ${res.submitted?"disabled":""}>`;
+      }
+
+      let resultTag = "";
+      let explainHtml = "";
+      if(res.submitted){
+        const correct = res.perQuestion[q.num];
+        resultTag = `<span class="result-tag ${correct?"correct":"incorrect"}">${correct?"Correct":"Incorrect"}</span>`;
+        if(res.unlocked){
+          explainHtml = `<div class="explain" style="display:block;">
+            <div class="ca">Correct answer: ${q.answer[0]}</div>
+            <div>${q.explain}</div>
+          </div>`;
+        }
+      }
+
+      row.innerHTML = `
+        <div class="qnum">${q.num}</div>
+        <div class="qbody">
+          <div class="qtext">${q.prompt || ""} ${resultTag}</div>
+          ${inputHtml}
+          ${explainHtml}
+        </div>
+      `;
+      g.appendChild(row);
+    });
+    wrap.appendChild(g);
+  });
+
+  // attach listeners for text inputs
+  wrap.querySelectorAll("input.answer").forEach(inp=>{
+    inp.addEventListener("input", e=>{
+      STATE.answers[e.target.dataset.key] = e.target.value;
+    });
+  });
+  wrap.querySelectorAll(".mcq-options input").forEach(inp=>{
+    inp.addEventListener("change", e=>{
+      STATE.answers[e.target.name] = e.target.value;
+    });
+  });
+
+  const bar = document.createElement("div");
+  bar.className = "submit-bar";
+  if(!res.submitted){
+    bar.innerHTML = `<div class="sans" style="font-size:12.5px;color:var(--ink-soft);">10 questions &middot; answers save automatically</div>`;
+    const btn = document.createElement("button");
+    btn.className = "primary";
+    btn.textContent = "Submit test";
+    btn.onclick = ()=>submitTest(test);
+    bar.appendChild(btn);
+  } else {
+    const pct = Math.round((res.score/res.total)*100);
+    bar.innerHTML = `<div class="score-line sans">Score: <b>${res.score} / ${res.total}</b> &nbsp;(${pct}%)</div>`;
+    const retry = document.createElement("button");
+    retry.className = "ghost";
+    retry.textContent = "Retake test";
+    retry.onclick = ()=>{
+      delete STATE.results[test.id];
+      test.groups.forEach(gr=>gr.questions.forEach(q=>{ delete STATE.answers[test.id+"-"+q.num]; }));
+      render(); saveProgress();
+    };
+    bar.appendChild(retry);
+  }
+  wrap.appendChild(bar);
+
+  if(res.submitted && !res.unlocked){
+    const note = document.createElement("div");
+    note.className = "lock-note sans";
+    note.textContent = "Detailed explanations and correct answers unlock at a score of 70% or higher. Review the tips above and retake the test when you're ready.";
+    wrap.insertBefore(note, bar);
+  }
+
+  return wrap;
+}
+
+function submitTest(test){
+  let score = 0, total = 0;
+  const perQuestion = {};
+  test.groups.forEach(g=>g.questions.forEach(q=>{
+    total++;
+    const key = test.id+"-"+q.num;
+    const correct = isCorrect(q, STATE.answers[key]);
+    perQuestion[q.num] = correct;
+    if(correct) score++;
+  }));
+  const unlocked = (score/total) >= PASS_THRESHOLD;
+  STATE.results[test.id] = {score, total, submitted:true, unlocked, perQuestion};
+  saveProgress();
+  render();
+}
+
+/* ============================= FINAL REPORT ============================= */
+function computeFocusAreas(){
+  const tips = [];
+  TESTS.forEach(test=>{
+    const res = STATE.results[test.id];
+    if(!res || !res.submitted) return;
+    // crude mapping: any wrong answer -> pull one categoryTip per test, avoid duplicates across tests via Set
+  });
+  return tips;
+}
+
+function renderReport(){
+  const wrap = document.createElement("div");
+  wrap.className = "report-card";
+
+  const completed = TESTS.filter(t=>STATE.results[t.id] && STATE.results[t.id].submitted);
+  const totalQ = completed.reduce((s,t)=>s+STATE.results[t.id].total,0);
+  const totalCorrect = completed.reduce((s,t)=>s+STATE.results[t.id].score,0);
+  const overallPct = totalQ ? Math.round((totalCorrect/totalQ)*100) : 0;
+
+  let html = `<h2>Final report</h2>
+    <div class="sans" style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">
+      ${STATE.student.name ? "Prepared for " + STATE.student.name : "Complete the tests to generate your personalised report"}
+    </div>`;
+
+  if(completed.length === 0){
+    html += `<p class="sans">No tests completed yet. Submit at least one test to see your results here.</p>`;
+    wrap.innerHTML = html;
+    return wrap;
+  }
+
+  html += `<div class="overall-band sans">Overall score <b>${overallPct}%</b></div>`;
+  html += `<div class="report-grid">`;
+  TESTS.forEach(t=>{
+    const res = STATE.results[t.id];
+    if(!res || !res.submitted){
+      html += `<div class="report-cell"><div class="label sans">${t.unit}</div><div class="value sans" style="font-size:15px;color:var(--ink-soft);">Not attempted</div></div>`;
+    } else {
+      const pct = Math.round((res.score/res.total)*100);
+      html += `<div class="report-cell"><div class="label sans">${t.unit}</div><div class="value">${res.score}/${res.total} <span style="font-size:14px;color:var(--ink-soft);">(${pct}%)</span></div></div>`;
+    }
+  });
+  html += `</div>`;
+
+  // focus areas: gather categoryTip entries from tests where score < 100%, weight by number wrong
+  html += `<h3 class="sans" style="font-size:14px;margin-top:20px;">Key areas for improvement</h3><ul class="focus-list">`;
+  let anyTip = false;
+  completed.forEach(t=>{
+    const res = STATE.results[t.id];
+    if(res.score < res.total){
+      const tipEntries = Object.entries(t.categoryTip);
+      const missCount = res.total - res.score;
+      const numTips = missCount >= 4 ? tipEntries.length : Math.min(tipEntries.length, Math.ceil(missCount/2));
+      tipEntries.slice(0,numTips).forEach(([cat,tip])=>{
+        html += `<li><b class="sans">${t.unit} &mdash; ${cat}:</b> ${tip}</li>`;
+        anyTip = true;
+      });
+    }
+  });
+  if(!anyTip){
+    html += `<li>Excellent work &mdash; no recurring weak areas detected in the tests completed so far.</li>`;
+  }
+  html += `</ul>`;
+
+  html += `<div class="no-print" style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="primary" id="downloadPdfBtn">Download PDF report</button>
+  </div>`;
+
+  wrap.innerHTML = html;
+  wrap.querySelector("#downloadPdfBtn").onclick = downloadPdfReport;
+  return wrap;
+}
+
+function downloadPdfReport(){
+  const completed = TESTS.filter(t=>STATE.results[t.id] && STATE.results[t.id].submitted);
+  const totalQ = completed.reduce((s,t)=>s+STATE.results[t.id].total,0);
+  const totalCorrect = completed.reduce((s,t)=>s+STATE.results[t.id].score,0);
+  const overallPct = totalQ ? Math.round((totalCorrect/totalQ)*100) : 0;
+  const dateStr = new Date().toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});
+
+  let rowsHtml = "";
+  TESTS.forEach(t=>{
+    const res = STATE.results[t.id];
+    if(res && res.submitted){
+      const pct = Math.round((res.score/res.total)*100);
+      rowsHtml += `<tr><td>${t.unit}</td><td>${t.section}</td><td>${res.score} / ${res.total}</td><td>${pct}%</td></tr>`;
+    } else {
+      rowsHtml += `<tr><td>${t.unit}</td><td>${t.section}</td><td colspan="2">Not attempted</td></tr>`;
+    }
+  });
+
+  let focusHtml = "";
+  completed.forEach(t=>{
+    const res = STATE.results[t.id];
+    if(res.score < res.total){
+      const tipEntries = Object.entries(t.categoryTip);
+      const missCount = res.total - res.score;
+      const numTips = missCount >= 4 ? tipEntries.length : Math.min(tipEntries.length, Math.ceil(missCount/2));
+      tipEntries.slice(0,numTips).forEach(([cat,tip])=>{
+        focusHtml += `<li><strong>${t.unit} &mdash; ${cat}:</strong> ${tip}</li>`;
+      });
+    }
+  });
+  if(!focusHtml) focusHtml = "<li>No recurring weak areas detected.</li>";
+
+  const container = document.getElementById("printReport");
+  container.innerHTML = `
+    <div style="font-family:Georgia,serif; max-width:720px; margin:0 auto; padding:30px; color:#1E2A32;">
+      <div style="border-bottom:4px solid #7A2E2E; padding-bottom:14px; margin-bottom:18px;">
+        <div style="font-family:Arial,sans-serif; font-size:11px; letter-spacing:1px; color:#7A5B12;">LISTENING STUDIO &mdash; MODULE 1</div>
+        <h1 style="font-style:italic; margin:4px 0 0;">Progress Report</h1>
+      </div>
+      <table style="width:100%; font-family:Arial,sans-serif; font-size:13px; margin-bottom:18px;">
+        <tr><td style="padding:3px 0;"><strong>Student:</strong></td><td>${STATE.student.name||"&mdash;"}</td></tr>
+        <tr><td style="padding:3px 0;"><strong>Email:</strong></td><td>${STATE.student.email||"&mdash;"}</td></tr>
+        <tr><td style="padding:3px 0;"><strong>Date:</strong></td><td>${dateStr}</td></tr>
+        <tr><td style="padding:3px 0;"><strong>Overall score:</strong></td><td>${overallPct}% (${totalCorrect}/${totalQ} questions)</td></tr>
+      </table>
+      <h3 style="font-family:Arial,sans-serif; font-size:14px; border-bottom:1px solid #C9C0A9; padding-bottom:4px;">Results by test</h3>
+      <table style="width:100%; border-collapse:collapse; font-family:Arial,sans-serif; font-size:12.5px; margin-bottom:20px;">
+        <thead><tr style="background:#EFEADC;"><th style="text-align:left;padding:6px;border:1px solid #C9C0A9;">Test</th><th style="text-align:left;padding:6px;border:1px solid #C9C0A9;">Section</th><th style="text-align:left;padding:6px;border:1px solid #C9C0A9;">Score</th><th style="text-align:left;padding:6px;border:1px solid #C9C0A9;">%</th></tr></thead>
+        <tbody>${rowsHtml.replace(/<td>/g,'<td style="padding:6px;border:1px solid #C9C0A9;">')}</tbody>
+      </table>
+      <h3 style="font-family:Arial,sans-serif; font-size:14px; border-bottom:1px solid #C9C0A9; padding-bottom:4px;">Key areas for improvement</h3>
+      <ul style="font-family:Arial,sans-serif; font-size:12.5px; line-height:1.6;">${focusHtml}</ul>
+      <div style="margin-top:30px; font-family:Arial,sans-serif; font-size:10.5px; color:#8D8368;">Generated automatically by Listening Studio &mdash; Module 1</div>
+    </div>
+  `;
+  window.print();
+}
+
+/* ============================= AUTOSAVE ============================= */
+let memoryStore = null;
+
+async function saveProgress(){
+  const payload = JSON.stringify(STATE);
+  try{
+    if(window.storage){
+      await window.storage.set("listening-studio-progress", payload, false);
+    } else {
+      memoryStore = payload;
+    }
+    flashSaved();
+  }catch(e){
+    memoryStore = payload;
+  }
+}
+
+function flashSaved(){
+  const el = document.getElementById("saveStatusText");
+  if(!el) return;
+  el.textContent = "Saved " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+}
+
+async function loadProgress(){
+  try{
+    if(window.storage){
+      const res = await window.storage.get("listening-studio-progress", false);
+      if(res && res.value){
+        STATE = JSON.parse(res.value);
+      }
+    } else if(memoryStore){
+      STATE = JSON.parse(memoryStore);
+    }
+  }catch(e){
+    // no saved progress yet, or storage unavailable — start fresh
+  }
+}
+
+/* ============================= INIT ============================= */
+async function init(){
+  await loadProgress();
+
+  const nameInput = document.getElementById("studentName");
+  const emailInput = document.getElementById("studentEmail");
+  nameInput.value = STATE.student.name || "";
+  emailInput.value = STATE.student.email || "";
+  nameInput.addEventListener("input", e=>{ STATE.student.name = e.target.value; });
+  emailInput.addEventListener("input", e=>{ STATE.student.email = e.target.value; });
+
+  render();
+
+  setInterval(saveProgress, 10000);
+  window.addEventListener("beforeunload", saveProgress);
+}
+
+init();
+</script>
+</body>
+</html>
