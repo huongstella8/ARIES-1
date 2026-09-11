@@ -126,17 +126,40 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
 .flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
 .flash.show{opacity:1;bottom:30px}
 .small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
 .vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
 .reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
 
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
 <header class="top">
   <div class="top-inner">
     <div class="brand">
       <div class="logo">📖</div>
-      <div><h1>IELTS Reading Studio</h1><p>Academic Reading · Strategy · Practice · Analytics</p></div>
+      <div><h1>IELTS Reading Studio — Module 1</h1><p>Academic Reading · Sentence Completion · True / False / Not Given · Multiple Choice · Vocabulary &amp; Glossary</p></div>
     </div>
     <div class="hfields">
       <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
@@ -156,16 +179,15 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
     <button data-tab="r1">📗 Reading 1</button>
     <button data-tab="r2">📘 Reading 2</button>
     <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
     <button data-tab="log">📕 Error Logbook</button>
     <button data-tab="report">📊 Report / PDF</button>
-    <button data-tab="setup">⚙️ Sheet Sync</button>
   </nav>
 
   <!-- ============ STRATEGIES ============ -->
   <section class="panel active" id="tab-strat">
     <div class="card">
       <h2 style="margin-top:0">Reading strategies from your IELTS teacher</h2>
-      <p class="small">These are the exact habits I coach my Band 7–8+ students to build. Read them before you start, and return here whenever a question type keeps costing you marks. The two passages in this Studio use three high-frequency task types — master these and you cover roughly 60% of the Academic Reading paper.</p>
     </div>
 
     <div class="strat-grid">
@@ -185,10 +207,10 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
         <span class="tag">Task type</span>
         <h3>Sentence / Summary Completion (gap-fill)</h3>
         <ol>
-          <li><b>Predict the word class first.</b> Look at the gap: does the grammar need a noun, a verb, an adjective? "The climate is described as ____" needs an adjective (→ <i>semi-arid</i>).</li>
+          <li><b>Predict the word class first.</b> Look at the gap: does the grammar need a noun, a verb, an adjective? A gap after "described as" usually needs an adjective; a gap after "a lack of" usually needs a noun.</li>
           <li><b>Answers come straight from the passage</b> — copy the exact word(s). Never paraphrase, never change the form unless the instruction lets you.</li>
-          <li><b>Locate by paraphrase.</b> The question rewords the passage; the gap word is usually the one part <i>not</i> reworded. "no rainfall for more than ____" → the text says "the most recent lasting over <b>20 years</b>".</li>
-          <li><b>Respect the word limit and stay grammatical.</b> If "TWO WORDS" and both "population" and "increasing population" fit, pick the fuller phrase only if the grammar demands it — otherwise the shorter correct answer is safest.</li>
+          <li><b>Locate by paraphrase.</b> The question rewords the passage; the word you need to fill the gap is usually the one part that has <i>not</i> been reworded. Scan for that unchanged detail (a number, name or key noun).</li>
+          <li><b>Respect the word limit and stay grammatical.</b> If the limit is "TWO WORDS" and both a single word and a two-word phrase seem to fit, choose the shorter version unless the grammar of the sentence clearly requires the longer one.</li>
           <li><b>Check spelling.</b> A correctly located but misspelled word scores zero.</li>
         </ol>
         <div class="trap">⚠️ Trap: writing a synonym instead of the passage's own word. The answer key is the text — not your vocabulary.</div>
@@ -200,7 +222,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
         <p>Decide about the <b>statement vs. the passage</b> — never about the real world.</p>
         <ul>
           <li><b>TRUE</b> = the passage clearly states or directly implies the same idea.</li>
-          <li><b>FALSE</b> = the passage says the <i>opposite</i>, or contradicts the statement (e.g. text says "southwards", statement says "northwards" → FALSE).</li>
+          <li><b>FALSE</b> = the passage says the <i>opposite</i> of, or directly contradicts, the statement (e.g. the text gives one direction and the statement gives the reverse).</li>
           <li><b>NOT GIVEN</b> = the passage neither confirms nor contradicts it. Usually the statement adds a <b>comparison, cause, degree, or extra claim the text never makes</b> ("faster than", "more effective than", "minor cause").</li>
         </ul>
         <div class="tip">💡 The NG test: "Can I point to a sentence that proves this true, OR a sentence that proves it false?" If neither — it's NOT GIVEN. Comparatives (faster, larger, more effective) with no comparison in the text are a classic NG signal.</div>
@@ -213,7 +235,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
         <ol>
           <li><b>Read all options first</b>, then scan the relevant section for each.</li>
           <li><b>Match meaning, not words.</b> The correct option paraphrases something the text states as a real, faced danger.</li>
-          <li><b>Eliminate the "true but not asked" and "distorted" options.</b> The passage says long sea crossings are <i>avoided</i> — so they are not a danger the birds routinely face. That option is a trap.</li>
+          <li><b>Eliminate the "true but not asked" and "distorted" options.</b> If something is mentioned but described as <i>avoided</i> or only hypothetical, it is not something the question is really asking about — treat it as a trap.</li>
           <li><b>You need both letters right</b> for the marks — verify each against the text, don't guess the second.</li>
         </ol>
         <div class="tip">💡 Cross out an option only when you can say <i>why</i> it's wrong (not mentioned / opposite / partly true). Confident elimination is faster than confident selection.</div>
@@ -272,8 +294,8 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
             <div class="ginstr"><b>Questions 1–6 · Sentence completion.</b> Complete each sentence with <b>NO MORE THAN TWO WORDS</b> from the passage.</div>
             <div class="q" data-type="text" data-answers="semi-arid|semi arid"><div class="qnum">1</div><div class="qmain"><div class="qtext">The climate of the Sahel is described as ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
             <div class="q" data-type="text" data-answers="20 years|twenty years"><div class="qnum">2</div><div class="qmain"><div class="qtext">In some areas of the Sahel, there has been no rainfall for more than ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
-            <div class="q" data-type="text" data-answers="increasing population|population"><div class="qnum">3</div><div class="qmain"><div class="qtext">Desertification is caused by overgrazing, but this in turn is due to the pressure from ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
-            <div class="q" data-type="text" data-answers="plant species|other plant species"><div class="qnum">4</div><div class="qmain"><div class="qtext">When trees are cut down, the soil is affected, which leads to the death of the surrounding ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="increasing population"><div class="qnum">3</div><div class="qmain"><div class="qtext">Desertification is caused by overgrazing, but this in turn is due to the pressure from ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="plant species"><div class="qnum">4</div><div class="qmain"><div class="qtext">When trees are cut down, the soil is affected, which leads to the death of the surrounding ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
             <div class="q" data-type="text" data-answers="preventable"><div class="qnum">5</div><div class="qmain"><div class="qtext">The consequences of the loss of topsoil cannot be reversed, but they are ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
             <div class="q" data-type="text" data-answers="rainfall"><div class="qnum">6</div><div class="qmain"><div class="qtext">Looking after trees reduces the consequences of a lack of ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
           </div>
@@ -338,11 +360,11 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
           <div class="qgroup">
             <div class="ginstr"><b>Questions 7–12 · Sentence completion.</b> Complete each sentence with <b>NO MORE THAN TWO WORDS</b> from the passage.</div>
             <div class="q" data-type="text" data-answers="complete mystery|mystery"><div class="qnum">7</div><div class="qmain"><div class="qtext">In the past, the destination of the swallows in autumn was a ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
-            <div class="q" data-type="text" data-answers="random guess"><div class="qnum">8</div><div class="qmain"><div class="qtext">As White could not verify what happened to the swallows, he made a ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="random guess|guess"><div class="qnum">8</div><div class="qmain"><div class="qtext">As White could not verify what happened to the swallows, he made a ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
             <div class="q" data-type="text" data-answers="unanswered questions"><div class="qnum">9</div><div class="qmain"><div class="qtext">Despite knowing that swallows migrate, we are still left with ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
-            <div class="q" data-type="text" data-answers="same nest|very same nest"><div class="qnum">10</div><div class="qmain"><div class="qtext">Sometimes, swallows have been known to return not just to the same area, but even to the ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="same nest"><div class="qnum">10</div><div class="qmain"><div class="qtext">Sometimes, swallows have been known to return not just to the same area, but even to the ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
             <div class="q" data-type="text" data-answers="stars|the stars"><div class="qnum">11</div><div class="qmain"><div class="qtext">Birds that travel by night can find their way using the ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
-            <div class="q" data-type="text" data-answers="local landmarks|landmarks"><div class="qnum">12</div><div class="qmain"><div class="qtext">Bird navigation appears to be connected with the memory of ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
+            <div class="q" data-type="text" data-answers="local landmarks"><div class="qnum">12</div><div class="qmain"><div class="qtext">Bird navigation appears to be connected with the memory of ______.</div><input type="text" placeholder="your answer"><div class="fb"></div></div></div>
           </div>
 
           <div class="qgroup">
@@ -400,7 +422,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
           <div class="q" data-type="text" data-answers="effect"><div class="qnum">c</div><div class="qmain"><div class="qtext">Planting trees can have a knock-on ______ on the economy of arid areas.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
           <div class="q" data-type="text" data-answers="consequences"><div class="qnum">d</div><div class="qmain"><div class="qtext">Deforestation can have unforeseen ______ for the ecology of a region.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
           <div class="q" data-type="text" data-answers="cause"><div class="qnum">e</div><div class="qmain"><div class="qtext">It is sometimes difficult to discover the exact ______ of a problem.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
-          <div class="q" data-type="text" data-answers="result|results"><div class="qnum">f</div><div class="qmain"><div class="qtext">To achieve the best ______ it is important to initiate change at a local level.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
+          <div class="q" data-type="text" data-answers="results"><div class="qnum">f</div><div class="qmain"><div class="qtext">To achieve the best ______ it is important to initiate change at a local level.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
           <div class="q" data-type="text" data-answers="factor"><div class="qnum">g</div><div class="qmain"><div class="qtext">The main ______ contributing to success in any organization is a happy workforce.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
           <div class="q" data-type="text" data-answers="role"><div class="qnum">h</div><div class="qmain"><div class="qtext">The climate has played a major ______ in this region's economic history.</div><input type="text" placeholder="answer"><div class="fb"></div></div></div>
         </div>
@@ -434,6 +456,18 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
     </div>
   </section>
 
+  <!-- ============ GLOSSARY ============ -->
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Topic Glossary — Environment &amp; Migration</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic vocabulary pulled from both reading passages. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage/nuance note, and the collocations examiners reward. <span id="glossCount"></span></p>
+      <div id="glossGrid" class="gloss-grid"></div>
+    </div>
+  </section>
+
   <!-- ============ ERROR LOGBOOK ============ -->
   <section class="panel" id="tab-log">
     <div class="card">
@@ -460,57 +494,6 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
     </div>
   </section>
 
-  <!-- ============ SHEET SYNC SETUP ============ -->
-  <section class="panel" id="tab-setup">
-    <div class="card">
-      <h2 style="margin-top:0">⚙️ Google Sheet sync</h2>
-      <p>On every <b>Submit &amp; Score</b>, this Studio sends the student's name, email, test, score, time, attempt number and every answer to your Google Sheet. Because Google does not let a web page write to a Sheet directly, you connect it once through a free <b>Apps Script Web App</b>. Takes ~2 minutes.</p>
-      <div style="margin:14px 0">
-        <label class="small" style="font-weight:600">Your Web App URL (paste after step 5):</label><br>
-        <input id="webAppUrl" type="text" placeholder="https://script.google.com/macros/s/..../exec" style="width:100%;max-width:640px;padding:9px 11px;border:1px solid var(--line);border-radius:8px;margin-top:6px;font-size:13px">
-        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn primary sm" id="saveUrl">Save URL</button>
-          <button class="btn ghost sm" id="testUrl">Send test row</button>
-          <span class="small" id="urlStatus"></span>
-        </div>
-      </div>
-
-      <ol class="setup-steps">
-        <li>Open your sheet → <b><a href="https://docs.google.com/spreadsheets/d/1hOKg9N3hdnltfZHNfE5vgdBNNaS66Yr8yE-AWA2acAI/edit" target="_blank" rel="noopener">this Google Sheet</a></b> → menu <b>Extensions → Apps Script</b>.</li>
-        <li>Delete anything in the editor and paste the code below.</li>
-        <li>Click <b>Deploy → New deployment</b> → gear icon → <b>Web app</b>.</li>
-        <li>Set <b>Execute as: Me</b> and <b>Who has access: Anyone</b>. Click <b>Deploy</b> and authorise.</li>
-        <li>Copy the <b>Web app URL</b> it gives you, paste it in the box above, and click <b>Save URL</b>.</li>
-        <li>Click <b>Send test row</b> — a row should appear in your sheet. Done!</li>
-      </ol>
-
-      <p class="small">Apps Script code (already set to your sheet ID — creates a header row automatically):</p>
-      <pre>function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(30000);
-  try {
-    var ss = SpreadsheetApp.openById('1hOKg9N3hdnltfZHNfE5vgdBNNaS66Yr8yE-AWA2acAI');
-    var sheet = ss.getSheetByName('Responses') || ss.insertSheet('Responses');
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['Timestamp','Name','Email','Test','Score','Total',
-                       'Percent','Attempt','Time (s)','Time (mm:ss)','Answer details']);
-    }
-    var d = JSON.parse(e.postData.contents);
-    sheet.appendRow([new Date(), d.name, d.email, d.test, d.score, d.total,
-                     d.percent, d.attempt, d.timeSec, d.timeFmt, d.details]);
-    return ContentService.createTextOutput(JSON.stringify({result:'ok'}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({result:'error', message: err.message}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}</pre>
-      <div class="notice">Tip: if the file is opened directly from disk, the browser sends the data in "no-cors" mode — the row still lands in your sheet, the page just can't read the reply back. That's normal and everything works. <span class="reset-link" id="resetAll">Reset all Studio data on this browser</span></div>
-    </div>
-  </section>
-
 </div>
 
 <div class="flash" id="flash"></div>
@@ -518,6 +501,14 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
 <script>
 (function(){
 "use strict";
+
+/* =======================================================================
+   TEACHER SETUP — paste your Google Apps Script Web App URL between the
+   quotes below (see the separate setup guide). Leave empty to turn sync off.
+   Example: const WEBAPP_URL = "https://script.google.com/macros/s/AKf.../exec";
+   ======================================================================= */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+
 const LS_KEY = "ielts_reading_studio_v1";
 const TEST_META = {
   r1:{label:"Reading 1 — Deforestation", pill:"r1"},
@@ -530,11 +521,10 @@ let state = load();
 function blank(){
   return {
     student:{name:"",email:""},
-    webAppUrl:"",
     tests:{
-      r1:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:""},
-      r2:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:""},
-      vocab:{attempts:0,timeSec:0,lastScore:null,total:21,best:null,answers:{},highlights:""}
+      r1:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false},
+      r2:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:21,best:null,answers:{},highlights:"",unlocked:false}
     },
     errorLog:[]
   };
@@ -565,6 +555,7 @@ $$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
   $("#tab-"+activeTab).classList.add("active");
   if(activeTab==="log")renderLog();
   if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
   updateHeaderStats();
 }));
 
@@ -589,15 +580,6 @@ const nameEl=$("#stuName"),emailEl=$("#stuEmail");
 nameEl.value=state.student.name;emailEl.value=state.student.email;
 nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
 emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
-
-// ---------- webAppUrl ----------
-const urlEl=$("#webAppUrl");urlEl.value=state.webAppUrl||"";
-$("#saveUrl").addEventListener("click",()=>{state.webAppUrl=urlEl.value.trim();save();$("#urlStatus").textContent="Saved ✓";});
-$("#testUrl").addEventListener("click",()=>{
-  if(!state.webAppUrl){$("#urlStatus").textContent="Enter & save a URL first.";return;}
-  syncToSheet({test:"TEST",score:0,total:0,percent:0,attempt:0,timeSec:0,timeFmt:"00:00",details:"connection test"},true);
-  $("#urlStatus").textContent="Test row sent — check your sheet.";
-});
 
 // ---------- highlighting ----------
 let hlMode={r1:false,r2:false};
@@ -650,8 +632,23 @@ function restoreAnswers(){
       else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
       else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
     });
-    if(state.tests[test].lastScore!=null)
-      $("#score-"+test).innerHTML=scoreText(state.tests[test].lastScore,state.tests[test].total);
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>';
+        // re-show feedback so a returning student keeps their reviewed answers
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+      }
+    }
   });
 }
 function collectAnswers(test){
@@ -677,26 +674,39 @@ $$('[data-test]').forEach(body=>{
 // ---------- scoring ----------
 function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
 
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
 function gradeQuestion(q){
   const type=q.dataset.type;
-  let ok=false,your="",correct="";
+  let ok=false,your="",correct="",points=0,max=1;
   if(type==="text"){
     your=q.querySelector("input[type=text]").value;
     const accept=q.dataset.answers.split("|");
     correct=accept[0];
-    ok=accept.some(a=>norm(a)===norm(your));
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
   }else if(type==="tfng"||type==="so"){
     your=q.querySelector("select").value;correct=q.dataset.answer;
-    ok=norm(your)===norm(correct);
+    ok=norm(your)===norm(correct);points=ok?1:0;
   }else if(type==="mc1"){
     const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
-    ok=your===correct;
+    ok=your===correct;points=ok?1:0;
   }else if(type==="mc2"){
-    your=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).sort().join(",");
-    correct=q.dataset.answer.split(",").sort().join(",");
-    ok=your===correct;
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());
+    max=correctSet.length;   // "choose TWO" = 2 marks
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");
+    correct=correctSet.slice().sort().join(",");
+    // IELTS style: 1 mark per correct letter, but over-selecting scores 0
+    points = (sel.length>max) ? 0 : sel.filter(v=>correctSet.includes(v)).length;
+    ok = points===max;
   }
-  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||""};
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
 }
 function questionLabel(q,test){
   const num=q.querySelector(".qnum").textContent.trim();
@@ -704,48 +714,76 @@ function questionLabel(q,test){
   return {num,txt};
 }
 
+const PASS_PCT=70;
+
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
 $$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
   const test=btn.dataset.submit;
   const body=$('[data-test="'+test+'"]');
-  let score=0,total=0;
-  const detailArr=[];
-  const newErrors=[];
+  // count blanks to warn the student, then confirm to avoid accidental submits
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{const r=peekAnswer(q);if(!r)blanks++;});
+  const msg="Submit "+TEST_META[test].label+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  // grade everything first (do not reveal yet)
+  let score=0,total=0;const graded=[];
   body.querySelectorAll(".q").forEach(q=>{
-    total++;
-    const r=gradeQuestion(q);
-    const fb=q.querySelector(".fb");
-    q.classList.remove("correct","wrong");q.classList.add("res");
-    const {num,txt}=questionLabel(q,test);
-    if(r.ok){
-      score++;q.classList.add("correct");
-      fb.className="fb ok";fb.innerHTML="✔ Correct.";
-    }else{
-      q.classList.add("wrong");
-      fb.className="fb no";
-      fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");
-      newErrors.push({test,num,q:txt,your:r.your,correct:r.correct,exp:r.exp,time:Date.now()});
-    }
-    detailArr.push("Q"+num+": "+r.your+(r.ok?" [correct]":" [x -> "+r.correct+"]"));
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q,test);
+    total+=r.max;score+=r.points;
+    graded.push({q,r,num,txt});
   });
+  const pct=Math.round(score/total*100);
 
   const t=state.tests[test];
   t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
   t.best=(t.best==null)?score:Math.max(t.best,score);
-  // append errors (avoid duplicating same attempt errors already there? we keep every attempt's errors)
-  newErrors.forEach(e=>state.errorLog.push(e));
+  const passedNow=pct>=PASS_PCT;
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;   // once unlocked (>=70% at any point), answers stay visible
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{
+      fb.className="fb";fb.innerHTML="";   // gate: hide right/wrong and answers
+    }
+  });
+
+  // only record errors once the student has earned the answers (avoids leaking via the logbook)
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+
   save();
   updateHeaderStats();
-  $("#score-"+test).innerHTML=scoreText(score,total);
-  flash(TEST_META[test].label+": "+score+"/"+total+" — attempt "+t.attempts);
 
-  // sync
-  const details=detailArr.join(" | ");
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>');
+    flash(TEST_META[test].label+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+    const note=document.createElement("div");
+    note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still being recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+
+  // sync full detail to the teacher's sheet regardless of the gate
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
   syncToSheet({
     test:TEST_META[test].label,score:score,total:total,
-    percent:Math.round(score/total*100),attempt:t.attempts,
+    percent:pct,attempt:t.attempts,
     timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
   });
-  // scroll to top of question column
   body.scrollIntoView({behavior:"smooth",block:"start"});
 }));
 
@@ -759,18 +797,19 @@ $$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
     q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
     const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
   });
+  clearLockNote(body);
   state.tests[test].answers={};save();
   flash("Answers cleared (attempts & time kept).");
 }));
 
 // ---------- Google Sheet sync ----------
 function syncToSheet(payload,isTest){
-  if(!state.webAppUrl)return;
+  if(!WEBAPP_URL)return;
   const full=Object.assign({
     name:state.student.name||"(no name)",
     email:state.student.email||"(no email)"
   },payload);
-  fetch(state.webAppUrl,{
+  fetch(WEBAPP_URL,{
     method:"POST",mode:"no-cors",
     headers:{"Content-Type":"text/plain;charset=utf-8"},
     body:JSON.stringify(full)
@@ -865,12 +904,51 @@ $("#exportPdf").addEventListener("click",()=>{
   flash("PDF report downloaded.");
 });
 
-// ---------- reset all ----------
-$("#resetAll").addEventListener("click",()=>{
-  if(confirm("This clears ALL saved answers, timers, attempts and the logbook on this browser. Continue?")){
-    localStorage.removeItem(LS_KEY);location.reload();
-  }
-});
+// ---------- glossary ----------
+const GLOSSARY=[
+ {w:"semi-arid",pos:"adjective",src:"R1",en:"(of a region or climate) having very little rainfall — drier than semi-humid land but not a true desert.",vi:"bán khô hạn (mưa rất ít, khô nhưng chưa phải sa mạc).",ex:"The Sahel is a semi-arid belt where farming is always precarious.",nu:"Neutral, technical; used in geography/climate writing, not casual speech.",co:"semi-arid land / region / climate / zone"},
+ {w:"desertification",pos:"noun (uncount.)",src:"R1",en:"the process by which fertile land gradually turns into desert, often through drought or poor land use.",vi:"quá trình sa mạc hoá (đất màu mỡ biến thành sa mạc).",ex:"Overgrazing accelerates desertification across the region.",nu:"Formal, environmental register; always negative.",co:"combat / halt / accelerate desertification; the process of desertification"},
+ {w:"deforestation",pos:"noun (uncount.)",src:"R1",en:"the cutting down or clearing of forests over a wide area.",vi:"nạn phá rừng / sự chặt phá rừng.",ex:"Deforestation removes the tree roots that bind the soil together.",nu:"Formal; strongly negative connotation.",co:"large-scale / rampant deforestation; drivers of deforestation; reduce deforestation"},
+ {w:"fertile",pos:"adjective",src:"R1",en:"(of soil or land) able to produce abundant, healthy crops or vegetation.",vi:"màu mỡ, phì nhiêu (đất trồng tốt).",ex:"The savannahs to the south are far more fertile than the Sahel.",nu:"Positive; opposite of barren / infertile. Also figurative: “a fertile imagination”.",co:"fertile soil / land / ground; highly fertile"},
+ {w:"overgrazing",pos:"noun (uncount.)",src:"R1",en:"letting animals feed on grassland for too long, so the vegetation is damaged and cannot recover.",vi:"chăn thả quá mức (khiến cây cỏ không kịp phục hồi).",ex:"Overgrazing strips the land of the grasses that hold moisture.",nu:"Technical/agricultural; negative. Prefix over- = “too much”.",co:"overgrazing of pastures; caused by overgrazing"},
+ {w:"overcultivation",pos:"noun (uncount.)",src:"R1",en:"farming land too intensively, so that the soil loses its fertility.",vi:"canh tác quá mức (trồng trọt quá nhiều làm đất bạc màu).",ex:"Overcultivation leaves the soil dry and prone to breaking up.",nu:"Technical; negative. Contrast with sustainable farming.",co:"overcultivation of land / soil"},
+ {w:"erosion",pos:"noun (uncount.)",src:"R1",en:"the gradual wearing away of soil or rock by wind, water or other natural forces.",vi:"sự xói mòn (đất/đá bị bào mòn dần).",ex:"Once the trees are gone, wind and rain erosion increase sharply.",nu:"Neutral/technical; also figurative: “erosion of trust”. Verb: erode.",co:"soil / coastal erosion; prevent / cause erosion; erosion of"},
+ {w:"topsoil",pos:"noun (uncount.)",src:"R1",en:"the upper, most fertile layer of soil in which plants grow.",vi:"lớp đất mặt (tầng đất trên cùng, màu mỡ nhất).",ex:"When the topsoil is lost, only bare rock and dust remain.",nu:"Technical; the valuable layer, contrasted with subsoil.",co:"fertile topsoil; loss of topsoil; topsoil erosion"},
+ {w:"drought",pos:"noun",src:"R1",en:"a long period with little or no rain, causing a serious shortage of water.",vi:"hạn hán (thời gian dài thiếu mưa).",ex:"The most recent drought lasted over twenty years.",nu:"Neutral; note the silent “gh”. Both countable and uncountable.",co:"severe / prolonged drought; drought conditions; suffer a drought"},
+ {w:"deteriorate",pos:"verb (intrans.)",src:"R1",en:"to become progressively worse.",vi:"xấu đi, suy thoái dần.",ex:"Over 70% of Africa’s dry farmland has deteriorated in thirty years.",nu:"Formal; always a worsening. Noun: deterioration.",co:"conditions / soil / health deteriorate; deteriorate rapidly / steadily"},
+ {w:"irreversible",pos:"adjective",src:"R1",en:"impossible to change back to a previous state; permanent.",vi:"không thể đảo ngược, không thể phục hồi.",ex:"The loss of topsoil is irreversible, though it is preventable.",nu:"Formal; a strong word implying permanence. Opposite: reversible.",co:"irreversible damage / change / loss; largely irreversible"},
+ {w:"sustainable",pos:"adjective",src:"R1",en:"able to continue over a long period without harming the environment or using up resources.",vi:"bền vững (duy trì lâu dài mà không hủy hoại môi trường).",ex:"Sustainable land use can halt the deterioration of soils.",nu:"Positive; very common in environmental IELTS topics. Opposite: unsustainable.",co:"sustainable development / agriculture / management; environmentally sustainable"},
+ {w:"conservation",pos:"noun (uncount.)",src:"R1",en:"the protection and careful management of the natural environment and its resources.",vi:"sự bảo tồn, bảo vệ (thiên nhiên / tài nguyên).",ex:"Careful conservation of tree cover lessens the effects of low rainfall.",nu:"Positive; don’t confuse with “conversation”. Verb: conserve.",co:"forest / water / wildlife conservation; conservation efforts / measures"},
+ {w:"habitat",pos:"noun",src:"R1 / R2",en:"the natural home or environment of a plant or animal.",vi:"môi trường sống, nơi cư trú (của động, thực vật).",ex:"Tree roots provide a habitat for other plants and animals.",nu:"Scientific; a habitat is for organisms — “habitation” is for humans.",co:"natural habitat; destroy / protect a habitat; habitat loss"},
+ {w:"prolonged",pos:"adjective",src:"R1",en:"continuing for a long time, often longer than expected or wanted.",vi:"kéo dài (lâu hơn bình thường).",ex:"Droughts have become more prolonged and more severe.",nu:"Slightly negative; suggests something drawn out. Verb: prolong.",co:"prolonged drought / exposure / period; prolonged and severe"},
+ {w:"migrate",pos:"verb (intrans.)",src:"R2",en:"(of animals) to move from one region to another at a particular time of year.",vi:"di cư (theo mùa).",ex:"Swallows migrate to equatorial Africa for the winter.",nu:"Neutral; for animals (seasonal) or people (relocating). Noun: migration; adj: migratory.",co:"migrate south / to; seasonal migration; migratory birds"},
+ {w:"breed",pos:"verb",src:"R2",en:"(of animals) to mate and produce young.",vi:"sinh sản, gây giống.",ex:"Swallows come north to breed and raise their young.",nu:"Neutral; irregular verb breed–bred–bred. Also transitive: “to breed animals”.",co:"breed in captivity; breeding season / grounds; breed rapidly"},
+ {w:"distinctive",pos:"adjective",src:"R2",en:"having a special quality or appearance that makes something easy to recognise.",vi:"đặc trưng, dễ nhận biết (riêng biệt).",ex:"The swallow is very distinctive, with its forked tail.",nu:"Positive/neutral; distinctive = recognisable — not the same as “distinct” (= separate/clear).",co:"distinctive feature / style / appearance; highly distinctive"},
+ {w:"flock",pos:"noun / verb",src:"R2",en:"a large group of birds or sheep; (verb) to gather or move in such a group.",vi:"đàn (chim, cừu); tụ tập / kéo đến thành đàn.",ex:"Before leaving, the swallows flock together on telegraph wires.",nu:"Neutral; collective noun “a flock of birds”. Figurative: people “flock to” a place.",co:"a flock of birds / sheep; flock together; flock to"},
+ {w:"navigate",pos:"verb",src:"R2",en:"to find the way to a destination, especially over a long distance.",vi:"định vị, tìm đường (nhất là đường dài).",ex:"Birds can navigate by the sun, the stars and the Earth’s magnetic field.",nu:"Neutral/technical; noun: navigation. Also figurative: “navigate a crisis”.",co:"navigate by the stars; navigate a route; navigation system"},
+ {w:"imprint",pos:"verb / noun",src:"R2",en:"to fix something firmly in the mind or memory; (of young animals) to form a lasting recognition.",vi:"in sâu, khắc ghi (vào trí nhớ).",ex:"Local landmarks are imprinted on the minds of young birds before departure.",nu:"Slightly literary; often passive “be imprinted on”. Noun: an imprint = a mark left behind.",co:"imprinted on the mind / memory; leave an imprint"},
+ {w:"prey",pos:"noun (uncount.)",src:"R2",en:"an animal that is hunted and killed by another for food.",vi:"con mồi (bị săn bắt).",ex:"Many young swallows become the prey of Eleonora’s falcons.",nu:"Neutral; opposite of “predator”. Homophone of “pray”. Verb: prey on.",co:"fall prey to; prey on; easy prey; bird of prey"},
+ {w:"exhausted",pos:"adjective",src:"R1 / R2",en:"extremely tired; or (of resources) completely used up.",vi:"kiệt sức; hoặc cạn kiệt (tài nguyên).",ex:"Sandstorms exhaust the weakened birds; scarce water supplies are exhausted.",nu:"Two senses — tired (people/animals) and used up (resources). Verb: exhaust; noun: exhaustion.",co:"utterly / completely exhausted; exhausted supplies / reserves"},
+ {w:"species",pos:"noun (sing.=pl.)",src:"R2",en:"a group of living organisms whose members can breed with one another.",vi:"loài (sinh vật).",ex:"Enough swallows survive to ensure the continuation of the species.",nu:"Same form in singular and plural (“one species / many species”). Not “specie”.",co:"endangered / native / invasive species; a species of; survival of the species"}
+];
+function renderGlossary(filter){
+  const grid=$("#glossGrid");if(!grid)return;
+  const f=norm(filter||$("#glossSearch").value||"");
+  const rows=GLOSSARY.filter(g=>!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0);
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  if(!rows.length){grid.innerHTML='<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';return;}
+  grid.innerHTML=rows.map(g=>
+    '<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span><span class="pill '+(g.src.indexOf("R1")>=0?"r1":"r2")+'">'+escapeHtml(g.src)+'</span></div>'
+    +'<dl>'
+    +'<dt>EN</dt><dd>'+escapeHtml(g.en)+'</dd>'
+    +'<dt>VI</dt><dd class="vi">'+escapeHtml(g.vi)+'</dd>'
+    +'<dt>e.g.</dt><dd class="ex">'+escapeHtml(g.ex)+'</dd>'
+    +'<dt>Note</dt><dd class="nu">'+escapeHtml(g.nu)+'</dd>'
+    +'<dt>Colloc.</dt><dd class="co">'+escapeHtml(g.co)+'</dd>'
+    +'</dl></div>'
+  ).join("");
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
 
 // ---------- init ----------
 restoreAnswers();
