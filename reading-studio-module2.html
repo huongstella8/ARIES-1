@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio — Module 2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:1px 0 0;font-size:11.5px;opacity:.82;font-weight:500}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.endbank{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0 14px;font-size:15px;color:var(--ink);line-height:1.6}
+.endbank .ebt{font-weight:700;color:var(--brand);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.endbank .ebi{padding:3px 0;border-bottom:1px dashed var(--line)}
+.endbank .ebi:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio — Module 2</h1><p>Academic Reading · Skimming &amp; Matching Headings · True / False / Not Given · Matching Sentence Endings · Matching People · Vocabulary</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategies</button>
+    <button data-tab="r1">📗 Reading 1</button>
+    <button data-tab="r2">📘 Reading 2</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+  </nav>
+
+  <!-- ============ STRATEGIES ============ -->
+  <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Reading strategies from your IELTS teacher</h2>
+    </div>
+    <div class="strat-grid">
+      <div class="strat">
+        <span class="tag">Global habits</span>
+        <h3>Before you answer</h3>
+        <ol>
+          <li><b>Skim for structure (1–2 min).</b> Read the title and the first sentence of every paragraph; give each paragraph a one-line label.</li>
+          <li><b>Read instructions exactly.</b> “Choose ONE letter”, “write NO MORE THAN TWO WORDS”, “each letter once” — breaking the rule scores zero.</li>
+          <li><b>Underline anchors</b> in each question: names, dates, numbers and technical nouns are hardest to paraphrase, so they are fastest to scan for.</li>
+          <li><b>Most tasks follow passage order</b> — don't jump backwards to hunt for an answer.</li>
+        </ol>
+        <div class="tip">💡 Aim for ~20 minutes per passage; flag a hard item and return to it.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Skimming &amp; Matching Headings</h3>
+        <ol>
+          <li><b>Find the paragraph's main idea, not a detail.</b> A heading must cover the whole paragraph, not one sentence in it.</li>
+          <li><b>Match on meaning.</b> The heading paraphrases the topic; look for the paragraph whose overall subject matches.</li>
+          <li><b>Use the opening and closing sentences</b> — the main idea usually sits there.</li>
+          <li><b>Watch for “trap” headings</b> that repeat a word from the text but describe only a small part of it.</li>
+        </ol>
+        <div class="tip">💡 Note the keyword(s) that justify your match — it trains you to answer from evidence, not gist alone.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>True / False / Not Given (comparisons)</h3>
+        <ul>
+          <li><b>TRUE</b> = the passage states or clearly implies the same idea.</li>
+          <li><b>FALSE</b> = the passage says the opposite / contradicts it (e.g. the text says “most important” but the statement says “less important”).</li>
+          <li><b>NOT GIVEN</b> = the passage neither confirms nor contradicts it.</li>
+        </ul>
+        <div class="tip">💡 Comparison words are a red flag. If a statement claims X is <i>more/less … than</i> Y, check the text actually makes that comparison. If it lists things without comparing them, it is usually NOT GIVEN.</div>
+        <div class="trap">⚠️ Words like <i>only</i>, <i>all</i>, <i>always</i> often make a statement FALSE — the text may say “some” or “to name just three”.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Matching Sentence Endings</h3>
+        <ol>
+          <li><b>Read the beginning and predict</b> what kind of ending fits — a cause, an effect, a definition, a date.</li>
+          <li><b>Check grammar AND meaning.</b> The joined sentence must be grammatical and true to the passage.</li>
+          <li><b>Cause → effect.</b> Beginnings such as “Funding problems …” or “Scandal about …” are usually followed by an <i>effect</i>.</li>
+          <li><b>There are more endings than beginnings</b> — some endings are distractors you will not use.</li>
+        </ol>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Matching Features / People</h3>
+        <ol>
+          <li><b>Scan for the proper nouns</b> (names) in the passage and mark where each appears.</li>
+          <li><b>Read around each name</b> and match the fact to the person — the wording will be paraphrased.</li>
+          <li><b>A name may be used more than once</b> unless the instructions say otherwise, so don't cross names off too early.</li>
+        </ol>
+      </div>
+      <div class="strat">
+        <span class="tag">Vocabulary</span>
+        <h3>Time &amp; sequence language</h3>
+        <ul>
+          <li><b>Precise vs. general time.</b> Learn to move between an exact year (1854) and a general phrase (“in the mid-nineteenth century”).</li>
+          <li><b>Sequence markers</b> tell you order: <i>previously / prior to this / earlier</i> point <b>back</b>; <i>subsequently / following this / later</i> point <b>forward</b>.</li>
+          <li><b>Goal collocations:</b> <i>fulfil an ambition, achieve an aim, work towards a goal, set a target, draw up a scheme, make every endeavour</i>.</li>
+        </ul>
+        <div class="tip">💡 Every wrong answer lands in your <b>Error Logbook</b> — review it before your next attempt.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 1 ============ -->
+  <section class="panel" id="tab-r1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128215; Reading 1 &middot; The greatest of Victorian engineers</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r1">&#128396; Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r1">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r1">
+          <div class="para"><span class="plabel">A</span>In the hundred years up to 1860, the work of a small group of construction engineers carried forward the enormous social and economic change that we associate with the Industrial Revolution in Britain. The most important of these engineers was Isambard Kingdom Brunel, whose work in shipping, bridge-building and railway construction, to name just three fields, both challenged and motivated his colleagues. He was the driving force behind a number of hugely ambitious projects, some of which resulted in works which are still in use today.</div>
+          <div class="para"><span class="plabel">B</span>The son of an engineer, Brunel apprenticed with his father at an early age on the building of the Thames Tunnel. At the age of just twenty, he became the engineer in charge of the project. This impressive plan to bore under the Thames twice suffered major disasters when the river broke through into the tunnel. When the second breach occurred in 1827, Brunel was seriously injured during rescue operations and further work was halted.</div>
+          <div class="para"><span class="plabel">C</span>While recovering from his injuries, Brunel entered a design competition for a new bridge over the Avon Gorge near Clifton, Bristol. The original judge of the competition was Thomas Telford, a leading civil engineer of his day, who rejected all entries to the competition in favour of his own design. After considerable scandal, a second contest was held and Brunel's design was accepted. For reasons of funding, however, exacerbated by social unrest in Bristol, the project was abandoned in 1843 with only the towers completed. After Brunel's death, it was decided to begin work on it again, partly so that the bridge could form a fitting memorial to the great engineer. Work was finally completed in 1864. Today, the well known Clifton Suspension Bridge is a symbol of Bristol, just as the Opera House is of Sydney. Originally intended only for horse-drawn traffic, the bridge now bears over four million motor vehicles a year.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">31 marks</span></div>
+        <div class="q-body" id="qbody-r1" data-test="r1">
+          <div class="qgroup"><div class="ginstr"><b>Questions 1–3 · Matching headings (Skimming).</b> Choose the paragraph (A–C) that each heading best describes.</div><div class="q" data-type="sel" data-answer="C" data-exp="Para C: “design competition”, “second contest”, and building the Clifton Suspension Bridge."><div class="qnum">1</div><div class="qmain"><div class="qtext">The contest for and construction of a suspension bridge</div><select><option value="">— choose —</option><option value="A">Paragraph A</option><option value="B">Paragraph B</option><option value="C">Paragraph C</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Para A: Brunel “challenged and motivated his colleagues” across shipping, bridges and railways."><div class="qnum">2</div><div class="qmain"><div class="qtext">An inspiring engineer</div><select><option value="">— choose —</option><option value="A">Paragraph A</option><option value="B">Paragraph B</option><option value="C">Paragraph C</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Para B: the Thames Tunnel — “bore under the Thames”, “the river broke through”."><div class="qnum">3</div><div class="qmain"><div class="qtext">The construction of a tunnel under a river</div><select><option value="">— choose —</option><option value="A">Paragraph A</option><option value="B">Paragraph B</option><option value="C">Paragraph C</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Question 4 · Spot the comparisons.</b> Select <b>ALL</b> of the statements below that contain a comparison. (This trains you before deciding True/False/Not Given.)</div><div class="q mc" data-type="mc2" data-answer="1,2,6,7" data-exp="Statements 1 (less important… than), 2 (less involved… than), 6 (at the same age as) and 7 (more difficult than) all compare two things."><div class="qnum">4</div><div class="qmain"><div class="qtext">Tick every statement that contains a comparison:</div><label><input type="checkbox" value="1"> (1) Brunel was less important than the other construction engineers in Britain during the Industrial Revolution.</label><label><input type="checkbox" value="2"> (2) Brunel was less involved in railway construction than other engineering fields.</label><label><input type="checkbox" value="3"> (3) Brunel worked only on shipping, bridge-building and railway construction.</label><label><input type="checkbox" value="4"> (4) Brunel's work was largely ignored by his colleagues.</label><label><input type="checkbox" value="5"> (5) All projects Brunel contributed to are still used today.</label><label><input type="checkbox" value="6"> (6) Brunel became an apprentice with his father at the same age as other engineers.</label><label><input type="checkbox" value="7"> (7) The Thames Tunnel Project was more difficult than any previous construction venture undertaken in Britain.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 5–11 · True / False / Not Given.</b> Do the statements agree with the passage?</div><div class="q" data-type="tfng" data-answer="FALSE" data-exp="The passage says Brunel was “the most important of these engineers”, so “less important” is false."><div class="qnum">5</div><div class="qmain"><div class="qtext">Brunel was less important than the other construction engineers in Britain during the Industrial Revolution.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="Three fields are listed, but the text never compares how involved he was in each."><div class="qnum">6</div><div class="qmain"><div class="qtext">Brunel was less involved in railway construction than other engineering fields.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="FALSE" data-exp="“…to name just three fields” implies he worked in more fields, so “only” is false."><div class="qnum">7</div><div class="qmain"><div class="qtext">Brunel worked only on shipping, bridge-building and railway construction.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="FALSE" data-exp="His work “motivated his colleagues” — it was not ignored."><div class="qnum">8</div><div class="qmain"><div class="qtext">Brunel's work was largely ignored by his colleagues.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="FALSE" data-exp="“some of which resulted in works which are still in use today” — not all."><div class="qnum">9</div><div class="qmain"><div class="qtext">All projects Brunel contributed to are still used today.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="No information compares his apprenticeship age with other engineers."><div class="qnum">10</div><div class="qmain"><div class="qtext">Brunel became an apprentice with his father at the same age as other engineers.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="The difficulty of the tunnel is described, but never compared with earlier projects."><div class="qnum">11</div><div class="qmain"><div class="qtext">The Thames Tunnel Project was more difficult than any previous construction venture undertaken in Britain.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 12–14 · Further True / False / Not Given.</b></div><div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="Huge change during the Industrial Revolution is mentioned, but not compared with later periods."><div class="qnum">12</div><div class="qmain"><div class="qtext">More change took place during the Industrial Revolution than has happened since.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="His fields are listed, but their number is never compared with his colleagues'."><div class="qnum">13</div><div class="qmain"><div class="qtext">Brunel was involved in more engineering fields than his colleagues.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="FALSE" data-exp="He is called “the most important” and the “driving force”, so “less influential” is false."><div class="qnum">14</div><div class="qmain"><div class="qtext">Brunel was less influential than his colleagues in some of the works that survive today.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Question 15 · Cause and effect.</b> Which <b>TWO</b> sentence beginnings below are most likely to be followed by an <i>effect</i>?</div><div class="q mc" data-type="mc2" data-answer="2,4" data-exp="“Scandal about…” (2) and “Funding problems…” (4) are causes, so an effect follows each."><div class="qnum">15</div><div class="qmain"><div class="qtext">Select the two beginnings that lead to an effect:</div><label><input type="checkbox" value="1"> (1) The original judge of the design competition, Thomas Telford,</label><label><input type="checkbox" value="2"> (2) Scandal about the result of the first competition</label><label><input type="checkbox" value="3"> (3) In the second competition,</label><label><input type="checkbox" value="4"> (4) Funding problems, worsened by social unrest,</label><label><input type="checkbox" value="5"> (5) During Brunel's lifetime, the towers</label><label><input type="checkbox" value="6"> (6) After Brunel's death,</label><label><input type="checkbox" value="7"> (7) Today,</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 16–22 · Matching sentence endings.</b> Match each beginning with the correct ending.</div><div class="endbank"><div class="ebt">Endings — choose one for each</div><div class="ebi">A — were the only parts of the bridge to be completed.</div><div class="ebi">B — was an important civil engineer of his day.</div><div class="ebi">C — meant that completion of the bridge was delayed.</div><div class="ebi">D — the Clifton Suspension Bridge is a symbol of Bristol.</div><div class="ebi">E — work on the bridge was recommenced as a fitting memorial to him.</div><div class="ebi">F — Brunel's design was chosen.</div><div class="ebi">G — led to a second contest to design the bridge.</div><div class="ebi">H — the tunnel under the Thames was finally completed.</div></div><div class="q" data-type="sel" data-answer="B" data-exp="Telford was “a leading civil engineer of his day.”"><div class="qnum">16</div><div class="qmain"><div class="qtext">(1) The original judge of the design competition, Thomas Telford,</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="G" data-exp="“After considerable scandal, a second contest was held.”"><div class="qnum">17</div><div class="qmain"><div class="qtext">(2) Scandal about the result of the first competition</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="F" data-exp="“…a second contest was held and Brunel's design was accepted.”"><div class="qnum">18</div><div class="qmain"><div class="qtext">(3) In the second competition,</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="Funding + unrest meant the project was abandoned in 1843 (delayed)."><div class="qnum">19</div><div class="qmain"><div class="qtext">(4) Funding problems, worsened by social unrest,</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="“…abandoned in 1843 with only the towers completed.”"><div class="qnum">20</div><div class="qmain"><div class="qtext">(5) During Brunel's lifetime, the towers</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="“…so that the bridge could form a fitting memorial to the great engineer.”"><div class="qnum">21</div><div class="qmain"><div class="qtext">(6) After Brunel's death,</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="D" data-exp="“Today, the well known Clifton Suspension Bridge is a symbol of Bristol.”"><div class="qnum">22</div><div class="qmain"><div class="qtext">(7) Today,</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23–27 · Recombine the sentences (skill practice).</b> Match each subject with the ending that makes a correct sentence.</div><div class="endbank"><div class="ebt">Endings — choose one for each</div><div class="ebi">P1 = are being destroyed by visitors.</div><div class="ebi">P2 = are being restored and digitally mastered.</div><div class="ebi">P3 = are rarely conducted for a long period of time.</div><div class="ebi">P4 = were known for their breadth of knowledge.</div><div class="ebi">P5 = are often rewritten by historians.</div></div><div class="q" data-type="sel" data-answer="P1" data-exp="Sites are being destroyed by visitors."><div class="qnum">23</div><div class="qmain"><div class="qtext">Many historical sites worldwide …</div><select><option value="">— choose —</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="P4">P4</option><option value="P5">P5</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="P2" data-exp="Films are being restored and digitally mastered."><div class="qnum">24</div><div class="qmain"><div class="qtext">Many old films …</div><select><option value="">— choose —</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="P4">P4</option><option value="P5">P5</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="P3" data-exp="Digs are rarely conducted for a long period."><div class="qnum">25</div><div class="qmain"><div class="qtext">Archaeological digs …</div><select><option value="">— choose —</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="P4">P4</option><option value="P5">P5</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="P4" data-exp="People known for their breadth of knowledge."><div class="qnum">26</div><div class="qmain"><div class="qtext">Samuel Johnson and Leonardo da Vinci …</div><select><option value="">— choose —</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="P4">P4</option><option value="P5">P5</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="P5" data-exp="Events are often rewritten by historians."><div class="qnum">27</div><div class="qmain"><div class="qtext">Past events …</div><select><option value="">— choose —</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="P4">P4</option><option value="P5">P5</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r1">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r1">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-r1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 2 ============ -->
+  <section class="panel" id="tab-r2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128216; Reading 2 &middot; Chartism: a people's petition to Parliament</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r2">&#128396; Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r2">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r2">
+          <div class="para">The early decades of the 1800s are well known as a period of discontent and social unrest. The Industrial Revolution meant the decline of traditional rural communities and the growth of a working-class urban population, particularly in the new industrial towns of the North such as Manchester. Living and working conditions for the urban factory worker were frequently appalling and gave rise to a number of movements aimed at bettering working-class conditions. One such movement was Chartism, which aimed to present a people's charter, or petition for reform, to parliament. It had a number of aims, but first and foremost among them was the granting of universal suffrage, or the vote for all men over the age of 21.</div>
+          <div class="para">There had been several previous attempts in the early 1800s to build a solid working-class movement, most notably the attempt to establish a universal trade union known as the Grand National Consolidated Trade Union or GNCTU. In 1834, however, this trade union collapsed. The subsequent disillusionment led to a growth of interest in other possible ways of giving voice to the desires and grievances of the workers. In 1836, the London Working Men's Association was founded, led by William Lovett. Its aim was to reform parliament, and in 1838 it issued a charter demanding six political reforms, including universal suffrage. Most of these demands were to be taken up by the Chartist petitioners.</div>
+          <div class="para">So began the Chartist movement. Other centres of this movement were located in Birmingham, and in the north of England. In Birmingham, the movement was championed by Thomas Attwood, a banker who was interested in leading the movement for parliamentary reform in the Midlands, and Joseph Sturge, a wealthy corn merchant. The key figure in the north of England was Fergus O'Connor, at that time the editor of the newspaper The Northern Star. In 1839, a Chartist National Convention assembled in London. The delegates talked of proclaiming a 'sacred month' or general strike, and collected signatures for a great petition. This petition was presented to parliament but it was rejected in the Commons by 235 votes to 46. Thereupon the National Convention proclaimed a general strike, but a week later cancelled the proclamation and ignominiously dismissed itself. The government meanwhile had taken action and additional troops had been sent to those areas where Chartism was strongest. Disturbances in Birmingham were crushed, and William Lovett was arrested. The only other Chartist rising occurred in Monmouthshire where a group of miners marched in Newport. Again, this Newport Rising was quickly crushed and its leaders transported for life.</div>
+          <div class="para">In 1842, a second petition was presented to parliament but was again rejected by 287 votes to 49. A series of riots and strikes followed, most notably the Lancashire Plug Plot, where strikers went round the mills removing the plugs from boilers. Again, government troops moved in to crush all such disturbances and many Chartists were arrested. William Lovett subsequently abandoned the cause, and Fergus O'Connor rose to prominence as the main Chartist leader.</div>
+          <div class="para">In 1848, under the leadership of O'Connor, a third Chartist petition was drawn up known as the 'Monster Petition'. It was intended to be taken to parliament in a large procession, but the government took elaborate military precautions, and the procession was forbidden to cross the Thames. It was therefore taken to parliament in three cabs instead. O'Connor had claimed that the petition contained five million signatures, but in the event it was found to contain less than two million, and a great many of these were false. Parliament refused to discuss it, and the Chartist movement was discredited.</div>
+          <div class="para">Despite the fiasco of the third petition, the Chartist movement gave expression to a number of proposals which were later adopted to produce a reformed parliamentary system. Universal manhood suffrage, the abolition of the property qualification and a secret ballot all featured among the Chartists' demands and all of them were eventually granted, but the process of reform was slow and was not fully achieved until the early 20th century. In essence, the demands of the Chartists were too far ahead of the times, and consequently the government took very resolute action to control and suppress their actions.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-r2" data-test="r2">
+          <div class="qgroup"><div class="ginstr"><b>Questions 1–7 · Matching sentence endings.</b> Match each beginning with the correct ending.</div><div class="endbank"><div class="ebt">Endings — choose one for each</div><div class="ebi">A — was not debated in parliament.</div><div class="ebi">B — was a response to the government's rejection of the 1842 Chartist petition.</div><div class="ebi">C — was a failed attempt to establish a universal workers' movement.</div><div class="ebi">D — was an example of the unrest following the rejection of the 1839 petition.</div><div class="ebi">E — was led by the banker Thomas Attwood.</div><div class="ebi">F — made an empty threat of industrial action.</div><div class="ebi">G — was rejected in parliament by a large majority.</div><div class="ebi">H — anticipated many of the demands of later Chartist petitions.</div></div><div class="q" data-type="sel" data-answer="C" data-exp="“…this trade union collapsed” in 1834 — a failed attempt at a universal movement."><div class="qnum">1</div><div class="qmain"><div class="qtext">(1) The GNCTU</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="H" data-exp="It “issued a charter demanding six… reforms… Most of these demands were to be taken up by the Chartist petitioners.”"><div class="qnum">2</div><div class="qmain"><div class="qtext">(2) The London Working Men's Association</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="F" data-exp="It proclaimed a general strike but “a week later cancelled the proclamation” — an empty threat."><div class="qnum">3</div><div class="qmain"><div class="qtext">(3) The Chartist National Convention</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="G" data-exp="“…rejected in the Commons by 235 votes to 46” — a large majority."><div class="qnum">4</div><div class="qmain"><div class="qtext">(4) The first Chartist petition</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="D" data-exp="The Newport Rising broke out amid the unrest after the 1839 petition was rejected."><div class="qnum">5</div><div class="qmain"><div class="qtext">(5) The Newport Rising</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="The Plug Plot followed the rejection of the second (1842) petition."><div class="qnum">6</div><div class="qmain"><div class="qtext">(6) The Lancashire Plug Plot</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="“Parliament refused to discuss it” — the third petition was not debated."><div class="qnum">7</div><div class="qmain"><div class="qtext">(7) The third Chartist petition</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 8–11 · Matching people.</b> Match each description with the correct person (A–C). A name may be used more than once.</div><div class="q" data-type="sel" data-answer="C" data-exp="“The key figure in the north of England was Fergus O'Connor.”"><div class="qnum">8</div><div class="qmain"><div class="qtext">He led the Chartist movement in the North of England.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="“…the London Working Men's Association was founded, led by William Lovett.”"><div class="qnum">9</div><div class="qmain"><div class="qtext">He was head of the London Working Men's Association.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Thomas Attwood led “the movement for parliamentary reform in the Midlands.”"><div class="qnum">10</div><div class="qmain"><div class="qtext">He campaigned for parliamentary reform in the Midlands.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="“In 1848, under the leadership of O'Connor, a third Chartist petition was drawn up.”"><div class="qnum">11</div><div class="qmain"><div class="qtext">He was the movement's figurehead when the third 'Monster' petition was compiled.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><div class="fb"></div></div></div></div><div class="vocab-box">Key: A = William Lovett &nbsp;·&nbsp; B = Thomas Attwood &nbsp;·&nbsp; C = Fergus O'Connor</div><div class="qgroup"><div class="ginstr"><b>Questions 12–14 · True / False / Not Given.</b></div><div class="q" data-type="tfng" data-answer="TRUE" data-exp="“…the government took elaborate military precautions, and the procession was forbidden to cross the Thames.”"><div class="qnum">12</div><div class="qmain"><div class="qtext">The 1848 Chartist procession was halted due to government intervention.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="NOT GIVEN" data-exp="The 1842 petition's number of signatures is never given, so no comparison is possible."><div class="qnum">13</div><div class="qmain"><div class="qtext">The third Chartist petition contained more signatures than the 1842 petition.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="tfng" data-answer="FALSE" data-exp="Reform “was not fully achieved until the early 20th century” — i.e. after 1900."><div class="qnum">14</div><div class="qmain"><div class="qtext">All of the Chartists' demands had been granted by 1900.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r2">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r2">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-r2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOCABULARY ============ -->
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">&#129513; Vocabulary &mdash; Time, sequence &amp; goals</h2>
+      <p class="small">Word skills built around the two history passages. Submit to score &mdash; mistakes go to your Error Logbook.</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+        <div class="qgroup"><div class="ginstr"><b>Exercise 1 · Precise dates &amp; general periods.</b> Match each general period with the correct year.</div><div class="q" data-type="sel" data-answer="1921" data-exp="The early decades of the 1900s → 1921."><div class="qnum">a</div><div class="qmain"><div class="qtext">in the early decades of the twentieth century</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1891" data-exp="Late 1800s → 1891."><div class="qnum">b</div><div class="qmain"><div class="qtext">in the late nineteenth century</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1803" data-exp="Just after 1800 → 1803."><div class="qnum">c</div><div class="qmain"><div class="qtext">just after the turn of the nineteenth century</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1854" data-exp="1850s → 1854."><div class="qnum">d</div><div class="qmain"><div class="qtext">in the 1850s</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1952" data-exp="Mid-1900s → 1952."><div class="qnum">e</div><div class="qmain"><div class="qtext">in the mid twentieth century</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="2001" data-exp="Near the year 2000 → 2001."><div class="qnum">f</div><div class="qmain"><div class="qtext">close to the millennium</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1798" data-exp="Late 1700s → 1798."><div class="qnum">g</div><div class="qmain"><div class="qtext">in the late eighteenth century</div><select><option value="">— choose —</option><option value="1798">1798</option><option value="1803">1803</option><option value="1854">1854</option><option value="1891">1891</option><option value="1921">1921</option><option value="1952">1952</option><option value="2001">2001</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 2 · Find the general time phrases.</b> Select the <b>FOUR</b> general time phrases (not precise dates or numbers) that appear in the passages.</div><div class="q mc" data-type="mc2" data-answer="1,3,4,6" data-exp="General: the early decades of the 1800s, in the early 1800s, the early 20th century, in the mid 19th century. The others are precise/irrelevant."><div class="qnum">2</div><div class="qmain"><div class="qtext">Choose four:</div><label><input type="checkbox" value="1"> the early decades of the 1800s</label><label><input type="checkbox" value="2"> on 12 September 1848</label><label><input type="checkbox" value="3"> in the early 1800s</label><label><input type="checkbox" value="4"> the early 20th century</label><label><input type="checkbox" value="5"> at three o'clock</label><label><input type="checkbox" value="6"> in the mid 19th century</label><label><input type="checkbox" value="7"> 235 votes to 46</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 3 · Goal collocations.</b> Complete each beginning with the best ending (1–7).</div><div class="endbank"><div class="ebt">Endings — choose one for each</div><div class="ebi">1 = to become a historian.</div><div class="ebi">2 = to restore the old mill to working order.</div><div class="ebi">3 = to help those most in need.</div><div class="ebi">4 = for the final quarter.</div><div class="ebi">5 = redistributing wealth.</div><div class="ebi">6 = for many years.</div><div class="ebi">7 = of giving up his authority.</div></div><div class="q" data-type="sel" data-answer="3" data-exp="make every endeavour to help those most in need."><div class="qnum">a</div><div class="qmain"><div class="qtext">The committee will make every endeavour …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="5" data-exp="achieved its aim of redistributing wealth."><div class="qnum">b</div><div class="qmain"><div class="qtext">On the whole, the government achieved its main aim of …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1" data-exp="fulfil his ambition to become a historian."><div class="qnum">c</div><div class="qmain"><div class="qtext">Unfortunately, he did not fulfil his ambition …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="6" data-exp="worked towards their goal for many years."><div class="qnum">d</div><div class="qmain"><div class="qtext">The campaigners worked towards their goal …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="2" data-exp="drew up a scheme to restore the old mill."><div class="qnum">e</div><div class="qmain"><div class="qtext">The local authority drew up a scheme …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="4" data-exp="set targets for the final quarter."><div class="qnum">f</div><div class="qmain"><div class="qtext">The directors set very high sales targets …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="7" data-exp="had no intention of giving up his authority."><div class="qnum">g</div><div class="qmain"><div class="qtext">The king declared that he had no intention …</div><select><option value="">— choose —</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 4 · Success or failure?</b> In which <b>TWO</b> sentences from Exercise 3 can you tell whether the aim was successful or not?</div><div class="q mc" data-type="mc2" data-answer="b,c" data-exp="(b) “achieved” = success; (c) “did not fulfil” = failure. The others do not say whether the aim was met."><div class="qnum">4</div><div class="qmain"><div class="qtext">Select the two:</div><label><input type="checkbox" value="a"> (a) make every endeavour to help…</label><label><input type="checkbox" value="b"> (b) achieved its main aim of…</label><label><input type="checkbox" value="c"> (c) did not fulfil his ambition…</label><label><input type="checkbox" value="d"> (d) worked towards their goal…</label><label><input type="checkbox" value="e"> (e) drew up a scheme…</label><label><input type="checkbox" value="f"> (f) set very high sales targets…</label><label><input type="checkbox" value="g"> (g) had no intention of…</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 5 · Sequence markers.</b> Does each expression introduce an action that came <b>BEFORE</b> (B) or <b>AFTER</b> (A) the event in the previous part of the text?</div><div class="q" data-type="sel" data-answer="A" data-exp="Points forward in time."><div class="qnum">1</div><div class="qmain"><div class="qtext">&ldquo;Following this,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Points back in time."><div class="qnum">2</div><div class="qmain"><div class="qtext">&ldquo;Previously,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Points back in time."><div class="qnum">3</div><div class="qmain"><div class="qtext">&ldquo;Some years earlier,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Points forward in time."><div class="qnum">4</div><div class="qmain"><div class="qtext">&ldquo;Subsequently,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Points back in time."><div class="qnum">5</div><div class="qmain"><div class="qtext">&ldquo;Prior to this,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Points forward in time."><div class="qnum">6</div><div class="qmain"><div class="qtext">&ldquo;Some months later,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Points back in time."><div class="qnum">7</div><div class="qmain"><div class="qtext">&ldquo;This had been caused by …&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Points forward in time."><div class="qnum">8</div><div class="qmain"><div class="qtext">&ldquo;The result of this was …&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Points forward in time."><div class="qnum">9</div><div class="qmain"><div class="qtext">&ldquo;The response was to …&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Points back in time."><div class="qnum">10</div><div class="qmain"><div class="qtext">&ldquo;By this time,&rdquo;</div><select><option value="">— choose —</option><option value="A">A — after</option><option value="B">B — before</option></select><div class="fb"></div></div></div></div>
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">&#10004; Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">&#8635; Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Topic Glossary — Environment &amp; Migration</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic vocabulary pulled from both reading passages. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage/nuance note, and the collocations examiners reward. <span id="glossCount"></span></p>
+      <div id="glossGrid" class="gloss-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ ERROR LOGBOOK ============ -->
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong is recorded here with the correct answer and the reason. Review before your next attempt — this is where score gains come from.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+      <p class="small" style="margin-top:16px">The PDF includes student details, per-test scores, time spent, attempts, and the full error logbook.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =======================================================================
+   TEACHER SETUP — paste your Google Apps Script Web App URL between the
+   quotes below (see the separate setup guide). Leave empty to turn sync off.
+   Example: const WEBAPP_URL = "https://script.google.com/macros/s/AKf.../exec";
+   ======================================================================= */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 2";
+
+const LS_KEY = "ielts_reading_studio_module2_v1";
+const TEST_META = {
+  r1:{label:"Reading 1 — Victorian Engineers", pill:"r1"},
+  r2:{label:"Reading 2 — Chartism", pill:"r2"},
+  vocab:{label:"Vocabulary", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    tests:{
+      r1:{attempts:0,timeSec:0,lastScore:null,total:31,best:null,answers:{},highlights:"",unlocked:false},
+      r2:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:30,best:null,answers:{},highlights:"",unlocked:false}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
+  updateHeaderStats();
+}));
+
+// timer ticks for the currently-open test tab
+setInterval(()=>{
+  if(state.tests[activeTab]){
+    state.tests[activeTab].timeSec++;
+    updateHeaderStats();
+  }
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "—:—";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+
+// autosave every 10s
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- highlighting ----------
+let hlMode={r1:false,r2:false};
+$$("[data-hl]").forEach(btn=>{
+  const id=btn.dataset.hl;
+  btn.addEventListener("click",()=>{
+    hlMode[id]=!hlMode[id];
+    btn.classList.toggle("on",hlMode[id]);
+    btn.querySelector("span").textContent=hlMode[id]?"ON":"OFF";
+  });
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+["r1","r2"].forEach(id=>{
+  const p=$("#passage-"+id);
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    if(!hlMode[id])return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){/* cross-node selection */}
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"||type==="sel"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>';
+        // re-show feedback so a returning student keeps their reviewed answers
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+      }
+    }
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so"||type==="sel")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+// live-save on input
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so"||type==="sel")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="",points=0,max=1;
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");
+    correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
+  }else if(type==="tfng"||type==="so"||type==="sel"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);points=ok?1:0;
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;points=ok?1:0;
+  }else if(type==="mc2"){
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());
+    max=correctSet.length;   // "choose TWO" = 2 marks
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");
+    correct=correctSet.slice().sort().join(",");
+    // IELTS style: 1 mark per correct letter, but over-selecting scores 0
+    points = (sel.length>max) ? 0 : sel.filter(v=>correctSet.includes(v)).length;
+    ok = points===max;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
+}
+function questionLabel(q,test){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+
+const PASS_PCT=70;
+
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  // count blanks to warn the student, then confirm to avoid accidental submits
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{const r=peekAnswer(q);if(!r)blanks++;});
+  const msg="Submit "+TEST_META[test].label+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  // grade everything first (do not reveal yet)
+  let score=0,total=0;const graded=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q,test);
+    total+=r.max;score+=r.points;
+    graded.push({q,r,num,txt});
+  });
+  const pct=Math.round(score/total*100);
+
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  const passedNow=pct>=PASS_PCT;
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;   // once unlocked (>=70% at any point), answers stay visible
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{
+      fb.className="fb";fb.innerHTML="";   // gate: hide right/wrong and answers
+    }
+  });
+
+  // only record errors once the student has earned the answers (avoids leaking via the logbook)
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+
+  save();
+  updateHeaderStats();
+
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>');
+    flash(TEST_META[test].label+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+    const note=document.createElement("div");
+    note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still being recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+
+  // sync full detail to the teacher's sheet regardless of the gate
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
+  syncToSheet({
+    test:MODULE_TAG+" — "+TEST_META[test].label,score:score,total:total,
+    percent:pct,attempt:t.attempts,
+    timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
+  });
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  clearLockNote(body);
+  state.tests[test].answers={};save();
+  flash("Answers cleared (attempts & time kept).");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload,isTest){
+  if(!WEBAPP_URL)return;
+  const full=Object.assign({
+    name:state.student.name||"(no name)",
+    email:state.student.email||"(no email)"
+  },payload);
+  fetch(WEBAPP_URL,{
+    method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(full)
+  }).then(()=>{if(!isTest)$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a test to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{label:e.test,pill:"r1"};
+    return '<tr><td><span class="pill '+meta.pill+'">'+meta.label.split(" —")[0]+'</span></td>'
+      +'<td><b>'+e.num+'</b></td>'
+      +'<td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Test</th><th>Q</th><th>Question</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=
+    metric("Student",state.student.name||"—")+
+    metric("Overall score",totMax?totScore+"/"+totMax:"—")+
+    metric("Total time",fmt(totTime))+
+    metric("Total attempts",totAtt)+
+    metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    return "<tr><td><b>"+meta.label+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595, M=40; let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);
+    doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(16);
+  doc.text("IELTS Reading Studio — Module 2 — Performance Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+
+  line("Results by test",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(meta.label,11,"bold");
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time: "+fmt(t.timeSec),10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{
+    state.errorLog.forEach((e,i)=>{
+      const meta=TEST_META[e.test]||{label:e.test};
+      line((i+1)+". ["+meta.label.split(" —")[0]+" Q"+e.num+"] "+e.q,10,"bold");
+      line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+      if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+      y+=2;
+    });
+  }
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module2_report.pdf";
+  doc.save(fn);
+  flash("PDF report downloaded.");
+});
+
+// ---------- glossary ----------
+const GLOSSARY=[
+ {w:"engineer",pos:"noun",src:"R1",en:"a person who designs and builds machines, structures or public works such as bridges and railways.",vi:"kỹ sư (thiết kế/xây dựng máy móc, công trình).",ex:"Brunel was the most important engineer of the age.",nu:"Neutral; verb “to engineer” = to arrange/bring about (often deliberately).",co:"civil / mechanical engineer; a team of engineers"},
+ {w:"apprentice",pos:"noun / verb",src:"R1",en:"a young person who learns a skilled trade by working with an expert; (verb) to train in this way.",vi:"người học việc; học nghề (dưới sự dẫn dắt).",ex:"Brunel apprenticed with his father at an early age.",nu:"Neutral; noun: apprenticeship (the period of training).",co:"apprentice to (someone); serve an apprenticeship"},
+ {w:"tunnel",pos:"noun / verb",src:"R1",en:"an underground passage; (verb) to dig such a passage.",vi:"đường hầm; đào hầm.",ex:"The Thames Tunnel passed beneath the river.",nu:"Neutral/technical.",co:"dig / bore a tunnel; a railway tunnel; tunnel under/through"},
+ {w:"bore",pos:"verb",src:"R1",en:"to make a deep round hole through something using a tool or machine.",vi:"khoan, đào (lỗ tròn sâu).",ex:"The plan to bore under the Thames suffered disasters.",nu:"Homograph: “bore” also = to make someone feel dull. Past: bored.",co:"bore a hole / tunnel; bore through / under"},
+ {w:"breach",pos:"noun / verb",src:"R1",en:"a gap or break, e.g. where water breaks through a barrier; (verb) to break through.",vi:"chỗ vỡ, chỗ nứt; sự phá vỡ.",ex:"When the second breach occurred, work was halted.",nu:"Also figurative: a breach of contract / trust.",co:"a breach in the wall; breach of contract; breach the defences"},
+ {w:"suspension bridge",pos:"noun",src:"R1",en:"a bridge whose deck hangs from cables supported by towers.",vi:"cầu treo (mặt cầu treo trên dây cáp).",ex:"The Clifton Suspension Bridge is a symbol of Bristol.",nu:"Technical compound noun.",co:"build / cross a suspension bridge"},
+ {w:"gorge",pos:"noun",src:"R1",en:"a narrow valley with steep rocky sides, usually with a river running through it.",vi:"hẻm núi, khe núi sâu.",ex:"Brunel designed a bridge over the Avon Gorge.",nu:"Neutral geographical term; verb “gorge (oneself)” = eat greedily.",co:"a deep / river gorge; span a gorge"},
+ {w:"scandal",pos:"noun",src:"R1",en:"an action or event that causes public outrage or disapproval.",vi:"vụ tai tiếng, bê bối.",ex:"After considerable scandal, a second contest was held.",nu:"Negative; adj: scandalous.",co:"cause / spark a scandal; a political scandal; considerable scandal"},
+ {w:"funding",pos:"noun (uncount.)",src:"R1",en:"money provided to pay for a project or activity.",vi:"kinh phí, nguồn tài trợ.",ex:"For reasons of funding, the project was abandoned in 1843.",nu:"Neutral; verb: fund.",co:"secure / cut / lack funding; funding problems; government funding"},
+ {w:"memorial",pos:"noun / adjective",src:"R1",en:"a structure or object built to remember a person or event.",vi:"đài/vật tưởng niệm; để tưởng nhớ.",ex:"The bridge could form a fitting memorial to the great engineer.",nu:"Neutral/respectful.",co:"a fitting / war memorial; a memorial to (someone)"},
+ {w:"abandon",pos:"verb",src:"R1 / R2",en:"to give up a plan, activity or place completely before it is finished.",vi:"từ bỏ, bỏ dở.",ex:"The project was abandoned in 1843; Lovett later abandoned the cause.",nu:"Neutral–negative; noun: abandonment.",co:"abandon a project / plan / cause; be forced to abandon"},
+ {w:"ambitious",pos:"adjective",src:"R1",en:"(of a plan) needing great effort and skill to succeed; (of a person) very eager for success.",vi:"đầy tham vọng, quy mô lớn.",ex:"Brunel was the driving force behind a number of hugely ambitious projects.",nu:"Usually positive for plans; noun: ambition.",co:"a hugely / overly ambitious plan; ambitious targets"},
+ {w:"discontent",pos:"noun (uncount.)",src:"R2",en:"a feeling of dissatisfaction with one's situation.",vi:"sự bất mãn, bất bình.",ex:"The early 1800s were a period of discontent and social unrest.",nu:"Formal; opposite: contentment. Adj: discontented.",co:"widespread / growing discontent; a period of discontent"},
+ {w:"unrest",pos:"noun (uncount.)",src:"R2",en:"a situation in which people protest or behave violently, often against a government.",vi:"tình trạng bất ổn, náo động (xã hội).",ex:"Social unrest in Bristol worsened the funding problems.",nu:"Formal; always negative; no plural.",co:"social / political / civil unrest; cause / quell unrest"},
+ {w:"suffrage",pos:"noun (uncount.)",src:"R2",en:"the right to vote in political elections.",vi:"quyền bầu cử.",ex:"Their first aim was the granting of universal suffrage.",nu:"Formal/historical; “universal suffrage” = the vote for all adults.",co:"universal / manhood suffrage; grant / extend suffrage"},
+ {w:"petition",pos:"noun / verb",src:"R2",en:"a formal written request, often signed by many people, to an authority; (verb) to make such a request.",vi:"đơn thỉnh nguyện, kiến nghị.",ex:"A third petition, the 'Monster Petition', was drawn up in 1848.",nu:"Neutral; verb: petition (someone) for (something).",co:"sign / present / reject a petition; petition parliament"},
+ {w:"charter",pos:"noun",src:"R2",en:"a formal document stating the aims, rights or principles of a group or movement.",vi:"hiến chương, bản tuyên bố (mục tiêu/quyền).",ex:"The association issued a charter demanding six political reforms.",nu:"Formal; the source of the name “Chartism”.",co:"issue / draw up a charter; a people's charter"},
+ {w:"trade union",pos:"noun",src:"R2",en:"an organised association of workers formed to protect their rights and interests.",vi:"công đoàn, nghiệp đoàn.",ex:"The GNCTU was an attempt to establish a universal trade union.",nu:"Neutral; (US) “labor union”.",co:"form / join a trade union; trade union movement"},
+ {w:"grievance",pos:"noun",src:"R2",en:"a real or imagined cause for complaint, especially unfair treatment.",vi:"nỗi bất bình, điều phàn nàn (bị đối xử bất công).",ex:"They sought ways of giving voice to the grievances of the workers.",nu:"Formal; often plural.",co:"air / address a grievance; a legitimate grievance"},
+ {w:"strike",pos:"noun / verb",src:"R2",en:"a period when workers stop work as a protest to obtain better conditions.",vi:"cuộc đình công; đình công.",ex:"The delegates talked of proclaiming a general strike.",nu:"Neutral; irregular verb strike–struck–struck. Many other meanings.",co:"go on / call / stage a strike; a general strike"},
+ {w:"crush",pos:"verb",src:"R2",en:"to defeat or suppress opposition completely, often by force.",vi:"đàn áp, dẹp tan (bằng vũ lực).",ex:"Government troops moved in to crush all such disturbances.",nu:"Strong/negative in this sense; also literal “crush = press hard”.",co:"crush a rebellion / protest / uprising; brutally crush"},
+ {w:"abolition",pos:"noun (uncount.)",src:"R2",en:"the official ending of a law, system or practice.",vi:"sự bãi bỏ, xoá bỏ (luật/chế độ).",ex:"Their demands included the abolition of the property qualification.",nu:"Formal; verb: abolish; opposite: introduction.",co:"the abolition of (slavery / a rule); call for abolition"},
+ {w:"resolute",pos:"adjective",src:"R2",en:"determined; firm in purpose and not easily changed.",vi:"kiên quyết, cương quyết.",ex:"The government took very resolute action to suppress their actions.",nu:"Formal, usually approving of firmness; adv: resolutely.",co:"resolute action / determination; remain resolute"},
+ {w:"procession",pos:"noun",src:"R2",en:"a group of people moving forward in an orderly line, often for a public or ceremonial purpose.",vi:"đoàn diễu hành, đám rước.",ex:"The petition was to be taken to parliament in a large procession.",nu:"Neutral; verb: process (to move in procession).",co:"a funeral / street procession; lead / form a procession"}
+];
+function renderGlossary(filter){
+  const grid=$("#glossGrid");if(!grid)return;
+  const f=norm(filter||$("#glossSearch").value||"");
+  const rows=GLOSSARY.filter(g=>!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0);
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  if(!rows.length){grid.innerHTML='<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';return;}
+  grid.innerHTML=rows.map(g=>
+    '<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span><span class="pill '+(g.src.indexOf("R1")>=0?"r1":"r2")+'">'+escapeHtml(g.src)+'</span></div>'
+    +'<dl>'
+    +'<dt>EN</dt><dd>'+escapeHtml(g.en)+'</dd>'
+    +'<dt>VI</dt><dd class="vi">'+escapeHtml(g.vi)+'</dd>'
+    +'<dt>e.g.</dt><dd class="ex">'+escapeHtml(g.ex)+'</dd>'
+    +'<dt>Note</dt><dd class="nu">'+escapeHtml(g.nu)+'</dd>'
+    +'<dt>Colloc.</dt><dd class="co">'+escapeHtml(g.co)+'</dd>'
+    +'</dl></div>'
+  ).join("");
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+save(true);
+})();
+</script>
+</body>
+</html>
