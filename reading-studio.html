@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IELTS Reading Studio</title>
+<title>IELTS Reading Studio — Module 1</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
@@ -149,6 +149,16 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
 .gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
 .vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
 .reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.chip.cd{gap:6px}
+.chip.cd select{border:none;border-radius:6px;font-size:11.5px;padding:2px 4px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:600}
+.cdbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:14px;padding:2px 10px;font-size:11.5px;font-weight:700;cursor:pointer}
+.cdbtn:hover{background:rgba(255,255,255,.30)}
+.chip.cd.warn{background:rgba(255,193,7,.32);border-color:#ffd45e}
+.chip.cd.done{background:rgba(192,57,43,.5);border-color:#ff8a7a}
+.swbar{display:flex;align-items:center;gap:8px;background:#eef3fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content}
+.swbar b{font-variant-numeric:tabular-nums;font-weight:700}
+.swbar .swb,.swbar .swr{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:14px;padding:2px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.swbar .swr{background:#fff;color:var(--brand)}
 </style>
 </head>
 <body>
@@ -166,6 +176,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
       <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
     </div>
     <div class="hstats">
+      
       <div class="chip">⏱ <b id="timerDisp">00:00</b></div>
       <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
       <div class="chip save-dot" id="saveDisp">saved</div>
@@ -289,6 +300,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
       <div class="q-col">
         <div class="col-head"><h3>Questions</h3><span class="small">13 questions</span></div>
         <div class="q-body" id="qbody-r1" data-test="r1">
+          <div class="swbar" title="Stopwatch for this test">&#9201; <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
 
           <div class="qgroup">
             <div class="ginstr"><b>Questions 1–6 · Sentence completion.</b> Complete each sentence with <b>NO MORE THAN TWO WORDS</b> from the passage.</div>
@@ -346,6 +358,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
       <div class="q-col">
         <div class="col-head"><h3>Questions</h3><span class="small">14 questions</span></div>
         <div class="q-body" id="qbody-r2" data-test="r2">
+          <div class="swbar" title="Stopwatch for this test">&#9201; <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
 
           <div class="qgroup">
             <div class="ginstr"><b>Questions 1–6 · True / False / Not Given.</b></div>
@@ -402,6 +415,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
     </div>
     <div class="card">
       <div class="q-body" data-test="vocab">
+          <div class="swbar" title="Stopwatch for this test">&#9201; <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
 
         <div class="qgroup">
           <div class="ginstr"><b>Exercise 1.</b> Identify the type of words in the box: (consequence, factor, change, result, impact, effect, cause, role). Are they (a) general nouns which need a context for their meaning, or (b) nouns which have specific meaning?</div>
@@ -508,6 +522,7 @@ code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
    Example: const WEBAPP_URL = "https://script.google.com/macros/s/AKf.../exec";
    ======================================================================= */
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 1";
 
 const LS_KEY = "ielts_reading_studio_v1";
 const TEST_META = {
@@ -780,7 +795,7 @@ $$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
   // sync full detail to the teacher's sheet regardless of the gate
   const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
   syncToSheet({
-    test:TEST_META[test].label,score:score,total:total,
+    test:MODULE_TAG+" — "+TEST_META[test].label,score:score,total:total,
     percent:pct,attempt:t.attempts,
     timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
   });
@@ -814,7 +829,7 @@ function syncToSheet(payload,isTest){
     headers:{"Content-Type":"text/plain;charset=utf-8"},
     body:JSON.stringify(full)
   }).then(()=>{if(!isTest)$("#saveDisp").textContent="saved + synced ✓";})
-    .catch(()=>{flash("Sheet sync failed — check the Web App URL in ⚙️ Sheet Sync.");});
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
 }
 
 // ---------- error logbook ----------
@@ -872,7 +887,7 @@ $("#exportPdf").addEventListener("click",()=>{
 
   doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
   doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(16);
-  doc.text("IELTS Reading Studio — Performance Report",M,26);
+  doc.text("IELTS Reading Studio — Module 1 — Performance Report",M,26);
   y=64;
   line("Student: "+(state.student.name||"—"),12,"bold");
   line("Email: "+(state.student.email||"—"),11);
@@ -899,7 +914,7 @@ $("#exportPdf").addEventListener("click",()=>{
       y+=2;
     });
   }
-  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_reading_report.pdf";
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module1_report.pdf";
   doc.save(fn);
   flash("PDF report downloaded.");
 });
@@ -954,6 +969,23 @@ document.getElementById("glossSearch").addEventListener("input",e=>renderGlossar
 restoreAnswers();
 updateHeaderStats();
 save(true);
+})();
+</script>
+
+<script>
+(function(){
+ var bars=document.querySelectorAll('.swbar');
+ bars.forEach(function(bar){
+   var d=bar.querySelector('.swd'),b=bar.querySelector('.swb'),r=bar.querySelector('.swr');
+   var el=0,tick=null,run=false;
+   function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+   function render(){d.textContent=fmt(el);}
+   function stop(){run=false;b.textContent='Start';if(tick){clearInterval(tick);tick=null;}}
+   function start(){if(run){stop();return;}run=true;b.textContent='Pause';tick=setInterval(function(){el++;render();},1000);}
+   b.addEventListener('click',start);
+   r.addEventListener('click',function(){stop();el=0;render();});
+   render();
+ });
 })();
 </script>
 </body>
