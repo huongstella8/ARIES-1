@@ -1,0 +1,1004 @@
+<title>Listening Studio · Unit 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#E9EDF1; --surface:#FFFFFF; --surface-2:#F3F6F9; --surface-3:#E7ECF1;
+  --ink:#16202E; --ink-soft:#42505F; --muted:#697788; --line:#D6DEE6; --line-soft:#E4EAF0;
+  --brand:#0E7C86; --brand-deep:#0A5A62; --brand-tint:#DCEEEF; --brand-ink:#083F45;
+  --amber:#B8781A; --amber-mark:#FBE6BE; --amber-mark-b:#E9C877;
+  --good:#1F8A54; --good-tint:#DBF0E4; --bad:#C63A2E; --bad-tint:#F6DED9; --warn:#B4791B; --warn-tint:#FBF0D8;
+  --shadow:0 1px 2px rgba(16,30,45,.06), 0 8px 24px -12px rgba(16,30,45,.18);
+  --shadow-lg:0 20px 50px -24px rgba(16,30,45,.35);
+  --radius:14px; --radius-s:9px;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Libre Franklin",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D141C; --surface:#141F2A; --surface-2:#1A2733; --surface-3:#223140;
+    --ink:#E8EEF3; --ink-soft:#B4C1CD; --muted:#8395A5; --line:#2A3A49; --line-soft:#22303D;
+    --brand:#38B4BC; --brand-deep:#2A9098; --brand-tint:#14343A; --brand-ink:#8FE0E5;
+    --amber:#E7B95C; --amber-mark:#4A3B18; --amber-mark-b:#7A611F;
+    --good:#4FBE85; --good-tint:#153426; --bad:#EA7365; --bad-tint:#3A1E1B; --warn:#E7B95C; --warn-tint:#2E2712;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.6);
+    --shadow-lg:0 24px 60px -24px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D141C; --surface:#141F2A; --surface-2:#1A2733; --surface-3:#223140;
+  --ink:#E8EEF3; --ink-soft:#B4C1CD; --muted:#8395A5; --line:#2A3A49; --line-soft:#22303D;
+  --brand:#38B4BC; --brand-deep:#2A9098; --brand-tint:#14343A; --brand-ink:#8FE0E5;
+  --amber:#E7B95C; --amber-mark:#4A3B18; --amber-mark-b:#7A611F;
+  --good:#4FBE85; --good-tint:#153426; --bad:#EA7365; --bad-tint:#3A1E1B; --warn:#E7B95C; --warn-tint:#2E2712;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 24px 60px -24px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0 0 .8em}p:last-child{margin-bottom:0}
+a{color:var(--brand-deep)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-deep);font-weight:500}
+
+/* header */
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1280px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.brand .logo{width:38px;height:38px;flex:none;border-radius:10px;background:linear-gradient(150deg,var(--brand),var(--brand-deep));display:grid;place-items:center;box-shadow:var(--shadow)}
+.brand .logo svg{width:22px;height:22px}
+.brand .name{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1}
+.brand .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.brand .org{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--brand-deep);font-weight:600;margin-bottom:2px}
+.idfields{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.idfield{display:flex;flex-direction:column;gap:2px}
+.idfield label{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding-left:2px}
+.idfield input{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;width:132px}
+.idfield.code input{width:92px}
+.idfield input:focus{border-color:var(--brand);background:var(--surface)}
+.hbtns{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface-2)}
+.seg button{border:none;background:none;color:var(--ink-soft);font-family:var(--mono);font-size:11.5px;font-weight:500;padding:7px 11px}
+.seg button.on{background:var(--brand);color:#fff}
+.save-pill{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.save-dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.save-dot.saving{background:var(--amber);animation:pulse 1s infinite}
+.save-dot.cloud{background:var(--brand)}
+.save-dot.off{background:var(--muted)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--amber) 60%,transparent)}70%{box-shadow:0 0 0 6px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.attempt-badge{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--brand-ink);background:var(--brand-tint);border:1px solid color-mix(in srgb,var(--brand) 35%,transparent);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);display:grid;place-items:center}
+.icon-btn:hover{background:var(--surface-3)}
+.icon-btn svg{width:18px;height:18px}
+
+/* layout */
+.shell{max-width:1280px;margin:0 auto;padding:22px 20px 80px;display:grid;grid-template-columns:272px 1fr;gap:26px;align-items:start}
+body[data-role="teacher"] .rail,body[data-role="teacher"] .mobile-tabs{display:none}
+body[data-role="teacher"] .shell{grid-template-columns:1fr}
+.rail{position:sticky;top:80px;display:flex;flex-direction:column;gap:16px}
+.rail-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.progress-block{padding:18px}
+.progress-top{display:flex;align-items:center;gap:14px}
+.ring{width:66px;height:66px;flex:none}
+.progress-meta .l{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.progress-meta .v{font-size:14px;font-weight:600;color:var(--ink);margin-top:2px}
+.navlist{display:flex;flex-direction:column;padding:8px}
+.navlist .sec-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 10px 5px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;border:none;background:none;text-align:left;width:100%;color:var(--ink-soft);font-size:13.5px;transition:background .12s}
+.navitem:hover{background:var(--surface-2)}
+.navitem.active{background:var(--brand-tint);color:var(--brand-ink);font-weight:600}
+.navitem .nix{width:22px;height:22px;flex:none;border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--surface-3);color:var(--muted)}
+.navitem.active .nix{background:var(--brand);color:#fff}
+.navitem .ntxt{flex:1;line-height:1.25}
+.navitem .nchip{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:2px 6px;border-radius:6px;white-space:nowrap}
+.nchip.pass{background:var(--good-tint);color:var(--good)}
+.nchip.fail{background:var(--bad-tint);color:var(--bad)}
+.nchip.due{background:var(--warn-tint);color:var(--warn)}
+.rail-finish{margin:0 8px 8px}
+.btn{font-family:var(--sans);font-weight:600;font-size:14px;border-radius:10px;padding:11px 16px;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .06s,background .15s}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:17px;height:17px}
+.btn-primary{background:var(--brand);color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{background:var(--brand-deep)}
+.btn-ghost{background:var(--surface-2);color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{background:var(--surface-3)}
+.btn-sm{padding:8px 12px;font-size:13px}
+.btn-block{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.main{min-width:0}
+.view{display:none;animation:rise .35s ease both}
+.view.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;margin-bottom:20px}
+.panel-head{border-bottom:1px solid var(--line-soft);padding-bottom:18px;margin-bottom:22px}
+.panel-head h2{font-size:26px;margin-top:6px}
+.panel-head .lead{color:var(--ink-soft);margin-top:10px;max-width:66ch}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+.tag.brand{background:var(--brand-tint);color:var(--brand-ink);border-color:transparent}
+
+.coach{border-radius:var(--radius-s);border:1px solid color-mix(in srgb,var(--brand) 26%,transparent);background:var(--brand-tint);padding:16px 18px;margin:18px 0}
+.coach h4{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-ink);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.coach h4 svg{width:16px;height:16px}
+.coach p,.coach li{color:var(--brand-ink)}
+.coach ul{margin:6px 0 0;padding-left:20px}.coach li{margin-bottom:5px}
+.coach.plain{background:var(--surface-2);border-color:var(--line)}
+.coach.plain h4{color:var(--ink)}.coach.plain p,.coach.plain li{color:var(--ink-soft)}
+.vi{display:block;font-size:.92em;color:color-mix(in srgb,var(--brand-ink) 78%,var(--muted));margin-top:3px;font-style:italic}
+.coach.plain .vi{color:var(--muted)}
+
+.tblwrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:var(--radius-s)}
+table.data{width:100%;border-collapse:collapse;font-size:13.5px;min-width:440px}
+table.data caption{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 14px 4px;caption-side:top}
+table.data th,table.data td{padding:10px 14px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:middle}
+table.data thead th{background:var(--surface-2);font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+table.data tbody th{font-weight:600;color:var(--ink);background:var(--surface-2)}
+table.data .num{font-variant-numeric:tabular-nums;font-family:var(--mono)}
+table.data tr:last-child td,table.data tr:last-child th{border-bottom:none}
+
+.qgroup{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.q{border:1px solid var(--line);border-radius:var(--radius-s);padding:15px 16px;background:var(--surface);transition:border-color .15s,background .15s}
+.q .qtop{display:flex;gap:12px;align-items:flex-start}
+.qnum{font-family:var(--mono);font-weight:600;font-size:13px;color:#fff;background:var(--brand);min-width:26px;height:26px;padding:0 6px;border-radius:7px;display:grid;place-items:center;flex:none;margin-top:1px}
+.qbody{flex:1;min-width:0}
+.qprompt{font-size:14.5px;color:var(--ink);margin-bottom:9px}
+.answer-in{font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;max-width:340px}
+.answer-in:focus{border-color:var(--brand);background:var(--surface)}
+select.answer-in{max-width:420px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23697788' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.q.correct{border-color:color-mix(in srgb,var(--good) 55%,transparent);background:color-mix(in srgb,var(--good-tint) 55%,var(--surface))}
+.q.incorrect{border-color:color-mix(in srgb,var(--bad) 45%,transparent);background:color-mix(in srgb,var(--bad-tint) 45%,var(--surface))}
+.q.correct .qnum{background:var(--good)}.q.incorrect .qnum{background:var(--bad)}
+.mark-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px;margin-top:2px}
+.mark-badge svg{width:13px;height:13px}
+.mark-badge.ok{background:var(--good-tint);color:var(--good)}.mark-badge.no{background:var(--bad-tint);color:var(--bad)}
+.reveal{margin-top:13px;padding-top:13px;border-top:1px dashed var(--line);font-size:13.5px;display:none}
+.reveal.show{display:block;animation:rise .3s ease both}
+.reveal .keyans{font-family:var(--mono);color:var(--good);font-weight:600}
+.reveal .exp{color:var(--ink-soft);margin-top:8px}
+.reveal .tscript{margin-top:9px;background:var(--surface-2);border-left:3px solid var(--brand);border-radius:0 8px 8px 0;padding:9px 13px;color:var(--ink-soft);font-size:13px;font-style:italic}
+.reveal .plabel{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--amber);font-weight:600;margin-top:9px;display:flex;align-items:center;gap:6px}
+.reveal .plabel svg{width:13px;height:13px}
+.hintbox{margin-top:12px;padding:11px 13px;border-radius:8px;background:var(--warn-tint);border:1px solid color-mix(in srgb,var(--warn) 32%,transparent);font-size:13px;color:var(--ink);display:none}
+.hintbox.show{display:block;animation:rise .3s ease both}
+.hintbox .hl{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.hintbox .hl svg{width:13px;height:13px}
+mark{background:var(--amber-mark);color:inherit;padding:.5px 3px;border-radius:3px;box-shadow:inset 0 0 0 1px var(--amber-mark-b);font-style:normal}
+
+.player{border:1px solid var(--line);border-radius:var(--radius-s);background:linear-gradient(180deg,var(--surface-2),var(--surface));padding:15px 16px;margin:18px 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.play-btn{width:50px;height:50px;flex:none;border-radius:50%;border:none;background:var(--brand);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow)}
+.play-btn:hover{background:var(--brand-deep)}.play-btn svg{width:22px;height:22px}
+.wave{flex:1;min-width:140px;height:40px;display:flex;align-items:center;gap:2.5px;overflow:hidden}
+.wave i{flex:1;min-width:2px;background:var(--brand);border-radius:2px;height:22%;opacity:.4}
+.player.playing .wave i{animation:eq 1s ease-in-out infinite}
+@keyframes eq{0%,100%{height:22%}50%{height:88%}}
+.player-meta{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.speed-group{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.speed-group button{border:none;background:var(--surface);color:var(--ink-soft);font-family:var(--mono);font-size:11px;padding:4px 9px}
+.speed-group button.on{background:var(--brand);color:#fff}
+.player-note{flex-basis:100%;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.player-note svg{width:14px;height:14px;flex:none}
+.classroom-audio{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:var(--radius-s);background:linear-gradient(180deg,var(--surface-2),var(--surface));padding:15px 16px;margin:18px 0;flex-wrap:wrap}
+.classroom-audio .ca-ic{width:44px;height:44px;flex:none;border-radius:10px;background:var(--brand-tint);color:var(--brand-deep);display:grid;place-items:center}
+.classroom-audio .ca-ic svg{width:22px;height:22px}
+.classroom-audio .ca-body{flex:1;min-width:170px}
+.classroom-audio .ca-title{font-weight:600;font-size:14px}
+.classroom-audio .ca-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.classroom-audio a{white-space:nowrap;text-decoration:none}
+.classroom-audio a svg{width:15px;height:15px}
+
+.exbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 0;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.exbar .track{flex:1;min-width:120px;height:6px;border-radius:4px;background:var(--surface-3);overflow:hidden}
+.exbar .track i{display:block;height:100%;background:var(--brand);border-radius:4px;transition:width .3s}
+.qactions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+.scoreline{font-family:var(--mono);font-size:13px;margin-left:auto;color:var(--ink-soft);display:flex;align-items:center;gap:10px}
+.score-big{font-size:20px;font-weight:600}.score-big.pass{color:var(--good)}.score-big.fail{color:var(--bad)}
+.lock-note{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--warn);background:var(--warn-tint);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);border-radius:9px;padding:10px 13px;margin-top:16px}
+.lock-note svg{width:16px;height:16px;flex:none;margin-top:2px}
+
+.study-toggle{margin-top:14px}
+.model-ans{display:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+.model-ans.show{display:block;animation:rise .3s ease both}
+.model-ans h4{font-family:var(--sans);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--brand-deep);margin-bottom:8px}
+.ans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ans-cell{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:8px;padding:8px 11px;font-size:13px}
+.ans-cell b{font-family:var(--mono);color:var(--brand-deep)}
+/* drag & drop word bank */
+.wordbank{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 6px;padding:14px;border:1.5px dashed var(--line);border-radius:var(--radius-s);background:var(--surface-2);min-height:56px;align-content:flex-start}
+.wordbank.over{border-color:var(--brand);background:var(--brand-tint)}
+.wordbank .bank-empty{color:var(--muted);font-family:var(--mono);font-size:12px;align-self:center}
+.chip-dnd{font-family:var(--mono);font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 13px;cursor:grab;user-select:none;box-shadow:var(--shadow);touch-action:manipulation}
+.chip-dnd:hover{border-color:var(--brand)}
+.chip-dnd.sel{background:var(--brand);color:#fff;border-color:transparent;box-shadow:0 0 0 3px var(--brand-tint)}
+.chip-dnd.dragging{opacity:.35}
+.gap-drop{display:inline-flex;align-items:center;justify-content:center;min-width:92px;min-height:32px;padding:5px 9px;border:1.5px dashed var(--line);border-radius:7px;background:var(--surface);cursor:pointer;font-family:var(--mono);font-size:13px;color:var(--muted);vertical-align:middle;transition:background .12s,border-color .12s}
+.gap-drop.filled{border-style:solid;border-color:var(--brand);background:var(--brand-tint);color:var(--brand-ink);font-weight:600;cursor:grab}
+.gap-drop.over{border-color:var(--brand);background:var(--brand-tint);color:var(--brand-ink)}
+.gap-drop.ok{border-style:solid;border-color:var(--good);background:var(--good-tint);color:var(--good)}
+.gap-drop.no{border-style:solid;border-color:var(--bad);background:var(--bad-tint);color:var(--bad)}
+.gap-num{font-family:var(--mono);font-weight:600;color:var(--ink-soft);margin-right:6px}
+.dnd-hint{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}
+.dnd-hint svg{width:15px;height:15px;flex:none}
+.pred-score{font-family:var(--mono);font-size:14px;font-weight:600;margin-left:auto}
+.pred-score.pass{color:var(--good)}.pred-score.mid{color:var(--warn)}
+
+.log-row{border:1px solid var(--line);border-radius:var(--radius-s);padding:14px 15px;margin-bottom:12px;background:var(--surface)}
+.log-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.log-src{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface-2);padding:3px 9px;border-radius:6px}
+.log-q{font-weight:600;font-size:14px}
+.log-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.log-fields .f label{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+.log-fields textarea{width:100%;font-family:var(--sans);font-size:13.5px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;resize:vertical;min-height:56px;line-height:1.5}
+.log-fields textarea:focus{border-color:var(--brand);background:var(--surface)}
+.log-empty,.empty-state{text-align:center;color:var(--muted);padding:44px 20px}
+.log-empty svg,.empty-state svg{width:40px;height:40px;color:var(--line);margin-bottom:10px}
+
+/* flashcards */
+.deck-stats{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 20px}
+.chipstat{font-family:var(--mono);font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:8px 12px}
+.chipstat b{font-size:16px;color:var(--brand-deep)}
+.flash{max-width:560px;margin:10px auto 0;perspective:1200px}
+.flash-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px 28px;min-height:210px;display:flex;flex-direction:column;justify-content:center;text-align:center;position:relative}
+.flash-side{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);position:absolute;top:16px;left:20px}
+.flash-src{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:10.5px;color:var(--muted);background:var(--surface-2);padding:3px 8px;border-radius:6px}
+.flash-front{font-size:19px;font-weight:600;color:var(--ink)}
+.flash-back{font-size:17px;color:var(--brand-deep);margin-top:6px}
+.flash-back mark{font-size:.95em}
+.flash-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.grade-btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 18px;font-weight:600;font-size:13.5px;color:var(--ink)}
+.grade-btn.again{border-color:color-mix(in srgb,var(--bad) 40%,transparent);color:var(--bad)}
+.grade-btn.hard{border-color:color-mix(in srgb,var(--warn) 45%,transparent);color:var(--warn)}
+.grade-btn.good{border-color:color-mix(in srgb,var(--good) 45%,transparent);color:var(--good)}
+.grade-btn:hover{background:var(--surface-2)}
+
+/* report */
+.report-hero{background:linear-gradient(150deg,var(--brand-deep),var(--brand));color:#fff;border-radius:var(--radius);padding:28px 30px;margin-bottom:20px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.report-hero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08)}
+.report-hero .eyebrow{color:rgba(255,255,255,.8)}
+.report-hero h2{color:#fff;font-size:30px;margin:8px 0 4px}
+.report-hero .rmeta{display:flex;gap:26px;flex-wrap:wrap;margin-top:18px;position:relative;z-index:1}
+.report-hero .rmeta .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.report-hero .rmeta .v{font-size:22px;font-weight:600;font-family:var(--serif)}
+.overall-ring{position:absolute;right:26px;top:26px;z-index:1}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.rcard{border:1px solid var(--line);border-radius:var(--radius-s);padding:16px;background:var(--surface)}
+.rcard .rc-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rcard .rc-name{font-weight:600;font-size:14px}
+.rcard .rc-pct{font-family:var(--mono);font-size:20px;font-weight:600}
+.rcard .rc-bar{height:7px;border-radius:4px;background:var(--surface-3);margin:11px 0 8px;overflow:hidden}
+.rcard .rc-bar i{display:block;height:100%;border-radius:4px}
+.rcard .rc-note{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+.improve li{margin-bottom:9px;color:var(--ink-soft)}.improve li b{color:var(--ink)}
+
+/* teacher */
+.tstat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.tstat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:16px 18px;box-shadow:var(--shadow)}
+.tstat .l{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tstat .v{font-family:var(--serif);font-size:28px;font-weight:600;margin-top:4px}
+.tstat .s{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.bar-mini{display:flex;align-items:flex-end;gap:10px;height:120px;padding:10px 4px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%}
+.bar-col .bar{width:70%;max-width:56px;background:var(--brand);border-radius:5px 5px 0 0;min-height:3px;position:relative}
+.bar-col .bv{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink)}
+.bar-col .bl{font-size:11px;color:var(--muted);text-align:center;line-height:1.2}
+.class-pct{font-family:var(--mono);font-weight:600}
+.pill-pass{color:var(--good)}.pill-fail{color:var(--bad)}.pill-none{color:var(--muted)}
+
+.foot{max-width:1280px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:12px;font-family:var(--mono);text-align:center}
+.mobile-tabs{display:none}
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr;gap:16px}
+  .rail{position:static}
+  .navlist{display:none}
+  .mobile-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px}
+  .mtab{flex:none;font-family:var(--mono);font-size:12px;padding:8px 13px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);white-space:nowrap}
+  .mtab.active{background:var(--brand);color:#fff;border-color:transparent}
+  .report-grid{grid-template-columns:1fr}
+  .overall-ring{position:static;margin-top:16px}
+}
+@media (max-width:620px){
+  .panel{padding:20px 16px}.log-fields{grid-template-columns:1fr}.brand .sub{display:none}
+  .idfield input{width:118px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{
+  .top,.rail,.mobile-tabs,.foot,.no-print{display:none!important}
+  body{background:#fff;color:#000;font-size:12px}
+  .shell{display:block;max-width:none;padding:0}.view{display:none!important}
+  #print-report{display:block!important}
+  .panel,.rcard,.report-hero{box-shadow:none;border:1px solid #ccc}
+  .report-hero{background:#0A5A62!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  mark,.rcard .rc-bar,.rcard .rc-bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{margin:14mm}
+}
+#print-report{display:none}
+</style>
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 12v2m4-6v10m4-13v16m4-11v6m4-4v2"/></svg></div>
+      <div><div class="org">Huong Stella Paradigm</div><div class="name">Listening Studio</div><div class="sub" id="brand-sub">Unit 4 · Education</div></div>
+    </div>
+    <div class="idfields" id="idfields">
+      <div class="idfield"><label id="lbl-name">Student name</label><input id="s-name" type="text" placeholder="Your name" autocomplete="name"></div>
+      <div class="idfield"><label id="lbl-email">Email</label><input id="s-email" type="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="idfield code"><label id="lbl-code">Class code</label><input id="s-code" type="text" placeholder="default"></div>
+    </div>
+    <div class="hbtns">
+      <div class="seg" role="group" aria-label="Language"><button data-lang="en" class="on">EN</button><button data-lang="vi">VI</button></div>
+      <div class="save-pill"><span class="save-dot" id="save-dot"></span><span id="save-text">Saved</span></div>
+      <span class="attempt-badge" id="attempt-badge">Report #0</span>
+      <button class="icon-btn" id="theme-btn" title="Theme" aria-label="Toggle theme"><svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7"/><circle cx="12" cy="12" r="4"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="rail-card progress-block">
+      <div class="progress-top">
+        <svg class="ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--surface-3)" stroke-width="4"/><circle id="ring-fg" cx="18" cy="18" r="15.5" fill="none" stroke="var(--brand)" stroke-width="4" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="97.4" transform="rotate(-90 18 18)"/><text id="ring-txt" x="18" y="19.5" text-anchor="middle" font-size="9" fill="var(--ink)">0%</text></svg>
+        <div class="progress-meta"><div class="l" id="prog-l">Studio progress</div><div class="v" id="prog-label">0 of 3 graded done</div></div>
+      </div>
+    </div>
+    <div class="rail-card"><nav class="navlist" id="navlist" aria-label="Exercises"></nav>
+      <button class="btn btn-primary btn-block rail-finish" id="finish-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span id="finish-lbl">Finish &amp; view report</span></button>
+    </div>
+  </aside>
+  <main class="main"><div class="mobile-tabs" id="mobile-tabs"></div><div id="views" aria-live="polite"></div></main>
+</div>
+<div class="foot" id="foot"></div>
+<div id="print-report"></div>
+
+<script>
+"use strict";
+/* =================== I18N =================== */
+const I18N={
+ en:{ studentName:"Student name", email:"Email", classCode:"Class code", saved:"Saved", saving:"Saving…", cloudOn:"Synced to class", cloudOff:"Local only",
+   progress:"Studio progress", graded:"{d} of {t} graded done", finish:"Finish & view report", check:"Check my answers", clear:"Clear", recheck:"Check again",
+   notSubmitted:"Not submitted yet", answered:"{a}/{n} answered", unanswered:"{k} still blank — you can still check.",
+   secLearn:"Learn", secPractise:"Practise (scored)", secReview:"Review", reportNum:"Report #{n}",
+   unlockHint:"Hints unlock the answer after 2 tries", paraWatch:"Paraphrase watch", answer:"Answer", hint:"Hint",
+   playHint:"Your browser reads the passage aloud as a stand-in for the exam audio. Answer from listening; the written script unlocks with your answers.",
+   dueCards:"due", newCards:"new", knownCards:"learned", reviewNow:"Review now", showAnswer:"Show answer", again:"Again", hard:"Hard", good:"Good",
+   deckEmpty:"No cards yet. Check a scored exercise — every paraphrase you miss becomes a review card here.",
+   deckDone:"All caught up! No cards due right now. Come back later, or reset a card by missing its question again." },
+ vi:{ studentName:"Tên học viên", email:"Email", classCode:"Mã lớp", saved:"Đã lưu", saving:"Đang lưu…", cloudOn:"Đã đồng bộ lớp", cloudOff:"Chỉ lưu máy này",
+   progress:"Tiến độ", graded:"Xong {d}/{t} bài chấm điểm", finish:"Kết thúc & xem báo cáo", check:"Kiểm tra đáp án", clear:"Xoá", recheck:"Kiểm tra lại",
+   notSubmitted:"Chưa nộp", answered:"Đã trả lời {a}/{n}", unanswered:"Còn {k} câu trống — vẫn kiểm tra được.",
+   secLearn:"Học", secPractise:"Luyện (chấm điểm)", secReview:"Ôn tập", reportNum:"Báo cáo #{n}",
+   unlockHint:"Đáp án mở sau 2 lần thử", paraWatch:"Điểm paraphrase", answer:"Đáp án", hint:"Gợi ý",
+   playHint:"Trình duyệt đọc bài nghe thay cho audio đề thi. Hãy trả lời bằng cách nghe; phần script hiện ra cùng đáp án.",
+   dueCards:"đến hạn", newCards:"mới", knownCards:"đã thuộc", reviewNow:"Ôn ngay", showAnswer:"Hiện đáp án", again:"Lại", hard:"Khó", good:"Nhớ",
+   deckEmpty:"Chưa có thẻ nào. Hãy kiểm tra một bài chấm điểm — mỗi paraphrase bạn sai sẽ thành một thẻ ôn ở đây.",
+   deckDone:"Đã ôn hết! Không còn thẻ đến hạn. Quay lại sau, hoặc thẻ sẽ xuất hiện lại khi bạn sai câu đó lần nữa." }
+};
+function t(k,vars){ let s=(I18N[S.lang]&&I18N[S.lang][k])||I18N.en[k]||k; if(vars) for(const v in vars) s=s.replace("{"+v+"}",vars[v]); return s; }
+function bi(o){ if(o==null) return ""; if(typeof o==="string") return o; return S.lang==="vi"&&o.vi?o.vi:o.en; }
+function biBoth(o){ if(typeof o==="string") return o; if(S.lang==="vi") return `${o.en}<span class="vi">${o.vi}</span>`; return o.en; }
+
+/* =================== CONTENT (JSON schema — extend UNITS for more units) =================== */
+const UNIT={code:"Unit 4", title:"Education", book:"Improve Your Skills · Listening for IELTS 4.5–6.0"};
+const PASS=70;
+
+const MC_Q=[
+ {id:"m1",n:1,opts:[["A","a library"],["B","a student flat"],["C","a lecture theatre"]],answer:"B",
+  prompt:{en:"Where are the speakers having this discussion?",vi:"Cuộc trò chuyện diễn ra ở đâu?"},
+  exp:{en:"Bill mentions the kitchen and Chloe her bedroom — rooms in a shared student flat, not a public academic space.",vi:"Bill nhắc đến bếp còn Chloe nhắc phòng ngủ — các phòng trong một căn hộ sinh viên, không phải nơi học công cộng."},
+  quote:"You haven't seen him because you've been here in the <mark>kitchen</mark> … I've been here in my <mark>bedroom</mark> reading for my assignment.",
+  para:{en:"No option is named directly — infer 'student flat' from 'kitchen' + 'bedroom'. 'library' and 'lecture theatre' are mentioned as other places (traps).",vi:"Không đáp án nào được nói thẳng — suy ra 'student flat' từ 'kitchen' + 'bedroom'. 'library' và 'lecture theatre' là nơi khác (bẫy)."},
+  hint:{en:"Listen for the rooms they are standing in, not the places they talk about.",vi:"Nghe xem họ đang ở phòng nào, không phải nơi họ nhắc tới."},
+  card:{front:{en:"'kitchen' + 'bedroom' → what place?",vi:"'kitchen' + 'bedroom' → nơi nào?"},back:"a <mark>student flat</mark> (inferred, not stated)"}},
+ {id:"m2",n:2,opts:[["A","drinking coffee"],["B","training"],["C","studying"]],answer:"C",
+  prompt:{en:"How has Chloe spent the morning?",vi:"Chloe đã dành buổi sáng làm gì?"},
+  exp:{en:"Chloe has been reading for her assignment. She says she should have been training, but that had to wait — a trap for option B.",vi:"Chloe đã đọc tài liệu cho bài tập. Cô nói lẽ ra nên đi tập nhưng phải hoãn — bẫy cho đáp án B."},
+  quote:"I've been here in my bedroom <mark>reading for my assignment</mark> … I should have been at the gym training … but that'll have to wait.",
+  para:{en:"'studying' ↔ 'reading for my assignment'. 'training' and 'drinking coffee' describe a rejected plan or Bill's morning.",vi:"'studying' ↔ 'reading for my assignment'. 'training' và 'drinking coffee' là kế hoạch bị bỏ hoặc buổi sáng của Bill."},
+  hint:{en:"She mentions training — but did she do it? Listen for what she actually did.",vi:"Cô nhắc 'training' — nhưng có làm không? Nghe xem cô thực sự làm gì."},
+  card:{front:{en:"'studying' — how said?",vi:"'studying' — nói thế nào?"},back:"<mark>reading for my assignment</mark> (trap: 'should have been… training')"}},
+ {id:"m3",n:3,opts:[["A","Quantities of water are hard to measure."],["B","Children under five make many mistakes."],["C","Clear thinking is difficult for small children."]],answer:"C",
+  prompt:{en:"According to Bill, what does the experiment show?",vi:"Theo Bill, thí nghiệm cho thấy điều gì?"},
+  exp:{en:"The water-container experiment shows young children cannot yet think logically — it is about cognitive development.",vi:"Thí nghiệm về nước cho thấy trẻ nhỏ chưa thể tư duy logic — nói về phát triển nhận thức."},
+  quote:"it showed how children are quite <mark>unable to think logically</mark> … cognitive development of young children.",
+  para:{en:"'Clear thinking is difficult' ↔ 'unable to think logically'. The water/measurement is only the method (trap A).",vi:"'Clear thinking is difficult' ↔ 'unable to think logically'. Nước/đo lường chỉ là phương pháp (bẫy A)."},
+  hint:{en:"The water is just the method — what does it prove about the children's minds?",vi:"Nước chỉ là phương pháp — nó chứng minh gì về tư duy trẻ?"},
+  card:{front:{en:"'clear thinking is difficult for small children'",vi:"'trẻ nhỏ khó tư duy rõ ràng'"},back:"'children are <mark>unable to think logically</mark>'"}},
+ {id:"m4",n:4,opts:[["A","emotional development."],["B","mental development."],["C","social development."]],answer:"B",
+  prompt:{en:"Bill's assignment is about the stages in a child's…",vi:"Bài tập của Bill nói về các giai đoạn phát triển … của trẻ."},
+  exp:{en:"Bill says the assignment is about cognitive development — cognitive means mental.",vi:"Bill nói bài tập về 'cognitive development' — cognitive nghĩa là trí tuệ/tinh thần."},
+  quote:"It's about <mark>cognitive development</mark> of young children over time.",
+  para:{en:"'mental development' ↔ 'cognitive development'. A single vocabulary synonym is the whole test here.",vi:"'mental development' ↔ 'cognitive development'. Ở đây chỉ là bài kiểm tra một từ đồng nghĩa."},
+  hint:{en:"'cognitive' is the key word — which option is its synonym?",vi:"'cognitive' là từ khoá — đáp án nào là đồng nghĩa?"},
+  card:{front:{en:"'cognitive development' =",vi:"'cognitive development' ="},back:"<mark>mental</mark> development"}}
+];
+
+const SUM_Q=[
+ {id:"s5",n:5,accept:["second","2nd"],prompt:{en:"Chloe started the psychology course in the ______ year.",vi:"Chloe bắt đầu khoá tâm lý học vào năm thứ ______."},
+  exp:{en:"She changed subject and began psychology in her second year (having studied law first).",vi:"Cô đổi ngành và bắt đầu tâm lý học vào năm thứ hai (trước đó học luật)."},
+  quote:"I started psychology in the <mark>second</mark> year.",
+  para:{en:"An ordinal number — listen for 'second'. Trap: 'first year' is when she changed FROM.",vi:"Một số thứ tự — nghe 'second'. Bẫy: 'first year' là lúc cô đổi ngành."},
+  hint:{en:"An ordinal number (first / second / third).",vi:"Một số thứ tự (first / second / third)."},
+  card:{front:{en:"started psychology in the ___ year",vi:"bắt đầu tâm lý học năm thứ ___"},back:"<mark>second</mark>"}},
+ {id:"s6",n:6,accept:["criminal"],prompt:{en:"She enjoyed studying the ______ branch of law.",vi:"Cô thích học nhánh ______ của luật."},
+  exp:{en:"Of her old subject (law), she found the criminal area fascinating.",vi:"Trong ngành cũ (luật), cô thấy mảng hình sự hấp dẫn."},
+  quote:"the <mark>criminal</mark> area was fascinating in general.",
+  para:{en:"'enjoyed / branch' ↔ 'fascinating / area'.",vi:"'enjoyed / branch' ↔ 'fascinating / area'."},
+  hint:{en:"A type of law she found fascinating.",vi:"Một loại luật cô thấy hấp dẫn."},
+  card:{front:{en:"branch of law she enjoyed",vi:"nhánh luật cô thích"},back:"<mark>criminal</mark> (law)"}},
+ {id:"s7",n:7,accept:["rules and exceptions","rules","exceptions"],prompt:{en:"The worst thing was having to remember lots of ______.",vi:"Điều tệ nhất là phải nhớ nhiều ______."},
+  exp:{en:"Law was full of little details — she could never get all the rules and exceptions into her head.",vi:"Luật đầy chi tiết vụn — cô không tài nào nhớ hết các quy tắc và ngoại lệ."},
+  quote:"I could never get all the <mark>rules and exceptions</mark> into my head.",
+  para:{en:"'the worst thing / remember' ↔ 'terrible memory / could never get … into my head'.",vi:"'điều tệ nhất / nhớ' ↔ 'trí nhớ kém / không tài nào nhớ hết'."},
+  hint:{en:"Two things joined by 'and' that are hard to memorise.",vi:"Hai thứ nối bằng 'and', khó thuộc."},
+  card:{front:{en:"hard to remember in law",vi:"khó nhớ trong luật"},back:"<mark>rules and exceptions</mark>"}},
+ {id:"s8",n:8,accept:["international trade"],prompt:{en:"She found ______ especially technical.",vi:"Cô thấy ______ đặc biệt khó/chuyên môn."},
+  exp:{en:"Her 'number one hate' was international trade — a minefield of rules and exceptions.",vi:"Thứ cô 'ghét nhất' là luật thương mại quốc tế — một bãi mìn quy tắc và ngoại lệ."},
+  quote:"My number one hate really was <mark>international trade</mark>.",
+  para:{en:"'especially technical' ↔ 'number one hate … a minefield'.",vi:"'đặc biệt chuyên môn' ↔ 'ghét nhất … bãi mìn'."},
+  hint:{en:"Two words — a branch of law about trade between countries.",vi:"Hai từ — nhánh luật về buôn bán giữa các nước."},
+  card:{front:{en:"the area she found most technical",vi:"mảng cô thấy chuyên môn nhất"},back:"<mark>international trade</mark>"}},
+ {id:"s9",n:9,accept:["famous cases","cases"],prompt:{en:"She did not enjoy reading about ______ in the library.",vi:"Cô không thích đọc về ______ trong thư viện."},
+  exp:{en:"Law is book-based; you spend time reading about famous cases in the library.",vi:"Luật nặng sách vở; phải đọc về các vụ án nổi tiếng trong thư viện."},
+  quote:"reading about <mark>famous cases</mark> sitting in a stuffy library.",
+  para:{en:"'reading about … in the library' matches almost word for word — spot the noun phrase.",vi:"'đọc về … trong thư viện' gần như trùng khớp — bắt lấy cụm danh từ."},
+  hint:{en:"Two words — well-known ones that lawyers read about.",vi:"Hai từ — loại nổi tiếng mà luật sư đọc."},
+  card:{front:{en:"what she read about in the library",vi:"thứ cô đọc trong thư viện"},back:"<mark>famous cases</mark>"}},
+ {id:"s10",n:10,accept:["practical"],prompt:{en:"She likes experimental psychology best because it involves ______ activities.",vi:"Cô thích tâm lý học thực nghiệm nhất vì có hoạt động ______."},
+  exp:{en:"Experimental psychology means doing something — practical activities, not just reading.",vi:"Tâm lý học thực nghiệm là được làm — hoạt động thực hành, không chỉ đọc."},
+  quote:"it involves doing something, so it's <mark>practical</mark>.",
+  para:{en:"'involves … activities' ↔ 'involves doing something … practical'.",vi:"'có hoạt động' ↔ 'được làm gì đó … thực hành'."},
+  hint:{en:"One word — the opposite of 'book-based'; hands-on.",vi:"Một từ — trái với 'nặng sách'; thực hành."},
+  card:{front:{en:"experimental psych involves ___ activities",vi:"tâm lý thực nghiệm có hoạt động ___"},back:"<mark>practical</mark>"}}
+];
+
+const EXAM_MC=[
+ {id:"e31",n:31,opts:[["A","six weeks"],["B","seven weeks"],["C","thirteen weeks"]],answer:"B",
+  prompt:{en:"How long would terms be under the six-term system?",vi:"Học kỳ sẽ dài bao lâu theo hệ sáu kỳ?"},
+  exp:{en:"Each term is seven weeks of teaching plus two weeks of vacation.",vi:"Mỗi kỳ gồm bảy tuần học cộng hai tuần nghỉ."},
+  quote:"<mark>seven weeks</mark> of term time plus two weeks of vacation.",
+  para:{en:"Trap: 'thirteen weeks' is the CURRENT system; 'two weeks' is the vacation, not the term.",vi:"Bẫy: 'thirteen weeks' là hệ HIỆN TẠI; 'two weeks' là nghỉ, không phải kỳ học."},
+  hint:{en:"Term time only — ignore the vacation and the current 13-week terms.",vi:"Chỉ tính thời gian học — bỏ tuần nghỉ và học kỳ 13 tuần hiện tại."},
+  card:{front:{en:"term length, six-term system",vi:"độ dài kỳ, hệ sáu kỳ"},back:"<mark>seven weeks</mark> (+2 weeks vacation)"}},
+ {id:"e32",n:32,opts:[["A","It would disappear."],["B","It would be shortened."],["C","It would be lengthened."]],answer:"B",
+  prompt:{en:"What would happen to the summer holiday?",vi:"Kỳ nghỉ hè sẽ ra sao?"},
+  exp:{en:"The long summer holiday would be reduced in length, not removed.",vi:"Kỳ nghỉ hè dài sẽ bị rút ngắn, không phải bỏ hẳn."},
+  quote:"the very long summer holiday would be <mark>reduced in length</mark>.",
+  para:{en:"'shortened' ↔ 'reduced in length'. Trap A 'disappear' is too strong.",vi:"'shortened' ↔ 'reduced in length'. Bẫy A 'disappear' quá mạnh."},
+  hint:{en:"Reduced — not removed entirely.",vi:"Bị giảm — không phải bỏ hẳn."},
+  card:{front:{en:"summer holiday would be…",vi:"kỳ nghỉ hè sẽ…"},back:"<mark>reduced in length</mark> (= shortened)"}},
+ {id:"e33",n:33,opts:[["A","two weeks"],["B","three weeks"],["C","seven weeks"]],answer:"B",
+  prompt:{en:"How much was the average learning loss in the summer?",vi:"Mức mất kiến thức trung bình trong hè là bao nhiêu?"},
+  exp:{en:"On average, scores were three weeks lower; two-to-seven weeks is the spread, not the average.",vi:"Trung bình điểm thấp hơn ba tuần; hai đến bảy tuần là biên độ, không phải trung bình."},
+  quote:"On average, children's test scores were <mark>three weeks</mark> lower than when they left school.",
+  para:{en:"Listen for 'on average' — trap: 'two to seven weeks' is the overall range.",vi:"Nghe 'on average' — bẫy: 'two to seven weeks' là toàn khoảng."},
+  hint:{en:"The AVERAGE figure, not the range.",vi:"Con số TRUNG BÌNH, không phải khoảng."},
+  card:{front:{en:"average summer learning loss",vi:"mất kiến thức hè trung bình"},back:"<mark>three weeks</mark> (range: 2–7)"}},
+ {id:"e34",n:34,opts:[["A","maths"],["B","reading"],["C","writing"]],answer:"B",
+  prompt:{en:"In which subject was learning loss greatest among disadvantaged children?",vi:"Trẻ khó khăn mất kiến thức nhiều nhất ở môn nào?"},
+  exp:{en:"Loss was greatest in maths for everyone, but disadvantaged children lost most in reading.",vi:"Nhìn chung mất nhiều nhất ở toán, nhưng riêng trẻ khó khăn mất nhiều nhất ở đọc."},
+  quote:"disadvantaged children showed even greater losses in <mark>reading</mark> skills.",
+  para:{en:"Trap A 'maths' is the overall greatest — the question asks specifically about disadvantaged children.",vi:"Bẫy A 'maths' là chung — câu hỏi hỏi riêng trẻ khó khăn."},
+  hint:{en:"Match the subject to 'disadvantaged children', not to everyone.",vi:"Ghép môn với 'trẻ khó khăn', không phải tất cả."},
+  card:{front:{en:"disadvantaged children — biggest loss in…",vi:"trẻ khó khăn — mất nhiều nhất ở…"},back:"<mark>reading</mark> (overall: maths)"}},
+ {id:"e35",n:35,opts:[["A","better than under the existing system."],["B","worse than under the existing system."],["C","the same as under the existing system."]],answer:"A",
+  prompt:{en:"According to Marchmont's research, in the six-term system pupils performed…",vi:"Theo nghiên cứu của Marchmont, học sinh hệ sáu kỳ học…"},
+  exp:{en:"Marchmont found six-term pupils kept their scores — an improvement on the traditional system.",vi:"Marchmont thấy học sinh hệ sáu kỳ giữ được điểm — cải thiện so với hệ truyền thống."},
+  quote:"This is certainly an <mark>improvement on the traditional system</mark>.",
+  para:{en:"'better than existing' ↔ 'an improvement on the traditional system'. Note: Benson found NO difference — attribute the finding to the right researcher.",vi:"'tốt hơn hệ hiện tại' ↔ 'cải thiện so với hệ truyền thống'. Lưu ý: Benson thấy KHÔNG khác biệt — gán đúng kết quả cho đúng người."},
+  hint:{en:"Whose result — Marchmont or Benson? And was it up, down or the same?",vi:"Kết quả của ai — Marchmont hay Benson? Và tăng, giảm hay như cũ?"},
+  card:{front:{en:"Marchmont: six-term pupils performed…",vi:"Marchmont: học sinh sáu kỳ học…"},back:"<mark>better</mark> (an improvement); Benson: no difference"}}
+];
+
+const EXAM_SUM=[
+ {id:"e36",n:36,accept:["agriculture","farming"],prompt:{en:"The familiar school terms originated when many people worked in ______.",vi:"Các học kỳ quen thuộc ra đời khi nhiều người làm ______."},
+  exp:{en:"Our three-term year comes from a time when agriculture dominated working life and children helped with the harvest.",vi:"Năm ba kỳ bắt nguồn từ thời nông nghiệp là chính và trẻ em phụ giúp mùa gặt."},
+  quote:"In days when <mark>agriculture</mark> was of much greater importance …",
+  para:{en:"'many people worked in' ↔ 'was of much greater importance in our working lives'.",vi:"'nhiều người làm' ↔ 'quan trọng hơn nhiều trong đời sống lao động'."},
+  hint:{en:"One word — farming / working the land.",vi:"Một từ — làm nông / đồng áng."},
+  card:{front:{en:"terms began when people worked in…",vi:"học kỳ ra đời khi người ta làm…"},back:"<mark>agriculture</mark>"}},
+ {id:"e37",n:37,accept:["air-conditioning","air conditioning","airconditioning"],prompt:{en:"Teaching in July and August was hard before the invention of ______.",vi:"Dạy học tháng 7–8 rất khó trước khi phát minh ra ______."},
+  exp:{en:"Summer heat made teaching impractical until air-conditioning existed.",vi:"Cái nóng mùa hè khiến việc dạy bất khả thi cho tới khi có điều hoà."},
+  quote:"Before <mark>air-conditioning</mark>, it was very impractical to try to teach children in the summer.",
+  para:{en:"'because of the heat … difficult' ↔ 'impractical … in the summer'.",vi:"'vì nóng … khó' ↔ 'bất khả thi … mùa hè'."},
+  hint:{en:"One (hyphenated) word — the machine that cools a room.",vi:"Một từ (có gạch nối) — máy làm mát phòng."},
+  card:{front:{en:"summer teaching hard before…",vi:"dạy hè khó trước khi có…"},back:"<mark>air-conditioning</mark>"}},
+ {id:"e38",n:38,accept:["summer school","summer schools"],prompt:{en:"A different approach can be provided by the ______.",vi:"Một hướng khác có thể đến từ ______."},
+  exp:{en:"Summer schools offer a completely different kind of educational provision.",vi:"Các trường hè mang lại một hình thức giáo dục hoàn toàn khác."},
+  quote:"One way of providing something different is the <mark>summer school</mark>.",
+  para:{en:"'a different approach' ↔ 'providing something different'.",vi:"'một hướng khác' ↔ 'mang lại điều gì đó khác biệt'."},
+  hint:{en:"Two words — classes held in the summer.",vi:"Hai từ — lớp học tổ chức vào mùa hè."},
+  card:{front:{en:"provides a different approach",vi:"mang lại hướng tiếp cận khác"},back:"<mark>summer school</mark>"}},
+ {id:"e39",n:39,accept:["class size","small class size","small classes"],prompt:{en:"An important factor in their success is the small ______.",vi:"Yếu tố quan trọng cho thành công là ______ nhỏ."},
+  exp:{en:"Small class size was shown to have a positive effect on learning.",vi:"Sĩ số lớp nhỏ được chứng minh có tác động tích cực tới việc học."},
+  quote:"Most summer schools … have small classes and <mark>class size</mark> was shown to have a positive effect.",
+  para:{en:"'the small ___' ↔ 'small classes and class size'.",vi:"'___ nhỏ' ↔ 'lớp nhỏ và sĩ số lớp'."},
+  hint:{en:"Two words — how many pupils are in a class.",vi:"Hai từ — số học sinh trong một lớp."},
+  card:{front:{en:"success factor: small ___",vi:"yếu tố thành công: ___ nhỏ"},back:"<mark>class size</mark>"}},
+ {id:"e40",n:40,accept:["parental support","parent support"],prompt:{en:"Also present is the element of ______, which contributes greatly.",vi:"Còn có yếu tố ______, đóng góp rất lớn."},
+  exp:{en:"Summer school children benefit from a great deal of parental support (parents pay the fees and get involved).",vi:"Trẻ học trường hè hưởng lợi từ sự hỗ trợ lớn của phụ huynh (đóng phí và tham gia)."},
+  quote:"summer school children usually benefit from a great deal of <mark>parental support</mark>.",
+  para:{en:"'the element of ___ … contributes greatly' ↔ 'benefit from a great deal of parental support'.",vi:"'yếu tố ___ … đóng góp lớn' ↔ 'hưởng lợi từ sự hỗ trợ lớn của phụ huynh'."},
+  hint:{en:"Two words — help from mums and dads.",vi:"Hai từ — sự hỗ trợ từ cha mẹ."},
+  card:{front:{en:"element that contributes greatly",vi:"yếu tố đóng góp lớn"},back:"<mark>parental support</mark>"}}
+];
+const EXAM_Q=EXAM_MC.concat(EXAM_SUM);
+const POOLS={};
+
+const EX=[
+ {id:"brief",kind:"brief",nav:{en:"Skills briefing",vi:"Giới thiệu kỹ năng"},nix:"i"},
+ {id:"campus",kind:"study",nav:{en:"Campus contexts",vi:"Bối cảnh học đường"},nix:"P1"},
+ {id:"mc",kind:"graded",nav:{en:"Multiple choice (1.23)",vi:"Trắc nghiệm (1.23)"},nix:"1"},
+ {id:"sumprep",kind:"study",nav:{en:"Summary prediction",vi:"Dự đoán tóm tắt"},nix:"P2"},
+ {id:"summary",kind:"graded",nav:{en:"Summary completion (1.24)",vi:"Hoàn thành tóm tắt (1.24)"},nix:"2"},
+ {id:"exam",kind:"graded",nav:{en:"Exam · Section 4 (1.28)",vi:"Bài thi · Section 4 (1.28)"},nix:"3"},
+ {id:"logbook",kind:"logbook",nav:{en:"Error logbook",vi:"Sổ lỗi paraphrase"},nix:"L"},
+ {id:"flash",kind:"flash",nav:{en:"Paraphrase flashcards",vi:"Flashcard paraphrase"},nix:"F"},
+ {id:"report",kind:"report",nav:{en:"Results & report",vi:"Kết quả & báo cáo"},nix:"R"}
+];
+const QMAP={mc:MC_Q,summary:SUM_Q,exam:EXAM_Q};
+const GRADED=["mc","summary","exam"];
+const GRADED_NAMES={mc:{en:"Multiple choice",vi:"Trắc nghiệm"},summary:{en:"Summary completion",vi:"Hoàn thành tóm tắt"},exam:{en:"Exam · Section 4",vi:"Bài thi · Section 4"}};
+
+/* =================== STATE =================== */
+const LS_KEY="listening-studio-u1-v2";
+let S={name:"",email:"",code:"",theme:null,lang:"en",role:"student",active:"brief",
+  answers:{},results:{},studyOpen:{},log:{},srs:{},reportCount:0,anon:null,
+  pred:{},predSel:null,predChecked:false};
+function load(){ try{const r=localStorage.getItem(LS_KEY); if(r) S=Object.assign(S,JSON.parse(r));}catch(e){} if(!S.anon) S.anon="anon_"+Math.random().toString(36).slice(2,9); }
+let dirty=false;
+function markDirty(){dirty=true;setSave("saving");}
+function commit(){ try{localStorage.setItem(LS_KEY,JSON.stringify(S));dirty=false;setSave("saved");}catch(e){setSave("error");} }
+function setSave(state){
+  const dot=document.getElementById("save-dot"),tx=document.getElementById("save-text");
+  dot.className="save-dot";
+  if(state==="saving"){dot.classList.add("saving");tx.textContent=t("saving");}
+  else if(state==="error"){dot.style.background="var(--bad)";tx.textContent="Save blocked";}
+  else{ if(CLOUD_OK){dot.classList.add("cloud");tx.textContent=t("cloudOn");} else {tx.textContent=t("saved");} }
+}
+setInterval(()=>{ if(dirty){commit(); syncUp();} },10000);
+window.addEventListener("beforeunload",()=>{ if(dirty) commit(); });
+
+/* =================== SCORING (lenient) =================== */
+function norm(s){return (s||"").toString().trim().toLowerCase().replace(/[.,;:!?]+$/,"").replace(/\s+/g," ").replace(/^the\s+/,"").replace(/[’']/g,"'");}
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;const d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);for(let j=0;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){const c=a[i-1]===b[j-1]?0:1;d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);}return d[m][n];}
+function acceptMatch(val,accept){const v=norm(val);if(!v)return false;for(const a of accept){if(norm(a)===v)return true;}
+  if(/[\d£$%]/.test(v))return false; // numbers/symbols must match exactly
+  for(const a of accept){const na=norm(a);if(na.length>=4&&lev(na,v)<=1)return true;}return false;}
+function scoreGroup(qs){
+  let c=0;const perQ={};const groups={};
+  qs.forEach(q=>{if(q.group)(groups[q.group]=groups[q.group]||[]).push(q);});
+  Object.keys(groups).forEach(g=>{const pool=(POOLS[g]||[]).map(a=>a.slice());const used=new Array(pool.length).fill(false);
+    groups[g].forEach(q=>{const val=S.answers[q.id]||"";let ok=false;for(let i=0;i<pool.length;i++){if(!used[i]&&pool[i].some(a=>norm(a)===norm(val)||(norm(a).length>=5&&lev(norm(a),norm(val))<=1&&norm(val)))){used[i]=true;ok=true;break;}}perQ[q.id]=ok;if(ok)c++;});});
+  qs.forEach(q=>{if(!q.group){const ok=acceptMatch(S.answers[q.id]||"",q.accept);perQ[q.id]=ok;if(ok)c++;}});
+  return {correct:c,total:qs.length,perQ};
+}
+function computeResult(exId){const qs=QMAP[exId];let c=0;const perQ={};
+ qs.forEach(q=>{let ok;if(q.opts){ok=(S.answers[q.id]||"")===q.answer;}else{ok=acceptMatch(S.answers[q.id]||"",q.accept||[]);}perQ[q.id]=ok;if(ok)c++;});
+ return {correct:c,total:qs.length,perQ,pct:qs.length?Math.round(c/qs.length*100):0};}
+function isUnlocked(r){ return r && (r.pct>=PASS || r.attempts>=2); }
+
+/* =================== CLOUD (Google Apps Script backend) =================== */
+/* Student results are POSTed to your Apps Script Web App, which appends/updates
+   a row in your Google Sheet. The separate Teacher page reads the same URL.
+   Paste the matching Code.gs (provided separately) into your Apps Script project. */
+const APPS_URL="https://script.google.com/macros/s/AKfycbxFcUtx3wTCvRFNgqBmZNSoO4X_cLdhj1_LSsbts8EcSQjeW7slaRRwlvzQi3VsTMKe/exec";
+/* Audio lives in Google Classroom. Paste your class (or the specific audio post) link below.
+   Optionally give a per-track deep link in AUDIO_LINKS; otherwise CLASSROOM_URL is used. */
+const CLASSROOM_URL="https://classroom.google.com/";
+const AUDIO_LINKS={};  // e.g. {"1.2":"https://classroom.google.com/c/XXX/…"}
+function audioLink(track){return AUDIO_LINKS[track]||CLASSROOM_URL;}
+let CLOUD_OK=false, syncBusy=false;
+function subKey(){ const e=(S.email||"").trim().toLowerCase(); const base=e?e.replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,""):S.anon; return (base||S.anon).slice(0,120); }
+async function syncUp(){
+  if(!APPS_URL) return;
+  if(!(S.email||S.name)) return;          // need an identity before syncing
+  if(syncBusy) return; syncBusy=true;
+  try{ const st=overallStats();
+    const exPct=id=>{const x=S.results[id];return (x&&x.submitted)?x.pct:"";};
+    const payload={action:"save",key:subKey(),classCode:(S.code||"default").trim()||"default",
+      name:S.name||"",email:S.email||"",anon:S.anon,unit:"u4",unitName:"Unit 4",
+      results:S.results||{},overall:st.pct,correct:st.correct,items:st.items,done:st.done,total:st.total,
+      ex1:exPct("mc"),ex2:exPct("summary"),ex3:exPct("exam"),
+      reportCount:S.reportCount||0,updatedAt:Date.now()};
+    await fetch(APPS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    CLOUD_OK=true; if(!dirty) setSave("saved");
+  }catch(e){ CLOUD_OK=false; }
+  syncBusy=false;
+}
+
+/* =================== RENDER helpers =================== */
+const views=document.getElementById("views");
+function iconCheck(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>';}
+function iconX(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';}
+function iconLock(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';}
+function iconBulb(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>';}
+function iconPara(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>';}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function escAttr(s){return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+
+/* ---- brief ---- */
+function renderBrief(){
+ return `<div class="panel"><div class="panel-head">
+   <div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Định hướng":"Orientation"}</span><span class="tag">${S.lang==="vi"?"Chiến lược thi":"Exam technique"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Trước khi bắt đầu":"Before you start"}</div>
+   <h2>${S.lang==="vi"?"Giới thiệu kỹ năng":"Skills briefing"}</h2></div>
+   <p class="lead" style="font-size:16px">${biBoth({en:`Welcome to your listening booth for <b>${UNIT.code}: ${UNIT.title}</b>. You get instant scoring, and every answer comes with a transcript quote where the paraphrase is <mark>highlighted</mark> — so you see exactly how the speaker said it differently from the question.`,vi:`Chào mừng đến phòng luyện nghe cho <b>${UNIT.code}: ${UNIT.title}</b>. Bạn được chấm điểm ngay, và mỗi đáp án đi kèm một câu trích từ transcript với phần paraphrase được <mark>tô sáng</mark> — để thấy rõ người nói đã diễn đạt khác câu hỏi thế nào.`})}</p>
+   <div class="coach"><h4>${iconBulb()}${S.lang==="vi"?"Cách phòng luyện hoạt động":"How this studio works"}</h4><ul>
+     <li>${biBoth({en:"<b>Listen first.</b> Each listening task links to its audio in <b>Google Classroom</b> — open it, listen, then answer from memory.",vi:"<b>Nghe trước.</b> Mỗi bài nghe có liên kết tới audio trên <b>Google Classroom</b> — mở, nghe, rồi trả lời."})}</li>
+     <li>${biBoth({en:"<b>Hints, then answers.</b> Below 70% you get graded <b>hints</b> for the items you missed; the full answer unlocks at 70% <i>or</i> after 2 tries — no dead-ends.",vi:"<b>Gợi ý, rồi đáp án.</b> Dưới 70% bạn nhận <b>gợi ý</b> phân tầng cho câu sai; đáp án đầy đủ mở khi đạt 70% <i>hoặc</i> sau 2 lần thử — không bế tắc."})}</li>
+     <li>${biBoth({en:"<b>Mine the paraphrases.</b> Each miss becomes a <b>flashcard</b> for spaced review. IELTS listening is really a test of synonyms.",vi:"<b>Khai thác paraphrase.</b> Mỗi câu sai thành một <b>flashcard</b> để ôn lại. Nghe IELTS thực chất là bài kiểm tra từ đồng nghĩa."})}</li>
+     <li>${biBoth({en:"<b>Autosaves</b> every 10s. Add your name, email and class code so results reach your teacher and your PDF report.",vi:"<b>Tự lưu</b> mỗi 10 giây. Nhập tên, email và mã lớp để kết quả tới giáo viên và vào báo cáo PDF."})}</li>
+   </ul></div>
+   <div class="coach plain"><h4>${S.lang==="vi"?"Điều giám khảo muốn bạn thành thạo ở Unit 4":"What an examiner wants you to master in Unit 4"}</h4>
+     <p>${biBoth({en:"<b>Prediction.</b> Before the audio, the headings, numbering and word limit already tell you what kind of answer to expect — a number, a percentage, a plural noun. Decide it in the pause before the audio.",vi:"<b>Dự đoán.</b> Trước khi nghe, tiêu đề, số thứ tự và giới hạn từ đã cho biết loại đáp án — con số, phần trăm, danh từ số nhiều. Hãy quyết định trong lúc tạm dừng trước audio."})}</p>
+     <p>${biBoth({en:"<b>Follow the word limit exactly.</b> 'NO MORE THAN TWO WORDS' is scored ruthlessly — a third word makes a correct idea wrong.",vi:"<b>Tuân thủ giới hạn từ.</b> 'NO MORE THAN TWO WORDS' bị chấm rất chặt — thừa một từ là sai dù ý đúng."})}</p>
+     <p>${biBoth({en:"<b>Hear the signposts.</b> Words like <i>but, however, rather than, compared with</i> mean a contrast — the answer is often the item <i>after</i> the signpost.",vi:"<b>Nghe từ chỉ dẫn.</b> Các từ như <i>but, however, rather than, compared with</i> báo hiệu tương phản — đáp án thường là phần <i>sau</i> từ chỉ dẫn."})}</p>
+   </div>
+   <div class="qactions"><button class="btn btn-primary" data-go="campus">${S.lang==="vi"?"Bắt đầu":"Get started"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`;
+}
+
+function mcQuestion(q){
+ const v=S.answers[q.id]||"";
+ return `<div class="q" data-q="${q.id}"><div class="qtop"><span class="qnum">${q.n}</span><div class="qbody">
+   <div class="qprompt">${bi(q.prompt)}</div>
+   <select class="answer-in" data-input="${q.id}"><option value="">${S.lang==="vi"?"Chọn A, B hoặc C…":"Choose A, B or C…"}</option>${q.opts.map(o=>`<option value="${o[0]}" ${v===o[0]?'selected':''}>${o[0]}) ${o[1]}</option>`).join("")}</select>
+   <div class="hintbox" data-hint="${q.id}"></div><div class="reveal" data-reveal="${q.id}"></div></div></div></div>`;
+}
+function renderCampus(){
+ const open=S.studyOpen["campus"];
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Luyện có hướng dẫn":"Guided practice"}</span><span class="tag">Section 3</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Kỹ năng nền tảng":"Foundation skill"}</div><h2>${S.lang==="vi"?"Nhận biết bối cảnh học đường":"Identifying campus contexts"}</h2></div>
+   <p class="lead">${biBoth({en:"Section 3 is set in a place of academic study. Before the audio, the questions already hint at the place, the speakers and the subject.",vi:"Section 3 diễn ra ở nơi học thuật. Trước khi nghe, câu hỏi đã gợi ý nơi chốn, người nói và môn học."})}</p>
+   <div class="coach"><h4>${iconBulb()}${S.lang==="vi"?"Đọc câu hỏi để dự đoán":"Read the questions to predict"}</h4><ul>
+     <li>${biBoth({en:"<b>How many speakers?</b> Names in the questions (Chloe, Bill) show a discussion between at least two students.",vi:"<b>Mấy người nói?</b> Tên trong câu hỏi (Chloe, Bill) cho thấy cuộc thảo luận giữa ít nhất hai sinh viên."})}</li>
+     <li>${biBoth({en:"<b>Which subject?</b> Words like <i>experiment, assignment, child development</i> point to psychology or education.",vi:"<b>Môn gì?</b> Các từ như <i>experiment, assignment, child development</i> chỉ tới tâm lý học hoặc giáo dục."})}</li>
+     <li>${biBoth({en:"<b>Predict the place</b> from campus vocabulary — a lab has <i>apparatus, bench</i>; a flat has <i>kitchen, bedroom</i>.",vi:"<b>Dự đoán nơi chốn</b> từ từ vựng học đường — phòng lab có <i>apparatus, bench</i>; căn hộ có <i>kitchen, bedroom</i>."})}</li>
+   </ul></div>
+   <h3 style="font-size:18px;margin:24px 0 4px">${S.lang==="vi"?"Từ vựng theo nơi chốn":"Campus vocabulary by place"}</h3>
+   <div class="tblwrap"><table class="data"><thead><tr><th>${S.lang==="vi"?"Nơi":"Place"}</th><th>${S.lang==="vi"?"Từ thường gặp":"Words you associate with it"}</th></tr></thead>
+   <tbody><tr><th>library</th><td>journals, books, CDs, DVDs, photocopier, computers</td></tr>
+   <tr><th>student flat</th><td>kitchen, lounge, study bedroom, bicycles, internet connection</td></tr>
+   <tr><th>lecture theatre</th><td>aisles, seats, whiteboard, steps, platform, sound system</td></tr>
+   <tr><th>laboratory</th><td>experiment, apparatus, test tube, bench, sink, lab coat</td></tr></tbody></table></div>
+   <button class="btn btn-ghost study-toggle" data-study="campus">${open?(S.lang==="vi"?"Ẩn":"Hide"):(S.lang==="vi"?"Hiện":"Reveal")} ${S.lang==="vi"?"phân tích 4 câu hỏi":"analysis of the 4 questions"}</button>
+   <div class="model-ans ${open?'show':''}"><div class="coach plain"><h4>${S.lang==="vi"?"Trước khi nghe (1.23)":"Before you listen (1.23)"}</h4>
+     <p>${biBoth({en:"<b>a — Speakers:</b> at least two (Bill and Chloe are named). <b>b — Assignments:</b> Bill mentions his. <b>c — Subject:</b> psychology / education. <b>d — Focus:</b> stages in child development.",vi:"<b>a — Người nói:</b> ít nhất hai (Bill và Chloe được nêu tên). <b>b — Bài tập:</b> Bill nhắc tới. <b>c — Môn:</b> tâm lý học / giáo dục. <b>d — Trọng tâm:</b> các giai đoạn phát triển của trẻ."})}</p></div></div>
+   <div class="qactions"><button class="btn btn-primary" data-go="mc">${S.lang==="vi"?"Tới bài trắc nghiệm":"Go to the multiple-choice task"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`;
+}
+function renderSumPrep(){
+ const open=S.studyOpen["sumprep"];
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Luyện có hướng dẫn":"Guided practice"}</span><span class="tag">${S.lang==="vi"?"Giới hạn từ":"Word limits"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Trước bài tóm tắt":"Before the summary task"}</div><h2>${S.lang==="vi"?"Dự đoán trong tóm tắt":"Predicting in a summary"}</h2></div>
+   <p class="lead">${biBoth({en:"In summary completion you read a paragraph with gaps. Use the reading time to predict the <i>type</i> of word each gap needs — a subject, a number, an adjective.",vi:"Trong bài hoàn thành tóm tắt bạn đọc một đoạn có chỗ trống. Dùng thời gian đọc để dự đoán <i>loại</i> từ mỗi chỗ trống cần — môn học, con số, tính từ."})}</p>
+   <div class="coach"><h4>${iconBulb()}${S.lang==="vi"?"Cách dự đoán từng chỗ trống":"How to predict each gap"}</h4><ul>
+     <li>${biBoth({en:"<b>Grammar first:</b> 'the' + gap + 'year' needs an ordinal (second).",vi:"<b>Ngữ pháp trước:</b> 'the' + trống + 'year' cần số thứ tự (second)."})}</li>
+     <li>${biBoth({en:"<b>Meaning next:</b> 'the ___ branch of law' needs a type of law (criminal, family…).",vi:"<b>Nghĩa tiếp theo:</b> 'nhánh ___ của luật' cần một loại luật (hình sự, gia đình…)."})}</li>
+     <li>${biBoth({en:"<b>Obey the limit</b> — NO MORE THAN TWO WORDS. 'international trade' is fine; a whole clause is not.",vi:"<b>Tuân thủ giới hạn</b> — KHÔNG QUÁ HAI TỪ. 'international trade' được; cả một mệnh đề thì không."})}</li>
+   </ul></div>
+   <button class="btn btn-ghost study-toggle" data-study="sumprep">${open?(S.lang==="vi"?"Ẩn":"Hide"):(S.lang==="vi"?"Hiện":"Reveal")} ${S.lang==="vi"?"ví dụ dự đoán":"worked predictions"}</button>
+   <div class="model-ans ${open?'show':''}"><div class="coach plain"><h4>${S.lang==="vi"?"Ví dụ (bài Chloe)":"Worked example (Chloe)"}</h4>
+     <p>${biBoth({en:"Gap 5 'started … in the ___ year' → ordinal (second). Gap 8 'found ___ especially technical' → a topic (international trade). Gap 10 'involves ___ activities' → an adjective (practical). Predicting the type makes the answer easy to catch.",vi:"Chỗ 5 'bắt đầu … năm thứ ___' → số thứ tự (second). Chỗ 8 'thấy ___ đặc biệt khó' → một chủ đề (international trade). Chỗ 10 'có hoạt động ___' → tính từ (practical). Dự đoán loại từ giúp bắt đáp án dễ hơn."})}</p></div></div>
+   <div class="qactions"><button class="btn btn-primary" data-go="summary">${S.lang==="vi"?"Tới bài tóm tắt":"Go to the summary task"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`;
+}
+
+/* ---- Classroom audio link (audio hosted in Google Classroom) ---- */
+function classroomAudio(track){
+ return `<div class="classroom-audio">
+   <div class="ca-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="14" width="4" height="6" rx="1.5"/><rect x="17.5" y="14" width="4" height="6" rx="1.5"/></svg></div>
+   <div class="ca-body"><div class="ca-title">${S.lang==="vi"?"Audio bài nghe":"Listening audio"} · Track ${track}</div>
+   <div class="ca-sub">${S.lang==="vi"?"Mở trên Google Classroom, nghe (một lần như trong đề), rồi quay lại trả lời.":"Open it in Google Classroom, listen (once, like the real exam), then come back to answer."}</div></div>
+   <a class="btn btn-primary btn-sm" href="${audioLink(track)}" target="_blank" rel="noopener">${S.lang==="vi"?"Mở Classroom":"Open Classroom"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div>`;
+}
+function gapQuestion(q){
+ const v=S.answers[q.id]||"";
+ return `<div class="q" data-q="${q.id}"><div class="qtop"><span class="qnum">${q.n}</span><div class="qbody">
+   <div class="qprompt">${bi(q.prompt)}</div>
+   <input class="answer-in" data-input="${q.id}" type="text" value="${escAttr(v)}" placeholder="${S.lang==="vi"?"Nhập đáp án":"Type your answer"}" autocomplete="off" spellcheck="false">
+   <div class="hintbox" data-hint="${q.id}"></div><div class="reveal" data-reveal="${q.id}"></div></div></div></div>`;
+}
+function exProgress(exId){ const qs=QMAP[exId]; const a=qs.filter(q=>(S.answers[q.id]||"").trim()).length;
+ return `<div class="exbar"><span>${t("answered",{a:a,n:qs.length})}</span><span class="track"><i style="width:${Math.round(a/qs.length*100)}%"></i></span></div>`;
+}
+function renderGradedMC(){
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Trắc nghiệm · chấm điểm":"Multiple choice · scored"}</span><span class="tag">Section 3</span><span class="tag">4 items</span></div>
+   <div class="eyebrow" style="margin-top:12px">Track 1.23</div><h2>${S.lang==="vi"?"Trắc nghiệm — Bill & Chloe":"Multiple choice — Bill & Chloe"}</h2></div>
+   <p class="lead">${biBoth({en:"Two students discuss an assignment on child development. Choose A, B or C. The answers are rarely the words you hear — listen for synonyms.",vi:"Hai sinh viên bàn về bài tập phát triển trẻ em. Chọn A, B hoặc C. Đáp án hiếm khi là từ bạn nghe thấy — hãy nghe từ đồng nghĩa."})}</p>
+   ${classroomAudio("1.23")}
+   ${exProgress("mc")}
+   <div class="qgroup">${MC_Q.map(mcQuestion).join("")}</div>${gradedActions("mc")}</div>`;
+}
+function renderGradedSummary(){
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Hoàn thành tóm tắt · chấm điểm":"Summary completion · scored"}</span><span class="tag">6 items</span></div>
+   <div class="eyebrow" style="margin-top:12px">Track 1.24</div><h2>${S.lang==="vi"?"Hoàn thành tóm tắt — Chloe":"Summary completion — Chloe"}</h2></div>
+   <p class="lead">${biBoth({en:"Chloe describes switching from law to psychology. Complete the summary — write NO MORE THAN TWO WORDS for each answer.",vi:"Chloe kể việc chuyển từ luật sang tâm lý học. Hoàn thành tóm tắt — viết KHÔNG QUÁ HAI TỪ cho mỗi đáp án."})}</p>
+   ${classroomAudio("1.24")}
+   ${exProgress("summary")}
+   <div class="coach plain" style="margin-top:14px"><p style="margin:0;font-style:italic">${biBoth({en:"Chloe started psychology in the (5)&nbsp;___ year; previously she studied law. She enjoyed the (6)&nbsp;___ branch. The worst thing was remembering lots of (7)&nbsp;___. She found (8)&nbsp;___ especially technical, and disliked reading about (9)&nbsp;___ in the library. She likes experimental psychology best because it involves (10)&nbsp;___ activities.",vi:"Chloe bắt đầu tâm lý học năm thứ (5)&nbsp;___; trước đó học luật. Cô thích nhánh (6)&nbsp;___. Điều tệ nhất là nhớ nhiều (7)&nbsp;___. Cô thấy (8)&nbsp;___ đặc biệt khó, và ngại đọc về (9)&nbsp;___ trong thư viện. Cô thích tâm lý thực nghiệm nhất vì có hoạt động (10)&nbsp;___."})}</p></div>
+   <div class="qgroup">${SUM_Q.map(gapQuestion).join("")}</div>${gradedActions("summary")}</div>`;
+}
+function renderGradedExam(){
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Bài thi · chấm điểm":"Exam · scored"}</span><span class="tag">IELTS Section 4</span><span class="tag">10 items</span></div>
+   <div class="eyebrow" style="margin-top:12px">Track 1.28</div><h2>${S.lang==="vi"?"Bài thi nghe — Section 4":"Exam listening — Section 4"}</h2></div>
+   <p class="lead">${biBoth({en:"A lecturer discusses the six-term school year and summer learning loss. Answer the multiple-choice questions, then complete the summary.",vi:"Một giảng viên bàn về năm học sáu kỳ và việc mất kiến thức mùa hè. Trả lời trắc nghiệm rồi hoàn thành tóm tắt."})}</p>
+   ${classroomAudio("1.28")}
+   ${exProgress("exam")}
+   <div class="coach plain" style="margin-top:14px"><h4>Q31–35 · ${S.lang==="vi"?"Chọn A, B hoặc C":"Choose A, B or C"}</h4><p style="margin:0">${S.lang==="vi"?"Về hệ sáu kỳ, kỳ nghỉ hè, mức mất kiến thức và nghiên cứu của Marchmont.":"About the six-term system, the summer holiday, learning loss and Marchmont's research."}</p></div>
+   <div class="qgroup">${EXAM_MC.map(mcQuestion).join("")}</div>
+   <div class="coach plain"><h4>Q36–40 · ${S.lang==="vi"?"KHÔNG QUÁ HAI TỪ":"NO MORE THAN TWO WORDS"}</h4><p style="margin:0">${biBoth({en:"Terms began when people worked in (36) ___; teaching in summer was hard before (37) ___. A different approach is the (38) ___; key factors are small (39) ___ and the element of (40) ___.",vi:"Học kỳ ra đời khi người ta làm (36) ___; dạy hè khó trước khi có (37) ___. Một hướng khác là (38) ___; yếu tố chính là (39) ___ nhỏ và yếu tố (40) ___."})}</p></div>
+   <div class="qgroup">${EXAM_SUM.map(gapQuestion).join("")}</div>${gradedActions("exam")}</div>`;
+}
+function gradedActions(exId){
+ const r=S.results[exId];
+ return `<div class="qactions"><button class="btn btn-primary" data-check="${exId}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L20 4"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg> ${r&&r.submitted?t("recheck"):t("check")}</button>
+   <button class="btn btn-ghost" data-reset="${exId}">${t("clear")}</button>
+   <div class="scoreline" data-scoreline="${exId}">${r&&r.submitted?scorelineHTML(r):`<span style="color:var(--muted)">${t("notSubmitted")}</span>`}</div></div>
+   <div data-lockzone="${exId}"></div>`;
+}
+function scorelineHTML(r){const cls=r.pct>=PASS?"pass":"fail";return `<span>${S.lang==="vi"?"Lần":"Attempt"} ${r.attempts} · ${r.correct}/${r.total}</span><span class="score-big ${cls}">${r.pct}%</span>`;}
+
+/* ---- logbook ---- */
+function collectMissed(){
+ const missed=[];
+ GRADED.forEach(exId=>{const r=S.results[exId];if(!r||!r.submitted)return;QMAP[exId].forEach(q=>{if(r.perQ&&r.perQ[q.id]===false){const label=q.n?("Q"+q.n):(q.label||q.id);missed.push({qid:q.id,exId:exId,source:bi(GRADED_NAMES[exId]),label,prompt:bi(q.prompt||q.desc||""),q});}});});
+ return missed;
+}
+function renderLogbook(){
+ const missed=collectMissed();
+ let body;
+ if(!missed.length){ body=`<div class="log-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>${biBoth({en:"No mistakes logged yet. Check a scored exercise and every item you miss appears here.",vi:"Chưa có lỗi nào. Kiểm tra một bài chấm điểm, mọi câu sai sẽ hiện ở đây."})}</p></div>`;}
+ else { body=missed.map(m=>{const L=S.log[m.qid]||{};return `<div class="log-row"><div class="log-head"><span class="log-src">${esc(m.source)}</span><span class="log-q">${m.label}</span></div>
+   <p style="color:var(--ink-soft);font-size:13px;margin:0 0 12px">${m.prompt}</p>
+   <div class="log-fields"><div class="f"><label>${S.lang==="vi"?"Từ trong câu hỏi":"The word in the question"}</label><textarea data-log="${m.qid}" data-field="missed" placeholder="${S.lang==="vi"?"vd. 'computer places'":"e.g. 'computer places'"}">${esc(L.missed||"")}</textarea></div>
+   <div class="f"><label>${S.lang==="vi"?"Người nói đã diễn đạt thế nào":"How the speaker said it"}</label><textarea data-log="${m.qid}" data-field="mine" placeholder="${S.lang==="vi"?"vd. 'computer stations'":"e.g. 'computer stations'"}">${esc(L.mine||"")}</textarea></div></div></div>`;}).join("");}
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Ngân hàng paraphrase":"Paraphrase bank"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Học từ những gì bạn bỏ lỡ":"Learn from what you missed"}</div><h2>${S.lang==="vi"?"Sổ lỗi paraphrase":"Paraphrase error logbook"}</h2></div>
+   <p class="lead">${biBoth({en:"For each miss, write the exact word from the question and the different word the speaker used. Then review them in Flashcards.",vi:"Với mỗi câu sai, viết từ trong câu hỏi và từ khác mà người nói dùng. Sau đó ôn lại ở Flashcard."})}</p>
+   ${missed.length?`<div class="coach"><h4>${iconPara()}${t("paraWatch")}</h4><p style="margin:0">${biBoth({en:"Unlock the explanation first (70%+ or 2 tries) — the highlighted phrase is the paraphrase to copy here.",vi:"Mở giải thích trước (đạt 70%+ hoặc 2 lần thử) — cụm được tô sáng chính là paraphrase cần chép vào đây."})}</p></div>`:""}
+   ${body}</div>`;
+}
+
+/* ---- flashcards (SRS) ---- */
+function deckCards(){
+ const cards=[];
+ GRADED.forEach(exId=>{const r=S.results[exId];if(!r||!r.submitted)return;QMAP[exId].forEach(q=>{if(r.perQ&&r.perQ[q.id]===false&&q.card){cards.push({id:"c_"+q.id,src:bi(GRADED_NAMES[exId]),front:bi(q.card.front),back:q.card.back});}});});
+ // custom logbook entries
+ Object.keys(S.log||{}).forEach(qid=>{const L=S.log[qid];if(L&&L.missed&&L.mine){cards.push({id:"lg_"+qid,src:S.lang==="vi"?"Sổ lỗi":"Logbook",front:esc(L.missed),back:esc(L.mine)});}});
+ // dedupe by id (logbook custom overrides)
+ const seen={},out=[];cards.forEach(c=>{if(!seen[c.id]){seen[c.id]=1;out.push(c);}});
+ return out;
+}
+function dueCards(){const now=Date.now();return deckCards().filter(c=>{const s=S.srs[c.id];return !s||!s.due||s.due<=now;});}
+function renderFlash(){
+ const all=deckCards();const due=dueCards();
+ const learned=all.filter(c=>{const s=S.srs[c.id];return s&&s.box>=4;}).length;
+ const newc=all.filter(c=>!S.srs[c.id]).length;
+ let body;
+ if(!all.length){ body=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="16" rx="2"/><path d="M7 5V3h14v16h-2"/></svg><p>${t("deckEmpty")}</p><button class="btn btn-primary" data-go="exam" style="margin-top:8px">${S.lang==="vi"?"Đến bài thi":"Go to exam task"}</button></div>`;}
+ else if(!due.length){ body=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><p>${t("deckDone")}</p></div>`;}
+ else { const c=due[0];const flipped=FLASH.flipped;
+   body=`<div class="flash"><div class="flash-card"><span class="flash-side">${flipped?(S.lang==="vi"?"Người nói nói":"Speaker said"):(S.lang==="vi"?"Câu hỏi":"Question")}</span><span class="flash-src">${esc(c.src)}</span>
+     <div class="flash-front">${c.front}</div>${flipped?`<div class="flash-back">${c.back}</div>`:""}</div>
+     <div class="flash-actions">${flipped?
+        `<button class="grade-btn again" data-grade="again" data-card="${c.id}">${t("again")}</button><button class="grade-btn hard" data-grade="hard" data-card="${c.id}">${t("hard")}</button><button class="grade-btn good" data-grade="good" data-card="${c.id}">${t("good")}</button>`:
+        `<button class="btn btn-primary" data-flip="1">${t("showAnswer")}</button>`}</div></div>`;
+ }
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Lặp lại ngắt quãng":"Spaced repetition"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Ôn lại paraphrase đã sai":"Review the paraphrases you missed"}</div><h2>${S.lang==="vi"?"Flashcard paraphrase":"Paraphrase flashcards"}</h2></div>
+   <div class="deck-stats"><span class="chipstat"><b>${due.length}</b> ${t("dueCards")}</span><span class="chipstat"><b>${newc}</b> ${t("newCards")}</span><span class="chipstat"><b>${learned}</b> ${t("knownCards")}</span><span class="chipstat">${all.length} ${S.lang==="vi"?"tổng thẻ":"cards total"}</span></div>
+   ${body}</div>`;
+}
+const FLASH={flipped:false};
+function gradeCard(id,grade){
+ const s=S.srs[id]||{box:1,due:0};
+ const box=s.box||1;
+ let nb;if(grade==="again")nb=1;else if(grade==="hard")nb=Math.max(1,box);else nb=Math.min(5,box+1);
+ const days=[0,1,2,4,8,16][nb]||16; // box→interval
+ const due=Date.now()+ (grade==="again"?60*1000: days*24*3600*1000);
+ S.srs[id]={box:nb,due,last:Date.now()};
+ FLASH.flipped=false; markDirty(); commit(); renderActive();
+}
+
+/* ---- report ---- */
+function overallStats(){
+ let tc=0,tt=0,done=0;const rows=[];
+ GRADED.forEach(id=>{const r=S.results[id];if(r&&r.submitted){tc+=r.correct;tt+=r.total;done++;rows.push({id,name:bi(GRADED_NAMES[id]),r});}else rows.push({id,name:bi(GRADED_NAMES[id]),r:null});});
+ return {rows,pct:tt?Math.round(tc/tt*100):0,done,total:GRADED.length,correct:tc,items:tt};
+}
+function improvementPoints(){
+ const pts=[];const st=overallStats();
+ st.rows.forEach(({name,r})=>{if(!r||!r.submitted)return;
+   if(r.pct<PASS)pts.push(biBoth({en:`<b>${name}:</b> below 70% (${r.pct}%). Re-listen; watch the exact word limit, then retry.`,vi:`<b>${name}:</b> dưới 70% (${r.pct}%). Nghe lại; chú ý giới hạn từ rồi thử lại.`}));
+   else if(r.pct<100)pts.push(biBoth({en:`<b>${name}:</b> ${r.pct}% — review the ${r.total-r.correct} highlighted paraphrase(s) and log them.`,vi:`<b>${name}:</b> ${r.pct}% — xem lại ${r.total-r.correct} paraphrase được tô sáng và ghi vào sổ.`}));});
+ const ex=S.results["exam"];
+ if(ex&&ex.submitted&&ex.perQ){
+   if(ex.perQ["e33"]===false)pts.push(biBoth({en:"<b>Average vs range:</b> when a range and an average are both given (e.g. 'two to seven weeks … on average three'), answer with the figure the question asks for.",vi:"<b>Trung bình vs khoảng:</b> khi có cả khoảng và trung bình (vd. 'hai đến bảy tuần … trung bình ba'), trả lời đúng con số câu hỏi cần."}));
+   if(ex.perQ["e35"]===false)pts.push(biBoth({en:"<b>Attribute findings correctly:</b> Marchmont found an improvement, Benson found no difference — match each result to the named researcher.",vi:"<b>Gán kết quả đúng người:</b> Marchmont thấy cải thiện, Benson thấy không khác biệt — ghép mỗi kết quả với đúng nhà nghiên cứu."}));
+ }
+ if(!pts.length){ if(st.done===st.total)pts.push(biBoth({en:"<b>Excellent</b> — every scored exercise is at or above 70%. Keep logging new paraphrases.",vi:"<b>Xuất sắc</b> — mọi bài chấm điểm đều đạt từ 70% trở lên. Tiếp tục ghi paraphrase mới."}));
+   else pts.push(biBoth({en:`You've completed ${st.done} of ${st.total} scored exercises. Finish the rest for a full picture.`,vi:`Bạn đã hoàn thành ${st.done}/${st.total} bài chấm điểm. Làm nốt để có bức tranh đầy đủ.`}));}
+ return pts;
+}
+function renderReport(){
+ const st=overallStats();
+ if(st.done===0){ return `<div class="panel"><div class="panel-head"><h2>${S.lang==="vi"?"Kết quả & báo cáo":"Results & report"}</h2></div>
+   <div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg><p>${S.lang==="vi"?"Hoàn thành ít nhất một bài chấm điểm để tạo báo cáo.":"Complete at least one scored exercise to generate your report."}</p><button class="btn btn-primary" data-go="match" style="margin-top:6px">${S.lang==="vi"?"Đến bài đầu tiên":"Go to first exercise"}</button></div></div>`;}
+ const off=97.4-(97.4*st.pct/100);
+ const grade=st.pct>=85?(S.lang==="vi"?"Vững":"Strong"):st.pct>=PASS?(S.lang==="vi"?"Đúng hướng":"On track"):st.pct>=50?(S.lang==="vi"?"Đang phát triển":"Developing"):(S.lang==="vi"?"Cần cải thiện":"Needs work");
+ return `<div><div class="report-hero"><div class="eyebrow">${S.lang==="vi"?"Kết quả & báo cáo":"Results & report"}</div><h2>${UNIT.code}: ${UNIT.title}</h2>
+   <div style="opacity:.85;font-size:14px">${esc(S.name||(S.lang==="vi"?"Chưa có tên":"Unnamed"))} · ${esc(S.email||"no email")} ${S.code?"· "+esc(S.code):""}</div>
+   <div class="rmeta"><div><div class="l">${S.lang==="vi"?"Tổng":"Overall"}</div><div class="v">${st.correct}/${st.items} · ${st.pct}%</div></div>
+     <div><div class="l">${S.lang==="vi"?"Đã làm":"Done"}</div><div class="v">${st.done}/${st.total}</div></div>
+     <div><div class="l">${S.lang==="vi"?"Xếp loại":"Standing"}</div><div class="v">${grade}</div></div>
+     <div><div class="l">${S.lang==="vi"?"Số báo cáo":"Report no."}</div><div class="v">#${S.reportCount||1}</div></div></div>
+   <svg class="overall-ring" width="86" height="86" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="3.5"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="${off}" transform="rotate(-90 18 18)"/><text x="18" y="20" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="600">${st.pct}%</text></svg></div>
+   <div class="panel"><h3 style="font-size:18px;margin-bottom:4px">${S.lang==="vi"?"Theo từng bài":"By exercise"}</h3>
+     <div class="report-grid">${st.rows.map(({name,r})=>{if(!r||!r.submitted)return `<div class="rcard" style="opacity:.6"><div class="rc-top"><span class="rc-name">${name}</span><span class="rc-pct" style="color:var(--muted)">—</span></div><div class="rc-bar"><i style="width:0"></i></div><div class="rc-note">${S.lang==="vi"?"Chưa làm":"Not attempted"}</div></div>`;const c=r.pct>=PASS?"var(--good)":"var(--bad)";return `<div class="rcard"><div class="rc-top"><span class="rc-name">${name}</span><span class="rc-pct" style="color:${c}">${r.pct}%</span></div><div class="rc-bar"><i style="width:${r.pct}%;background:${c}"></i></div><div class="rc-note">${r.correct}/${r.total} · ${S.lang==="vi"?"lần":"attempt"} ${r.attempts} · ${isUnlocked(r)?(S.lang==="vi"?"đã mở đáp án":"answers unlocked"):(S.lang==="vi"?"chưa mở":"locked")}</div></div>`;}).join("")}</div>
+     <h3 style="font-size:18px;margin:22px 0 8px">${S.lang==="vi"?"Khu vực cần cải thiện":"Key areas for improvement"}</h3>
+     <div class="coach"><ul class="improve">${improvementPoints().map(p=>`<li>${p}</li>`).join("")}</ul></div>
+     <div class="qactions no-print"><button class="btn btn-primary" data-pdf><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg> ${S.lang==="vi"?"Tải báo cáo PDF":"Download PDF report"}</button>
+       <span class="scoreline" style="color:var(--muted);font-size:12px">${S.lang==="vi"?"Mở hộp thoại in — chọn 'Lưu thành PDF'":"Opens print dialog — choose 'Save as PDF'"}</span></div></div></div>`;
+}
+
+/* =================== DISPATCH =================== */
+const RENDERERS={brief:renderBrief,campus:renderCampus,mc:renderGradedMC,sumprep:renderSumPrep,summary:renderGradedSummary,exam:renderGradedExam,logbook:renderLogbook,flash:renderFlash,report:renderReport};
+function renderActive(){
+ const id=S.active;
+ views.innerHTML=`<div class="view active">${(RENDERERS[id]||renderBrief)()}</div>`;
+ GRADED.forEach(exId=>{const r=S.results[exId];if(S.active===exId&&r&&r.submitted)applyMarks(exId,r);});
+ buildNav();buildTabs();updateProgress();syncLangButtons();
+}
+function buildNav(){
+ const nav=document.getElementById("navlist");
+ const groups=[[t("secLearn"),["brief","campus","sumprep"]],[t("secPractise"),["mc","summary","exam"]],[t("secReview"),["logbook","flash","report"]]];
+ nav.innerHTML=groups.map(([label,ids])=>`<div class="sec-label">${label}</div>`+ids.map(id=>{const ex=EX.find(e=>e.id===id);const r=S.results[id];let chip="";
+   if(ex.kind==="graded"&&r&&r.submitted){chip=`<span class="nchip ${r.pct>=PASS?'pass':'fail'}">${r.pct}%</span>`;}
+   else if(id==="flash"){const d=dueCards().length;if(d)chip=`<span class="nchip due">${d}</span>`;}
+   return `<button class="navitem ${S.active===id?'active':''}" data-nav="${id}"><span class="nix">${ex.nix}</span><span class="ntxt">${bi(ex.nav)}</span>${chip}</button>`;}).join("")).join("");
+}
+function buildTabs(){document.getElementById("mobile-tabs").innerHTML=EX.map(ex=>`<button class="mtab ${S.active===ex.id?'active':''}" data-nav="${ex.id}">${bi(ex.nav)}</button>`).join("");}
+function updateProgress(){const st=overallStats();const off=97.4-(97.4*st.pct/100);const fg=document.getElementById("ring-fg"),txt=document.getElementById("ring-txt"),lab=document.getElementById("prog-label");if(fg){fg.setAttribute("stroke-dashoffset",off);txt.textContent=st.pct+"%";lab.textContent=t("graded",{d:st.done,t:st.total});}document.getElementById("prog-l").textContent=t("progress");}
+
+/* =================== MARKS / HINTS =================== */
+function applyMarks(exId,r){
+ const qs=QMAP[exId];const unlocked=isUnlocked(r);
+ qs.forEach(q=>{const qEl=document.querySelector(`[data-q="${q.id}"]`);if(!qEl)return;
+   const ok=r.perQ?r.perQ[q.id]:((S.answers[q.id]||"")===q.answer);
+   qEl.classList.remove("correct","incorrect");qEl.classList.add(ok?"correct":"incorrect");
+   const rev=qEl.querySelector(`[data-reveal="${q.id}"]`);const hb=qEl.querySelector(`[data-hint="${q.id}"]`);
+   if(hb){hb.classList.remove("show");hb.innerHTML="";}
+   if(!rev)return;
+   if(ok||unlocked){
+     let html=`<span class="mark-badge ${ok?'ok':'no'}">${ok?iconCheck()+' '+(S.lang==="vi"?"Đúng":"Correct"):iconX()+' '+(S.lang==="vi"?"Chưa đúng":"Not correct")}</span>`;
+     if(unlocked){
+       const key=q.opts?q.opts.find(o=>o[0]===q.answer)[1]:(q.accept?q.accept[0]:"");
+       const disp=q.opts?`${q.answer}) ${key}`:key;
+       html+=`<div class="exp"><b>${t("answer")}:</b> <span class="keyans">${disp}</span>. ${bi(q.exp)||""}</div>`;
+       if(q.quote)html+=`<div class="tscript">“…${q.quote}…”</div>`;
+       if(q.para)html+=`<div class="plabel">${iconPara()}${t("paraWatch")}</div><div class="exp" style="margin-top:4px">${bi(q.para)}</div>`;
+     }
+     rev.innerHTML=html;rev.classList.add("show");
+   } else {
+     rev.classList.remove("show");rev.innerHTML="";
+     if(hb&&q.hint){hb.innerHTML=`<div class="hl">${iconBulb()}${t("hint")}</div>${bi(q.hint)}`;hb.classList.add("show");}
+   }
+ });
+ const lz=document.querySelector(`[data-lockzone="${exId}"]`);
+ if(lz){ lz.innerHTML=unlocked?"":`<div class="lock-note">${iconLock()}<span>${biBoth({en:`You scored <b>${r.pct}%</b>. Hints are shown for each miss; the full answers unlock at 70% or after 2 tries (this was attempt ${r.attempts}). Listen again and press Check.`,vi:`Bạn được <b>${r.pct}%</b>. Mỗi câu sai có gợi ý; đáp án đầy đủ mở khi đạt 70% hoặc sau 2 lần thử (đây là lần ${r.attempts}). Nghe lại rồi bấm Kiểm tra.`})}</span></div>`;}
+ const sl=document.querySelector(`[data-scoreline="${exId}"]`);if(sl)sl.innerHTML=scorelineHTML(r);
+}
+function checkExercise(exId){
+ const res=computeResult(exId);const prev=S.results[exId];const attempts=(prev&&prev.attempts?prev.attempts:0)+1;
+ S.results[exId]={...res,submitted:true,attempts};
+ markDirty();commit();syncUp();applyMarks(exId,S.results[exId]);buildNav();updateProgress();
+}
+
+/* =================== PDF =================== */
+function buildPrintReport(){
+ const st=overallStats();const pr=document.getElementById("print-report");
+ const tdC='padding:7px 9px;border:1px solid #ccc;text-align:center',tdL='padding:7px 9px;border:1px solid #ccc';
+ const rows=st.rows.map(({name,r})=>!r||!r.submitted?`<tr><td style="${tdL}">${name}</td><td style="${tdC}">—</td><td style="${tdC}">—</td><td style="${tdL}">${S.lang==="vi"?"Chưa làm":"Not attempted"}</td></tr>`:`<tr><td style="${tdL}">${name}</td><td style="${tdC}">${r.correct}/${r.total}</td><td style="${tdC}"><b>${r.pct}%</b></td><td style="${tdL}">${S.lang==="vi"?"lần":"attempt"} ${r.attempts} · ${r.pct>=PASS?"pass":"<70%"}</td></tr>`).join("");
+ const missed=collectMissed();
+ const logRows=missed.map(m=>{const L=S.log[m.qid]||{};return `<tr><td style="${tdL}">${m.source} · ${m.label}</td><td style="${tdL}">${esc(L.missed||"—")}</td><td style="${tdL}">${esc(L.mine||"—")}</td></tr>`;}).join("");
+ pr.innerHTML=`<div style="font-family:var(--sans);color:#111;padding:6px">
+   <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #0A5A62;padding-bottom:10px;margin-bottom:16px"><div><div style="font-family:var(--serif);font-size:24px;font-weight:600">Listening Studio — ${S.lang==="vi"?"Báo cáo":"Report"}</div><div style="color:#444;font-size:13px">${UNIT.code}: ${UNIT.title}</div></div><div style="text-align:right;font-family:var(--mono);font-size:12px;color:#333">${S.lang==="vi"?"Báo cáo":"Report"} #${S.reportCount||1}<br>${new Date().toLocaleString()}</div></div>
+   <table style="width:100%;font-size:13px;margin-bottom:14px"><tbody>
+     <tr><td style="padding:3px 0;color:#666;width:120px">${S.lang==="vi"?"Học viên":"Student"}</td><td><b>${esc(S.name||"—")}</b></td><td style="color:#666;width:110px">Email</td><td>${esc(S.email||"—")}</td></tr>
+     <tr><td style="padding:3px 0;color:#666">${S.lang==="vi"?"Mã lớp":"Class"}</td><td>${esc(S.code||"default")}</td><td style="color:#666">${S.lang==="vi"?"Tổng điểm":"Overall"}</td><td><b>${st.correct}/${st.items} (${st.pct}%)</b></td></tr></tbody></table>
+   <h3 style="font-family:var(--serif);font-size:16px;margin:14px 0 6px">${S.lang==="vi"?"Điểm theo bài":"Score by exercise"}</h3>
+   <table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#eef3f4"><th style="text-align:left;${tdL}">${S.lang==="vi"?"Bài":"Exercise"}</th><th style="${tdC}">${S.lang==="vi"?"Đúng":"Correct"}</th><th style="${tdC}">%</th><th style="text-align:left;${tdL}">${S.lang==="vi"?"Trạng thái":"Status"}</th></tr></thead><tbody>${rows}</tbody></table>
+   <h3 style="font-family:var(--serif);font-size:16px;margin:16px 0 6px">${S.lang==="vi"?"Khu vực cần cải thiện":"Key areas for improvement"}</h3>
+   <ul style="font-size:13px;color:#222;padding-left:18px">${improvementPoints().map(p=>`<li style="margin-bottom:5px">${p.replace(/<span class="vi">.*?<\/span>/g,"").replace(/<\/?b>/g,"")}</li>`).join("")}</ul>
+   ${missed.length?`<h3 style="font-family:var(--serif);font-size:16px;margin:16px 0 6px">${S.lang==="vi"?"Sổ lỗi paraphrase":"Paraphrase error logbook"}</h3><table style="width:100%;border-collapse:collapse;font-size:12.5px"><thead><tr style="background:#eef3f4"><th style="text-align:left;${tdL}">${S.lang==="vi"?"Câu":"Item"}</th><th style="text-align:left;${tdL}">${S.lang==="vi"?"Từ trong câu hỏi":"Word in question"}</th><th style="text-align:left;${tdL}">${S.lang==="vi"?"Người nói nói":"Speaker said"}</th></tr></thead><tbody>${logRows}</tbody></table>`:""}
+   <div style="margin-top:22px;font-size:11px;color:#888;font-family:var(--mono);border-top:1px solid #ddd;padding-top:8px">Listening Studio · ${UNIT.book}</div></div>`;
+}
+function downloadPDF(){S.reportCount=(S.reportCount||0)+1;document.getElementById("attempt-badge").textContent=t("reportNum",{n:S.reportCount});markDirty();commit();syncUp();renderActive();buildPrintReport();setTimeout(()=>window.print(),60);}
+
+/* =================== EVENTS =================== */
+function go(id){S.active=id;markDirty();renderActive();window.scrollTo({top:0,behavior:'smooth'});}
+document.addEventListener("click",(e)=>{
+ const nav=e.target.closest("[data-nav]");if(nav){go(nav.dataset.nav);return;}
+ const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return;}
+ const st=e.target.closest("[data-study]");if(st){const id=st.dataset.study;S.studyOpen[id]=!S.studyOpen[id];markDirty();renderActive();return;}
+ const chip=e.target.closest("[data-chip]");if(chip){const c=chip.dataset.chip;S.predSel=(S.predSel===c?null:c);renderActive();return;}
+ const gp=e.target.closest("[data-gap]");if(gp){const id=gp.dataset.gap;
+   if(S.predSel){for(const k in S.pred)if(S.pred[k]===S.predSel)delete S.pred[k];S.pred[id]=S.predSel;S.predSel=null;}
+   else if(S.pred[id]){delete S.pred[id];}
+   S.predChecked=false;markDirty();commit();renderActive();return;}
+ const pchk=e.target.closest("[data-predcheck]");if(pchk){S.predChecked=true;S.predSel=null;markDirty();commit();renderActive();return;}
+ const prst=e.target.closest("[data-predreset]");if(prst){S.pred={};S.predSel=null;S.predChecked=false;markDirty();commit();renderActive();return;}
+ const ck=e.target.closest("[data-check]");if(ck){checkExercise(ck.dataset.check);return;}
+ const rs=e.target.closest("[data-reset]");if(rs){const exId=rs.dataset.reset;QMAP[exId].forEach(q=>delete S.answers[q.id]);delete S.results[exId];markDirty();commit();syncUp();renderActive();return;}
+ const fl=e.target.closest("[data-flip]");if(fl){FLASH.flipped=true;renderActive();return;}
+ const gr=e.target.closest("[data-grade]");if(gr){gradeCard(gr.dataset.card,gr.dataset.grade);return;}
+ const fin=e.target.closest("#finish-btn");if(fin){go("report");return;}
+ const pdf=e.target.closest("[data-pdf]");if(pdf){downloadPDF();return;}
+ const th=e.target.closest("#theme-btn");if(th){toggleTheme();return;}
+ const lang=e.target.closest("[data-lang]");if(lang){setLang(lang.dataset.lang);return;}
+});
+document.addEventListener("input",(e)=>{
+ const inp=e.target.closest("[data-input]");if(inp){S.answers[inp.dataset.input]=inp.value;markDirty();
+   const bar=inp.closest(".panel")&&inp.closest(".panel").querySelector(".exbar");if(bar&&QMAP[S.active]){const qs=QMAP[S.active];const a=qs.filter(q=>(S.answers[q.id]||"").trim()).length;bar.querySelector("span").textContent=t("answered",{a,n:qs.length});bar.querySelector(".track i").style.width=Math.round(a/qs.length*100)+"%";}return;}
+ const log=e.target.closest("[data-log]");if(log){const id=log.dataset.log,f=log.dataset.field;S.log[id]=S.log[id]||{};S.log[id][f]=log.value;markDirty();return;}
+});
+/* drag & drop for the word-bank exercise */
+let DRAG=null;
+function placeChip(val,gapId,fromGap){
+ if(fromGap)delete S.pred[fromGap]; else {for(const k in S.pred)if(S.pred[k]===val)delete S.pred[k];}
+ S.pred[gapId]=val;S.predSel=null;S.predChecked=false;markDirty();commit();renderActive();
+}
+function removeChip(val,fromGap){
+ if(fromGap)delete S.pred[fromGap]; else {for(const k in S.pred)if(S.pred[k]===val)delete S.pred[k];}
+ S.predChecked=false;markDirty();commit();renderActive();
+}
+document.addEventListener("dragstart",e=>{
+ const chip=e.target.closest("[data-chip]");const gap=e.target.closest("[data-gap]");
+ if(chip){DRAG={val:chip.dataset.chip,from:null};try{e.dataTransfer.setData("text/plain",chip.dataset.chip);e.dataTransfer.effectAllowed="move";}catch(x){}chip.classList.add("dragging");}
+ else if(gap&&S.pred[gap.dataset.gap]){DRAG={val:S.pred[gap.dataset.gap],from:gap.dataset.gap};try{e.dataTransfer.setData("text/plain",DRAG.val);e.dataTransfer.effectAllowed="move";}catch(x){}gap.classList.add("dragging");}
+});
+document.addEventListener("dragend",()=>{document.querySelectorAll(".dragging,.over").forEach(el=>el.classList.remove("dragging","over"));});
+document.addEventListener("dragover",e=>{const gap=e.target.closest("[data-gap]");const bank=e.target.closest("[data-bank]");if((gap||bank)&&DRAG){e.preventDefault();if(gap)gap.classList.add("over");else bank.classList.add("over");}});
+document.addEventListener("dragleave",e=>{const gap=e.target.closest("[data-gap]");if(gap)gap.classList.remove("over");const bank=e.target.closest("[data-bank]");if(bank)bank.classList.remove("over");});
+document.addEventListener("drop",e=>{
+ if(!DRAG)return;const gap=e.target.closest("[data-gap]");const bank=e.target.closest("[data-bank]");
+ if(gap){e.preventDefault();placeChip(DRAG.val,gap.dataset.gap,DRAG.from);DRAG=null;}
+ else if(bank){e.preventDefault();removeChip(DRAG.val,DRAG.from);DRAG=null;}
+});
+document.addEventListener("keydown",e=>{
+ if(e.key!=="Enter"&&e.key!==" ")return;
+ const chip=e.target.closest("[data-chip]");const gap=e.target.closest("[data-gap]");
+ if(chip){e.preventDefault();const c=chip.dataset.chip;S.predSel=(S.predSel===c?null:c);renderActive();}
+ else if(gap){e.preventDefault();const id=gap.dataset.gap;if(S.predSel){placeChip(S.predSel,id,null);}else if(S.pred[id]){removeChip(S.pred[id],id);}}
+});
+
+document.getElementById("s-name").addEventListener("input",e=>{S.name=e.target.value;markDirty();});
+document.getElementById("s-email").addEventListener("input",e=>{S.email=e.target.value;markDirty();});
+document.getElementById("s-code").addEventListener("input",e=>{S.code=e.target.value;markDirty();});
+
+function setLang(l){S.lang=l;syncLangButtons();markDirty();commit();refreshChrome();renderActive();}
+function syncLangButtons(){document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("on",b.dataset.lang===S.lang));}
+function refreshChrome(){
+ document.getElementById("lbl-name").textContent=t("studentName");document.getElementById("lbl-email").textContent=t("email");document.getElementById("lbl-code").textContent=t("classCode");
+ document.getElementById("finish-lbl").textContent=t("finish");
+ document.getElementById("attempt-badge").textContent=t("reportNum",{n:S.reportCount||0});
+ document.getElementById("brand-sub").innerHTML=UNIT.code+" · "+(S.lang==="vi"?"Giáo dục":"Education");
+ document.getElementById("foot").textContent=UNIT.book+(S.lang==="vi"?" · tự lưu mỗi 10 giây":" · autosaves every 10 seconds");
+ setSave(dirty?"saving":"saved");
+}
+function applyTheme(){if(S.theme)document.documentElement.setAttribute("data-theme",S.theme);else document.documentElement.removeAttribute("data-theme");}
+function toggleTheme(){const dark=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dark?"light":"dark";applyTheme();markDirty();commit();}
+
+/* =================== INIT =================== */
+(function init(){
+ load();applyTheme();
+ document.getElementById("s-name").value=S.name||"";document.getElementById("s-email").value=S.email||"";document.getElementById("s-code").value=S.code||"";
+ if(!EX.find(e=>e.id===S.active))S.active="brief";
+ refreshChrome();renderActive();setSave("saved");
+})();
+</script>

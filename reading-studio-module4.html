@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio — Module 4</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:1px 0 0;font-size:11.5px;opacity:.82;font-weight:500}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.endbank{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0 14px;font-size:15px;color:var(--ink);line-height:1.6}
+.endbank .ebt{font-weight:700;color:var(--brand);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.endbank .ebi{padding:3px 0;border-bottom:1px dashed var(--line)}
+.endbank .ebi:last-child{border-bottom:none}
+.chip.cd{gap:6px}
+.chip.cd select{border:none;border-radius:6px;font-size:11.5px;padding:2px 4px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:600}
+.cdbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:14px;padding:2px 10px;font-size:11.5px;font-weight:700;cursor:pointer}
+.cdbtn:hover{background:rgba(255,255,255,.30)}
+.chip.cd.warn{background:rgba(255,193,7,.32);border-color:#ffd45e}
+.chip.cd.done{background:rgba(192,57,43,.5);border-color:#ff8a7a}
+.swbar{display:flex;align-items:center;gap:8px;background:#eef3fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content}
+.swbar b{font-variant-numeric:tabular-nums;font-weight:700}
+.swbar .swb,.swbar .swr{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:14px;padding:2px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.swbar .swr{background:#fff;color:var(--brand)}
+</style>
+</head>
+<body>
+
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio — Module 4</h1><p>Academic Reading · Yes / No / Not Given · Matching Headings · Prefixes &amp; Negative Word-Formation · Vocabulary</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategies</button>
+    <button data-tab="r1">📗 Reading 1</button>
+    <button data-tab="r2">📘 Reading 2</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+  </nav>
+
+  <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Reading strategies from your IELTS teacher</h2>
+      <p class="small">Module 4 focuses on <b>Yes / No / Not Given</b> (the writer’s claims), <b>Matching Headings</b>, and <b>prefixes &amp; negative word-formation</b>. Read these before you start; every wrong answer is saved to your Error Logbook for review.</p>
+    </div>
+    <div class="strat-grid">
+      <div class="strat">
+        <span class="tag">Global habits</span>
+        <h3>Before you answer</h3>
+        <ol>
+          <li><b>Skim for structure (1–2 min).</b> Read the title and the first sentence of every paragraph; give each paragraph a one-line label.</li>
+          <li><b>Read instructions exactly.</b> “YES / NO / NOT GIVEN” is not the same as “TRUE / FALSE”; “choose ONE heading”, “some are not used” — breaking the rule scores zero.</li>
+          <li><b>Underline anchors</b> in each question: names, dates and technical nouns are hardest to paraphrase, so they are fastest to scan for.</li>
+          <li><b>Most tasks follow passage order</b> — don’t jump backwards to hunt for an answer.</li>
+        </ol>
+        <div class="tip">💡 Aim for ~20 minutes per passage; flag a hard item and return to it.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Yes / No / Not Given (writer’s claims)</h3>
+        <ul>
+          <li><b>YES</b> = the statement agrees with the writer’s <i>opinion or claim</i>.</li>
+          <li><b>NO</b> = the writer <i>contradicts</i> or disputes the statement (watch for words like “canard”, “myth”, “but surely…”).</li>
+          <li><b>NOT GIVEN</b> = the writer never states a view on this point.</li>
+        </ul>
+        <div class="tip">💡 Y/N/NG is about <b>opinions</b>, not facts. Ask “What does the <i>writer</i> think?”, not “Is this true in the real world?”</div>
+        <div class="trap">⚠️ Absolute words — <i>only</i>, <i>all</i>, <i>less… than</i> — and comparisons are red flags. If the text lists things without comparing them, the answer is usually NOT GIVEN.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Matching Headings</h3>
+        <ol>
+          <li><b>Find the paragraph’s main idea, not a detail.</b> A heading must cover the whole paragraph, not one sentence in it.</li>
+          <li><b>Use the opening and closing sentences</b> — the main idea usually sits there.</li>
+          <li><b>Beware “trap” headings</b> that repeat a word from the text but describe only a small part of it (e.g. a heading about “the USA” when the USA is just one example in a list).</li>
+          <li><b>There are more headings than paragraphs</b> — some are distractors you will not use, and any “example” heading is already taken.</li>
+        </ol>
+        <div class="tip">💡 Note the keyword(s) that justify each match — it trains you to answer from evidence, not gist alone.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Method</span>
+        <h3>Predicting the order of headings</h3>
+        <p class="small" style="margin-top:0">A well-written passage usually follows a logic you can predict:</p>
+        <ol>
+          <li><b>State the general problem or issue</b> first (look for an indefinite article: “<i>A</i> problem…”).</li>
+          <li><b>Say where it is found</b> or give examples.</li>
+          <li><b>Explain the causes / reasons</b> behind it.</li>
+          <li><b>End with consequences or a prediction</b> about the future.</li>
+        </ol>
+        <div class="tip">💡 &lsquo;General nouns&rsquo; in a heading tell you its job: <i>problem, reason, factor, cause, effect, consequence, benefit, solution, prediction, criticism, belief</i>.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Vocabulary</span>
+        <h3>Negative prefixes</h3>
+        <ul>
+          <li><b>Choose the prefix by the word’s start.</b> <i>ir-</i> before r (irrelevant), <i>il-</i> before l (illiterate), <i>im-</i> before m/p (immortal, impossible), <i>in-</i> for many others (inaccurate).</li>
+          <li><b>dis-</b> often reverses (dissimilar, dissatisfied); <b>a-</b> means “without” (apolitical, asymmetrical); <b>un-</b> is the most general (unconscious, unambitious).</li>
+          <li><b>Spelling counts.</b> In the test you must type the whole word correctly.</li>
+        </ul>
+        <div class="trap">⚠️ There is no single rule — learn the negative form together with the adjective.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Vocabulary</span>
+        <h3>Other useful prefixes</h3>
+        <ul>
+          <li><b>mis-</b> = wrongly (misspelt); <b>under-</b> = too little (underfunded); <b>over-</b> = too much (overfishing).</li>
+          <li><b>re-</b> = again (resit); <b>de-</b> = reverse (denationalize); <b>out-</b> = more/longer than (outlive).</li>
+          <li><b>pre-</b> = before, <b>post-</b> = after; <b>pro-</b> = in favour of, <b>anti-</b> = against.</li>
+        </ul>
+        <div class="tip">💡 Knowing the prefix lets you decode an unfamiliar word without a dictionary — a core Reading skill.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 1 ============ -->
+  <section class="panel" id="tab-r1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📗 Reading 1 &middot; Do the British need foreign languages?</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r1">✎ Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r1">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r1">
+          <div class="para"><span class="plabel">A</span>Every so often, the educational supplements of our broadsheets devote an entire issue to the danger the British face of falling behind in Europe because so few of our schoolkids speak foreign languages. Most recently, the German ambassador lambasted us for only ever speaking English, a rebuke echoed by his French and Spanish counterparts.</div>
+          <div class="para"><span class="plabel">B</span>The truth is that foreign languages are phenomenally unpopular in secondary schools. Poor teaching and the late introduction of the subject are often cited as the main reasons youngsters are so loath to study them. Another factor for our notorious laziness vis-à-vis other tongues has to be that we are brought up to believe that the whole world speaks English, so why bother? Why indeed? Struggling to communicate in another language is, for all but the committed and enthusiastic linguist, a frustrating experience, which, if not necessary, is best avoided. And yes, when millions of Brits take their annual holidays abroad, local tourism, travel, catering and retail staff are all trained in at least rudimentary English. So, again, there is little motivation to learn more than a couple of words. All this is true, and yet illuminates only part of the picture. British teenagers are generally bored by French or German verbs, but the underlying reasons are more complex than a vague assumption that they only need to speak English because everyone else does. Their leisure activities revolve around pop music, sport, computers, television and films. These things are already in English; translations and subtitles are the exception. Furthermore, the most powerful country in the world happens to speak our language, and we absorb its cultural exports easily and readily. So, for us, language is not a major issue.</div>
+          <div class="para"><span class="plabel">C</span>Of course, should the world situation change, and the United States become a Hispanic country, as some boffins have predicted, the British would see the benefit of learning Spanish and do so. Not so long ago, knowledge of French was more widespread here, and eagerly acquired, when that language was of paramount international importance.</div>
+          <div class="para"><span class="plabel">D</span>The belief that we will lag behind our European business partners also needs to be dissected. The canard here is that we lose out because our businessmen and women can’t keep up with the local lingo. But surely, it is competitiveness and the attraction of lucrative offers that count. After all, American executives don’t wring their hands at their lack of linguistic skills.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">7 marks</span></div>
+        <div class="q-body" id="qbody-r1" data-test="r1">
+          <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+          <div class="qgroup"><div class="ginstr"><b>Questions 1–7 · Yes / No / Not Given.</b> Do the following statements agree with the claims of the writer? Write <b>YES</b> if it agrees with the writer’s views, <b>NO</b> if it contradicts them, or <b>NOT GIVEN</b> if it is impossible to say what the writer thinks.</div><div class="q" data-type="sel" data-answer="YES" data-exp="Para A: the broadsheets (serious newspapers) &lsquo;devote an entire issue to the danger&rsquo; of so few children speaking languages – journalists endorse studying more."><div class="qnum">1</div><div class="qmain"><div class="qtext">Some journalists take the view that more British schoolchildren should study languages.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="Para B: abroad, tourism staff &lsquo;are all trained in at least rudimentary English. So… there is little motivation to learn&rsquo; – the writer agrees it is unnecessary."><div class="qnum">2</div><div class="qmain"><div class="qtext">The number of English speakers worldwide makes it unnecessary for British tourists to learn languages.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="Para B says British teenagers are &lsquo;generally bored by French or German verbs&rsquo;, but never claims they are the <i>only</i> ones – no comparison is made."><div class="qnum">3</div><div class="qmain"><div class="qtext">Only British teenagers find languages boring.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="Para B: their leisure &lsquo;activities revolve around pop music… television and films. These things are already in English… language is not a major issue.&rsquo;"><div class="qnum">4</div><div class="qmain"><div class="qtext">British teenagers’ reluctance to learn languages is linked to the availability of films and music in English.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="Para C mentions French was once &lsquo;widespread&rsquo; and &lsquo;eagerly acquired&rsquo;, but never says it helped people learn <i>further</i> languages."><div class="qnum">5</div><div class="qmain"><div class="qtext">In the past, studying French made it easier for British people to learn further languages.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="Para D calls this a &lsquo;canard&rsquo; and rebuts it: &lsquo;it is competitiveness and the attraction of lucrative offers that count&rsquo; – the writer disagrees."><div class="qnum">6</div><div class="qmain"><div class="qtext">The lack of linguistic skills within British companies has resulted in business being lost.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="Para D notes US executives &lsquo;don’t wring their hands&rsquo; over weak language skills, but never compares their <i>interest</i> with that of British businesspeople."><div class="qnum">7</div><div class="qmain"><div class="qtext">American businesspeople are less interested in learning languages than British businesspeople.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r1">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r1">↻ Reset answers</button>
+            <div class="scorebox" id="score-r1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 2 ============ -->
+  <section class="panel" id="tab-r2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📘 Reading 2 &middot; The power of music in education</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r2">✎ Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r2">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r2">
+          <div class="para"><span class="plabel">A</span>Even the Greeks couldn’t agree about it. Was music a source of order and proportion in society, regulating its innate chaos in ways similar to the disciplines of geometry and architecture? Or did its ability to express passionate emotions beyond the reach of words create the potential for disorder and anarchy? Compare the behaviour of an audience listening to classical string quartets with headbangers at a rave, and the age-old conflict between Apollo and Dionysus is made manifest all over again in our own time.</div>
+          <div class="para"><span class="plabel">B</span>Shakespeare, though, came clean. For him, ‘the man who hath no music in himself, Nor is not mov’d with concord of sweet sounds, Is fit for treasons, stratagems and spoils; The motions of his spirit are dull as night…’ Throughout his plays, Shakespeare perceives music as a healing force, an art whose practice makes man whole.</div>
+          <div class="para"><span class="plabel">C</span>Yet, despite the growth of the science of music therapy within the last two centuries, and despite the huge weight of books published on the miraculous ‘Mozart effect’, our schools and colleges have fallen strangely silent. The so-called ‘Mozart effect’ presents anecdotal and statistical evidence for advances in both social and academic skills in those children exposed in their formative years to the music of Mozart. But, in an age obsessed by pragmatism and by short-term vocational learning, music has been marginalized in both primary and secondary education. Compared with the holy trinity of reading, writing and arithmetic, music is regarded as an unimportant pastime. As a result, children are leaving school not only totally ignorant of their own musical heritage, but lacking in social, physical and mental skills which musical performance can uniquely promote.</div>
+          <div class="para"><span class="plabel">D</span>Playing an instrument requires a degree of concentration and coordination which brings into play a plethora of mental and physical skills which are being eroded in our push-button world. Socialization and teamwork are also involved. Schools with wind bands, string ensembles, jazz groups and orchestras are right up there at the top of the league tables. In excelling in musical activity, the students’ performance in many other fields of learning is refocused and radically improved.</div>
+          <div class="para"><span class="plabel">E</span>There are medical aspects too. Long before British primary schools discovered the recorder – that most basic of all modern woodwind instruments – Australian Aborigines had developed the didgeridoo. Like the clarinet and the flute, this haunting and beautiful instrument helped to overcome both upper and lower respiratory tract problems and encouraged better sleep. In playing a wind instrument, abdominal muscles are used to support the breathing system. And these are the very muscles which come into play when an asthmatic is experiencing an attack.</div>
+          <div class="para"><span class="plabel">F</span>But what of those individuals and schools which simply cannot afford a musical instrument? What of those institutions where not a single member of staff can read music? This is where the human being’s most primitive form of music-making comes into its own. Singing is free. Everyone possesses a voice. And, with it, the body expresses itself in the most fundamental and organic way.</div>
+          <div class="para"><span class="plabel">G</span>The Hungarian composer Zoltan Kodaly knew this, and developed his own system of training ear and voice within a simple yet comprehensive system of body language. Today, an organization called The Voices Foundation adapts and applies Kodaly’s methods, aiming to give children back their singing voices, and to make our schools ring with music-making once again. Their advisors and teachers have already achieved extraordinary turn-around effects the length and breadth of Britain and in schools in the troubled areas of South Africa.</div>
+          <div class="para"><span class="plabel">H</span>Important work is currently being done in Finland, Israel and the United States on pre-school, even pre-birth, musical education. Music in the womb is very much part of the life of the unborn future citizens of Finland. And one has only to look at the educational standards, health records and professional musical activity in this small nation to see what dividends music in education pays from the earliest days of human life.</div>
+          <div class="para"><span class="plabel">I</span>Mozart has been celebrated in his anniversary years of 1991 and again in 2006. By the time of the next Mozart-Year, shall we have allowed music to conjure a better society for us all? Or, relegated to the ranks of mere entertainment, will music be eroded of its unique power to heal and to make whole?</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">7 marks</span></div>
+        <div class="q-body" id="qbody-r2" data-test="r2">
+          <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+          <div class="qgroup"><div class="ginstr"><b>Questions 1–7 · Matching headings.</b> The passage has nine paragraphs, A–I. Choose the best heading for paragraphs <b>B–H</b> from the List of Headings below. There are more headings than paragraphs, so some are not used. (Paragraph A = <b>xi</b> and Paragraph I = <b>iii</b> are done for you.)</div><div class="endbank"><div class="ebt">List of Headings</div><div class="ebi"><b>i</b> &nbsp;The effect of emphasis on short-term educational goals</div><div class="ebi"><b>ii</b> &nbsp;The limited effects of music</div><div class="ebi"><b>iii</b> &nbsp;The future of music <span style="color:var(--muted);font-style:italic">(Example – Paragraph I)</span></div><div class="ebi"><b>iv</b> &nbsp;Benefits for health</div><div class="ebi"><b>v</b> &nbsp;The effects of early exposure to music</div><div class="ebi"><b>vi</b> &nbsp;The skills involved in musical activity</div><div class="ebi"><b>vii</b> &nbsp;A playwright’s perception of music</div><div class="ebi"><b>viii</b> &nbsp;Early exposure to music in the USA</div><div class="ebi"><b>ix</b> &nbsp;Music without instruments</div><div class="ebi"><b>x</b> &nbsp;The ‘Mozart effect’</div><div class="ebi"><b>xi</b> &nbsp;Order or chaos <span style="color:var(--muted);font-style:italic">(Example – Paragraph A)</span></div><div class="ebi"><b>xii</b> &nbsp;The creation of The Voices Foundation</div><div class="ebi"><b>xiii</b> &nbsp;A method for training singers</div><div class="ebi"><b>xiv</b> &nbsp;The use of music in Shakespeare’s plays</div></div><div class="q" data-type="sel" data-answer="vii" data-exp="Para B is entirely about Shakespeare (a playwright): he &lsquo;perceives music as a healing force&rsquo;. Heading vii = a playwright’s perception of music. (xiv is a trap – it is only about his plays.)"><div class="qnum">1</div><div class="qmain"><div class="qtext">Paragraph B</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="x" data-exp="Para C explains the &lsquo;Mozart effect&rsquo; – &lsquo;anecdotal and statistical evidence for advances… in children exposed… to the music of Mozart&rsquo;."><div class="qnum">2</div><div class="qmain"><div class="qtext">Paragraph C</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="vi" data-exp="Para D lists the skills playing an instrument develops: &lsquo;concentration and coordination… a plethora of mental and physical skills… socialization and teamwork&rsquo;."><div class="qnum">3</div><div class="qmain"><div class="qtext">Paragraph D</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="iv" data-exp="Para E covers &lsquo;medical aspects&rsquo; – respiratory-tract problems, better sleep and help for asthma – i.e. benefits for health."><div class="qnum">4</div><div class="qmain"><div class="qtext">Paragraph E</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="ix" data-exp="Para F asks what schools do without instruments: &lsquo;Singing is free. Everyone possesses a voice&rsquo; – music without instruments."><div class="qnum">5</div><div class="qmain"><div class="qtext">Paragraph F</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="xii" data-exp="Para G describes how Kodaly’s methods led to &lsquo;an organization called The Voices Foundation&rsquo; – its creation. (xiii is a trap about training singers in general.)"><div class="qnum">6</div><div class="qmain"><div class="qtext">Paragraph G</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="v" data-exp="Para H is about &lsquo;pre-school, even pre-birth, musical education&rsquo; and the &lsquo;dividends… from the earliest days of human life&rsquo; – effects of early exposure. (viii is a trap: the USA is only one of several countries.)"><div class="qnum">7</div><div class="qmain"><div class="qtext">Paragraph H</div><select><option value="">— choose —</option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option><option value="xi">xi</option><option value="xii">xii</option><option value="xiii">xiii</option><option value="xiv">xiv</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r2">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r2">↻ Reset answers</button>
+            <div class="scorebox" id="score-r2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOCABULARY ============ -->
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">🧩 Vocabulary — Prefixes &amp; negative word-formation</h2>
+      <p class="small">Word skills built around the two reading passages. Submit to score — mistakes go to your Error Logbook. Spelling must be exact.</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+        <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 1 · Negative prefixes.</b> Make each adjective negative by adding the correct prefix (<i>un-, in-, il-, im-, ir-, dis-, a-</i>). Type the whole word.</div><div class="q" data-type="text" data-answers="unconscious" data-exp="conscious → <b>unconscious</b>."><div class="qnum">a</div><div class="qmain"><div class="qtext">conscious</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="inaccurate" data-exp="accurate → <b>inaccurate</b>."><div class="qnum">b</div><div class="qmain"><div class="qtext">accurate</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="illiterate" data-exp="literate → <b>illiterate</b>."><div class="qnum">c</div><div class="qmain"><div class="qtext">literate</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="immortal" data-exp="mortal → <b>immortal</b>."><div class="qnum">d</div><div class="qmain"><div class="qtext">mortal</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="irreplaceable" data-exp="replaceable → <b>irreplaceable</b>."><div class="qnum">e</div><div class="qmain"><div class="qtext">replaceable</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="irrelevant" data-exp="relevant → <b>irrelevant</b>."><div class="qnum">f</div><div class="qmain"><div class="qtext">relevant</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="asymmetrical" data-exp="symmetrical → <b>asymmetrical</b>."><div class="qnum">g</div><div class="qmain"><div class="qtext">symmetrical</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="unambitious" data-exp="ambitious → <b>unambitious</b>."><div class="qnum">h</div><div class="qmain"><div class="qtext">ambitious</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="dissimilar" data-exp="similar → <b>dissimilar</b>."><div class="qnum">i</div><div class="qmain"><div class="qtext">similar</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="dissatisfied" data-exp="satisfied → <b>dissatisfied</b>."><div class="qnum">j</div><div class="qmain"><div class="qtext">satisfied</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="apolitical" data-exp="political → <b>apolitical</b>."><div class="qnum">k</div><div class="qmain"><div class="qtext">political</div><input type="text" placeholder="negative form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 2 · Gap-fill.</b> Complete each sentence with the negative form of one adjective from Exercise 1.</div><div class="q" data-type="text" data-answers="irreplaceable" data-exp="Answer: <b>irreplaceable</b>."><div class="qnum">a</div><div class="qmain"><div class="qtext">Coral reefs are ________. Once they are destroyed, they are gone forever.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="unconscious" data-exp="Answer: <b>unconscious</b>."><div class="qnum">b</div><div class="qmain"><div class="qtext">If the patient remains ________, he should be put in the recovery position.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="irrelevant" data-exp="Answer: <b>irrelevant</b>."><div class="qnum">c</div><div class="qmain"><div class="qtext">Some students do not see the point of studying history as they find it ________ to the modern world.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="dissimilar" data-exp="Answer: <b>dissimilar</b>."><div class="qnum">d</div><div class="qmain"><div class="qtext">The two students’ background was not ________, as they both came from working-class families.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="inaccurate" data-exp="Answer: <b>inaccurate</b>."><div class="qnum">e</div><div class="qmain"><div class="qtext">Unfortunately, the data was wrongly analysed and some of the figures were ________.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="apolitical" data-exp="Answer: <b>apolitical</b>."><div class="qnum">f</div><div class="qmain"><div class="qtext">Although doctors and nurses generally prefer to be ________, all of them are united against the government in this matter.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="immortal" data-exp="Answer: <b>immortal</b>."><div class="qnum">g</div><div class="qmain"><div class="qtext">No form of life on this planet can be ________, since our Sun’s lifespan will end in a few billion years.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="unambitious" data-exp="Answer: <b>unambitious</b>."><div class="qnum">h</div><div class="qmain"><div class="qtext">Low-status jobs tend to attract ________ workers with little desire to progress.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="asymmetrical" data-exp="Answer: <b>asymmetrical</b>."><div class="qnum">i</div><div class="qmain"><div class="qtext">The regularity of the 16th-century garden was replaced by more ________ shapes.</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 3 · Prefix meanings.</b> Use your knowledge of prefixes to choose the meaning of the prefix in each word.</div><div class="q" data-type="sel" data-answer="10" data-exp="The prefix <i>mis-</i> means &lsquo;wrongly / badly&rsquo; (spelt incorrectly)."><div class="qnum">1</div><div class="qmain"><div class="qtext"><b>mis</b>spelt</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="8" data-exp="The prefix <i>under-</i> means &lsquo;too little / not enough&rsquo; (given too little money)."><div class="qnum">2</div><div class="qmain"><div class="qtext"><b>under</b>funded</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="7" data-exp="The prefix <i>de-</i> reverses an action (undo nationalization → return to private ownership)."><div class="qnum">3</div><div class="qmain"><div class="qtext"><b>de</b>nationalized</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="9" data-exp="The prefix <i>over-</i> means &lsquo;too much / excessively&rsquo; (fishing to excess)."><div class="qnum">4</div><div class="qmain"><div class="qtext"><b>over</b>fishing</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="1" data-exp="The prefix <i>re-</i> means &lsquo;again&rsquo; (sit an exam again)."><div class="qnum">5</div><div class="qmain"><div class="qtext"><b>re</b>sit</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="11" data-exp="The prefix <i>out-</i> means &lsquo;longer / more than&rsquo; (live longer than someone)."><div class="qnum">6</div><div class="qmain"><div class="qtext"><b>out</b>live</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="4" data-exp="The prefix <i>pre-</i> means &lsquo;before&rsquo; (before the war)."><div class="qnum">7</div><div class="qmain"><div class="qtext"><b>pre</b>-war</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="5" data-exp="The prefix <i>pro-</i> means &lsquo;in favour of&rsquo; (supporting democracy)."><div class="qnum">8</div><div class="qmain"><div class="qtext"><b>pro</b>-democracy</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="2" data-exp="The prefix <i>anti-</i> means &lsquo;against&rsquo; (counteracting aggression)."><div class="qnum">9</div><div class="qmain"><div class="qtext"><b>anti</b>-aggressive</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="3" data-exp="The prefix <i>post-</i> means &lsquo;after&rsquo; (after the crisis)."><div class="qnum">10</div><div class="qmain"><div class="qtext"><b>post</b>-crisis</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="6" data-exp="The prefix <i>un-</i> means &lsquo;not&rsquo; (not able to be used)."><div class="qnum">11</div><div class="qmain"><div class="qtext"><b>un</b>usable</div><select><option value="">— choose —</option><option value="1">again</option><option value="2">against</option><option value="3">after</option><option value="4">before</option><option value="5">in favour of</option><option value="6">not</option><option value="7">reverse / undo an action</option><option value="8">too little / not enough</option><option value="9">too much / excessively</option><option value="10">wrongly / badly</option><option value="11">longer / more than</option></select><div class="fb"></div></div></div></div>
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">✔ Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">↻ Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Topic Glossary — Languages &amp; Music in Education</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic vocabulary pulled from both reading passages. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage/nuance note, and the collocations examiners reward. <span id="glossCount"></span></p>
+      <div id="glossGrid" class="gloss-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ ERROR LOGBOOK ============ -->
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong is recorded here with the correct answer and the reason. Review before your next attempt — this is where score gains come from.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+      <p class="small" style="margin-top:16px">The PDF includes student details, per-test scores, time spent, attempts, and the full error logbook.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =======================================================================
+   TEACHER SETUP — paste your Google Apps Script Web App URL between the
+   quotes below (see the separate setup guide). Leave empty to turn sync off.
+   Example: const WEBAPP_URL = "https://script.google.com/macros/s/AKf.../exec";
+   ======================================================================= */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 4";
+
+const LS_KEY = "ielts_reading_studio_module4_v1";
+const TEST_META = {
+  r1:{label:"Reading 1 — Foreign Languages", pill:"r1"},
+  r2:{label:"Reading 2 — Music in Education", pill:"r2"},
+  vocab:{label:"Vocabulary", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    tests:{
+      r1:{attempts:0,timeSec:0,lastScore:null,total:7,best:null,answers:{},highlights:"",unlocked:false},
+      r2:{attempts:0,timeSec:0,lastScore:null,total:7,best:null,answers:{},highlights:"",unlocked:false},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:31,best:null,answers:{},highlights:"",unlocked:false}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
+  updateHeaderStats();
+}));
+
+// timer ticks for the currently-open test tab
+setInterval(()=>{
+  if(state.tests[activeTab]){
+    state.tests[activeTab].timeSec++;
+    updateHeaderStats();
+  }
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "—:—";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+
+// autosave every 10s
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- highlighting ----------
+let hlMode={r1:false,r2:false};
+$$("[data-hl]").forEach(btn=>{
+  const id=btn.dataset.hl;
+  btn.addEventListener("click",()=>{
+    hlMode[id]=!hlMode[id];
+    btn.classList.toggle("on",hlMode[id]);
+    btn.querySelector("span").textContent=hlMode[id]?"ON":"OFF";
+  });
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+["r1","r2"].forEach(id=>{
+  const p=$("#passage-"+id);
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    if(!hlMode[id])return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){/* cross-node selection */}
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"||type==="sel"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>';
+        // re-show feedback so a returning student keeps their reviewed answers
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+      }
+    }
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so"||type==="sel")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+// live-save on input
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so"||type==="sel")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="",points=0,max=1;
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");
+    correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
+  }else if(type==="tfng"||type==="so"||type==="sel"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);points=ok?1:0;
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;points=ok?1:0;
+  }else if(type==="mc2"){
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());
+    max=correctSet.length;   // "choose TWO" = 2 marks
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");
+    correct=correctSet.slice().sort().join(",");
+    // IELTS style: 1 mark per correct letter, but over-selecting scores 0
+    points = (sel.length>max) ? 0 : sel.filter(v=>correctSet.includes(v)).length;
+    ok = points===max;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
+}
+function questionLabel(q,test){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+
+const PASS_PCT=70;
+
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  // count blanks to warn the student, then confirm to avoid accidental submits
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{const r=peekAnswer(q);if(!r)blanks++;});
+  const msg="Submit "+TEST_META[test].label+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  // grade everything first (do not reveal yet)
+  let score=0,total=0;const graded=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q,test);
+    total+=r.max;score+=r.points;
+    graded.push({q,r,num,txt});
+  });
+  const pct=Math.round(score/total*100);
+
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  const passedNow=pct>=PASS_PCT;
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;   // once unlocked (>=70% at any point), answers stay visible
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{
+      fb.className="fb";fb.innerHTML="";   // gate: hide right/wrong and answers
+    }
+  });
+
+  // only record errors once the student has earned the answers (avoids leaking via the logbook)
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+
+  save();
+  updateHeaderStats();
+
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>');
+    flash(TEST_META[test].label+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+    const note=document.createElement("div");
+    note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still being recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+
+  // sync full detail to the teacher's sheet regardless of the gate
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
+  syncToSheet({
+    test:MODULE_TAG+" — "+TEST_META[test].label,score:score,total:total,
+    percent:pct,attempt:t.attempts,
+    timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
+  });
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  clearLockNote(body);
+  state.tests[test].answers={};save();
+  flash("Answers cleared (attempts & time kept).");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload,isTest){
+  if(!WEBAPP_URL)return;
+  const full=Object.assign({
+    name:state.student.name||"(no name)",
+    email:state.student.email||"(no email)"
+  },payload);
+  fetch(WEBAPP_URL,{
+    method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(full)
+  }).then(()=>{if(!isTest)$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a test to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{label:e.test,pill:"r1"};
+    return '<tr><td><span class="pill '+meta.pill+'">'+meta.label.split(" —")[0]+'</span></td>'
+      +'<td><b>'+e.num+'</b></td>'
+      +'<td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Test</th><th>Q</th><th>Question</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=
+    metric("Student",state.student.name||"—")+
+    metric("Overall score",totMax?totScore+"/"+totMax:"—")+
+    metric("Total time",fmt(totTime))+
+    metric("Total attempts",totAtt)+
+    metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    return "<tr><td><b>"+meta.label+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595, M=40; let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);
+    doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(16);
+  doc.text("IELTS Reading Studio — Module 4 — Performance Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+
+  line("Results by test",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(meta.label,11,"bold");
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time: "+fmt(t.timeSec),10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{
+    state.errorLog.forEach((e,i)=>{
+      const meta=TEST_META[e.test]||{label:e.test};
+      line((i+1)+". ["+meta.label.split(" —")[0]+" Q"+e.num+"] "+e.q,10,"bold");
+      line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+      if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+      y+=2;
+    });
+  }
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module4_report.pdf";
+  doc.save(fn);
+  flash("PDF report downloaded.");
+});
+
+// ---------- glossary ----------
+const GLOSSARY=[
+ {w:"lambaste",pos:"verb",src:"R1",en:"to criticise someone or something very harshly, often in public.",vi:"chỉ trích gắt gao, mắng nhiếc (công khai).",ex:"The German ambassador lambasted us for only ever speaking English.",nu:"Formal and strong; heavier than ‘criticise’.",co:"lambaste someone for (doing) something; publicly lambaste"},
+ {w:"rebuke",pos:"noun / verb",src:"R1",en:"a sharp expression of disapproval; (verb) to criticise sharply.",vi:"lời khiển trách; quở trách.",ex:"…a rebuke echoed by his French and Spanish counterparts.",nu:"Formal; a ‘stinging/sharp rebuke’ is common.",co:"a sharp / stinging rebuke; rebuke someone for something"},
+ {w:"counterpart",pos:"noun",src:"R1",en:"a person or thing with the same role or function as another, in a different place or organisation.",vi:"người/vật tương đương (ở nơi khác).",ex:"…a rebuke echoed by his French and Spanish counterparts.",nu:"Neutral; frequent in diplomatic and business contexts.",co:"one’s foreign / European counterpart"},
+ {w:"loath",pos:"adjective",src:"R1",en:"reluctant or unwilling to do something.",vi:"miễn cưỡng, không muốn.",ex:"Youngsters are so loath to study foreign languages.",nu:"Formal; note the spelling ‘loath’ (adj) vs ‘loathe’ (verb = hate).",co:"be loath to do something"},
+ {w:"notorious",pos:"adjective",src:"R1",en:"famous or well known for something bad.",vi:"khét tiếng, mang tiếng xấu.",ex:"…our notorious laziness vis-à-vis other tongues.",nu:"Always negative; contrast with ‘famous’ (usually positive). Adv: notoriously.",co:"notorious for (doing) something; a notorious example"},
+ {w:"rudimentary",pos:"adjective",src:"R1",en:"basic; at an early or elementary stage of development.",vi:"sơ đẳng, cơ bản.",ex:"Local staff are trained in at least rudimentary English.",nu:"Formal; often mildly dismissive (‘only basic’).",co:"rudimentary knowledge / skills / equipment"},
+ {w:"illuminate",pos:"verb",src:"R1",en:"to make something clearer or easier to understand; (literally) to light up.",vi:"làm sáng tỏ, giải thích rõ.",ex:"All this is true, and yet illuminates only part of the picture.",nu:"Figurative here; noun: illumination. Opposite (fig.): obscure.",co:"illuminate an issue / a point; shed light on"},
+ {w:"absorb",pos:"verb",src:"R1",en:"to take in and make part of oneself (knowledge, culture, liquid, etc.).",vi:"tiếp thu, hấp thụ.",ex:"We absorb its cultural exports easily and readily.",nu:"Neutral; ‘be absorbed in’ = fully concentrated on. Noun: absorption.",co:"absorb information / culture / a shock"},
+ {w:"paramount",pos:"adjective",src:"R1",en:"more important than anything else; supreme.",vi:"tối quan trọng, quan trọng hàng đầu.",ex:"…when French was of paramount international importance.",nu:"Formal; often ‘of paramount importance’ or ‘paramount concern’.",co:"of paramount importance; paramount concern"},
+ {w:"dissect",pos:"verb",src:"R1",en:"to analyse something in great detail; (literally) to cut apart for study.",vi:"phân tích tỉ mỉ, mổ xẻ.",ex:"The belief that we will lag behind… needs to be dissected.",nu:"Formal in the figurative sense; noun: dissection.",co:"dissect an argument / a claim / the evidence"},
+ {w:"canard",pos:"noun",src:"R1",en:"a false or baseless story, rumour or belief that is widely repeated.",vi:"tin đồn thất thiệt, điều bịa đặt.",ex:"The canard here is that we lose out because we can’t keep up with the local lingo.",nu:"Formal / literary; from French for ‘duck’.",co:"an old / popular canard; spread a canard"},
+ {w:"lucrative",pos:"adjective",src:"R1",en:"producing a great deal of profit or money.",vi:"sinh lời, có lãi lớn, béo bở.",ex:"…it is competitiveness and the attraction of lucrative offers that count.",nu:"Neutral–positive; synonym: profitable.",co:"a lucrative offer / contract / deal / market"},
+ {w:"innate",pos:"adjective",src:"R2",en:"existing in a person or thing from birth; natural rather than learned.",vi:"bẩm sinh, vốn có.",ex:"…regulating its innate chaos in ways similar to geometry.",nu:"Formal; synonym: inborn. Opposite: acquired / learned.",co:"an innate ability / sense / tendency"},
+ {w:"manifest",pos:"verb / adjective",src:"R2",en:"to show or display clearly; (adj) obvious, easy to see.",vi:"biểu lộ rõ, thể hiện; hiển nhiên.",ex:"…the conflict… is made manifest all over again in our own time.",nu:"Formal; ‘manifest itself’ = become apparent. Noun: manifestation.",co:"manifest itself; be made manifest"},
+ {w:"concord",pos:"noun",src:"R2",en:"agreement or harmony between people or things.",vi:"sự hòa hợp, đồng thuận.",ex:"…nor is not mov’d with concord of sweet sounds.",nu:"Formal / literary; opposite: discord.",co:"in concord (with); a state of concord"},
+ {w:"marginalize",pos:"verb",src:"R2",en:"to treat a person, group or subject as unimportant or peripheral.",vi:"gạt ra ngoài lề, coi nhẹ.",ex:"Music has been marginalized in both primary and secondary education.",nu:"Usually negative; also spelt ‘marginalise’ (UK). Noun: marginalization.",co:"marginalize a group / subject; be increasingly marginalized"},
+ {w:"heritage",pos:"noun",src:"R2",en:"the traditions, achievements and culture passed down from previous generations.",vi:"di sản (văn hóa), truyền thống thừa kế.",ex:"…children… ignorant of their own musical heritage.",nu:"Neutral; ‘cultural / national heritage’ common.",co:"cultural / musical / national heritage; preserve one’s heritage"},
+ {w:"plethora",pos:"noun",src:"R2",en:"a very large or excessive amount of something.",vi:"số lượng lớn, vô số.",ex:"…brings into play a plethora of mental and physical skills.",nu:"Formal; almost always ‘a plethora of’ + plural noun.",co:"a plethora of options / choices / problems"},
+ {w:"coordination",pos:"noun",src:"R2",en:"the ability to make different body parts work smoothly together; organised cooperation.",vi:"sự phối hợp (nhịp nhàng).",ex:"Playing an instrument requires concentration and coordination.",nu:"Neutral; verb: coordinate. Also ‘hand–eye coordination’.",co:"hand–eye coordination; require / improve coordination"},
+ {w:"erode",pos:"verb",src:"R2",en:"to gradually wear away, weaken or destroy something over time.",vi:"làm xói mòn, bào mòn dần.",ex:"…skills which are being eroded in our push-button world.",nu:"Neutral–negative; noun: erosion. Both literal and figurative.",co:"erode confidence / skills / support; be gradually eroded"},
+ {w:"respiratory",pos:"adjective",src:"R2",en:"relating to breathing and the organs used for it.",vi:"(thuộc) hô hấp.",ex:"…helped to overcome both upper and lower respiratory tract problems.",nu:"Technical / medical; noun: respiration.",co:"the respiratory system / tract; respiratory problems"},
+ {w:"primitive",pos:"adjective",src:"R2",en:"belonging to an early or simple stage of development; basic.",vi:"sơ khai, nguyên thủy, thô sơ.",ex:"…the human being’s most primitive form of music-making.",nu:"Can be neutral (‘earliest’) or negative (‘crude’) by context.",co:"a primitive form / tool / society"},
+ {w:"dividends",pos:"noun (plural)",src:"R2",en:"benefits or advantages gained later from an action or investment; (finance) a share of profits paid to shareholders.",vi:"lợi ích thu được về sau; cổ tức.",ex:"…to see what dividends music in education pays.",nu:"Figurative here: ‘pay dividends’ = bring benefits later.",co:"pay dividends; reap the dividends of"},
+ {w:"relegate",pos:"verb",src:"R2",en:"to move someone or something to a lower or less important position.",vi:"đẩy xuống (vị trí thấp hơn), hạ cấp.",ex:"…relegated to the ranks of mere entertainment.",nu:"Formal; often ‘relegate to’. Noun: relegation.",co:"relegate something to; be relegated to second place"}
+];
+function renderGlossary(filter){
+  const grid=$("#glossGrid");if(!grid)return;
+  const f=norm(filter||$("#glossSearch").value||"");
+  const rows=GLOSSARY.filter(g=>!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0);
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  if(!rows.length){grid.innerHTML='<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';return;}
+  grid.innerHTML=rows.map(g=>
+    '<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span><span class="pill '+(g.src.indexOf("R1")>=0?"r1":"r2")+'">'+escapeHtml(g.src)+'</span></div>'
+    +'<dl>'
+    +'<dt>EN</dt><dd>'+escapeHtml(g.en)+'</dd>'
+    +'<dt>VI</dt><dd class="vi">'+escapeHtml(g.vi)+'</dd>'
+    +'<dt>e.g.</dt><dd class="ex">'+escapeHtml(g.ex)+'</dd>'
+    +'<dt>Note</dt><dd class="nu">'+escapeHtml(g.nu)+'</dd>'
+    +'<dt>Colloc.</dt><dd class="co">'+escapeHtml(g.co)+'</dd>'
+    +'</dl></div>'
+  ).join("");
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+save(true);
+})();
+</script>
+
+<script>
+(function(){
+ var bars=document.querySelectorAll('.swbar');
+ bars.forEach(function(bar){
+   var d=bar.querySelector('.swd'),b=bar.querySelector('.swb'),r=bar.querySelector('.swr');
+   var el=0,tick=null,run=false;
+   function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+   function render(){d.textContent=fmt(el);}
+   function stop(){run=false;b.textContent='Start';if(tick){clearInterval(tick);tick=null;}}
+   function start(){if(run){stop();return;}run=true;b.textContent='Pause';tick=setInterval(function(){el++;render();},1000);}
+   b.addEventListener('click',start);
+   r.addEventListener('click',function(){stop();el=0;render();});
+   render();
+ });
+})();
+</script>
+</body>
+</html>

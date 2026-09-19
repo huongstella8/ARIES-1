@@ -1,0 +1,249 @@
+<title>Listening Studio Teacher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#E9EDF1;--surface:#FFFFFF;--surface-2:#F3F6F9;--surface-3:#E7ECF1;
+  --ink:#16202E;--ink-soft:#42505F;--muted:#697788;--line:#D6DEE6;--line-soft:#E4EAF0;
+  --brand:#0E7C86;--brand-deep:#0A5A62;--brand-tint:#DCEEEF;--brand-ink:#083F45;
+  --good:#1F8A54;--good-tint:#DBF0E4;--bad:#C63A2E;--bad-tint:#F6DED9;--warn:#B4791B;--warn-tint:#FBF0D8;
+  --shadow:0 1px 2px rgba(16,30,45,.06),0 8px 24px -12px rgba(16,30,45,.18);
+  --radius:14px;--radius-s:9px;
+  --serif:"Fraunces",Georgia,serif;--sans:"Libre Franklin",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0D141C;--surface:#141F2A;--surface-2:#1A2733;--surface-3:#223140;
+  --ink:#E8EEF3;--ink-soft:#B4C1CD;--muted:#8395A5;--line:#2A3A49;--line-soft:#22303D;
+  --brand:#38B4BC;--brand-deep:#2A9098;--brand-tint:#14343A;--brand-ink:#8FE0E5;
+  --good:#4FBE85;--good-tint:#153426;--bad:#EA7365;--bad-tint:#3A1E1B;--warn:#E7B95C;--warn-tint:#2E2712;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -14px rgba(0,0,0,.6);}}
+:root[data-theme="dark"]{
+  --ground:#0D141C;--surface:#141F2A;--surface-2:#1A2733;--surface-3:#223140;
+  --ink:#E8EEF3;--ink-soft:#B4C1CD;--muted:#8395A5;--line:#2A3A49;--line-soft:#22303D;
+  --brand:#38B4BC;--brand-deep:#2A9098;--brand-tint:#14343A;--brand-ink:#8FE0E5;
+  --good:#4FBE85;--good-tint:#153426;--bad:#EA7365;--bad-tint:#3A1E1B;--warn:#E7B95C;--warn-tint:#2E2712;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px -14px rgba(0,0,0,.6);}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0;letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px;border-radius:4px}
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1160px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.brand .logo{width:38px;height:38px;flex:none;border-radius:10px;background:linear-gradient(150deg,var(--brand),var(--brand-deep));display:grid;place-items:center;box-shadow:var(--shadow)}
+.brand .logo svg{width:22px;height:22px}
+.brand .org{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--brand-deep);font-weight:600;margin-bottom:2px}
+.brand .name{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1}
+.brand .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.idfield{display:flex;flex-direction:column;gap:2px}
+.idfield label{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding-left:2px}
+.idfield input{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;width:140px}
+.idfield input:focus{border-color:var(--brand);background:var(--surface)}
+.hbtns{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface-2)}
+.seg button{border:none;background:none;color:var(--ink-soft);font-family:var(--mono);font-size:11.5px;font-weight:500;padding:7px 11px}
+.seg button.on{background:var(--brand);color:#fff}
+.icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);display:grid;place-items:center}
+.icon-btn:hover{background:var(--surface-3)}.icon-btn svg{width:18px;height:18px}
+.btn{font-family:var(--sans);font-weight:600;font-size:14px;border-radius:10px;padding:9px 15px;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--brand);color:#fff;box-shadow:var(--shadow)}.btn-primary:hover{background:var(--brand-deep)}
+.btn-ghost{background:var(--surface-2);color:var(--ink);border-color:var(--line)}.btn-ghost:hover{background:var(--surface-3)}
+.btn-sm{padding:7px 12px;font-size:13px}
+.wrap{max-width:1160px;margin:0 auto;padding:24px 20px 80px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-deep);font-weight:500}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+.head{margin-bottom:18px}
+.head h2{font-size:26px;margin-top:10px}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--brand-ink);background:var(--brand-tint);border-radius:20px;padding:3px 10px;display:inline-block}
+.tstat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.tstat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:16px 18px;box-shadow:var(--shadow)}
+.tstat .l{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tstat .v{font-family:var(--serif);font-size:28px;font-weight:600;margin-top:4px}
+.tstat .s{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.section{margin-top:18px}
+.section h3{font-size:17px;margin-bottom:10px}
+.bar-mini{display:flex;align-items:flex-end;gap:14px;height:150px;padding:10px 4px 0;border-bottom:1px solid var(--line);margin-bottom:6px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%}
+.bar-col .bar{width:64%;max-width:70px;background:var(--brand);border-radius:5px 5px 0 0;min-height:3px}
+.bar-col .bv{font-family:var(--mono);font-size:12px;font-weight:600}
+.bar-col .bl{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.2}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-s)}
+table.data{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+table.data th,table.data td{padding:10px 13px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:middle}
+table.data thead th{background:var(--surface-2);font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;cursor:pointer;user-select:none}
+table.data thead th:hover{color:var(--brand-deep)}
+table.data tbody tr:hover{background:var(--surface-2)}
+table.data .num{font-variant-numeric:tabular-nums;font-family:var(--mono)}
+table.data tr:last-child td{border-bottom:none}
+.pill-pass{color:var(--good);font-weight:600}.pill-fail{color:var(--bad);font-weight:600}.pill-none{color:var(--muted)}
+.empty-state{text-align:center;color:var(--muted);padding:48px 24px}
+.empty-state svg{width:44px;height:44px;color:var(--line);margin-bottom:12px}
+.spin{width:34px;height:34px;border:3px solid var(--surface-3);border-top-color:var(--brand);border-radius:50%;animation:sp 0.8s linear infinite;margin:0 auto 14px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.errbox{background:var(--bad-tint);border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);color:var(--ink);border-radius:var(--radius-s);padding:14px 16px;margin-top:10px;font-size:13.5px}
+.foot{max-width:1160px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:12px;font-family:var(--mono);text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:560px){.brand .sub{display:none}.panel{padding:18px 15px}}
+</style>
+
+<div class="top"><div class="top-in">
+  <div class="brand">
+    <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 12v2m4-6v10m4-13v16m4-11v6m4-4v2"/></svg></div>
+    <div><div class="org">Huong Stella Paradigm</div><div class="name">Listening Studio</div><div class="sub" id="brand-sub">Teacher console</div></div>
+  </div>
+  <div class="idfield"><label id="lbl-code">Class code</label><input id="t-code" type="text" placeholder="default"></div>
+  <div class="hbtns">
+    <button class="btn btn-primary btn-sm" id="load-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7M21 3v6h-6"/></svg><span id="load-lbl">Load class</span></button>
+    <div class="seg" role="group" aria-label="Language"><button data-lang="en" class="on">EN</button><button data-lang="vi">VI</button></div>
+    <button class="icon-btn" id="theme-btn" aria-label="Theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7"/><circle cx="12" cy="12" r="4"/></svg></button>
+  </div>
+</div></div>
+
+<div class="wrap"><div id="view"></div></div>
+<div class="foot" id="foot"></div>
+
+<script>
+"use strict";
+/* ==== Backend: same Apps Script Web App the student app posts to ==== */
+const APPS_URL="https://script.google.com/macros/s/AKfycbxFcUtx3wTCvRFNgqBmZNSoO4X_cLdhj1_LSsbts8EcSQjeW7slaRRwlvzQi3VsTMKe/exec";
+const PASS=70;
+const GRADED=["match","supervalue","exam"];
+const GRADED_NAMES={match:{en:"Match tables",vi:"Ghép bảng"},supervalue:{en:"SuperValue 1.2",vi:"SuperValue 1.2"},exam:{en:"Exam Section 2",vi:"Bài thi S2"}};
+const I18N={
+ en:{classCode:"Class code",load:"Load class",title:"Teacher console",sub:"Unit 1 · Change & consequences",
+   students:"Students",classAvg:"Class average",passRate:"Pass rate ≥70%",refreshed:"Loaded",
+   avgByEx:"Average by exercise",studentsH:"Students",export:"Export CSV",
+   colStudent:"Student",colEmail:"Email",colOverall:"Overall",colReports:"Reports",colUpdated:"Updated",
+   loading:"Loading class results…",
+   emptyTitle:"No results yet",empty:'No submissions for class code "{c}". Ask students to type this exact class code in their header, complete an exercise, and press Check.',
+   enterTitle:"Enter a class code",enter:"Type your class code above and press Load class to see your students' results.",
+   errTitle:"Couldn't reach the results backend",err:"The request to the Apps Script failed. Check that the Web App is deployed with access set to Anyone, the URL is correct, and you have run a student submission at least once.",
+   noAudioNote:"Live results are read from your Google Sheet via Apps Script." },
+ vi:{classCode:"Mã lớp",load:"Tải lớp",title:"Bảng điều khiển giáo viên",sub:"Unit 1 · Thay đổi & hệ quả",
+   students:"Học viên",classAvg:"Điểm TB lớp",passRate:"Tỷ lệ đạt ≥70%",refreshed:"Đã tải",
+   avgByEx:"Điểm TB theo bài",studentsH:"Học viên",export:"Xuất CSV",
+   colStudent:"Học viên",colEmail:"Email",colOverall:"Tổng",colReports:"Báo cáo",colUpdated:"Cập nhật",
+   loading:"Đang tải kết quả lớp…",
+   emptyTitle:"Chưa có kết quả",empty:'Chưa có bài nộp cho mã lớp "{c}". Yêu cầu học viên nhập đúng mã lớp này ở đầu trang, làm một bài và bấm Kiểm tra.',
+   enterTitle:"Nhập mã lớp",enter:"Nhập mã lớp ở trên rồi bấm Tải lớp để xem kết quả học viên.",
+   errTitle:"Không kết nối được backend kết quả",err:"Yêu cầu tới Apps Script thất bại. Kiểm tra Web App đã deploy với quyền Anyone, URL đúng, và đã có ít nhất một lượt nộp của học viên.",
+   noAudioNote:"Kết quả được đọc trực tiếp từ Google Sheet qua Apps Script." }
+};
+let S={lang:"en",theme:null,code:""};
+try{const r=localStorage.getItem("ls-teacher");if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+function save(){try{localStorage.setItem("ls-teacher",JSON.stringify({lang:S.lang,theme:S.theme,code:S.code}));}catch(e){}}
+function t(k,vars){let s=(I18N[S.lang]&&I18N[S.lang][k])||I18N.en[k]||k;if(vars)for(const v in vars)s=s.replace("{"+v+"}",vars[v]);return s;}
+function bi(o){return S.lang==="vi"&&o.vi?o.vi:o.en;}
+function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+let ROWS=null,STATUS="enter"; // enter | loading | ok | error
+const view=document.getElementById("view");
+let sortKey="overall",sortDir=-1;
+
+function normRow(r){
+ const res=(r.results&&typeof r.results==="object")?r.results:{};
+ const pick=id=>{const x=res[id];return (x&&x.submitted)?Number(x.pct):null;};
+ return {name:r.name||"",email:r.email||"",classCode:r.classCode||"default",overall:Number(r.overall)||0,
+   done:Number(r.done)||0,total:Number(r.total)||GRADED.length,reportCount:Number(r.reportCount)||0,
+   updatedAt:r.updatedAt?Number(r.updatedAt):null,ex:{match:pick("match"),supervalue:pick("supervalue"),exam:pick("exam")}};
+}
+async function loadClass(){
+ const code=(S.code||"default").trim()||"default";
+ STATUS="loading";render();
+ try{
+   const url=APPS_URL+"?action=list&classCode="+encodeURIComponent(code)+"&_="+Date.now();
+   const res=await fetch(url,{method:"GET"});
+   const data=await res.json();
+   const raw=Array.isArray(data)?data:(data.rows||[]);
+   ROWS=raw.map(normRow).filter(r=>(r.classCode||"default")===code);
+   STATUS="ok";
+ }catch(e){ STATUS="error"; ROWS=null; }
+ render();
+}
+function fmtDate(ts){if(!ts)return "—";const d=new Date(ts);return d.toLocaleDateString()+" "+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}
+function sortRows(rows){
+ const r=rows.slice();
+ r.sort((a,b)=>{let va,vb;
+   if(sortKey==="name"){va=(a.name||"").toLowerCase();vb=(b.name||"").toLowerCase();return va<vb?-1*sortDir:va>vb?1*sortDir:0;}
+   if(sortKey==="updated"){va=a.updatedAt||0;vb=b.updatedAt||0;}
+   else if(GRADED.includes(sortKey)){va=a.ex[sortKey]==null?-1:a.ex[sortKey];vb=b.ex[sortKey]==null?-1:b.ex[sortKey];}
+   else {va=a.overall;vb=b.overall;}
+   return (va-vb)*sortDir;});
+ return r;
+}
+function render(){
+ const code=(S.code||"default").trim()||"default";
+ let body;
+ if(STATUS==="enter"){ body=stateBox('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',t("enterTitle"),t("enter")); }
+ else if(STATUS==="loading"){ body=`<div class="empty-state"><div class="spin"></div><p>${t("loading")}</p></div>`; }
+ else if(STATUS==="error"){ body=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><p style="font-size:16px;color:var(--ink);font-weight:600">${t("errTitle")}</p><div class="errbox">${t("err")}</div></div>`; }
+ else if(!ROWS||!ROWS.length){ body=stateBox('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>',t("emptyTitle"),t("empty",{c:esc(code)})); }
+ else {
+   const rows=ROWS;const n=rows.length;
+   const avg=Math.round(rows.reduce((s,r)=>s+r.overall,0)/n);
+   const passRate=Math.round(rows.filter(r=>r.overall>=PASS).length/n*100);
+   const exAvg=GRADED.map(id=>{const vals=rows.map(r=>r.ex[id]).filter(v=>v!=null);return {id,name:bi(GRADED_NAMES[id]),avg:vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0};});
+   const maxAvg=Math.max(100,...exAvg.map(e=>e.avg));
+   const srt=sortRows(rows);
+   const arrow=k=>sortKey===k?(sortDir<0?" ↓":" ↑"):"";
+   const cell=(v)=>v==null?`<td class="num pill-none">—</td>`:`<td class="num ${v>=PASS?'pill-pass':'pill-fail'}">${v}%</td>`;
+   body=`<div class="tstat-row">
+     <div class="tstat"><div class="l">${t("students")}</div><div class="v">${n}</div><div class="s">${esc(code)}</div></div>
+     <div class="tstat"><div class="l">${t("classAvg")}</div><div class="v" style="color:${avg>=PASS?'var(--good)':'var(--bad)'}">${avg}%</div></div>
+     <div class="tstat"><div class="l">${t("passRate")}</div><div class="v">${passRate}%</div></div>
+     <div class="tstat"><div class="l">${t("refreshed")}</div><div class="v" style="font-size:16px">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div></div>
+   </div>
+   <div class="section"><h3>${t("avgByEx")}</h3><div class="bar-mini">${exAvg.map(e=>`<div class="bar-col"><span class="bv">${e.avg}%</span><div class="bar" style="height:${Math.round(e.avg/maxAvg*100)}%;background:${e.avg>=PASS?'var(--good)':'var(--brand)'}"></div><span class="bl">${e.name}</span></div>`).join("")}</div></div>
+   <div class="section"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px"><h3 style="margin:0">${t("studentsH")}</h3><button class="btn btn-ghost btn-sm" id="csv-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg> ${t("export")}</button></div>
+     <div class="tblwrap"><table class="data"><thead><tr>
+       <th data-sort="name">${t("colStudent")}${arrow("name")}</th><th>${t("colEmail")}</th>
+       <th data-sort="overall">${t("colOverall")}${arrow("overall")}</th>
+       ${GRADED.map(id=>`<th data-sort="${id}">${bi(GRADED_NAMES[id])}${arrow(id)}</th>`).join("")}
+       <th data-sort="updated">${t("colUpdated")}${arrow("updated")}</th></tr></thead>
+       <tbody>${srt.map(r=>`<tr><td>${esc(r.name||"—")}</td><td style="font-size:12px;color:var(--muted)">${esc(r.email||"—")}</td><td class="num ${r.overall>=PASS?'pill-pass':'pill-fail'}">${r.overall}%</td>${GRADED.map(id=>cell(r.ex[id])).join("")}<td style="font-size:12px;color:var(--muted)">${fmtDate(r.updatedAt)}</td></tr>`).join("")}</tbody></table></div>
+     <p style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:10px">${t("noAudioNote")}</p></div>`;
+ }
+ view.innerHTML=`<div class="panel"><div class="head"><span class="tag">${t("title")}</span><h2>Unit 1 · ${S.lang==="vi"?"Thay đổi & hệ quả":"Change & consequences"}</h2></div>${body}</div>`;
+}
+function stateBox(icon,title,text){return `<div class="empty-state">${icon}<p style="font-size:16px;color:var(--ink);font-weight:600;margin:0 0 6px">${title}</p><p style="max-width:52ch;margin:0 auto">${text}</p></div>`;}
+
+function exportCSV(){
+ if(!ROWS||!ROWS.length)return;
+ const code=(S.code||"default").trim()||"default";
+ const head=["Name","Email","ClassCode","Overall%",...GRADED.map(id=>bi(GRADED_NAMES[id])+"%"),"Reports","Updated"];
+ const lines=[head.join(",")];
+ sortRows(ROWS).forEach(r=>{const cells=[r.name,r.email,r.classCode,r.overall,...GRADED.map(id=>r.ex[id]==null?"":r.ex[id]),r.reportCount,r.updatedAt?new Date(r.updatedAt).toISOString():""];
+   lines.push(cells.map(c=>{const s=String(c).replace(/"/g,'""');return /[",\n]/.test(s)?`"${s}"`:s;}).join(","));});
+ const csv="﻿"+lines.join("\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`listening-studio-${code}-U1.csv`;
+ document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+
+/* events */
+document.addEventListener("click",e=>{
+ if(e.target.closest("#load-btn")){loadClass();return;}
+ if(e.target.closest("#csv-btn")){exportCSV();return;}
+ const th=e.target.closest("[data-sort]");if(th){const k=th.dataset.sort;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="name")?1:-1;}render();return;}
+ const lang=e.target.closest("[data-lang]");if(lang){S.lang=lang.dataset.lang;syncLang();refreshChrome();render();save();return;}
+ if(e.target.closest("#theme-btn")){const dark=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dark?"light":"dark";applyTheme();save();return;}
+});
+document.getElementById("t-code").addEventListener("input",e=>{S.code=e.target.value;save();});
+document.getElementById("t-code").addEventListener("keydown",e=>{if(e.key==="Enter")loadClass();});
+function syncLang(){document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("on",b.dataset.lang===S.lang));}
+function applyTheme(){if(S.theme)document.documentElement.setAttribute("data-theme",S.theme);else document.documentElement.removeAttribute("data-theme");}
+function refreshChrome(){
+ document.getElementById("lbl-code").textContent=t("classCode");
+ document.getElementById("load-lbl").textContent=t("load");
+ document.getElementById("brand-sub").textContent=t("title");
+ document.getElementById("foot").textContent="Huong Stella Paradigm · Listening Studio · "+t("sub");
+}
+(function init(){
+ applyTheme();syncLang();document.getElementById("t-code").value=S.code||"";refreshChrome();
+ render();
+ if((S.code||"").trim())loadClass();
+})();
+</script>

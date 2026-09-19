@@ -1,0 +1,954 @@
+<title>Listening Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#E9EDF1; --surface:#FFFFFF; --surface-2:#F3F6F9; --surface-3:#E7ECF1;
+  --ink:#16202E; --ink-soft:#42505F; --muted:#697788; --line:#D6DEE6; --line-soft:#E4EAF0;
+  --brand:#0E7C86; --brand-deep:#0A5A62; --brand-tint:#DCEEEF; --brand-ink:#083F45;
+  --amber:#B8781A; --amber-mark:#FBE6BE; --amber-mark-b:#E9C877;
+  --good:#1F8A54; --good-tint:#DBF0E4; --bad:#C63A2E; --bad-tint:#F6DED9; --warn:#B4791B; --warn-tint:#FBF0D8;
+  --shadow:0 1px 2px rgba(16,30,45,.06), 0 8px 24px -12px rgba(16,30,45,.18);
+  --shadow-lg:0 20px 50px -24px rgba(16,30,45,.35);
+  --radius:14px; --radius-s:9px;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Libre Franklin",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D141C; --surface:#141F2A; --surface-2:#1A2733; --surface-3:#223140;
+    --ink:#E8EEF3; --ink-soft:#B4C1CD; --muted:#8395A5; --line:#2A3A49; --line-soft:#22303D;
+    --brand:#38B4BC; --brand-deep:#2A9098; --brand-tint:#14343A; --brand-ink:#8FE0E5;
+    --amber:#E7B95C; --amber-mark:#4A3B18; --amber-mark-b:#7A611F;
+    --good:#4FBE85; --good-tint:#153426; --bad:#EA7365; --bad-tint:#3A1E1B; --warn:#E7B95C; --warn-tint:#2E2712;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.6);
+    --shadow-lg:0 24px 60px -24px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D141C; --surface:#141F2A; --surface-2:#1A2733; --surface-3:#223140;
+  --ink:#E8EEF3; --ink-soft:#B4C1CD; --muted:#8395A5; --line:#2A3A49; --line-soft:#22303D;
+  --brand:#38B4BC; --brand-deep:#2A9098; --brand-tint:#14343A; --brand-ink:#8FE0E5;
+  --amber:#E7B95C; --amber-mark:#4A3B18; --amber-mark-b:#7A611F;
+  --good:#4FBE85; --good-tint:#153426; --bad:#EA7365; --bad-tint:#3A1E1B; --warn:#E7B95C; --warn-tint:#2E2712;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 30px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 24px 60px -24px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0 0 .8em}p:last-child{margin-bottom:0}
+a{color:var(--brand-deep)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--brand);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-deep);font-weight:500}
+
+/* header */
+.top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1280px;margin:0 auto;padding:9px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.brand .logo{width:38px;height:38px;flex:none;border-radius:10px;background:linear-gradient(150deg,var(--brand),var(--brand-deep));display:grid;place-items:center;box-shadow:var(--shadow)}
+.brand .logo svg{width:22px;height:22px}
+.brand .name{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1}
+.brand .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.brand .org{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--brand-deep);font-weight:600;margin-bottom:2px}
+.idfields{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.idfield{display:flex;flex-direction:column;gap:2px}
+.idfield label{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding-left:2px}
+.idfield input{font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;width:132px}
+.idfield.code input{width:92px}
+.idfield input:focus{border-color:var(--brand);background:var(--surface)}
+.hbtns{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface-2)}
+.seg button{border:none;background:none;color:var(--ink-soft);font-family:var(--mono);font-size:11.5px;font-weight:500;padding:7px 11px}
+.seg button.on{background:var(--brand);color:#fff}
+.save-pill{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.save-dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.save-dot.saving{background:var(--amber);animation:pulse 1s infinite}
+.save-dot.cloud{background:var(--brand)}
+.save-dot.off{background:var(--muted)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--amber) 60%,transparent)}70%{box-shadow:0 0 0 6px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.attempt-badge{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--brand-ink);background:var(--brand-tint);border:1px solid color-mix(in srgb,var(--brand) 35%,transparent);border-radius:20px;padding:5px 10px;white-space:nowrap}
+.icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);display:grid;place-items:center}
+.icon-btn:hover{background:var(--surface-3)}
+.icon-btn svg{width:18px;height:18px}
+
+/* layout */
+.shell{max-width:1280px;margin:0 auto;padding:22px 20px 80px;display:grid;grid-template-columns:272px 1fr;gap:26px;align-items:start}
+body[data-role="teacher"] .rail,body[data-role="teacher"] .mobile-tabs{display:none}
+body[data-role="teacher"] .shell{grid-template-columns:1fr}
+.rail{position:sticky;top:80px;display:flex;flex-direction:column;gap:16px}
+.rail-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.progress-block{padding:18px}
+.progress-top{display:flex;align-items:center;gap:14px}
+.ring{width:66px;height:66px;flex:none}
+.progress-meta .l{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.progress-meta .v{font-size:14px;font-weight:600;color:var(--ink);margin-top:2px}
+.navlist{display:flex;flex-direction:column;padding:8px}
+.navlist .sec-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 10px 5px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;border:none;background:none;text-align:left;width:100%;color:var(--ink-soft);font-size:13.5px;transition:background .12s}
+.navitem:hover{background:var(--surface-2)}
+.navitem.active{background:var(--brand-tint);color:var(--brand-ink);font-weight:600}
+.navitem .nix{width:22px;height:22px;flex:none;border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:600;background:var(--surface-3);color:var(--muted)}
+.navitem.active .nix{background:var(--brand);color:#fff}
+.navitem .ntxt{flex:1;line-height:1.25}
+.navitem .nchip{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:2px 6px;border-radius:6px;white-space:nowrap}
+.nchip.pass{background:var(--good-tint);color:var(--good)}
+.nchip.fail{background:var(--bad-tint);color:var(--bad)}
+.nchip.due{background:var(--warn-tint);color:var(--warn)}
+.rail-finish{margin:0 8px 8px}
+.btn{font-family:var(--sans);font-weight:600;font-size:14px;border-radius:10px;padding:11px 16px;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .06s,background .15s}
+.btn:active{transform:translateY(1px)}
+.btn svg{width:17px;height:17px}
+.btn-primary{background:var(--brand);color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{background:var(--brand-deep)}
+.btn-ghost{background:var(--surface-2);color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{background:var(--surface-3)}
+.btn-sm{padding:8px 12px;font-size:13px}
+.btn-block{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.main{min-width:0}
+.view{display:none;animation:rise .35s ease both}
+.view.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;margin-bottom:20px}
+.panel-head{border-bottom:1px solid var(--line-soft);padding-bottom:18px;margin-bottom:22px}
+.panel-head h2{font-size:26px;margin-top:6px}
+.panel-head .lead{color:var(--ink-soft);margin-top:10px;max-width:66ch}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+.tag.brand{background:var(--brand-tint);color:var(--brand-ink);border-color:transparent}
+
+.coach{border-radius:var(--radius-s);border:1px solid color-mix(in srgb,var(--brand) 26%,transparent);background:var(--brand-tint);padding:16px 18px;margin:18px 0}
+.coach h4{font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-ink);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.coach h4 svg{width:16px;height:16px}
+.coach p,.coach li{color:var(--brand-ink)}
+.coach ul{margin:6px 0 0;padding-left:20px}.coach li{margin-bottom:5px}
+.coach.plain{background:var(--surface-2);border-color:var(--line)}
+.coach.plain h4{color:var(--ink)}.coach.plain p,.coach.plain li{color:var(--ink-soft)}
+.vi{display:block;font-size:.92em;color:color-mix(in srgb,var(--brand-ink) 78%,var(--muted));margin-top:3px;font-style:italic}
+.coach.plain .vi{color:var(--muted)}
+
+.tblwrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:var(--radius-s)}
+table.data{width:100%;border-collapse:collapse;font-size:13.5px;min-width:440px}
+table.data caption{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 14px 4px;caption-side:top}
+table.data th,table.data td{padding:10px 14px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:middle}
+table.data thead th{background:var(--surface-2);font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+table.data tbody th{font-weight:600;color:var(--ink);background:var(--surface-2)}
+table.data .num{font-variant-numeric:tabular-nums;font-family:var(--mono)}
+table.data tr:last-child td,table.data tr:last-child th{border-bottom:none}
+
+.qgroup{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.q{border:1px solid var(--line);border-radius:var(--radius-s);padding:15px 16px;background:var(--surface);transition:border-color .15s,background .15s}
+.q .qtop{display:flex;gap:12px;align-items:flex-start}
+.qnum{font-family:var(--mono);font-weight:600;font-size:13px;color:#fff;background:var(--brand);min-width:26px;height:26px;padding:0 6px;border-radius:7px;display:grid;place-items:center;flex:none;margin-top:1px}
+.qbody{flex:1;min-width:0}
+.qprompt{font-size:14.5px;color:var(--ink);margin-bottom:9px}
+.answer-in{font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;max-width:340px}
+.answer-in:focus{border-color:var(--brand);background:var(--surface)}
+select.answer-in{max-width:420px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23697788' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.q.correct{border-color:color-mix(in srgb,var(--good) 55%,transparent);background:color-mix(in srgb,var(--good-tint) 55%,var(--surface))}
+.q.incorrect{border-color:color-mix(in srgb,var(--bad) 45%,transparent);background:color-mix(in srgb,var(--bad-tint) 45%,var(--surface))}
+.q.correct .qnum{background:var(--good)}.q.incorrect .qnum{background:var(--bad)}
+.mark-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:5px;margin-top:2px}
+.mark-badge svg{width:13px;height:13px}
+.mark-badge.ok{background:var(--good-tint);color:var(--good)}.mark-badge.no{background:var(--bad-tint);color:var(--bad)}
+.reveal{margin-top:13px;padding-top:13px;border-top:1px dashed var(--line);font-size:13.5px;display:none}
+.reveal.show{display:block;animation:rise .3s ease both}
+.reveal .keyans{font-family:var(--mono);color:var(--good);font-weight:600}
+.reveal .exp{color:var(--ink-soft);margin-top:8px}
+.reveal .tscript{margin-top:9px;background:var(--surface-2);border-left:3px solid var(--brand);border-radius:0 8px 8px 0;padding:9px 13px;color:var(--ink-soft);font-size:13px;font-style:italic}
+.reveal .plabel{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--amber);font-weight:600;margin-top:9px;display:flex;align-items:center;gap:6px}
+.reveal .plabel svg{width:13px;height:13px}
+.hintbox{margin-top:12px;padding:11px 13px;border-radius:8px;background:var(--warn-tint);border:1px solid color-mix(in srgb,var(--warn) 32%,transparent);font-size:13px;color:var(--ink);display:none}
+.hintbox.show{display:block;animation:rise .3s ease both}
+.hintbox .hl{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.hintbox .hl svg{width:13px;height:13px}
+mark{background:var(--amber-mark);color:inherit;padding:.5px 3px;border-radius:3px;box-shadow:inset 0 0 0 1px var(--amber-mark-b);font-style:normal}
+
+.player{border:1px solid var(--line);border-radius:var(--radius-s);background:linear-gradient(180deg,var(--surface-2),var(--surface));padding:15px 16px;margin:18px 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.play-btn{width:50px;height:50px;flex:none;border-radius:50%;border:none;background:var(--brand);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow)}
+.play-btn:hover{background:var(--brand-deep)}.play-btn svg{width:22px;height:22px}
+.wave{flex:1;min-width:140px;height:40px;display:flex;align-items:center;gap:2.5px;overflow:hidden}
+.wave i{flex:1;min-width:2px;background:var(--brand);border-radius:2px;height:22%;opacity:.4}
+.player.playing .wave i{animation:eq 1s ease-in-out infinite}
+@keyframes eq{0%,100%{height:22%}50%{height:88%}}
+.player-meta{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.speed-group{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.speed-group button{border:none;background:var(--surface);color:var(--ink-soft);font-family:var(--mono);font-size:11px;padding:4px 9px}
+.speed-group button.on{background:var(--brand);color:#fff}
+.player-note{flex-basis:100%;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.player-note svg{width:14px;height:14px;flex:none}
+
+.exbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 0;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.exbar .track{flex:1;min-width:120px;height:6px;border-radius:4px;background:var(--surface-3);overflow:hidden}
+.exbar .track i{display:block;height:100%;background:var(--brand);border-radius:4px;transition:width .3s}
+.qactions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+.scoreline{font-family:var(--mono);font-size:13px;margin-left:auto;color:var(--ink-soft);display:flex;align-items:center;gap:10px}
+.score-big{font-size:20px;font-weight:600}.score-big.pass{color:var(--good)}.score-big.fail{color:var(--bad)}
+.lock-note{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--warn);background:var(--warn-tint);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);border-radius:9px;padding:10px 13px;margin-top:16px}
+.lock-note svg{width:16px;height:16px;flex:none;margin-top:2px}
+
+.study-toggle{margin-top:14px}
+.model-ans{display:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+.model-ans.show{display:block;animation:rise .3s ease both}
+.model-ans h4{font-family:var(--sans);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--brand-deep);margin-bottom:8px}
+.ans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ans-cell{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:8px;padding:8px 11px;font-size:13px}
+.ans-cell b{font-family:var(--mono);color:var(--brand-deep)}
+
+.log-row{border:1px solid var(--line);border-radius:var(--radius-s);padding:14px 15px;margin-bottom:12px;background:var(--surface)}
+.log-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.log-src{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface-2);padding:3px 9px;border-radius:6px}
+.log-q{font-weight:600;font-size:14px}
+.log-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.log-fields .f label{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px}
+.log-fields textarea{width:100%;font-family:var(--sans);font-size:13.5px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;resize:vertical;min-height:56px;line-height:1.5}
+.log-fields textarea:focus{border-color:var(--brand);background:var(--surface)}
+.log-empty,.empty-state{text-align:center;color:var(--muted);padding:44px 20px}
+.log-empty svg,.empty-state svg{width:40px;height:40px;color:var(--line);margin-bottom:10px}
+
+/* flashcards */
+.deck-stats{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 20px}
+.chipstat{font-family:var(--mono);font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:8px 12px}
+.chipstat b{font-size:16px;color:var(--brand-deep)}
+.flash{max-width:560px;margin:10px auto 0;perspective:1200px}
+.flash-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px 28px;min-height:210px;display:flex;flex-direction:column;justify-content:center;text-align:center;position:relative}
+.flash-side{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);position:absolute;top:16px;left:20px}
+.flash-src{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:10.5px;color:var(--muted);background:var(--surface-2);padding:3px 8px;border-radius:6px}
+.flash-front{font-size:19px;font-weight:600;color:var(--ink)}
+.flash-back{font-size:17px;color:var(--brand-deep);margin-top:6px}
+.flash-back mark{font-size:.95em}
+.flash-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.grade-btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 18px;font-weight:600;font-size:13.5px;color:var(--ink)}
+.grade-btn.again{border-color:color-mix(in srgb,var(--bad) 40%,transparent);color:var(--bad)}
+.grade-btn.hard{border-color:color-mix(in srgb,var(--warn) 45%,transparent);color:var(--warn)}
+.grade-btn.good{border-color:color-mix(in srgb,var(--good) 45%,transparent);color:var(--good)}
+.grade-btn:hover{background:var(--surface-2)}
+
+/* report */
+.report-hero{background:linear-gradient(150deg,var(--brand-deep),var(--brand));color:#fff;border-radius:var(--radius);padding:28px 30px;margin-bottom:20px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.report-hero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08)}
+.report-hero .eyebrow{color:rgba(255,255,255,.8)}
+.report-hero h2{color:#fff;font-size:30px;margin:8px 0 4px}
+.report-hero .rmeta{display:flex;gap:26px;flex-wrap:wrap;margin-top:18px;position:relative;z-index:1}
+.report-hero .rmeta .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.report-hero .rmeta .v{font-size:22px;font-weight:600;font-family:var(--serif)}
+.overall-ring{position:absolute;right:26px;top:26px;z-index:1}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.rcard{border:1px solid var(--line);border-radius:var(--radius-s);padding:16px;background:var(--surface)}
+.rcard .rc-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rcard .rc-name{font-weight:600;font-size:14px}
+.rcard .rc-pct{font-family:var(--mono);font-size:20px;font-weight:600}
+.rcard .rc-bar{height:7px;border-radius:4px;background:var(--surface-3);margin:11px 0 8px;overflow:hidden}
+.rcard .rc-bar i{display:block;height:100%;border-radius:4px}
+.rcard .rc-note{font-size:12.5px;color:var(--muted);font-family:var(--mono)}
+.improve li{margin-bottom:9px;color:var(--ink-soft)}.improve li b{color:var(--ink)}
+
+/* teacher */
+.tstat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.tstat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:16px 18px;box-shadow:var(--shadow)}
+.tstat .l{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.tstat .v{font-family:var(--serif);font-size:28px;font-weight:600;margin-top:4px}
+.tstat .s{font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.bar-mini{display:flex;align-items:flex-end;gap:10px;height:120px;padding:10px 4px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%}
+.bar-col .bar{width:70%;max-width:56px;background:var(--brand);border-radius:5px 5px 0 0;min-height:3px;position:relative}
+.bar-col .bv{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink)}
+.bar-col .bl{font-size:11px;color:var(--muted);text-align:center;line-height:1.2}
+.class-pct{font-family:var(--mono);font-weight:600}
+.pill-pass{color:var(--good)}.pill-fail{color:var(--bad)}.pill-none{color:var(--muted)}
+
+.foot{max-width:1280px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:12px;font-family:var(--mono);text-align:center}
+.mobile-tabs{display:none}
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr;gap:16px}
+  .rail{position:static}
+  .navlist{display:none}
+  .mobile-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px}
+  .mtab{flex:none;font-family:var(--mono);font-size:12px;padding:8px 13px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);white-space:nowrap}
+  .mtab.active{background:var(--brand);color:#fff;border-color:transparent}
+  .report-grid{grid-template-columns:1fr}
+  .overall-ring{position:static;margin-top:16px}
+}
+@media (max-width:620px){
+  .panel{padding:20px 16px}.log-fields{grid-template-columns:1fr}.brand .sub{display:none}
+  .idfield input{width:118px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{
+  .top,.rail,.mobile-tabs,.foot,.no-print{display:none!important}
+  body{background:#fff;color:#000;font-size:12px}
+  .shell{display:block;max-width:none;padding:0}.view{display:none!important}
+  #print-report{display:block!important}
+  .panel,.rcard,.report-hero{box-shadow:none;border:1px solid #ccc}
+  .report-hero{background:#0A5A62!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  mark,.rcard .rc-bar,.rcard .rc-bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{margin:14mm}
+}
+#print-report{display:none}
+</style>
+
+<div class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 12v2m4-6v10m4-13v16m4-11v6m4-4v2"/></svg></div>
+      <div><div class="org">Huong Stella Paradigm</div><div class="name">Listening Studio</div><div class="sub" id="brand-sub">Unit 1 · Change &amp; consequences</div></div>
+    </div>
+    <div class="idfields" id="idfields">
+      <div class="idfield"><label id="lbl-name">Student name</label><input id="s-name" type="text" placeholder="Your name" autocomplete="name"></div>
+      <div class="idfield"><label id="lbl-email">Email</label><input id="s-email" type="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="idfield code"><label id="lbl-code">Class code</label><input id="s-code" type="text" placeholder="default"></div>
+    </div>
+    <div class="hbtns">
+      <div class="seg" role="group" aria-label="Language"><button data-lang="en" class="on">EN</button><button data-lang="vi">VI</button></div>
+      <div class="save-pill"><span class="save-dot" id="save-dot"></span><span id="save-text">Saved</span></div>
+      <span class="attempt-badge" id="attempt-badge">Report #0</span>
+      <button class="icon-btn" id="theme-btn" title="Theme" aria-label="Toggle theme"><svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36l-.7-.7M6.34 6.34l-.7-.7m12.72 0l-.7.7M6.34 17.66l-.7.7"/><circle cx="12" cy="12" r="4"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="rail-card progress-block">
+      <div class="progress-top">
+        <svg class="ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--surface-3)" stroke-width="4"/><circle id="ring-fg" cx="18" cy="18" r="15.5" fill="none" stroke="var(--brand)" stroke-width="4" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="97.4" transform="rotate(-90 18 18)"/><text id="ring-txt" x="18" y="19.5" text-anchor="middle" font-size="9" fill="var(--ink)">0%</text></svg>
+        <div class="progress-meta"><div class="l" id="prog-l">Studio progress</div><div class="v" id="prog-label">0 of 3 graded done</div></div>
+      </div>
+    </div>
+    <div class="rail-card"><nav class="navlist" id="navlist" aria-label="Exercises"></nav>
+      <button class="btn btn-primary btn-block rail-finish" id="finish-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span id="finish-lbl">Finish &amp; view report</span></button>
+    </div>
+  </aside>
+  <main class="main"><div class="mobile-tabs" id="mobile-tabs"></div><div id="views" aria-live="polite"></div></main>
+</div>
+<div class="foot" id="foot"></div>
+<div id="print-report"></div>
+
+<script>
+"use strict";
+/* =================== I18N =================== */
+const I18N={
+ en:{ studentName:"Student name", email:"Email", classCode:"Class code", saved:"Saved", saving:"Saving…", cloudOn:"Synced to class", cloudOff:"Local only",
+   progress:"Studio progress", graded:"{d} of {t} graded done", finish:"Finish & view report", check:"Check my answers", clear:"Clear", recheck:"Check again",
+   notSubmitted:"Not submitted yet", answered:"{a}/{n} answered", unanswered:"{k} still blank — you can still check.",
+   secLearn:"Learn", secPractise:"Practise (scored)", secReview:"Review", reportNum:"Report #{n}",
+   unlockHint:"Hints unlock the answer after 2 tries", paraWatch:"Paraphrase watch", answer:"Answer", hint:"Hint",
+   playHint:"Your browser reads the passage aloud as a stand-in for the exam audio. Answer from listening; the written script unlocks with your answers.",
+   dueCards:"due", newCards:"new", knownCards:"learned", reviewNow:"Review now", showAnswer:"Show answer", again:"Again", hard:"Hard", good:"Good",
+   deckEmpty:"No cards yet. Check a scored exercise — every paraphrase you miss becomes a review card here.",
+   deckDone:"All caught up! No cards due right now. Come back later, or reset a card by missing its question again." },
+ vi:{ studentName:"Tên học viên", email:"Email", classCode:"Mã lớp", saved:"Đã lưu", saving:"Đang lưu…", cloudOn:"Đã đồng bộ lớp", cloudOff:"Chỉ lưu máy này",
+   progress:"Tiến độ", graded:"Xong {d}/{t} bài chấm điểm", finish:"Kết thúc & xem báo cáo", check:"Kiểm tra đáp án", clear:"Xoá", recheck:"Kiểm tra lại",
+   notSubmitted:"Chưa nộp", answered:"Đã trả lời {a}/{n}", unanswered:"Còn {k} câu trống — vẫn kiểm tra được.",
+   secLearn:"Học", secPractise:"Luyện (chấm điểm)", secReview:"Ôn tập", reportNum:"Báo cáo #{n}",
+   unlockHint:"Đáp án mở sau 2 lần thử", paraWatch:"Điểm paraphrase", answer:"Đáp án", hint:"Gợi ý",
+   playHint:"Trình duyệt đọc bài nghe thay cho audio đề thi. Hãy trả lời bằng cách nghe; phần script hiện ra cùng đáp án.",
+   dueCards:"đến hạn", newCards:"mới", knownCards:"đã thuộc", reviewNow:"Ôn ngay", showAnswer:"Hiện đáp án", again:"Lại", hard:"Khó", good:"Nhớ",
+   deckEmpty:"Chưa có thẻ nào. Hãy kiểm tra một bài chấm điểm — mỗi paraphrase bạn sai sẽ thành một thẻ ôn ở đây.",
+   deckDone:"Đã ôn hết! Không còn thẻ đến hạn. Quay lại sau, hoặc thẻ sẽ xuất hiện lại khi bạn sai câu đó lần nữa." }
+};
+function t(k,vars){ let s=(I18N[S.lang]&&I18N[S.lang][k])||I18N.en[k]||k; if(vars) for(const v in vars) s=s.replace("{"+v+"}",vars[v]); return s; }
+function bi(o){ if(o==null) return ""; if(typeof o==="string") return o; return S.lang==="vi"&&o.vi?o.vi:o.en; }
+function biBoth(o){ if(typeof o==="string") return o; if(S.lang==="vi") return `${o.en}<span class="vi">${o.vi}</span>`; return o.en; }
+
+/* =================== CONTENT (JSON schema — extend UNITS for more units) =================== */
+const UNIT={code:"Unit 1", title:"Change and consequences", book:"Improve Your Skills · Listening for IELTS 4.5–6.0"};
+const PASS=70;
+
+const MATCH_Q=[
+ {id:"m1",label:"Table 1",desc:{en:"Columns: District · Typical style · Average price · Transport (Aberton, Hunborough, Millview)",vi:"Cột: Quận · Kiểu nhà · Giá TB · Giao thông (Aberton, Hunborough, Millview)"},
+  options:[["a","Climate change over 50 years"],["b","Transport use by type"],["c","Comparison of housing by area"]],answer:"c",
+  exp:{en:"Every row is a residential district and every column is a housing attribute — property type, price, and quality of transport. That makes it a comparison of housing across areas.",vi:"Mỗi hàng là một khu dân cư, mỗi cột là một đặc điểm nhà ở — kiểu nhà, giá, chất lượng giao thông. Vậy đây là so sánh nhà ở theo khu vực."},
+  para:{en:"Signposts: <mark>District</mark>, <mark>Typical style</mark> (bungalows/flats), <mark>Average price</mark> — all housing vocabulary.",vi:"Tín hiệu: <mark>District</mark> (quận), <mark>Typical style</mark> (kiểu nhà), <mark>Average price</mark> (giá) — đều là từ vựng nhà ở."},
+  hint:{en:"Look at the column headings — they describe places to live.",vi:"Nhìn tiêu đề các cột — chúng mô tả nơi ở."}},
+ {id:"m2",label:"Table 2",desc:{en:"Rows: Average temperature · Annual rainfall, compared across 1955 and 2013",vi:"Hàng: Nhiệt độ TB · Lượng mưa năm, so sánh giữa 1955 và 2013"},
+  options:[["a","Climate change over 50 years"],["b","Transport use by type"],["c","Comparison of housing by area"]],answer:"a",
+  exp:{en:"Temperature and rainfall are weather measures, and the two headings are years about half a century apart (1955 → 2013).",vi:"Nhiệt độ và lượng mưa là chỉ số thời tiết, hai cột là hai năm cách nhau khoảng nửa thế kỷ (1955 → 2013)."},
+  para:{en:"The dates <mark>1955</mark> and <mark>2013</mark> span ~50 years — 'over 50 years' is paraphrased by the date range.",vi:"Hai mốc <mark>1955</mark> và <mark>2013</mark> cách nhau ~50 năm — 'over 50 years' được diễn đạt bằng khoảng thời gian này."},
+  hint:{en:"What do temperature and rainfall together describe?",vi:"Nhiệt độ và lượng mưa gộp lại mô tả điều gì?"}},
+ {id:"m3",label:"Table 3",desc:{en:"Columns: Bus · Train · Bicycle, with fares, journeys and passenger percentages",vi:"Cột: Xe buýt · Tàu · Xe đạp, kèm giá vé, số chuyến và % hành khách"},
+  options:[["a","Climate change over 50 years"],["b","Transport use by type"],["c","Comparison of housing by area"]],answer:"b",
+  exp:{en:"The three columns are three modes of travel, and each row (fare, journeys, passengers) describes how each is used.",vi:"Ba cột là ba phương tiện, mỗi hàng (giá vé, số chuyến, hành khách) cho biết cách sử dụng từng loại."},
+  para:{en:"'By type' is paraphrased by the headings <mark>Bus</mark>, <mark>Train</mark>, <mark>Bicycle</mark> — the types themselves.",vi:"'By type' được thể hiện qua chính các cột <mark>Bus</mark>, <mark>Train</mark>, <mark>Bicycle</mark>."},
+  hint:{en:"Bus, train, bicycle — these are all kinds of what?",vi:"Xe buýt, tàu, xe đạp — đều là loại của cái gì?"}}
+];
+
+const SV_Q=[
+ {id:"q6",n:6,prompt:{en:"New SuperValue Card — Free credit period: ______ months",vi:"Thẻ SuperValue mới — Thời gian miễn lãi: ______ tháng"},accept:["3","three"],
+  exp:{en:"The old card gives one month's free credit; the assistant contrasts this with the new card.",vi:"Thẻ cũ miễn lãi một tháng; nhân viên đối chiếu với thẻ mới."},
+  quote:"With your old card you get one month's free credit, but you can get <mark>three months'</mark> free credit with the new card.",
+  para:{en:"Watch the contrast marker <b>but</b> — the answer (new card) comes after it, not before.",vi:"Chú ý từ đối lập <b>but</b> — đáp án (thẻ mới) đứng sau nó, không phải trước."},
+  hint:{en:"A number of months. Listen to the middle of the talk, right after the word 'but'.",vi:"Là số tháng. Nghe ở giữa đoạn, ngay sau từ 'but'."},
+  card:{front:{en:"Free credit period → what did the assistant say for the NEW card?",vi:"Thời gian miễn lãi → nhân viên nói gì cho thẻ MỚI?"},back:"…one month (old), <mark>but three months</mark> with the new card. (answer after 'but')"}},
+ {id:"q7",n:7,prompt:{en:"New SuperValue Card — Interest rate: ______ %",vi:"Thẻ SuperValue mới — Lãi suất: ______ %"},accept:["22.5","22.5%"],
+  exp:{en:"Two rates are read out; the higher one belongs to the new card. Trap: 18.5% is the old card and comes first.",vi:"Có hai mức lãi; mức cao hơn là của thẻ mới. Bẫy: 18.5% là thẻ cũ, đọc trước."},
+  quote:"The interest rate is a bit higher, at <mark>22.5 per cent</mark> rather than 18.5 per cent.",
+  para:{en:"'%' is said as <mark>per cent</mark>; 'a bit higher … rather than' signals the two figures.",vi:"'%' được đọc là <mark>per cent</mark>; 'a bit higher … rather than' báo hiệu hai con số."},
+  hint:{en:"A percentage. Two numbers are said — you need the HIGHER one (the new card).",vi:"Là phần trăm. Có hai số — cần số CAO hơn (thẻ mới)."},
+  card:{front:{en:"Interest rate (%) — new card",vi:"Lãi suất (%) — thẻ mới"},back:"<mark>22.5 per cent</mark> — 'higher … rather than 18.5%'. '%' spoken as 'per cent'."}},
+ {id:"q8",n:8,prompt:{en:"Old ValueCard — Cardholder shopping evenings: ______ per month",vi:"Thẻ ValueCard cũ — Buổi tối mua sắm cho chủ thẻ: ______ mỗi tháng"},accept:["1","one"],
+  exp:{en:"Special cardholder days are two per month on the new card, compared with one per month on the old. The gap is on the OLD-card side.",vi:"Ngày dành riêng cho chủ thẻ là hai lần/tháng ở thẻ mới, so với một lần/tháng ở thẻ cũ. Ô trống ở phía thẻ CŨ."},
+  quote:"there are special cardholder-only days – two per month, compared with <mark>one per month</mark> with the old card.",
+  para:{en:"'shopping evenings' is paraphrased as <mark>cardholder-only days</mark>; 'compared with … the old card' points to the old value.",vi:"'shopping evenings' được diễn đạt là <mark>cardholder-only days</mark>; 'compared with … the old card' chỉ về giá trị thẻ cũ."},
+  hint:{en:"A number per month for the OLD card. Listen after 'compared with'.",vi:"Một con số mỗi tháng cho thẻ CŨ. Nghe sau 'compared with'."},
+  card:{front:{en:"'shopping evenings' — how did the speaker say it?",vi:"'shopping evenings' — người nói diễn đạt thế nào?"},back:"<mark>cardholder-only days</mark> — two (new) vs one (old) per month"}},
+ {id:"q9",n:9,prompt:{en:"Old ValueCard — Benefits: Free delivery within ______ miles",vi:"Thẻ ValueCard cũ — Ưu đãi: Giao hàng miễn phí trong ______ dặm"},accept:["20","twenty"],
+  exp:{en:"Free delivery is described for both cards; the old card's radius is twenty miles (new reaches 50).",vi:"Giao hàng miễn phí có ở cả hai thẻ; bán kính thẻ cũ là hai mươi dặm (thẻ mới tới 50)."},
+  quote:"free delivery within <mark>twenty miles</mark>. The SuperValue Card gives you free delivery up to 50 miles.",
+  para:{en:"Number trap: <mark>twenty</mark> (old) vs 50 (new). The gap is the old-card row, so 'twenty' is the answer.",vi:"Bẫy số: <mark>twenty</mark> (cũ) vs 50 (mới). Ô trống là hàng thẻ cũ nên đáp án là 'twenty'."},
+  hint:{en:"A distance in miles for the OLD card. Don't write 50 — that's the new card.",vi:"Khoảng cách (miles) của thẻ CŨ. Đừng viết 50 — đó là thẻ mới."},
+  card:{front:{en:"Free delivery within __ miles — OLD card",vi:"Giao hàng miễn phí trong __ dặm — thẻ CŨ"},back:"<mark>twenty miles</mark> (new card = 50) — number trap"}},
+ {id:"q10",n:10,prompt:{en:"New SuperValue Card — Fee: £ ______",vi:"Thẻ SuperValue mới — Phí: £ ______"},accept:["12","£12","12 pounds"],
+  exp:{en:"The old card was free ('Nil'); the new card carries a small initial fee.",vi:"Thẻ cũ miễn phí ('Nil'); thẻ mới có một khoản phí ban đầu nhỏ."},
+  quote:"with the SuperValue card there is an initial <mark>fee of just £12</mark>, and then it's very good value.",
+  para:{en:"'just' is a distractor adjective — write only the number. 'initial fee' = the joining charge.",vi:"'just' là tính từ gây nhiễu — chỉ viết con số. 'initial fee' = phí gia nhập."},
+  hint:{en:"A number of pounds for the new card. Ignore the word 'just'.",vi:"Số tiền (bảng) của thẻ mới. Bỏ qua từ 'just'."},
+  card:{front:{en:"Fee — new card",vi:"Phí — thẻ mới"},back:"initial <mark>fee of just £12</mark> — write only '12'"}}
+];
+
+const EXAM_Q=[
+ {id:"e11",n:11,group:"people",prompt:{en:"Q11–13: Three kinds of people listening to the talk (any order) — person 1",vi:"Câu 11–13: Ba nhóm người đang nghe bài nói (bất kỳ thứ tự) — người 1"},
+  exp:{en:"The librarian names the audience early; three groups, any order across 11–13.",vi:"Thủ thư nêu đối tượng ngay đầu; ba nhóm, thứ tự tuỳ ý cho 11–13."},
+  quote:"The majority of you are <mark>full-time students</mark> … <mark>part-time students</mark> will no doubt require the services too … there may be a few <mark>distance learners</mark>.",
+  para:{en:"'kinds of people listening' = who the talk addresses: 'The majority of you are…', 'there may be a few…'.",vi:"'kinds of people listening' = đối tượng bài nói hướng tới: 'The majority of you are…', 'there may be a few…'."},
+  hint:{en:"Listen at the very start for plural people-nouns after 'you are' / 'a few'.",vi:"Nghe ngay đầu bài, tìm danh từ chỉ người số nhiều sau 'you are' / 'a few'."},
+  card:{front:{en:"'kinds of people listening to the talk'",vi:"'các nhóm người đang nghe bài nói'"},back:"<mark>full-time / part-time students, distance learners</mark>"}},
+ {id:"e12",n:12,group:"people",prompt:{en:"Q11–13: … person 2",vi:"Câu 11–13: … người 2"},
+  exp:{en:"The three groups are full-time students, part-time students and distance learners.",vi:"Ba nhóm là full-time students, part-time students và distance learners."},
+  quote:"The majority of you are <mark>full-time students</mark> … <mark>part-time students</mark> … a few <mark>distance learners</mark>.",
+  para:{en:"Listen for people-nouns after 'you are' / 'there may be a few'.",vi:"Nghe danh từ chỉ người sau 'you are' / 'there may be a few'."},
+  hint:{en:"Same section as Q11 — three groups of students.",vi:"Cùng đoạn với câu 11 — ba nhóm sinh viên."},
+  card:{front:{en:"student who studies remotely",vi:"sinh viên học từ xa"},back:"<mark>distance learner</mark>"}},
+ {id:"e13",n:13,group:"people",prompt:{en:"Q11–13: … person 3",vi:"Câu 11–13: … người 3"},
+  exp:{en:"The three groups are full-time students, part-time students and distance learners.",vi:"Ba nhóm là full-time students, part-time students và distance learners."},
+  quote:"… there may be a few <mark>distance learners</mark> on the tour today.",
+  para:{en:"'distance learners' study remotely — a common IELTS synonym for off-campus students.",vi:"'distance learners' học từ xa — cách nói thường gặp cho sinh viên ngoài trường."},
+  hint:{en:"The third group is mentioned as an afterthought ('Sorry, I forgot…').",vi:"Nhóm thứ ba được nhắc thêm ('Sorry, I forgot…')."},
+  card:{front:{en:"'part-time students' — meaning",vi:"'part-time students' — nghĩa"},back:"sinh viên bán thời gian (học không toàn thời gian)"}},
+ {id:"e14",n:14,prompt:{en:"Q14: What will you need to do to visit the Fieldhouse Library?",vi:"Câu 14: Bạn cần làm gì để tới thăm Thư viện Fieldhouse?"},accept:["make an appointment","an appointment","appointment","make appointment","book an appointment"],
+  exp:{en:"The Fieldhouse Library is an exception to open access, so a visit must be arranged in advance.",vi:"Thư viện Fieldhouse là ngoại lệ của quy tắc mở cửa tự do, nên phải hẹn trước."},
+  quote:"if you want to visit it you will need to <mark>make an appointment</mark>.",
+  para:{en:"'visit the Fieldhouse Library' ↔ 'if you want to visit it'. The verb phrase follows 'you will need to'.",vi:"'visit the Fieldhouse Library' ↔ 'if you want to visit it'. Cụm động từ đứng sau 'you will need to'."},
+  hint:{en:"Two–three words, a verb phrase. Listen where the Fieldhouse Library is described.",vi:"Hai–ba từ, cụm động từ. Nghe đoạn mô tả Thư viện Fieldhouse."},
+  card:{front:{en:"'visit the Fieldhouse Library' → what must you do?",vi:"'thăm Thư viện Fieldhouse' → phải làm gì?"},back:"<mark>make an appointment</mark> ('if you want to visit it…')"}},
+ {id:"e15",n:15,prompt:{en:"Q15: What is necessary for gaining access to the library?",vi:"Câu 15: Cần gì để được vào thư viện?"},accept:["id card","your id card","(your) id card","an id card","id","identity card"],
+  exp:{en:"Access to the facilities is conditional on one thing, repeated for emphasis.",vi:"Việc vào thư viện phụ thuộc vào một thứ, được nhắc lại để nhấn mạnh."},
+  quote:"to gain access to the facilities you must have your <mark>ID card</mark> – no ID card, no entry.",
+  para:{en:"'necessary for gaining access' ↔ 'you must have…' — 'must' signals necessity.",vi:"'necessary for gaining access' ↔ 'you must have…' — 'must' báo hiệu sự bắt buộc."},
+  hint:{en:"Two words. Listen for 'you must have your…'.",vi:"Hai từ. Nghe cụm 'you must have your…'."},
+  card:{front:{en:"'necessary for gaining access'",vi:"'cần thiết để được vào'"},back:"'you must have your <mark>ID card</mark>' (must = necessity)"}},
+ {id:"e16",n:16,group:"coll",prompt:{en:"Q16–17: Two collections not yet fully moved in (any order) — collection 1",vi:"Câu 16–17: Hai bộ sưu tập chưa chuyển vào xong (bất kỳ thứ tự) — bộ 1"},
+  exp:{en:"Most collections have moved, but two are exceptions still in transit; either order.",vi:"Hầu hết đã chuyển xong, nhưng hai bộ là ngoại lệ vẫn đang chuyển; thứ tự tuỳ ý."},
+  quote:"we are currently moving the <mark>Economics</mark> collection here … we will be moving the <mark>French Literature</mark> collection … next week.",
+  para:{en:"'not yet fully moved in' ↔ 'we are currently moving…' / 'we will be moving…' (action still in progress or future).",vi:"'not yet fully moved in' ↔ 'we are currently moving…' / 'we will be moving…' (việc còn đang làm hoặc sắp làm)."},
+  hint:{en:"Two subject names. Listen for continuous/future verbs: 'are moving', 'will be moving'.",vi:"Hai tên môn học. Nghe động từ tiếp diễn/tương lai: 'are moving', 'will be moving'."},
+  card:{front:{en:"'not yet fully moved in' — how signalled?",vi:"'chưa chuyển vào xong' — báo hiệu thế nào?"},back:"'we are currently moving… / will be moving…' → <mark>Economics, French Literature</mark>"}},
+ {id:"e17",n:17,group:"coll",prompt:{en:"Q16–17: … collection 2",vi:"Câu 16–17: … bộ 2"},
+  exp:{en:"The two collections still being moved are Economics and French Literature.",vi:"Hai bộ vẫn đang chuyển là Economics và French Literature."},
+  quote:"… we will be moving the <mark>French Literature</mark> collection into this building next week.",
+  para:{en:"Future/continuous verb forms tell you these moves are not finished.",vi:"Thì tương lai/tiếp diễn cho biết việc chuyển chưa xong."},
+  hint:{en:"The second collection is moved 'next week' — a future action.",vi:"Bộ thứ hai chuyển 'next week' — hành động tương lai."},
+  card:{front:{en:"paraphrase for 'currently / will be moving'",vi:"cách diễn đạt 'currently / will be moving'"},back:"= not yet fully moved in (chưa chuyển xong)"}},
+ {id:"e18",n:18,prompt:{en:"Q18: What is currently being built?",vi:"Câu 18: Hiện đang xây dựng cái gì?"},accept:["new restaurant","a new restaurant","restaurant","the new restaurant"],
+  exp:{en:"One facility is still under construction; the café is finished, this one is not (max two words).",vi:"Một hạng mục vẫn đang xây; quán café đã xong, cái này thì chưa (tối đa hai từ)."},
+  quote:"we are still building the <mark>new restaurant</mark>.",
+  para:{en:"'currently being built' (passive) ↔ 'we are still building' (active) — a classic IELTS voice paraphrase.",vi:"'currently being built' (bị động) ↔ 'we are still building' (chủ động) — bẫy đổi thể thường gặp."},
+  hint:{en:"Two words. 'being built' is passive — listen for the active 'we are still building…'.",vi:"Hai từ. 'being built' là bị động — nghe câu chủ động 'we are still building…'."},
+  card:{front:{en:"'currently being built' (passive)",vi:"'currently being built' (bị động)"},back:"'we are still building the <mark>new restaurant</mark>' (active)"}},
+ {id:"e19",n:19,prompt:{en:"Q19: How many computer places have been installed?",vi:"Câu 19: Đã lắp bao nhiêu chỗ máy tính?"},accept:["150","150 stations","one hundred and fifty"],
+  exp:{en:"A number is given for the updated computers (another hundred are still to come — don't add them).",vi:"Có một con số cho số máy đã cập nhật (còn một trăm nữa sắp thêm — đừng cộng vào)."},
+  quote:"We have recently updated <mark>150</mark> computer stations.",
+  para:{en:"'computer places' ↔ 'computer stations'; 'installed' ↔ 'updated'. Trap: 'another hundred shortly' isn't installed yet.",vi:"'computer places' ↔ 'computer stations'; 'installed' ↔ 'updated'. Bẫy: 'another hundred shortly' chưa lắp."},
+  hint:{en:"A number. Two figures are mentioned — take the one already done, not the future one.",vi:"Một con số. Có hai số — lấy số đã hoàn thành, không phải số tương lai."},
+  card:{front:{en:"'computer places … installed'",vi:"'chỗ máy tính … đã lắp'"},back:"'updated <mark>150</mark> computer stations' (places=stations, installed=updated)"}},
+ {id:"e20",n:20,prompt:{en:"Q20: What else can you get from the librarians if you ask?",vi:"Câu 20: Bạn còn có thể lấy gì từ thủ thư nếu hỏi?"},accept:["national newspapers","newspapers","a wide range of national newspapers"],
+  exp:{en:"Beyond books and journals, one extra resource is available on request.",vi:"Ngoài sách và tạp chí, có một nguồn tài nguyên nữa có thể yêu cầu."},
+  quote:"there is a wide range of <mark>national newspapers</mark> available from the librarians on request.",
+  para:{en:"'if you ask' ↔ 'on request'; 'get from the librarians' ↔ 'available from the librarians'.",vi:"'if you ask' ↔ 'on request'; 'get from the librarians' ↔ 'available from the librarians'."},
+  hint:{en:"Two words. Listen near the end for 'on request'.",vi:"Hai từ. Nghe gần cuối cụm 'on request'."},
+  card:{front:{en:"'if you ask' — the exam paraphrase",vi:"'if you ask' — cách diễn đạt trong đề"},back:"'on request' → <mark>national newspapers</mark>"}}
+];
+
+const POOLS={
+ people:[["full-time students","full time students","fulltime students","full-time student"],["part-time students","part time students","part-time student"],["distance learners","distance learner"]],
+ coll:[["economics","the economics collection","economics collection"],["french literature","the french literature collection","french literature collection"]]
+};
+
+const TRANSCRIPTS={
+ supervalue:[["Assistant","So, how would you like to pay?"],["Customer","Er, cash?"],["Assistant","Do you have a Robson's Store Card?"],["Customer","I think I might do. Here we are."],["Assistant","Oh my goodness, I haven't seen one of those for a long time. Those are the old ValueCards. Now you can get a SuperValue Card, which is even better value."],["Customer","Really? I don't know what to do."],["Assistant","Well, I can change you onto a SuperValue Card if you want. With the SuperValue Card you get double the standard number of points, and your free credit period is longer. With your old card you get one month's free credit, but you can get three months' free credit with the new card. The interest rate is a bit higher, at 22.5 per cent rather than 18.5 per cent, but if you're careful you don't have to pay interest at all."],["Customer","Well, I'm not sure about that, it seems better in some ways. Can I continue to use my old card?"],["Assistant","You certainly can, until they withdraw them, which I'm sure they will be before too long. But with the SuperValue Card there are special cardholder-only days, two per month, compared with one per month with the old card."],["Customer","I see. My old card gave me free delivery, too."],["Assistant","That's right, free delivery within twenty miles. The SuperValue Card gives you free delivery up to 50 miles."],["Customer","That sounds good. I think the old card was free, too."],["Assistant","Mmm, with the SuperValue card there is an initial fee of just 12 pounds, and then it's very good value."],["Customer","I think I'll pay cash."],["Assistant","Very good, madam."]],
+ exam:[["Librarian","Good morning. My name is Mandy and I am going to tell you a little about the John R Jones Memorial Library here at Blackwater College. We regard the library as a gateway to the resources that you as students at the College may need. The majority of you are full-time students. Even those of you who are part-time students will no doubt require the services too. Sorry, I forgot there may be a few distance learners on the tour today."],["Librarian","This is the main site of the library, but we also have the Rivergate building and the Fieldhouse Library. The Fieldhouse Library contains a specialist collection of local history and if you want to visit it you will need to make an appointment. However, to gain access to the facilities you must have your ID card. No ID card, no entry. Just remember your ID card!"],["Librarian","Now, I must apologize for the mess. This new building has been here for only two months and we have not quite finished moving in. So far we have moved most of the book and journal collections. There are two exceptions: we are currently moving the Economics collection here, which should be installed by tomorrow, and we will be moving the French Literature collection into this building next week. But we are still building the new restaurant. We have finished the café. We have recently updated 150 computer stations and we will be adding another one hundred shortly. In addition to the books and journals there is a wide range of national newspapers available from the librarians on request. Now, any questions?"]]
+};
+
+const PREDICT_MODEL=[["1 Aberton — Transport","good"],["2 Hunborough — Typical style","terraced houses"],["3 Millview — Average price","£125,000"],["4 2013 — Avg temperature","18.2°C"],["5 1955 — Annual rainfall","612 mm"],["6 Bus — Total journeys","3567"],["7 Train — Price of fare","£4.50"],["8 Bicycle — Male passengers","25%"],["9 Bicycle — Female passengers","75%"]];
+
+const EX=[
+ {id:"brief",kind:"brief",nav:{en:"Skills briefing",vi:"Giới thiệu kỹ năng"},nix:"i"},
+ {id:"predict",kind:"study",nav:{en:"Predicting in tables",vi:"Dự đoán trong bảng"},nix:"P1"},
+ {id:"match",kind:"graded",nav:{en:"Match the tables",vi:"Ghép bảng"},nix:"1"},
+ {id:"strategy",kind:"study",nav:{en:"Reading the rubric",vi:"Đọc đề & giới hạn từ"},nix:"P2"},
+ {id:"supervalue",kind:"graded",nav:{en:"SuperValue Card (1.2)",vi:"Thẻ SuperValue (1.2)"},nix:"2"},
+ {id:"exam",kind:"graded",nav:{en:"Exam listening · Section 2",vi:"Bài thi · Section 2"},nix:"3"},
+ {id:"logbook",kind:"logbook",nav:{en:"Error logbook",vi:"Sổ lỗi paraphrase"},nix:"L"},
+ {id:"flash",kind:"flash",nav:{en:"Paraphrase flashcards",vi:"Flashcard paraphrase"},nix:"F"},
+ {id:"report",kind:"report",nav:{en:"Results & report",vi:"Kết quả & báo cáo"},nix:"R"}
+];
+const QMAP={match:MATCH_Q,supervalue:SV_Q,exam:EXAM_Q};
+const GRADED=["match","supervalue","exam"];
+const GRADED_NAMES={match:{en:"Match the tables",vi:"Ghép bảng"},supervalue:{en:"SuperValue Card (1.2)",vi:"Thẻ SuperValue (1.2)"},exam:{en:"Exam listening · Section 2",vi:"Bài thi · Section 2"}};
+
+/* =================== STATE =================== */
+const LS_KEY="listening-studio-u1-v2";
+let S={name:"",email:"",code:"",theme:null,lang:"en",role:"student",active:"brief",
+  answers:{},results:{},studyOpen:{},log:{},srs:{},reportCount:0,anon:null};
+function load(){ try{const r=localStorage.getItem(LS_KEY); if(r) S=Object.assign(S,JSON.parse(r));}catch(e){} if(!S.anon) S.anon="anon_"+Math.random().toString(36).slice(2,9); }
+let dirty=false;
+function markDirty(){dirty=true;setSave("saving");}
+function commit(){ try{localStorage.setItem(LS_KEY,JSON.stringify(S));dirty=false;setSave("saved");}catch(e){setSave("error");} }
+function setSave(state){
+  const dot=document.getElementById("save-dot"),tx=document.getElementById("save-text");
+  dot.className="save-dot";
+  if(state==="saving"){dot.classList.add("saving");tx.textContent=t("saving");}
+  else if(state==="error"){dot.style.background="var(--bad)";tx.textContent="Save blocked";}
+  else{ if(CLOUD_OK){dot.classList.add("cloud");tx.textContent=t("cloudOn");} else {tx.textContent=t("saved");} }
+}
+setInterval(()=>{ if(dirty){commit(); syncUp();} },10000);
+window.addEventListener("beforeunload",()=>{ if(dirty) commit(); });
+
+/* =================== SCORING (lenient) =================== */
+function norm(s){return (s||"").toString().trim().toLowerCase().replace(/[.,;:!?]+$/,"").replace(/\s+/g," ").replace(/^the\s+/,"").replace(/[’']/g,"'");}
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;const d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);for(let j=0;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){const c=a[i-1]===b[j-1]?0:1;d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);}return d[m][n];}
+function acceptMatch(val,accept){const v=norm(val);if(!v)return false;for(const a of accept){if(norm(a)===v)return true;}
+  if(/[\d£$%]/.test(v))return false; // numbers/symbols must match exactly
+  for(const a of accept){const na=norm(a);if(na.length>=4&&lev(na,v)<=1)return true;}return false;}
+function scoreGroup(qs){
+  let c=0;const perQ={};const groups={};
+  qs.forEach(q=>{if(q.group)(groups[q.group]=groups[q.group]||[]).push(q);});
+  Object.keys(groups).forEach(g=>{const pool=(POOLS[g]||[]).map(a=>a.slice());const used=new Array(pool.length).fill(false);
+    groups[g].forEach(q=>{const val=S.answers[q.id]||"";let ok=false;for(let i=0;i<pool.length;i++){if(!used[i]&&pool[i].some(a=>norm(a)===norm(val)||(norm(a).length>=5&&lev(norm(a),norm(val))<=1&&norm(val)))){used[i]=true;ok=true;break;}}perQ[q.id]=ok;if(ok)c++;});});
+  qs.forEach(q=>{if(!q.group){const ok=acceptMatch(S.answers[q.id]||"",q.accept);perQ[q.id]=ok;if(ok)c++;}});
+  return {correct:c,total:qs.length,perQ};
+}
+function computeResult(exId){
+  if(exId==="match"){let c=0;const perQ={};MATCH_Q.forEach(q=>{const ok=(S.answers[q.id]||"")===q.answer;perQ[q.id]=ok;if(ok)c++;});return{correct:c,total:MATCH_Q.length,perQ,pct:Math.round(c/MATCH_Q.length*100)};}
+  const r=scoreGroup(QMAP[exId]);return{...r,pct:Math.round(r.correct/r.total*100)};
+}
+function isUnlocked(r){ return r && (r.pct>=PASS || r.attempts>=2); }
+
+/* =================== CLOUD (Google Apps Script backend) =================== */
+/* Student results are POSTed to your Apps Script Web App, which appends/updates
+   a row in your Google Sheet. The separate Teacher page reads the same URL.
+   Paste the matching Code.gs (provided separately) into your Apps Script project. */
+const APPS_URL="https://script.google.com/macros/s/AKfycbxFcUtx3wTCvRFNgqBmZNSoO4X_cLdhj1_LSsbts8EcSQjeW7slaRRwlvzQi3VsTMKe/exec";
+let CLOUD_OK=false, syncBusy=false;
+function subKey(){ const e=(S.email||"").trim().toLowerCase(); const base=e?e.replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,""):S.anon; return (base||S.anon).slice(0,120); }
+async function syncUp(){
+  if(!APPS_URL) return;
+  if(!(S.email||S.name)) return;          // need an identity before syncing
+  if(syncBusy) return; syncBusy=true;
+  try{ const st=overallStats();
+    const payload={action:"save",key:subKey(),classCode:(S.code||"default").trim()||"default",
+      name:S.name||"",email:S.email||"",anon:S.anon,unit:"u1",
+      results:S.results||{},overall:st.pct,correct:st.correct,items:st.items,done:st.done,total:st.total,
+      reportCount:S.reportCount||0,updatedAt:Date.now()};
+    await fetch(APPS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    CLOUD_OK=true; if(!dirty) setSave("saved");
+  }catch(e){ CLOUD_OK=false; }
+  syncBusy=false;
+}
+
+/* =================== RENDER helpers =================== */
+const views=document.getElementById("views");
+function iconCheck(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg>';}
+function iconX(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';}
+function iconLock(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';}
+function iconBulb(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg>';}
+function iconPara(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>';}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function escAttr(s){return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+
+/* ---- brief ---- */
+function renderBrief(){
+ return `<div class="panel"><div class="panel-head">
+   <div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Định hướng":"Orientation"}</span><span class="tag">${S.lang==="vi"?"Chiến lược thi":"Exam technique"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Trước khi bắt đầu":"Before you start"}</div>
+   <h2>${S.lang==="vi"?"Giới thiệu kỹ năng":"Skills briefing"}</h2></div>
+   <p class="lead" style="font-size:16px">${biBoth({en:`Welcome to your listening booth for <b>${UNIT.code}: ${UNIT.title}</b>. You get instant scoring, and every answer comes with a transcript quote where the paraphrase is <mark>highlighted</mark> — so you see exactly how the speaker said it differently from the question.`,vi:`Chào mừng đến phòng luyện nghe cho <b>${UNIT.code}: ${UNIT.title}</b>. Bạn được chấm điểm ngay, và mỗi đáp án đi kèm một câu trích từ transcript với phần paraphrase được <mark>tô sáng</mark> — để thấy rõ người nói đã diễn đạt khác câu hỏi thế nào.`})}</p>
+   <div class="coach"><h4>${iconBulb()}${S.lang==="vi"?"Cách phòng luyện hoạt động":"How this studio works"}</h4><ul>
+     <li>${biBoth({en:"<b>Listen first.</b> Each listening task has a <b>Play</b> button that reads the passage aloud. Answer from listening; the script stays hidden.",vi:"<b>Nghe trước.</b> Mỗi bài có nút <b>Play</b> đọc bài nghe. Hãy trả lời bằng cách nghe; script được giấu đi."})}</li>
+     <li>${biBoth({en:"<b>Hints, then answers.</b> Below 70% you get graded <b>hints</b> for the items you missed; the full answer unlocks at 70% <i>or</i> after 2 tries — no dead-ends.",vi:"<b>Gợi ý, rồi đáp án.</b> Dưới 70% bạn nhận <b>gợi ý</b> phân tầng cho câu sai; đáp án đầy đủ mở khi đạt 70% <i>hoặc</i> sau 2 lần thử — không bế tắc."})}</li>
+     <li>${biBoth({en:"<b>Mine the paraphrases.</b> Each miss becomes a <b>flashcard</b> for spaced review. IELTS listening is really a test of synonyms.",vi:"<b>Khai thác paraphrase.</b> Mỗi câu sai thành một <b>flashcard</b> để ôn lại. Nghe IELTS thực chất là bài kiểm tra từ đồng nghĩa."})}</li>
+     <li>${biBoth({en:"<b>Autosaves</b> every 10s. Add your name, email and class code so results reach your teacher and your PDF report.",vi:"<b>Tự lưu</b> mỗi 10 giây. Nhập tên, email và mã lớp để kết quả tới giáo viên và vào báo cáo PDF."})}</li>
+   </ul></div>
+   <div class="coach plain"><h4>${S.lang==="vi"?"Điều giám khảo muốn bạn thành thạo ở Unit 1":"What an examiner wants you to master in Unit 1"}</h4>
+     <p>${biBoth({en:"<b>Prediction.</b> Before the audio, the headings, numbering and word limit already tell you what kind of answer to expect — a number, a percentage, a plural noun. Decide it in the pause before the audio.",vi:"<b>Dự đoán.</b> Trước khi nghe, tiêu đề, số thứ tự và giới hạn từ đã cho biết loại đáp án — con số, phần trăm, danh từ số nhiều. Hãy quyết định trong lúc tạm dừng trước audio."})}</p>
+     <p>${biBoth({en:"<b>Follow the word limit exactly.</b> 'NO MORE THAN TWO WORDS' is scored ruthlessly — a third word makes a correct idea wrong.",vi:"<b>Tuân thủ giới hạn từ.</b> 'NO MORE THAN TWO WORDS' bị chấm rất chặt — thừa một từ là sai dù ý đúng."})}</p>
+     <p>${biBoth({en:"<b>Hear the signposts.</b> Words like <i>but, however, rather than, compared with</i> mean a contrast — the answer is often the item <i>after</i> the signpost.",vi:"<b>Nghe từ chỉ dẫn.</b> Các từ như <i>but, however, rather than, compared with</i> báo hiệu tương phản — đáp án thường là phần <i>sau</i> từ chỉ dẫn."})}</p>
+   </div>
+   <div class="qactions"><button class="btn btn-primary" data-go="predict">${S.lang==="vi"?"Bắt đầu với dự đoán":"Start with prediction"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`;
+}
+
+/* ---- predict (study) ---- */
+function renderPredict(){
+ const open=S.studyOpen["predict"];
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Luyện có hướng dẫn · không chấm":"Guided · not scored"}</span><span class="tag">${S.lang==="vi"?"Hoàn thành bảng":"Table completion"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Kỹ năng nền tảng":"Foundation skill"}</div><h2>${S.lang==="vi"?"Dự đoán trong bảng":"Predicting in tables"}</h2></div>
+   <p class="lead">${biBoth({en:"Read a table the way the exam expects: title first, then headings, then the direction the numbering runs.",vi:"Đọc bảng theo cách đề thi yêu cầu: tiêu đề trước, rồi các cột/hàng, rồi hướng đánh số."})}</p>
+   <div class="coach"><h4>${iconBulb()}${S.lang==="vi"?"Quy trình chuẩn cho mọi bài bảng":"Expert routine for any table task"}</h4><ul>
+     <li>${biBoth({en:"<b>Read the title first</b> — it fixes the topic.",vi:"<b>Đọc tiêu đề trước</b> — để xác định chủ đề."})}</li>
+     <li>${biBoth({en:"<b>Read the top row and first column</b> — these headings are what the speaker names aloud.",vi:"<b>Đọc hàng đầu và cột đầu</b> — đây là những tiêu đề người nói sẽ đọc lên."})}</li>
+     <li>${biBoth({en:"<b>Decide each gap's answer type</b> (price? percentage? plural noun?) before you listen.",vi:"<b>Xác định loại đáp án mỗi ô</b> (giá? phần trăm? danh từ số nhiều?) trước khi nghe."})}</li>
+     <li>${biBoth({en:"<b>Check the numbering direction</b> so you don't lose your place.",vi:"<b>Kiểm tra hướng đánh số</b> để không bị lạc chỗ."})}</li></ul></div>
+   <h3 style="font-size:18px;margin:26px 0 4px">${S.lang==="vi"?"Bài 2 — điền bảng từ ngân hàng đáp án":"Exercise 2 — complete the tables from the word bank"}</h3>
+   <p style="color:var(--ink-soft);margin-bottom:6px">${biBoth({en:"Fill each numbered gap, then reveal the model answers and reasoning.",vi:"Điền mỗi ô số, rồi hiện đáp án mẫu và lập luận."})}</p>
+   <p class="mono" style="background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-size:13px">£125,000 · £4.50 · 18.2°C · 25% · 3567 · 612 mm · 75% · good · terraced houses</p>
+   <div class="tblwrap"><table class="data"><caption>${S.lang==="vi"?"Bảng 1 — nhà ở theo khu vực":"Table 1 — housing by area"}</caption>
+     <thead><tr><th>District</th><th>Typical style</th><th>Average price</th><th>Transport</th></tr></thead>
+     <tbody><tr><th>Aberton</th><td>bungalows</td><td class="num">£180,000</td><td><b>1</b> ______</td></tr>
+     <tr><th>Hunborough</th><td><b>2</b> ______</td><td class="num">£225,000</td><td>poor</td></tr>
+     <tr><th>Millview</th><td>flats</td><td class="num"><b>3</b> ______</td><td>excellent</td></tr></tbody></table></div>
+   <div class="tblwrap"><table class="data"><caption>${S.lang==="vi"?"Bảng 2 — biến đổi khí hậu":"Table 2 — climate change"}</caption>
+     <thead><tr><th></th><th>1955</th><th>2013</th></tr></thead>
+     <tbody><tr><th>Average temperature</th><td class="num">17.4°C</td><td class="num"><b>4</b> ______</td></tr><tr><th>Annual rainfall</th><td class="num"><b>5</b> ______</td><td class="num">652 mm</td></tr></tbody></table></div>
+   <div class="tblwrap"><table class="data"><caption>${S.lang==="vi"?"Bảng 3 — sử dụng phương tiện":"Table 3 — transport use"}</caption>
+     <thead><tr><th></th><th>Bus</th><th>Train</th><th>Bicycle</th></tr></thead>
+     <tbody><tr><th>Price of fare</th><td class="num">£1.50</td><td class="num"><b>7</b> ______</td><td>N/A</td></tr>
+     <tr><th>Total journeys</th><td class="num"><b>6</b> ______</td><td class="num">2504</td><td class="num">962</td></tr>
+     <tr><th>Male passengers</th><td class="num">34%</td><td class="num">62%</td><td class="num"><b>8</b> ______</td></tr>
+     <tr><th>Female passengers</th><td class="num">66%</td><td class="num">38%</td><td class="num"><b>9</b> ______</td></tr></tbody></table></div>
+   <button class="btn btn-ghost study-toggle" data-study="predict">${open?(S.lang==="vi"?"Ẩn":"Hide"):(S.lang==="vi"?"Hiện":"Reveal")} ${S.lang==="vi"?"đáp án mẫu & lập luận":"model answers & reasoning"}</button>
+   <div class="model-ans ${open?'show':''}"><h4>${S.lang==="vi"?"Đáp án gợi ý":"Suggested answers"}</h4>
+     <div class="ans-grid">${PREDICT_MODEL.map(([k,v])=>`<div class="ans-cell">${k} → <b>${v}</b></div>`).join("")}</div>
+     <div class="coach plain" style="margin-top:16px"><h4>${S.lang==="vi"?"Vì sao":"Why"}</h4>
+       <p>${biBoth({en:"<b>Housing:</b> transport reads poor/<b>good</b>/excellent, so Aberton is 'good'. The only style left is 'terraced houses'; the only price left is '£125,000' (flats, cheaper).",vi:"<b>Nhà ở:</b> giao thông là poor/<b>good</b>/excellent nên Aberton là 'good'. Kiểu nhà còn lại là 'terraced houses'; giá còn lại là '£125,000' (căn hộ, rẻ hơn)."})}</p>
+       <p>${biBoth({en:"<b>Climate:</b> only one temperature (18.2°C) and one rainfall (612 mm) remain — warmer, slightly wetter over ~50 years.",vi:"<b>Khí hậu:</b> chỉ còn một nhiệt độ (18.2°C) và một lượng mưa (612 mm) — ấm hơn, hơi ẩm hơn sau ~50 năm."})}</p>
+       <p>${biBoth({en:"<b>Transport:</b> the leftover fare (£4.50) is the train's; the leftover count (3567) is the bus's. Male + female must total 100%, so 25% and 75% fill gaps 8/9. <i>This pair is a prediction — the speaker would confirm which is which.</i>",vi:"<b>Phương tiện:</b> giá vé còn lại (£4.50) là của tàu; số chuyến còn lại (3567) là của xe buýt. Nam + nữ phải bằng 100%, nên 25% và 75% điền ô 8/9. <i>Cặp này là dự đoán — người nói sẽ xác nhận số nào là số nào.</i>"})}</p></div></div>
+   <div class="qactions"><button class="btn btn-primary" data-go="match">${S.lang==="vi"?"Tiếp: bài chấm điểm đầu tiên":"Next: your first scored task"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`;
+}
+
+/* ---- strategy (study) ---- */
+function renderStrategy(){
+ const open=S.studyOpen["strategy"];
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Luyện có hướng dẫn · không chấm":"Guided · not scored"}</span><span class="tag">${S.lang==="vi"?"Giới hạn từ":"Word limits"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Trước bài SuperValue":"Before the SuperValue task"}</div><h2>${S.lang==="vi"?"Đọc đề & dự đoán đáp án":"Reading the rubric & predicting answers"}</h2></div>
+   <h3 style="font-size:18px;margin:6px 0 4px">${S.lang==="vi"?"Bài 5 — đáp án nào chắc chắn sai?":"Exercise 5 — which answers must be wrong?"}</h3>
+   <p style="color:var(--ink-soft)">${biBoth({en:"Rubric: <b>Write NO MORE THAN TWO WORDS AND/OR A NUMBER.</b> Which would be marked wrong?",vi:"Đề: <b>Viết KHÔNG QUÁ HAI TỪ VÀ/HOẶC MỘT SỐ.</b> Câu nào sẽ bị chấm sai?"})}</p>
+   <div class="tblwrap"><table class="data"><thead><tr><th>${S.lang==="vi"?"Đáp án ứng viên":"Candidate answer"}</th><th>${S.lang==="vi"?"Số từ/số":"Words / numbers"}</th><th>${S.lang==="vi"?"Kết luận":"Verdict"}</th></tr></thead>
+     <tbody><tr><td>a &nbsp;very high quality</td><td class="num">3 words</td><td style="color:var(--bad);font-weight:600">${S.lang==="vi"?"Sai — quá dài":"Wrong — too long"}</td></tr>
+     <tr><td>b &nbsp;210</td><td class="num">1 number</td><td style="color:var(--good);font-weight:600">${S.lang==="vi"?"Được":"Allowed"}</td></tr>
+     <tr><td>c &nbsp;£35 or £55</td><td class="num">2 numbers + a word</td><td style="color:var(--bad);font-weight:600">${S.lang==="vi"?"Sai — vượt giới hạn":"Wrong — over limit"}</td></tr>
+     <tr><td>d &nbsp;3 or 4 years</td><td class="num">4 words/numbers</td><td style="color:var(--bad);font-weight:600">${S.lang==="vi"?"Sai — quá dài":"Wrong — too long"}</td></tr></tbody></table></div>
+   <div class="coach"><h4>${iconBulb()}${S.lang==="vi"?"Ghi nhớ":"Takeaway"}</h4><p>${biBoth({en:"Only <b>b</b> is safe. Never write a list joined by 'or' — if you hear two possible values, the recording makes one the real answer; write only that one.",vi:"Chỉ <b>b</b> an toàn. Đừng viết danh sách nối bằng 'or' — nếu nghe hai giá trị, bài nghe chỉ có một đáp án đúng; chỉ viết đáp án đó."})}</p></div>
+   <h3 style="font-size:18px;margin:26px 0 4px">${S.lang==="vi"?"Bài 7 — dự đoán đáp án thẻ SuperValue":"Exercise 7 — predict the SuperValue answers"}</h3>
+   <button class="btn btn-ghost study-toggle" data-study="strategy">${open?(S.lang==="vi"?"Ẩn":"Hide"):(S.lang==="vi"?"Hiện":"Reveal")} ${S.lang==="vi"?"dự đoán của chuyên gia":"expert prediction"}</button>
+   <div class="model-ans ${open?'show':''}"><div class="coach plain"><h4>${S.lang==="vi"?"Thứ tự & dự đoán":"Order & predictions"}</h4>
+     <p>${biBoth({en:"<b>Order:</b> you hear categories top-to-bottom — points, free credit, interest, shopping evenings, delivery, fee.",vi:"<b>Thứ tự:</b> bạn nghe các mục từ trên xuống — điểm, miễn lãi, lãi suất, buổi mua sắm, giao hàng, phí."})}</p>
+     <p>${biBoth({en:"<b>Predictable gaps:</b> every missing answer is a number — months (6), a percentage (7), a number per month (8), miles (9), pounds (10). Lock onto figures.",vi:"<b>Ô dự đoán được:</b> mọi đáp án đều là số — tháng (6), phần trăm (7), số lần/tháng (8), dặm (9), bảng (10). Hãy khoá vào các con số."})}</p></div></div>
+   <div class="qactions"><button class="btn btn-primary" data-go="supervalue">${S.lang==="vi"?"Đến bài nghe":"Go to the listening task"} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>`;
+}
+
+/* ---- players & graded ---- */
+function playerHTML(exId,label){
+ const bars=Array.from({length:40},()=>'<i></i>').join("");
+ return `<div class="player" data-player="${exId}"><button class="play-btn" data-play="${exId}" aria-label="Play recording"><svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>
+   <div class="wave" aria-hidden="true">${bars}</div>
+   <div class="player-meta"><span data-status="${exId}">${label}</span><span class="speed-group"><button data-speed="${exId}" data-rate="0.8">0.8×</button><button data-speed="${exId}" data-rate="1" class="on">1.0×</button></span></div>
+   <div class="player-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5L6 9H2v6h4l5 4zM19 12a7 7 0 0 0-3-5.7M15.5 8.5a3.5 3.5 0 0 1 0 7"/></svg>${t("playHint")}</div></div>`;
+}
+function gapQuestion(q){
+ const v=S.answers[q.id]||"";
+ return `<div class="q" data-q="${q.id}"><div class="qtop"><span class="qnum">${q.n}</span><div class="qbody">
+   <div class="qprompt">${bi(q.prompt)}</div>
+   <input class="answer-in" data-input="${q.id}" type="text" value="${escAttr(v)}" placeholder="${S.lang==="vi"?"Nhập đáp án":"Type your answer"}" autocomplete="off" spellcheck="false">
+   <div class="hintbox" data-hint="${q.id}"></div><div class="reveal" data-reveal="${q.id}"></div></div></div></div>`;
+}
+function exProgress(exId){ const qs=QMAP[exId]; const a=qs.filter(q=>(S.answers[q.id]||"").trim()).length;
+ return `<div class="exbar"><span>${t("answered",{a:a,n:qs.length})}</span><span class="track"><i style="width:${Math.round(a/qs.length*100)}%"></i></span></div>`;
+}
+function renderGradedMatch(){
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Khởi động · chấm điểm":"Warm-up · scored"}</span><span class="tag">3 items</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Bài 1":"Exercise 1"}</div><h2>${S.lang==="vi"?"Ghép mỗi bảng với tiêu đề đúng":"Match each table to its title"}</h2></div>
+   <p class="lead">${biBoth({en:"Read each table's headings, then choose the title. This is scored — treat the headings as your only evidence.",vi:"Đọc tiêu đề mỗi bảng rồi chọn tên. Bài này chấm điểm — hãy coi các tiêu đề là bằng chứng duy nhất."})}</p>
+   <div class="qgroup">${MATCH_Q.map((q,i)=>{const v=S.answers[q.id]||"";return `<div class="q" data-q="${q.id}"><div class="qtop"><span class="qnum">${i+1}</span><div class="qbody">
+     <div class="qprompt"><b>${q.label}.</b> ${bi(q.desc)}</div>
+     <select class="answer-in" data-input="${q.id}"><option value="">${S.lang==="vi"?"Chọn tiêu đề…":"Choose a title…"}</option>${q.options.map(o=>`<option value="${o[0]}" ${v===o[0]?'selected':''}>${o[0]}) ${o[1]}</option>`).join("")}</select>
+     <div class="hintbox" data-hint="${q.id}"></div><div class="reveal" data-reveal="${q.id}"></div></div></div></div>`;}).join("")}</div>
+   ${gradedActions("match")}</div>`;
+}
+function renderGradedSV(){
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Nghe · chấm điểm":"Listening · scored"}</span><span class="tag">${S.lang==="vi"?"Hoàn thành bảng":"Table completion"}</span><span class="tag">5 items</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Bài 8 · Track 1.2":"Exercise 8 · Track 1.2"}</div><h2>${S.lang==="vi"?"Hoàn thành bảng — Thẻ SuperValue":"Table completion — the SuperValue Card"}</h2></div>
+   <p class="lead">${biBoth({en:"A shop assistant explains the new SuperValue Card. All five answers are numbers — write only the figure (a word like 'three' also works).",vi:"Một nhân viên giới thiệu Thẻ SuperValue mới. Cả năm đáp án là số — chỉ viết con số (viết chữ như 'three' cũng được)."})}</p>
+   ${playerHTML("supervalue",S.lang==="vi"?"Hội thoại · ~1 phút":"Dialogue · ~1 min")}
+   ${exProgress("supervalue")}
+   <div class="qgroup">${SV_Q.map(gapQuestion).join("")}</div>${gradedActions("supervalue")}</div>`;
+}
+function renderGradedExam(){
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Trả lời ngắn · chấm điểm":"Short answer · scored"}</span><span class="tag">IELTS Section 2</span><span class="tag">10 items</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Track 1.6–1.7":"Tracks 1.6–1.7"}</div><h2>${S.lang==="vi"?"Bài thi nghe — Section 2":"Exam listening — Section 2"}</h2></div>
+   <p class="lead">${biBoth({en:"Mandy the librarian gives new students a tour. Q11–13 and 16–17 can be any order. Obey the word limits.",vi:"Thủ thư Mandy dẫn sinh viên mới tham quan. Câu 11–13 và 16–17 thứ tự tuỳ ý. Tuân thủ giới hạn từ."})}</p>
+   ${playerHTML("exam",S.lang==="vi"?"Độc thoại · ~2 phút":"Monologue · ~2 min")}
+   ${exProgress("exam")}
+   <div class="coach plain" style="margin-top:14px"><h4>Q11–15 · ${S.lang==="vi"?"KHÔNG QUÁ BA TỪ":"NO MORE THAN THREE WORDS"}</h4><p style="margin:0">${S.lang==="vi"?"11–13 · Ba nhóm người đang nghe | 14 · Phải làm gì để thăm Thư viện Fieldhouse | 15 · Cần gì để được vào":"11–13 · Three kinds of people listening | 14 · What must you do to visit the Fieldhouse Library | 15 · What is necessary for access"}</p></div>
+   <div class="qgroup">${EXAM_Q.slice(0,5).map(gapQuestion).join("")}</div>
+   <div class="coach plain"><h4>Q16–20 · ${S.lang==="vi"?"KHÔNG QUÁ HAI TỪ VÀ/HOẶC MỘT SỐ":"NO MORE THAN TWO WORDS AND/OR A NUMBER"}</h4><p style="margin:0">${S.lang==="vi"?"16–17 · Hai bộ sưu tập chưa chuyển xong | 18 · Đang xây gì | 19 · Số chỗ máy tính đã lắp | 20 · Nguồn tài nguyên thêm khi yêu cầu":"16–17 · Two collections not fully moved in | 18 · Currently being built | 19 · Computer places installed | 20 · Extra resource on request"}</p></div>
+   <div class="qgroup">${EXAM_Q.slice(5).map(gapQuestion).join("")}</div>${gradedActions("exam")}</div>`;
+}
+function gradedActions(exId){
+ const r=S.results[exId];
+ return `<div class="qactions"><button class="btn btn-primary" data-check="${exId}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L20 4"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg> ${r&&r.submitted?t("recheck"):t("check")}</button>
+   <button class="btn btn-ghost" data-reset="${exId}">${t("clear")}</button>
+   <div class="scoreline" data-scoreline="${exId}">${r&&r.submitted?scorelineHTML(r):`<span style="color:var(--muted)">${t("notSubmitted")}</span>`}</div></div>
+   <div data-lockzone="${exId}"></div>`;
+}
+function scorelineHTML(r){const cls=r.pct>=PASS?"pass":"fail";return `<span>${S.lang==="vi"?"Lần":"Attempt"} ${r.attempts} · ${r.correct}/${r.total}</span><span class="score-big ${cls}">${r.pct}%</span>`;}
+
+/* ---- logbook ---- */
+function collectMissed(){
+ const missed=[];
+ GRADED.forEach(exId=>{const r=S.results[exId];if(!r||!r.submitted)return;QMAP[exId].forEach(q=>{if(r.perQ&&r.perQ[q.id]===false){const label=q.n?("Q"+q.n):(q.label||q.id);missed.push({qid:q.id,exId:exId,source:bi(GRADED_NAMES[exId]),label,prompt:bi(q.prompt||q.desc||""),q});}});});
+ return missed;
+}
+function renderLogbook(){
+ const missed=collectMissed();
+ let body;
+ if(!missed.length){ body=`<div class="log-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><p>${biBoth({en:"No mistakes logged yet. Check a scored exercise and every item you miss appears here.",vi:"Chưa có lỗi nào. Kiểm tra một bài chấm điểm, mọi câu sai sẽ hiện ở đây."})}</p></div>`;}
+ else { body=missed.map(m=>{const L=S.log[m.qid]||{};return `<div class="log-row"><div class="log-head"><span class="log-src">${esc(m.source)}</span><span class="log-q">${m.label}</span></div>
+   <p style="color:var(--ink-soft);font-size:13px;margin:0 0 12px">${m.prompt}</p>
+   <div class="log-fields"><div class="f"><label>${S.lang==="vi"?"Từ trong câu hỏi":"The word in the question"}</label><textarea data-log="${m.qid}" data-field="missed" placeholder="${S.lang==="vi"?"vd. 'computer places'":"e.g. 'computer places'"}">${esc(L.missed||"")}</textarea></div>
+   <div class="f"><label>${S.lang==="vi"?"Người nói đã diễn đạt thế nào":"How the speaker said it"}</label><textarea data-log="${m.qid}" data-field="mine" placeholder="${S.lang==="vi"?"vd. 'computer stations'":"e.g. 'computer stations'"}">${esc(L.mine||"")}</textarea></div></div></div>`;}).join("");}
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Ngân hàng paraphrase":"Paraphrase bank"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Học từ những gì bạn bỏ lỡ":"Learn from what you missed"}</div><h2>${S.lang==="vi"?"Sổ lỗi paraphrase":"Paraphrase error logbook"}</h2></div>
+   <p class="lead">${biBoth({en:"For each miss, write the exact word from the question and the different word the speaker used. Then review them in Flashcards.",vi:"Với mỗi câu sai, viết từ trong câu hỏi và từ khác mà người nói dùng. Sau đó ôn lại ở Flashcard."})}</p>
+   ${missed.length?`<div class="coach"><h4>${iconPara()}${t("paraWatch")}</h4><p style="margin:0">${biBoth({en:"Unlock the explanation first (70%+ or 2 tries) — the highlighted phrase is the paraphrase to copy here.",vi:"Mở giải thích trước (đạt 70%+ hoặc 2 lần thử) — cụm được tô sáng chính là paraphrase cần chép vào đây."})}</p></div>`:""}
+   ${body}</div>`;
+}
+
+/* ---- flashcards (SRS) ---- */
+function deckCards(){
+ const cards=[];
+ GRADED.forEach(exId=>{const r=S.results[exId];if(!r||!r.submitted)return;QMAP[exId].forEach(q=>{if(r.perQ&&r.perQ[q.id]===false&&q.card){cards.push({id:"c_"+q.id,src:bi(GRADED_NAMES[exId]),front:bi(q.card.front),back:q.card.back});}});});
+ // custom logbook entries
+ Object.keys(S.log||{}).forEach(qid=>{const L=S.log[qid];if(L&&L.missed&&L.mine){cards.push({id:"lg_"+qid,src:S.lang==="vi"?"Sổ lỗi":"Logbook",front:esc(L.missed),back:esc(L.mine)});}});
+ // dedupe by id (logbook custom overrides)
+ const seen={},out=[];cards.forEach(c=>{if(!seen[c.id]){seen[c.id]=1;out.push(c);}});
+ return out;
+}
+function dueCards(){const now=Date.now();return deckCards().filter(c=>{const s=S.srs[c.id];return !s||!s.due||s.due<=now;});}
+function renderFlash(){
+ const all=deckCards();const due=dueCards();
+ const learned=all.filter(c=>{const s=S.srs[c.id];return s&&s.box>=4;}).length;
+ const newc=all.filter(c=>!S.srs[c.id]).length;
+ let body;
+ if(!all.length){ body=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="14" height="16" rx="2"/><path d="M7 5V3h14v16h-2"/></svg><p>${t("deckEmpty")}</p><button class="btn btn-primary" data-go="exam" style="margin-top:8px">${S.lang==="vi"?"Đến bài thi":"Go to exam task"}</button></div>`;}
+ else if(!due.length){ body=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><p>${t("deckDone")}</p></div>`;}
+ else { const c=due[0];const flipped=FLASH.flipped;
+   body=`<div class="flash"><div class="flash-card"><span class="flash-side">${flipped?(S.lang==="vi"?"Người nói nói":"Speaker said"):(S.lang==="vi"?"Câu hỏi":"Question")}</span><span class="flash-src">${esc(c.src)}</span>
+     <div class="flash-front">${c.front}</div>${flipped?`<div class="flash-back">${c.back}</div>`:""}</div>
+     <div class="flash-actions">${flipped?
+        `<button class="grade-btn again" data-grade="again" data-card="${c.id}">${t("again")}</button><button class="grade-btn hard" data-grade="hard" data-card="${c.id}">${t("hard")}</button><button class="grade-btn good" data-grade="good" data-card="${c.id}">${t("good")}</button>`:
+        `<button class="btn btn-primary" data-flip="1">${t("showAnswer")}</button>`}</div></div>`;
+ }
+ return `<div class="panel"><div class="panel-head"><div class="tag-row"><span class="tag brand">${S.lang==="vi"?"Lặp lại ngắt quãng":"Spaced repetition"}</span></div>
+   <div class="eyebrow" style="margin-top:12px">${S.lang==="vi"?"Ôn lại paraphrase đã sai":"Review the paraphrases you missed"}</div><h2>${S.lang==="vi"?"Flashcard paraphrase":"Paraphrase flashcards"}</h2></div>
+   <div class="deck-stats"><span class="chipstat"><b>${due.length}</b> ${t("dueCards")}</span><span class="chipstat"><b>${newc}</b> ${t("newCards")}</span><span class="chipstat"><b>${learned}</b> ${t("knownCards")}</span><span class="chipstat">${all.length} ${S.lang==="vi"?"tổng thẻ":"cards total"}</span></div>
+   ${body}</div>`;
+}
+const FLASH={flipped:false};
+function gradeCard(id,grade){
+ const s=S.srs[id]||{box:1,due:0};
+ const box=s.box||1;
+ let nb;if(grade==="again")nb=1;else if(grade==="hard")nb=Math.max(1,box);else nb=Math.min(5,box+1);
+ const days=[0,1,2,4,8,16][nb]||16; // box→interval
+ const due=Date.now()+ (grade==="again"?60*1000: days*24*3600*1000);
+ S.srs[id]={box:nb,due,last:Date.now()};
+ FLASH.flipped=false; markDirty(); commit(); renderActive();
+}
+
+/* ---- report ---- */
+function overallStats(){
+ let tc=0,tt=0,done=0;const rows=[];
+ GRADED.forEach(id=>{const r=S.results[id];if(r&&r.submitted){tc+=r.correct;tt+=r.total;done++;rows.push({id,name:bi(GRADED_NAMES[id]),r});}else rows.push({id,name:bi(GRADED_NAMES[id]),r:null});});
+ return {rows,pct:tt?Math.round(tc/tt*100):0,done,total:GRADED.length,correct:tc,items:tt};
+}
+function improvementPoints(){
+ const pts=[];const st=overallStats();
+ st.rows.forEach(({name,r})=>{if(!r||!r.submitted)return;
+   if(r.pct<PASS)pts.push(biBoth({en:`<b>${name}:</b> below 70% (${r.pct}%). Re-listen; watch the exact word limit, then retry.`,vi:`<b>${name}:</b> dưới 70% (${r.pct}%). Nghe lại; chú ý giới hạn từ rồi thử lại.`}));
+   else if(r.pct<100)pts.push(biBoth({en:`<b>${name}:</b> ${r.pct}% — review the ${r.total-r.correct} highlighted paraphrase(s) and log them.`,vi:`<b>${name}:</b> ${r.pct}% — xem lại ${r.total-r.correct} paraphrase được tô sáng và ghi vào sổ.`}));});
+ const ex=S.results["exam"];
+ if(ex&&ex.submitted&&ex.perQ){
+   if(ex.perQ["e19"]===false)pts.push(biBoth({en:"<b>Numbers & distractors:</b> when two figures are said (e.g. '150 … another hundred'), write the one tied to the exact question.",vi:"<b>Số & gây nhiễu:</b> khi có hai số (vd. '150 … another hundred'), viết số gắn đúng câu hỏi."}));
+   if(ex.perQ["e18"]===false)pts.push(biBoth({en:"<b>Active ↔ passive:</b> 'currently being built' = 'we are still building'. Flip passive questions into active as you listen.",vi:"<b>Chủ động ↔ bị động:</b> 'currently being built' = 'we are still building'. Chuyển câu bị động sang chủ động khi nghe."}));
+ }
+ if(!pts.length){ if(st.done===st.total)pts.push(biBoth({en:"<b>Excellent</b> — every scored exercise is at or above 70%. Keep logging new paraphrases.",vi:"<b>Xuất sắc</b> — mọi bài chấm điểm đều đạt từ 70% trở lên. Tiếp tục ghi paraphrase mới."}));
+   else pts.push(biBoth({en:`You've completed ${st.done} of ${st.total} scored exercises. Finish the rest for a full picture.`,vi:`Bạn đã hoàn thành ${st.done}/${st.total} bài chấm điểm. Làm nốt để có bức tranh đầy đủ.`}));}
+ return pts;
+}
+function renderReport(){
+ const st=overallStats();
+ if(st.done===0){ return `<div class="panel"><div class="panel-head"><h2>${S.lang==="vi"?"Kết quả & báo cáo":"Results & report"}</h2></div>
+   <div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg><p>${S.lang==="vi"?"Hoàn thành ít nhất một bài chấm điểm để tạo báo cáo.":"Complete at least one scored exercise to generate your report."}</p><button class="btn btn-primary" data-go="match" style="margin-top:6px">${S.lang==="vi"?"Đến bài đầu tiên":"Go to first exercise"}</button></div></div>`;}
+ const off=97.4-(97.4*st.pct/100);
+ const grade=st.pct>=85?(S.lang==="vi"?"Vững":"Strong"):st.pct>=PASS?(S.lang==="vi"?"Đúng hướng":"On track"):st.pct>=50?(S.lang==="vi"?"Đang phát triển":"Developing"):(S.lang==="vi"?"Cần cải thiện":"Needs work");
+ return `<div><div class="report-hero"><div class="eyebrow">${S.lang==="vi"?"Kết quả & báo cáo":"Results & report"}</div><h2>${UNIT.code}: ${UNIT.title}</h2>
+   <div style="opacity:.85;font-size:14px">${esc(S.name||(S.lang==="vi"?"Chưa có tên":"Unnamed"))} · ${esc(S.email||"no email")} ${S.code?"· "+esc(S.code):""}</div>
+   <div class="rmeta"><div><div class="l">${S.lang==="vi"?"Tổng":"Overall"}</div><div class="v">${st.correct}/${st.items} · ${st.pct}%</div></div>
+     <div><div class="l">${S.lang==="vi"?"Đã làm":"Done"}</div><div class="v">${st.done}/${st.total}</div></div>
+     <div><div class="l">${S.lang==="vi"?"Xếp loại":"Standing"}</div><div class="v">${grade}</div></div>
+     <div><div class="l">${S.lang==="vi"?"Số báo cáo":"Report no."}</div><div class="v">#${S.reportCount||1}</div></div></div>
+   <svg class="overall-ring" width="86" height="86" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="3.5"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="${off}" transform="rotate(-90 18 18)"/><text x="18" y="20" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="600">${st.pct}%</text></svg></div>
+   <div class="panel"><h3 style="font-size:18px;margin-bottom:4px">${S.lang==="vi"?"Theo từng bài":"By exercise"}</h3>
+     <div class="report-grid">${st.rows.map(({name,r})=>{if(!r||!r.submitted)return `<div class="rcard" style="opacity:.6"><div class="rc-top"><span class="rc-name">${name}</span><span class="rc-pct" style="color:var(--muted)">—</span></div><div class="rc-bar"><i style="width:0"></i></div><div class="rc-note">${S.lang==="vi"?"Chưa làm":"Not attempted"}</div></div>`;const c=r.pct>=PASS?"var(--good)":"var(--bad)";return `<div class="rcard"><div class="rc-top"><span class="rc-name">${name}</span><span class="rc-pct" style="color:${c}">${r.pct}%</span></div><div class="rc-bar"><i style="width:${r.pct}%;background:${c}"></i></div><div class="rc-note">${r.correct}/${r.total} · ${S.lang==="vi"?"lần":"attempt"} ${r.attempts} · ${isUnlocked(r)?(S.lang==="vi"?"đã mở đáp án":"answers unlocked"):(S.lang==="vi"?"chưa mở":"locked")}</div></div>`;}).join("")}</div>
+     <h3 style="font-size:18px;margin:22px 0 8px">${S.lang==="vi"?"Khu vực cần cải thiện":"Key areas for improvement"}</h3>
+     <div class="coach"><ul class="improve">${improvementPoints().map(p=>`<li>${p}</li>`).join("")}</ul></div>
+     <div class="qactions no-print"><button class="btn btn-primary" data-pdf><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg> ${S.lang==="vi"?"Tải báo cáo PDF":"Download PDF report"}</button>
+       <span class="scoreline" style="color:var(--muted);font-size:12px">${S.lang==="vi"?"Mở hộp thoại in — chọn 'Lưu thành PDF'":"Opens print dialog — choose 'Save as PDF'"}</span></div></div></div>`;
+}
+
+/* =================== DISPATCH =================== */
+const RENDERERS={brief:renderBrief,predict:renderPredict,match:renderGradedMatch,strategy:renderStrategy,supervalue:renderGradedSV,exam:renderGradedExam,logbook:renderLogbook,flash:renderFlash,report:renderReport};
+function renderActive(){
+ const id=S.active;
+ views.innerHTML=`<div class="view active">${(RENDERERS[id]||renderBrief)()}</div>`;
+ GRADED.forEach(exId=>{const r=S.results[exId];if(S.active===exId&&r&&r.submitted)applyMarks(exId,r);});
+ buildNav();buildTabs();updateProgress();syncLangButtons();
+}
+function buildNav(){
+ const nav=document.getElementById("navlist");
+ const groups=[[t("secLearn"),["brief","predict","strategy"]],[t("secPractise"),["match","supervalue","exam"]],[t("secReview"),["logbook","flash","report"]]];
+ nav.innerHTML=groups.map(([label,ids])=>`<div class="sec-label">${label}</div>`+ids.map(id=>{const ex=EX.find(e=>e.id===id);const r=S.results[id];let chip="";
+   if(ex.kind==="graded"&&r&&r.submitted){chip=`<span class="nchip ${r.pct>=PASS?'pass':'fail'}">${r.pct}%</span>`;}
+   else if(id==="flash"){const d=dueCards().length;if(d)chip=`<span class="nchip due">${d}</span>`;}
+   return `<button class="navitem ${S.active===id?'active':''}" data-nav="${id}"><span class="nix">${ex.nix}</span><span class="ntxt">${bi(ex.nav)}</span>${chip}</button>`;}).join("")).join("");
+}
+function buildTabs(){document.getElementById("mobile-tabs").innerHTML=EX.map(ex=>`<button class="mtab ${S.active===ex.id?'active':''}" data-nav="${ex.id}">${bi(ex.nav)}</button>`).join("");}
+function updateProgress(){const st=overallStats();const off=97.4-(97.4*st.pct/100);const fg=document.getElementById("ring-fg"),txt=document.getElementById("ring-txt"),lab=document.getElementById("prog-label");if(fg){fg.setAttribute("stroke-dashoffset",off);txt.textContent=st.pct+"%";lab.textContent=t("graded",{d:st.done,t:st.total});}document.getElementById("prog-l").textContent=t("progress");}
+
+/* =================== MARKS / HINTS =================== */
+function applyMarks(exId,r){
+ const qs=QMAP[exId];const unlocked=isUnlocked(r);
+ qs.forEach(q=>{const qEl=document.querySelector(`[data-q="${q.id}"]`);if(!qEl)return;
+   const ok=r.perQ?r.perQ[q.id]:((S.answers[q.id]||"")===q.answer);
+   qEl.classList.remove("correct","incorrect");qEl.classList.add(ok?"correct":"incorrect");
+   const rev=qEl.querySelector(`[data-reveal="${q.id}"]`);const hb=qEl.querySelector(`[data-hint="${q.id}"]`);
+   if(hb){hb.classList.remove("show");hb.innerHTML="";}
+   if(!rev)return;
+   if(ok||unlocked){
+     let html=`<span class="mark-badge ${ok?'ok':'no'}">${ok?iconCheck()+' '+(S.lang==="vi"?"Đúng":"Correct"):iconX()+' '+(S.lang==="vi"?"Chưa đúng":"Not correct")}</span>`;
+     if(unlocked){
+       const key=q.answer?q.options.find(o=>o[0]===q.answer)[1]:(q.accept?q.accept[0]:(POOLS[q.group]?POOLS[q.group].map(a=>a[0]).join(" / "):""));
+       const disp=q.answer?`${q.answer}) ${key}`:key;
+       html+=`<div class="exp"><b>${t("answer")}:</b> <span class="keyans">${disp}</span>. ${bi(q.exp)||""}</div>`;
+       if(q.quote)html+=`<div class="tscript">“…${q.quote}…”</div>`;
+       if(q.para)html+=`<div class="plabel">${iconPara()}${t("paraWatch")}</div><div class="exp" style="margin-top:4px">${bi(q.para)}</div>`;
+     }
+     rev.innerHTML=html;rev.classList.add("show");
+   } else {
+     rev.classList.remove("show");rev.innerHTML="";
+     if(hb&&q.hint){hb.innerHTML=`<div class="hl">${iconBulb()}${t("hint")}</div>${bi(q.hint)}`;hb.classList.add("show");}
+   }
+ });
+ const lz=document.querySelector(`[data-lockzone="${exId}"]`);
+ if(lz){ lz.innerHTML=unlocked?"":`<div class="lock-note">${iconLock()}<span>${biBoth({en:`You scored <b>${r.pct}%</b>. Hints are shown for each miss; the full answers unlock at 70% or after 2 tries (this was attempt ${r.attempts}). Listen again and press Check.`,vi:`Bạn được <b>${r.pct}%</b>. Mỗi câu sai có gợi ý; đáp án đầy đủ mở khi đạt 70% hoặc sau 2 lần thử (đây là lần ${r.attempts}). Nghe lại rồi bấm Kiểm tra.`})}</span></div>`;}
+ const sl=document.querySelector(`[data-scoreline="${exId}"]`);if(sl)sl.innerHTML=scorelineHTML(r);
+}
+function checkExercise(exId){
+ const res=computeResult(exId);const prev=S.results[exId];const attempts=(prev&&prev.attempts?prev.attempts:0)+1;
+ S.results[exId]={...res,submitted:true,attempts};
+ markDirty();commit();syncUp();applyMarks(exId,S.results[exId]);buildNav();updateProgress();
+}
+
+/* =================== TTS =================== */
+const TTS={current:null,rate:{supervalue:1,exam:1},voices:[]};
+function loadVoices(){TTS.voices=window.speechSynthesis?speechSynthesis.getVoices():[];}
+if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function pickVoice(alt){const vs=TTS.voices;if(!vs.length)return null;let v=vs.find(x=>/en-GB/i.test(x.lang))||vs.find(x=>/en[-_]/i.test(x.lang))||vs[0];if(alt){const a=vs.filter(x=>/en/i.test(x.lang));if(a.length>1)v=a[1];}return v;}
+function pEls(exId){const p=document.querySelector(`[data-player="${exId}"]`);return{p,status:document.querySelector(`[data-status="${exId}"]`),btn:document.querySelector(`[data-play="${exId}"]`)};}
+function setPlayIcon(exId,on){const{p,btn}=pEls(exId);if(!p)return;p.classList.toggle("playing",on);if(btn){btn.querySelector(".ic-play").style.display=on?"none":"block";btn.querySelector(".ic-pause").style.display=on?"block":"none";}}
+function stopTTS(){if(window.speechSynthesis)speechSynthesis.cancel();if(TTS.current){setPlayIcon(TTS.current,false);}TTS.current=null;}
+function playTTS(exId){
+ if(!window.speechSynthesis){const{status}=pEls(exId);if(status)status.textContent="Speech N/A";return;}
+ if(TTS.current===exId){stopTTS();return;}
+ stopTTS();const lines=TRANSCRIPTS[exId];if(!lines)return;TTS.current=exId;setPlayIcon(exId,true);
+ const{status}=pEls(exId);const rate=TTS.rate[exId]||1;let i=0;
+ const next=()=>{if(TTS.current!==exId||i>=lines.length){if(TTS.current===exId){setPlayIcon(exId,false);if(status)status.textContent=S.lang==="vi"?"Xong":"Finished";TTS.current=null;}return;}
+   const[spk,txt]=lines[i];const u=new SpeechSynthesisUtterance(txt);u.rate=rate;u.pitch=spk==="Customer"?1.08:spk==="Assistant"?0.96:1;const v=pickVoice(spk==="Customer");if(v)u.voice=v;u.lang=(v&&v.lang)||"en-GB";
+   if(status)status.textContent=(S.lang==="vi"?"Đang phát… ":"Playing… ")+spk;u.onend=()=>{i++;next();};u.onerror=()=>{i++;next();};speechSynthesis.speak(u);};
+ next();
+}
+
+/* =================== PDF =================== */
+function buildPrintReport(){
+ const st=overallStats();const pr=document.getElementById("print-report");
+ const tdC='padding:7px 9px;border:1px solid #ccc;text-align:center',tdL='padding:7px 9px;border:1px solid #ccc';
+ const rows=st.rows.map(({name,r})=>!r||!r.submitted?`<tr><td style="${tdL}">${name}</td><td style="${tdC}">—</td><td style="${tdC}">—</td><td style="${tdL}">${S.lang==="vi"?"Chưa làm":"Not attempted"}</td></tr>`:`<tr><td style="${tdL}">${name}</td><td style="${tdC}">${r.correct}/${r.total}</td><td style="${tdC}"><b>${r.pct}%</b></td><td style="${tdL}">${S.lang==="vi"?"lần":"attempt"} ${r.attempts} · ${r.pct>=PASS?"pass":"<70%"}</td></tr>`).join("");
+ const missed=collectMissed();
+ const logRows=missed.map(m=>{const L=S.log[m.qid]||{};return `<tr><td style="${tdL}">${m.source} · ${m.label}</td><td style="${tdL}">${esc(L.missed||"—")}</td><td style="${tdL}">${esc(L.mine||"—")}</td></tr>`;}).join("");
+ pr.innerHTML=`<div style="font-family:var(--sans);color:#111;padding:6px">
+   <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #0A5A62;padding-bottom:10px;margin-bottom:16px"><div><div style="font-family:var(--serif);font-size:24px;font-weight:600">Listening Studio — ${S.lang==="vi"?"Báo cáo":"Report"}</div><div style="color:#444;font-size:13px">${UNIT.code}: ${UNIT.title}</div></div><div style="text-align:right;font-family:var(--mono);font-size:12px;color:#333">${S.lang==="vi"?"Báo cáo":"Report"} #${S.reportCount||1}<br>${new Date().toLocaleString()}</div></div>
+   <table style="width:100%;font-size:13px;margin-bottom:14px"><tbody>
+     <tr><td style="padding:3px 0;color:#666;width:120px">${S.lang==="vi"?"Học viên":"Student"}</td><td><b>${esc(S.name||"—")}</b></td><td style="color:#666;width:110px">Email</td><td>${esc(S.email||"—")}</td></tr>
+     <tr><td style="padding:3px 0;color:#666">${S.lang==="vi"?"Mã lớp":"Class"}</td><td>${esc(S.code||"default")}</td><td style="color:#666">${S.lang==="vi"?"Tổng điểm":"Overall"}</td><td><b>${st.correct}/${st.items} (${st.pct}%)</b></td></tr></tbody></table>
+   <h3 style="font-family:var(--serif);font-size:16px;margin:14px 0 6px">${S.lang==="vi"?"Điểm theo bài":"Score by exercise"}</h3>
+   <table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="background:#eef3f4"><th style="text-align:left;${tdL}">${S.lang==="vi"?"Bài":"Exercise"}</th><th style="${tdC}">${S.lang==="vi"?"Đúng":"Correct"}</th><th style="${tdC}">%</th><th style="text-align:left;${tdL}">${S.lang==="vi"?"Trạng thái":"Status"}</th></tr></thead><tbody>${rows}</tbody></table>
+   <h3 style="font-family:var(--serif);font-size:16px;margin:16px 0 6px">${S.lang==="vi"?"Khu vực cần cải thiện":"Key areas for improvement"}</h3>
+   <ul style="font-size:13px;color:#222;padding-left:18px">${improvementPoints().map(p=>`<li style="margin-bottom:5px">${p.replace(/<span class="vi">.*?<\/span>/g,"").replace(/<\/?b>/g,"")}</li>`).join("")}</ul>
+   ${missed.length?`<h3 style="font-family:var(--serif);font-size:16px;margin:16px 0 6px">${S.lang==="vi"?"Sổ lỗi paraphrase":"Paraphrase error logbook"}</h3><table style="width:100%;border-collapse:collapse;font-size:12.5px"><thead><tr style="background:#eef3f4"><th style="text-align:left;${tdL}">${S.lang==="vi"?"Câu":"Item"}</th><th style="text-align:left;${tdL}">${S.lang==="vi"?"Từ trong câu hỏi":"Word in question"}</th><th style="text-align:left;${tdL}">${S.lang==="vi"?"Người nói nói":"Speaker said"}</th></tr></thead><tbody>${logRows}</tbody></table>`:""}
+   <div style="margin-top:22px;font-size:11px;color:#888;font-family:var(--mono);border-top:1px solid #ddd;padding-top:8px">Listening Studio · ${UNIT.book}</div></div>`;
+}
+function downloadPDF(){S.reportCount=(S.reportCount||0)+1;document.getElementById("attempt-badge").textContent=t("reportNum",{n:S.reportCount});markDirty();commit();syncUp();renderActive();buildPrintReport();setTimeout(()=>window.print(),60);}
+
+/* =================== EVENTS =================== */
+function go(id){stopTTS();S.active=id;markDirty();renderActive();window.scrollTo({top:0,behavior:'smooth'});}
+document.addEventListener("click",(e)=>{
+ const nav=e.target.closest("[data-nav]");if(nav){go(nav.dataset.nav);return;}
+ const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return;}
+ const st=e.target.closest("[data-study]");if(st){const id=st.dataset.study;S.studyOpen[id]=!S.studyOpen[id];markDirty();renderActive();return;}
+ const ck=e.target.closest("[data-check]");if(ck){checkExercise(ck.dataset.check);return;}
+ const rs=e.target.closest("[data-reset]");if(rs){const exId=rs.dataset.reset;QMAP[exId].forEach(q=>delete S.answers[q.id]);delete S.results[exId];markDirty();commit();syncUp();renderActive();return;}
+ const pl=e.target.closest("[data-play]");if(pl){playTTS(pl.dataset.play);return;}
+ const sp=e.target.closest("[data-speed]");if(sp){const exId=sp.dataset.speed;TTS.rate[exId]=parseFloat(sp.dataset.rate);document.querySelectorAll(`[data-speed="${exId}"]`).forEach(b=>b.classList.toggle("on",b===sp));if(TTS.current===exId){stopTTS();playTTS(exId);}return;}
+ const fl=e.target.closest("[data-flip]");if(fl){FLASH.flipped=true;renderActive();return;}
+ const gr=e.target.closest("[data-grade]");if(gr){gradeCard(gr.dataset.card,gr.dataset.grade);return;}
+ const fin=e.target.closest("#finish-btn");if(fin){go("report");return;}
+ const pdf=e.target.closest("[data-pdf]");if(pdf){downloadPDF();return;}
+ const th=e.target.closest("#theme-btn");if(th){toggleTheme();return;}
+ const lang=e.target.closest("[data-lang]");if(lang){setLang(lang.dataset.lang);return;}
+});
+document.addEventListener("input",(e)=>{
+ const inp=e.target.closest("[data-input]");if(inp){S.answers[inp.dataset.input]=inp.value;markDirty();
+   const bar=inp.closest(".panel")&&inp.closest(".panel").querySelector(".exbar");if(bar&&QMAP[S.active]){const qs=QMAP[S.active];const a=qs.filter(q=>(S.answers[q.id]||"").trim()).length;bar.querySelector("span").textContent=t("answered",{a,n:qs.length});bar.querySelector(".track i").style.width=Math.round(a/qs.length*100)+"%";}return;}
+ const log=e.target.closest("[data-log]");if(log){const id=log.dataset.log,f=log.dataset.field;S.log[id]=S.log[id]||{};S.log[id][f]=log.value;markDirty();return;}
+});
+document.getElementById("s-name").addEventListener("input",e=>{S.name=e.target.value;markDirty();});
+document.getElementById("s-email").addEventListener("input",e=>{S.email=e.target.value;markDirty();});
+document.getElementById("s-code").addEventListener("input",e=>{S.code=e.target.value;markDirty();});
+
+function setLang(l){S.lang=l;syncLangButtons();markDirty();commit();refreshChrome();renderActive();}
+function syncLangButtons(){document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("on",b.dataset.lang===S.lang));}
+function refreshChrome(){
+ document.getElementById("lbl-name").textContent=t("studentName");document.getElementById("lbl-email").textContent=t("email");document.getElementById("lbl-code").textContent=t("classCode");
+ document.getElementById("finish-lbl").textContent=t("finish");
+ document.getElementById("attempt-badge").textContent=t("reportNum",{n:S.reportCount||0});
+ document.getElementById("brand-sub").innerHTML=UNIT.code+" · "+(S.lang==="vi"?"Thay đổi & hệ quả":"Change &amp; consequences");
+ document.getElementById("foot").textContent=UNIT.book+(S.lang==="vi"?" · tự lưu mỗi 10 giây":" · autosaves every 10 seconds");
+ setSave(dirty?"saving":"saved");
+}
+function applyTheme(){if(S.theme)document.documentElement.setAttribute("data-theme",S.theme);else document.documentElement.removeAttribute("data-theme");}
+function toggleTheme(){const dark=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dark?"light":"dark";applyTheme();markDirty();commit();}
+
+/* =================== INIT =================== */
+(function init(){
+ load();applyTheme();
+ document.getElementById("s-name").value=S.name||"";document.getElementById("s-email").value=S.email||"";document.getElementById("s-code").value=S.code||"";
+ if(!EX.find(e=>e.id===S.active))S.active="brief";
+ refreshChrome();renderActive();setSave("saved");
+})();
+</script>
