@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio — Module 4 Homework</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:1px 0 0;font-size:11.5px;opacity:.82;font-weight:500}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.endbank{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0 14px;font-size:15px;color:var(--ink);line-height:1.6}
+.endbank .ebt{font-weight:700;color:var(--brand);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.endbank .ebi{padding:3px 0;border-bottom:1px dashed var(--line)}
+.endbank .ebi:last-child{border-bottom:none}
+.chip.cd{gap:6px}
+.chip.cd select{border:none;border-radius:6px;font-size:11.5px;padding:2px 4px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:600}
+.cdbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:14px;padding:2px 10px;font-size:11.5px;font-weight:700;cursor:pointer}
+.cdbtn:hover{background:rgba(255,255,255,.30)}
+.chip.cd.warn{background:rgba(255,193,7,.32);border-color:#ffd45e}
+.chip.cd.done{background:rgba(192,57,43,.5);border-color:#ff8a7a}
+.swbar{display:flex;align-items:center;gap:8px;background:#eef3fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content}
+.swbar b{font-variant-numeric:tabular-nums;font-weight:700}
+.swbar .swb,.swbar .swr{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:14px;padding:2px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.swbar .swr{background:#fff;color:var(--brand)}
+
+/* ---- Module 2 Homework additions ---- */
+.srcline{padding:2px 22px 8px;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.passage .byline{font-style:italic;color:#374357;margin:4px 0 12px;font-size:14px;border-left:3px solid var(--brand);padding-left:12px}
+.passage .fnote{font-size:12.5px;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.pill.rd{background:#e8f0ff;color:#1550b3}
+/* countdown bar */
+.cdbar{display:flex;align-items:center;gap:8px;background:#eef7f0;border:1px solid #bfe3cc;border-radius:8px;padding:6px 12px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content;max-width:100%;flex-wrap:wrap}
+.cdbar .cdlab{font-weight:600;color:var(--good)}
+.cdbar b.cdd{font-variant-numeric:tabular-nums;font-weight:800;font-size:18px;min-width:58px;text-align:center}
+.cdbar .cdb,.cdbar .cdr{border:1px solid var(--good);background:var(--good);color:#fff;border-radius:14px;padding:3px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.cdbar .cdr{background:#fff;color:var(--good)}
+.cdbar.warn{background:var(--warn-bg);border-color:var(--warn)}
+.cdbar.warn .cdlab,.cdbar.warn b.cdd{color:var(--warn)}
+.cdbar.warn .cdb,.cdbar.warn .cdr{border-color:var(--warn);background:var(--warn)}
+.cdbar.warn .cdr{background:#fff;color:var(--warn)}
+.cdbar.done{background:var(--bad-bg);border-color:var(--bad)}
+.cdbar.done .cdlab,.cdbar.done b.cdd{color:var(--bad)}
+.cdbar.done .cdb{border-color:var(--bad);background:var(--bad);cursor:default}
+/* glossary sections */
+.gloss-section{margin-top:22px}
+.gloss-section:first-child{margin-top:6px}
+.gloss-section h3{font-size:15px;color:#12325f;border-bottom:2px solid var(--line);padding-bottom:6px;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.gloss-section h3 .gnum{background:var(--brand);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-grid;place-items:center;font-size:12px;flex:none}
+.gloss-section h3 .gsrc{font-size:11px;font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0}
+.strat-compact ul{margin:6px 0;padding-left:20px}
+.strat-compact li{margin:5px 0}
+/* multi-colour highlighter */
+.passage mark{border-radius:3px;padding:0 1px}
+.passage mark.hl-y{background:#fff3a3}
+.passage mark.hl-g{background:#c3f0cf}
+.passage mark.hl-p{background:#ffcfe0}
+.passage mark.hl-b{background:#c7e3ff}
+.hl-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.swatch{width:22px;height:22px;border-radius:6px;border:2px solid rgba(0,0,0,.12);cursor:pointer;padding:0;position:relative}
+.swatch.sw-y{background:#fff3a3}.swatch.sw-g{background:#c3f0cf}.swatch.sw-p{background:#ffcfe0}.swatch.sw-b{background:#c7e3ff}
+.swatch.on{border-color:#12325f;box-shadow:0 0 0 2px rgba(31,111,235,.35)}
+.btn.eraser.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.hl-hint{font-size:11px;color:var(--muted);width:100%;margin-top:2px}
+.qsub{font-weight:700;color:#12325f;font-size:13.5px;margin:2px 0 8px}
+.q .blank{color:var(--brand);font-weight:700;letter-spacing:1px}
+/* sequential-unlock locked tabs */
+nav.tabs button.locked{opacity:.4;cursor:not-allowed;background:var(--panel);border-color:var(--line);color:var(--muted)}
+nav.tabs button.locked:hover{border-color:var(--line);color:var(--muted)}
+nav.tabs button .tlock{font-size:11px}
+/* Roman-tunnel diagram */
+.diagram{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 10px 6px;margin:2px 0 16px;box-shadow:var(--shadow)}
+.diagram svg{width:100%;height:auto;display:block;border-radius:6px}
+.diagram .dgcap{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:center}
+/* very faint source footer */
+.srcfoot{max-width:1280px;margin:30px auto 0;padding:14px 18px 26px;border-top:1px solid #edf0f5;font-size:8px;line-height:1.6;color:#e4e8ee;letter-spacing:.2px}
+/* overtime + count-up timer states */
+.cdbar.over{background:var(--bad-bg);border-color:var(--bad)}
+.cdbar.over .cdlab,.cdbar.over b.cdd{color:var(--bad)}
+.cdbar.over .cdb,.cdbar.over .cdr{border-color:var(--bad);background:var(--bad)}
+.cdbar.over .cdr{background:#fff;color:var(--bad)}
+.cdover{color:var(--bad);font-weight:800;font-variant-numeric:tabular-nums}
+.over-badge{display:inline-block;background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.cdbar.countup{background:#eef3fb;border-color:#c7d8f0}
+.cdbar.countup .cdlab{color:var(--brand)}
+.cdbar.countup .cdb,.cdbar.countup .cdr{border-color:var(--brand);background:var(--brand)}
+.cdbar.countup .cdr{background:#fff;color:var(--brand)}
+
+</style>
+</head>
+<body>
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio — Module 4 · Homework</h1><p>Academic Reading · Education topics · Yes/No/Not Given · Matching headings · Multiple choice · Summary completion · Prefixes &amp; word-formation</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ On-tab <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategy</button>
+    <button data-tab="m1">1 · AI attitudes</button>
+    <button data-tab="m2">2 · Env. psychology</button>
+    <button data-tab="m3">3 · Growth mindset</button>
+    <button data-tab="m4">4 · Mixed-ability</button>
+    <button data-tab="m5">5 · Gifted child</button>
+    <button data-tab="m6">6 · Intelligence</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+  </nav>
+  <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Module 4 Homework — Yes / No / Not Given &amp; Matching Headings</h2>
+      <p class="small">Six education-themed Academic Reading passages (Cambridge 16, 18, 19 &amp; practice tests). Each passage has a <b>20-minute countdown</b>; once 20 minutes pass it keeps timing your <b>overtime</b>. Score <b>70%+</b> to unlock the answers, and finish each passage to open the next.</p>
+    </div>
+    <div class="strat-grid">
+      <div class="strat strat-compact">
+        <span class="tag">Core rule</span>
+        <h3>Yes / No / Not Given</h3>
+        <ul>
+          <li><b>YES</b> — the statement agrees with the writer&rsquo;s <i>claim / opinion</i>.</li>
+          <li><b>NO</b> — the writer <i>disagrees</i> or claims the opposite.</li>
+          <li><b>NOT GIVEN</b> — the writer gives no opinion on this point.</li>
+        </ul>
+        <div class="tip">💡 Y/N/NG tracks the writer&rsquo;s <b>views</b> (True/False/Not Given tracks <b>facts</b>). Ask: &lsquo;Does the writer actually claim this?&rsquo;</div>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Matching Headings</h3>
+        <ul>
+          <li><b>Find the main idea</b> of each section, not one detail.</li>
+          <li>Read the <b>first and last sentences</b> — the topic usually sits there.</li>
+          <li><b>There are more headings than sections</b> — some are distractors.</li>
+          <li>Beware a heading that repeats a word but covers only part of the section.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Multiple choice &amp; Matching people</h3>
+        <ul>
+          <li><b>MCQ:</b> read all options; cross out ones that are true but don&rsquo;t answer the question, or that go further than the text.</li>
+          <li><b>Matching people:</b> scan for each name, read around it, and match the paraphrased idea. A name may be used more than once.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Summary completion (word bank)</h3>
+        <ul>
+          <li><b>Read the whole summary first</b> to get the meaning, then fill the gaps.</li>
+          <li><b>Predict the word class</b> of each gap (noun, adjective, verb).</li>
+          <li>The words are <b>paraphrases</b> of the passage — match meaning, and there are extra options you won&rsquo;t use.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Traps</span>
+        <h3>Watch these</h3>
+        <ul>
+          <li><b>Extreme words</b> (only, all, never, the first) often make a statement NO.</li>
+          <li><b>&lsquo;Not Given&rsquo; ≠ &lsquo;No&rsquo;</b> — if the writer simply never mentions it, it is NOT GIVEN.</li>
+          <li>A word from the text appearing in an option does <b>not</b> make it correct.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Vocabulary</span>
+        <h3>Prefixes &amp; negatives</h3>
+        <ul>
+          <li><b>Make opposites</b> with un-, in-, im- (before p/b/m), il- (before l), ir- (before r), dis-, mis-.</li>
+          <li><b>over-</b> = too much, <b>under-</b> = too little (overestimate / underachieve).</li>
+          <li>Learn the noun/verb/adjective family: <i>able → unable → inability</i>.</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="panel" id="tab-m1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128214; Attitudes towards Artificial Intelligence</h3>
+          <div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="m1" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="m1" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="m1" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="m1" title="Highlight blue"></button><button class="btn sm eraser" data-erase="m1">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="m1">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div>
+        </div>
+        <div class="passage" id="passage-m1">
+<div class="para"><span class="plabel">A</span>Artificial intelligence (AI) can already predict the future. Police forces are using it to map when and where crime is likely to occur. Doctors can use it to predict when a patient is most likely to have a heart attack or stroke. Researchers are even trying to give AI imagination so it can plan for unexpected consequences. Many decisions in our lives require a good forecast, and AI is almost always better at forecasting than we are. Yet for all these technological advances, we still seem to deeply lack confidence in AI predictions. Recent cases show that people don&#x27;t like relying on AI and prefer to trust human experts, even if these experts are wrong.</div>
+<div class="para"><span class="plabel">B</span>If we want AI to really benefit people, we need to find a way to get people to trust it. To do that, we need to understand why people are so reluctant to trust AI in the first place. Take the case of Watson for Oncology, one of technology giant IBM&#x27;s supercomputer programs. Their attempt to promote this program to cancer doctors was a PR disaster. The AI promised to deliver top-quality recommendations on the treatment of 12 cancers that accounted for 80% of the world&#x27;s cases. But when doctors first interacted with Watson, they found themselves in a rather difficult situation. On the one hand, if Watson provided guidance about a treatment that coincided with their own opinions, physicians did not see much point in Watson&#x27;s recommendations. The supercomputer was simply telling them what they already knew, and these recommendations did not change the actual treatment. On the other hand, if Watson generated a recommendation that contradicted the experts&#x27; opinion, doctors would typically conclude that Watson wasn&#x27;t competent. And the machine wouldn&#x27;t be able to explain why its treatment was plausible because its machine-learning algorithms were simply too complex to be fully understood by humans. Consequently, this has caused even more suspicion and disbelief, leading many doctors to ignore the seemingly outlandish AI recommendations and stick to their own expertise.</div>
+<div class="para"><span class="plabel">C</span>This is just one example of people&#x27;s lack of confidence in AI and their reluctance to accept what AI has to offer. Trust in other people is often based on our understanding of how others think and having experience of their reliability. This helps create a psychological feeling of safety. AI, on the other hand, is still fairly new and unfamiliar to most people. Even if it can be technically explained (and that&#x27;s not always the case), AI&#x27;s decision-making process is usually too difficult for most people to comprehend. And interacting with something we don&#x27;t understand can cause anxiety and give us a sense that we&#x27;re losing control. Many people are also simply not familiar with many instances of AI actually working, because it often happens in the background. Instead, they are acutely aware of instances where AI goes wrong. Embarrassing AI failures receive a disproportionate amount of media attention, emphasising the message that we cannot rely on technology. Machine learning is not foolproof, in part because the humans who design it aren&#x27;t.</div>
+<div class="para"><span class="plabel">D</span>Feelings about AI run deep. In a recent experiment, people from a range of backgrounds were given various sci-fi films about AI to watch and then asked questions about automation in everyday life. It was found that, regardless of whether the film they watched depicted AI in a positive or negative light, simply watching a cinematic vision of our technological future polarised the participants&#x27; attitudes. Optimists became more extreme in their enthusiasm for AI and sceptics became even more guarded. This suggests people use relevant evidence about AI in a biased manner to support their existing attitudes, a deep-rooted human tendency known as &quot;confirmation bias&quot;. As AI is represented more and more in media and entertainment, it could lead to a society split between those who benefit from AI and those who reject it. More pertinently, refusing to accept the advantages offered by AI could place a large group of people at a serious disadvantage.</div>
+<div class="para"><span class="plabel">E</span>Fortunately, we already have some ideas about how to improve trust in AI. Simply having previous experience with AI can significantly improve people&#x27;s opinions about the technology, as was found in the study mentioned above. Evidence also suggests the more you use other technologies such as the internet, the more you trust them. Another solution may be to reveal more about the algorithms which AI uses and the purposes they serve. Several high-profile social media companies and online marketplaces already release transparency reports about government requests and surveillance disclosures. A similar practice for AI could help people have a better understanding of the way algorithmic decisions are made.</div>
+<div class="para"><span class="plabel">F</span>Research suggests that allowing people some control over AI decision-making could also improve trust and enable AI to learn from human experience. For example, one study showed that when people were allowed the freedom to slightly modify an algorithm, they felt more satisfied with its decisions, more likely to believe it was superior and more likely to use it in the future. We don&#x27;t need to understand the intricate inner workings of AI systems, but if people are given a degree of responsibility for how they are implemented, they will be more willing to accept AI into their lives.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-m1" data-test="m1">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 27&ndash;32 &middot; Matching headings.</b> Choose the correct heading (i–viii) for each section from the list below.</div><div class="endbank"><div class="ebt">List of headings</div><div class="ebi"><b>i</b> &nbsp;An increasing divergence of attitudes towards AI</div><div class="ebi"><b>ii</b> &nbsp;Reasons why we have more faith in human judgement than in AI</div><div class="ebi"><b>iii</b> &nbsp;The superiority of AI projections over those made by humans</div><div class="ebi"><b>iv</b> &nbsp;The process by which AI can help us make good decisions</div><div class="ebi"><b>v</b> &nbsp;The advantages of involving users in AI processes</div><div class="ebi"><b>vi</b> &nbsp;Widespread distrust of an AI innovation</div><div class="ebi"><b>vii</b> &nbsp;Encouraging openness about how AI functions</div><div class="ebi"><b>viii</b> &nbsp;A surprisingly successful AI application</div></div><div class="q" data-type="sel" data-answer="iii" data-exp="Section A stresses AI is &lsquo;almost always better at forecasting than we are&rsquo; &mdash; the superiority of AI projections."><div class="qnum">27</div><div class="qmain"><div class="qtext">Section A</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="ii">ii</option><option value="iv">iv</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="vi" data-exp="Section B is the Watson for Oncology case, a &lsquo;PR disaster&rsquo; in which doctors distrusted the AI innovation."><div class="qnum">28</div><div class="qmain"><div class="qtext">Section B</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="ii">ii</option><option value="iv">iv</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="ii" data-exp="Section C: we trust people because we understand how they think, whereas AI is unfamiliar &mdash; reasons we favour human judgement."><div class="qnum">29</div><div class="qmain"><div class="qtext">Section C</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="ii">ii</option><option value="iv">iv</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="i" data-exp="Section D shows films &lsquo;polarised&rsquo; opinion and a society &lsquo;split&rsquo; over AI &mdash; an increasing divergence of attitudes."><div class="qnum">30</div><div class="qmain"><div class="qtext">Section D</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="ii">ii</option><option value="iv">iv</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="vii" data-exp="Section E proposes releasing &lsquo;transparency reports&rsquo; about algorithms &mdash; encouraging openness about how AI functions."><div class="qnum">31</div><div class="qmain"><div class="qtext">Section E</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="ii">ii</option><option value="iv">iv</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="v" data-exp="Section F shows that letting users &lsquo;modify an algorithm&rsquo; raises trust &mdash; the advantages of involving users."><div class="qnum">32</div><div class="qmain"><div class="qtext">Section F</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="ii">ii</option><option value="iv">iv</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 33&ndash;35 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="C" data-exp="Section A raises the problem that we &lsquo;lack confidence in AI predictions&rsquo; &mdash; the writer highlights the existence of a problem. (C)"><div class="qnum">33</div><div class="qmain"><div class="qtext">What is the writer doing in Section A?</div><label><input type="radio" name="q_mc133" value="A"> <b>A</b> providing a solution to a concern</label><label><input type="radio" name="q_mc133" value="B"> <b>B</b> justifying an opinion about an issue</label><label><input type="radio" name="q_mc133" value="C"> <b>C</b> highlighting the existence of a problem</label><label><input type="radio" name="q_mc133" value="D"> <b>D</b> explaining the reasons for a phenomenon</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="People feel &lsquo;at a disadvantage&rsquo; because AI&rsquo;s decision-making is &lsquo;too difficult&hellip; to comprehend&rsquo; &mdash; its complexity. (B)"><div class="qnum">34</div><div class="qmain"><div class="qtext">According to Section C, why might some people be reluctant to accept AI?</div><label><input type="radio" name="q_mc134" value="A"> <b>A</b> They are afraid it will replace humans in decision-making jobs.</label><label><input type="radio" name="q_mc134" value="B"> <b>B</b> Its complexity makes them feel that they are at a disadvantage.</label><label><input type="radio" name="q_mc134" value="C"> <b>C</b> They would rather wait for the technology to be tested over a period of time.</label><label><input type="radio" name="q_mc134" value="D"> <b>D</b> Misunderstandings about how it works make it seem more challenging than it is.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="A" data-exp="Embarrassing AI failures &lsquo;receive a disproportionate amount of media attention&rsquo;, leading the public to mistrust AI. (A)"><div class="qnum">35</div><div class="qmain"><div class="qtext">What does the writer say about the media in Section C of the text?</div><label><input type="radio" name="q_mc135" value="A"> <b>A</b> It leads the public to be mistrustful of AI.</label><label><input type="radio" name="q_mc135" value="B"> <b>B</b> It devotes an excessive amount of attention to AI.</label><label><input type="radio" name="q_mc135" value="C"> <b>C</b> Its reports of incidents involving AI are often inaccurate.</label><label><input type="radio" name="q_mc135" value="D"> <b>D</b> It gives the impression that AI failures are due to designer error.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 36&ndash;40 &middot; Yes / No / Not Given.</b> Do the following statements agree with the claims of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; the films &lsquo;polarised&rsquo; attitudes (made optimists and sceptics more extreme); they did not simply change people&rsquo;s opinion."><div class="qnum">36</div><div class="qmain"><div class="qtext">Subjective depictions of AI in sci-fi films make people change their opinions about automation.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; whether portrayals will become more positive in future is not discussed."><div class="qnum">37</div><div class="qmain"><div class="qtext">Portrayals of AI in media and entertainment are likely to become more positive.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;refusing to accept the advantages offered by AI could place a large group of people at a serious disadvantage.&rsquo;"><div class="qnum">38</div><div class="qmain"><div class="qtext">Rejection of the possibilities of AI may have a negative effect on many people&#x27;s lives.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; &lsquo;having previous experience with AI can significantly improve people&rsquo;s opinions&rsquo;: familiarity has a large impact, not little."><div class="qnum">39</div><div class="qmain"><div class="qtext">Familiarity with AI has very little impact on people&#x27;s attitudes to the technology.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; when users can modify AI they are &lsquo;more likely to use it in the future&rsquo;, so modifiable applications gain acceptance."><div class="qnum">40</div><div class="qmain"><div class="qtext">AI applications which users are able to modify are more likely to gain consumer approval.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="m1">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="m1">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-m1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-m2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128214; Is there a psychologist in the building?</h3>
+          <div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="m2" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="m2" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="m2" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="m2" title="Highlight blue"></button><button class="btn sm eraser" data-erase="m2">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="m2">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div>
+        </div>
+        <div class="passage" id="passage-m2">
+<div class="para"><span class="plabel">A</span>The space around us affects us profoundly – emotionally, behaviourally, cognitively. In Britain that space is changing at a pace not seen for a generation. Surely psychology has something to say about all this change. But is anyone listening? &#x27;There is a huge amount of psychology research that is relevant, but at the moment we&#x27;re talking to ourselves,&#x27; says Chris Spencer, professor of environmental psychology at the University of Sheffield. Spencer recalls a recent talk he gave in which he called on fellow researchers to make a greater effort to communicate their findings to architects and planners. &#x27;I was amazed at the response of many of the senior researchers, who would say: &quot;I&#x27;m doing my research for pure science, the industry can take it or leave it&quot;. But there are models of how to apply environmental psychology to real problems, if you know where to look. Professor Frances Kuo is an example.</div>
+<div class="para"><span class="plabel">B</span>Kuo&#x27;s website provides pictures and plain English summaries of research conducted by her Human Environment Research Laboratory. Among these is a study using police records that found inner-city Chicago apartment buildings surrounded by more vegetation suffered 52 per cent fewer crimes than apartment blocks with little or no greenery. Frances Kuo and her co-researcher William Sullivan believe that greenery reduces crime – so long as visibility is preserved – because it reduces aggression, brings local residents together outdoors, and the conspicuous presence of people deters criminals.</div>
+<div class="para"><span class="plabel">C</span>&#x27;Environmental psychologists are increasingly in demand,&#x27; says David Uzzell, professor of environmental psychology. &#x27;We&#x27;re asked to contribute to the planning, design and management of many different environments, ranging from neighbourhoods, offices, schools, health, transport, traffic and leisure environments for the purpose of improving quality of life and creating a better people-environment fit.&#x27; Uzzell points to the rebuilding of one south London school as a striking example of how building design can affect human behaviour positively. Before its redesign, it was ranked as the worst school in the area – now it is recognised as one of the country&#x27;s twenty most improved schools.</div>
+<div class="para"><span class="plabel">D</span>Uzzell has been involved in a pioneering project between MSc students in England and Scotland. Architecture students in Scotland acted as designers while environmental psychology students in England acted as consultants, as together they worked on a community project in a run-down area of Glasgow. &#x27;The psychology students encouraged the architecture students to think about who their client group was, to consider issues of crowding and social cohesion, and they introduced them to psychological methodologies, for example observation and interviewing local residents about their needs. The collaborative project currently stands as a one-off experiment. &#x27;Hopefully these trainee architects will now go away with some understanding of the psychological issues involved in design and will take into account people&#x27;s needs,&#x27; says Uzzell.</div>
+<div class="para"><span class="plabel">E</span>Hilary Barker, a recent graduate in psychology, now works for a design consultancy. She&#x27;s part of a four-person research team that contributes to the overall work of the company in helping clients use their office space more productively. Her team all have backgrounds in psychology or social science, but the rest of the firm consists mainly of architects and interior designers. &#x27;What I do is pretty rare to be honest,&#x27; Barker says. &#x27;I feel very privileged to be able to use my degree in such a way.&#x27; Barker explains that the team carries out observational studies on behalf of companies, to identify exactly how occupants are using their building. The companies are often surprised by the findings, for example that staff use meeting rooms for quiet, individual work.</div>
+<div class="para"><span class="plabel">F</span>One area where the findings from environment-behaviour research have certainly influenced building is in hospital design. &#x27;The government has a checklist of criteria that must be met in the design of new hospitals, and these are derived largely from the work of the behavioural scientist Professor Roger Ulrich,&#x27; Chris Spencer says. Ulrich&#x27;s work has shown, for example, how the view from a patient&#x27;s window can affect their recovery. Even a hospital&#x27;s layout can impact on people&#x27;s health, according to Dr John Zeisel. &#x27;If people get lost in hospitals, they get stressed, which lowers their immune system and means their medication works less well. You might think that way-finding round the hospital is the responsibility of the person who puts all the signs up, but the truth is that the basic layout of a building is what helps people find their way around,&#x27; he says.</div>
+<div class="para"><span class="plabel">G</span>Zeisel also points to the need for a better balance between private and shared rooms in hospitals. &#x27;Falls are reduced and fewer medication errors occur&#x27; in private rooms, he says. There&#x27;s also research showing how important it is that patients have access to the outdoors and that gardens in hospitals are a major contributor to well-being. However, more generally, Zeisel shares Chris Spencer&#x27;s concerns that the lessons from environmental psychology research are not getting through. &#x27;There is certainly a gap between what we in social science know and the world of designers and architects,&#x27; says Zeisel. He believes that most industries, from sports to film-making, have now recognised the importance of an evidence-based approach, and that the building trade needs to formulate itself more in that vein, and to recognise that there is relevant research out there. &#x27;It would be outrageous, silly, to go ahead with huge building projects without learning the lessons from the new towns established between 30 and 40 years ago,&#x27; he warns.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-m2" data-test="m2">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 14&ndash;20 &middot; Matching headings.</b> Choose the correct heading (i–x) for each section from the list below.</div><div class="endbank"><div class="ebt">List of headings</div><div class="ebi"><b>i</b> &nbsp;A comparison between similar buildings</div><div class="ebi"><b>ii</b> &nbsp;The negative reaction of local residents</div><div class="ebi"><b>iii</b> &nbsp;An unusual job for a psychologist</div><div class="ebi"><b>iv</b> &nbsp;A type of building benefiting from prescribed guidelines</div><div class="ebi"><b>v</b> &nbsp;The need for government action</div><div class="ebi"><b>vi</b> &nbsp;A failure to use available information in practical ways</div><div class="ebi"><b>vii</b> &nbsp;Academics with an unhelpful attitude</div><div class="ebi"><b>viii</b> &nbsp;A refusal by architects to accept criticism</div><div class="ebi"><b>ix</b> &nbsp;A unique co-operative scheme</div><div class="ebi"><b>x</b> &nbsp;The expanding scope of environmental psychology</div></div><div class="q" data-type="sel" data-answer="vii" data-exp="Para A: senior researchers say the industry &lsquo;can take it or leave it&rsquo; &mdash; academics with an unhelpful attitude. (vii)"><div class="qnum">14</div><div class="qmain"><div class="qtext">Paragraph A</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="i" data-exp="Para B compares Chicago blocks with more vs less greenery (52% fewer crimes) &mdash; a comparison between similar buildings. (i)"><div class="qnum">15</div><div class="qmain"><div class="qtext">Paragraph B</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="x" data-exp="Para C lists ever more settings psychologists advise on &mdash; the expanding scope of environmental psychology. (x)"><div class="qnum">16</div><div class="qmain"><div class="qtext">Paragraph C</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="ix" data-exp="Para D describes the one-off England&ndash;Scotland student collaboration &mdash; a unique co-operative scheme. (ix)"><div class="qnum">17</div><div class="qmain"><div class="qtext">Paragraph D</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="iii" data-exp="Para E: Barker says &lsquo;what I do is pretty rare&rsquo; &mdash; an unusual job for a psychologist. (iii)"><div class="qnum">18</div><div class="qmain"><div class="qtext">Paragraph E</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="iv" data-exp="Para F: new hospitals must meet a government &lsquo;checklist of criteria&rsquo; &mdash; a building type benefiting from prescribed guidelines. (iv)"><div class="qnum">19</div><div class="qmain"><div class="qtext">Paragraph F</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="vi" data-exp="Para G: the lessons &lsquo;are not getting through&rsquo; to designers &mdash; a failure to use available information in practical ways. (vi)"><div class="qnum">20</div><div class="qmain"><div class="qtext">Paragraph G</div><select><option value="">— choose —</option><option value="i">i</option><option value="v">v</option><option value="x">x</option><option value="ii">ii</option><option value="iv">iv</option><option value="ix">ix</option><option value="vi">vi</option><option value="iii">iii</option><option value="vii">vii</option><option value="viii">viii</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 21&ndash;22 &middot; Multiple choice — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="B,D" data-exp="Benefits named: &lsquo;improved educational performance&rsquo; (B, the redesigned school) and &lsquo;fewer mistakes made by medical staff&rsquo; (D, private hospital rooms)."><div class="qnum">21&ndash;22</div><div class="qmain"><div class="qtext">Which TWO of the following benefits are said to arise from the use of environmental psychology when planning buildings?</div><label><input type="checkbox" value="A"> <b>A</b> better relationships between staff</label><label><input type="checkbox" value="B"> <b>B</b> improved educational performance</label><label><input type="checkbox" value="C"> <b>C</b> reduction of environmental pollution</label><label><input type="checkbox" value="D"> <b>D</b> fewer mistakes made by medical staff</label><label><input type="checkbox" value="E"> <b>E</b> easier detection of crime</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23&ndash;24 &middot; Multiple choice — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="A,C" data-exp="Methods mentioned: using existing data for an area, e.g. police records (A), and watching what people do in a building &mdash; observational studies (C)."><div class="qnum">23&ndash;24</div><div class="qmain"><div class="qtext">Which TWO of the following research methods are mentioned in the passage?</div><label><input type="checkbox" value="A"> <b>A</b> the use of existing data relating to a geographical area</label><label><input type="checkbox" value="B"> <b>B</b> measuring the space given to a variety of activities</label><label><input type="checkbox" value="C"> <b>C</b> watching what people do in different parts of a building</label><label><input type="checkbox" value="D"> <b>D</b> analysing decisions made during the planning of a building</label><label><input type="checkbox" value="E"> <b>E</b> observing patients&#x27; reactions to each other</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 25&ndash;26 &middot; Sentence completion.</b> Complete the sentences. Choose NO MORE THAN TWO WORDS from the passage for each answer.</div><div class="q" data-type="text" data-answers="client group" data-exp="The psychology students told the architects to consider &lsquo;who their client group was&rsquo;."><div class="qnum">25</div><div class="qmain"><div class="qtext">The students from England suggested that the Scottish students should identify their <span class="blank">______</span> </div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="basic layout" data-exp="Zeisel: &lsquo;the basic layout of a building is what helps people find their way around&rsquo;."><div class="qnum">26</div><div class="qmain"><div class="qtext">John Zeisel believes that if the <span class="blank">______</span> of a building is clear, patient outcomes will improve.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="m2">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="m2">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-m2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-m3">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128214; The growth mindset</h3>
+          <div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="m3" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="m3" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="m3" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="m3" title="Highlight blue"></button><button class="btn sm eraser" data-erase="m3">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="m3">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div>
+        </div>
+        <div class="passage" id="passage-m3">
+<div class="para">Over the past century, a powerful idea has taken root in the educational landscape. The concept of intelligence as something innate has been supplanted by the idea that intelligence is not fixed, and that, with the right training, we can be the authors of our own cognitive capabilities. Psychologist Alfred Binet, the developer of the first intelligence tests, was one of many 19th-century scientists who held that earlier view and sought to quantify cognitive ability. Then, in the early 20th century, progressive thinkers revolted against the notion that inherent ability is destiny. Instead, educators such as John Dewey argued that every child&#x27;s intelligence could be developed, given the right environment.</div>
+<div class="para">&#x27;Growth mindset theory&#x27; is a relatively new and extremely popular version of this idea. In many schools today you will see hallways covered in motivational posters and hear speeches on the mindset of great sporting heroes who simply believed their way to the top. A major focus of the growth mindset in schools is coaxing students away from seeing failure as an indication of their ability, and towards seeing it as a chance to improve that ability. As educationalist Jeff Howard noted several decades ago: &#x27;Smart is not something that you just are, smart is something that you can get.&#x27; The idea of the growth mindset is based on the work of psychologist Carol Dweck in California in the 1990s. In one key experiment, Dweck divided a group of 10- to 12-year-olds into two groups.</div>
+<div class="para">All were told that they had achieved a high score on a test but the first group were praised for their intelligence in achieving this, while the others were praised for their effort. The second group – those who had been instilled with a &#x27;growth mindset&#x27; – were subsequently far more likely to put effort into future tasks. Meanwhile, the former took on only those tasks that would not risk their sense of worth. This group had inferred that success or failure is due to innate ability, and this &#x27;fixed mindset&#x27; had led them to fear of failure and lack of effort. Praising ability actually made the students perform worse, while praising effort emphasised that change was possible.</div>
+<div class="para">One of the greatest impediments to successfully implementing a growth mindset, however, is the education system itself: in many parts of the world, the school climate is obsessed with performance in the form of constant testing, analysing and ranking of students a key characteristic of the fixed mindset. Nor is it unusual for schools to create a certain cognitive dissonance, when they applaud the benefits of a growth mindset but then hand out fixed target grades in lessons based on performance. Aside from the implementation problem, the original growth mindset research has also received harsh criticism. The statistician Andrew Gelman claims that &#x27;their research designs have enough degrees of freedom that they could take their data to support just about any theory at all&#x27;. Professor of Psychology Timothy Bates, who has been trying to replicate Dweck&#x27;s work, is finding that the results are repeatedly null.</div>
+<div class="para">He notes that: &#x27;People with a growth mindset don&#x27;t cope any better with failure Kids with the growth mindset aren&#x27;t getting better grades, either before or after our intervention study.&#x27; Much of this criticism is not lost on Dweck, and she deserves great credit for responding to it and adapting her work accordingly. In fact, she argues that her work has been misunderstood and misapplied in a range of ways. She has also expressed concerns that her theories are being misappropriated in schools by being conflated with the self-esteem movement: &#x27;For me the growth mindset is a tool for learning and improvement. It&#x27;s not just a vehicle for making children feel good.&#x27; But there is another factor at work here. The failure to translate the growth mindset into the classroom might reflect a misunderstanding of the nature of teaching and learning itself.</div>
+<div class="para">Growth mindset supporters David Yeager and Gregory Walton claim that interventions should be delivered in a subtle way to maximise their effectiveness. They say that if adolescents perceive a teacher&#x27;s intervention as conveying that they are in need of help, this could undo its intended effects. A lot of what drives students is their innate beliefs and how they perceive themselves. There is a strong correlation between self-perception and achievement, but there is evidence to suggest that the actual effect of achievement on self-perception is stronger than the other way round. To stand up in a classroom and successfully deliver a good speech is a genuine achievement, and that is likely to be more powerfully motivating than vague notions of &#x27;motivation&#x27; itself.</div>
+<div class="para">Recent evidence would suggest that growth mindset interventions are not the elixir of student learning that its proponents claim to be. The growth mindset appears to be a viable construct in the lab, which, when administered in the classroom via targeted interventions, doesn&#x27;t seem to work. It is hard to dispute that having faith in the capacity to change is a good attribute for students. Paradoxically, however, that aspiration is not well served by direct interventions that try to instil it. Motivational posters and talks are often a waste of time, and might well give students a deluded notion of what success actually means.</div>
+<div class="para">Teaching concrete skills such as how to write an effective introduction to an essay then praising students&#x27; effort in getting there is probably a far better way of improving confidence than telling them how unique they are, or indeed how capable they are of changing their own brains. Perhaps growth mindset works best as a philosophy and not an intervention.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-m3" data-test="m3">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 14&ndash;16 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="B" data-exp="The first paragraph traces how the idea of innate intelligence was &lsquo;supplanted&rsquo; &mdash; how ideas about intelligence began to shift. (B)"><div class="qnum">14</div><div class="qmain"><div class="qtext">What can we learn from the first paragraph?</div><label><input type="radio" name="q_mc114" value="A"> <b>A</b> where the notion of innate intelligence first began</label><label><input type="radio" name="q_mc114" value="B"> <b>B</b> when ideas about the nature of intelligence began to shift</label><label><input type="radio" name="q_mc114" value="C"> <b>C</b> how scientists have responded to changing views of intelligence</label><label><input type="radio" name="q_mc114" value="D"> <b>D</b> why thinkers turned away from the idea of intelligence being fixed</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="C" data-exp="Schools coax students to see failure as &lsquo;a chance to improve&rsquo; ability &mdash; to have confidence in their potential to succeed. (C)"><div class="qnum">15</div><div class="qmain"><div class="qtext">The second paragraph describes how schools encourage students to</div><label><input type="radio" name="q_mc115" value="A"> <b>A</b> identify their personal ambitions.</label><label><input type="radio" name="q_mc115" value="B"> <b>B</b> help each other to realise their goals.</label><label><input type="radio" name="q_mc115" value="C"> <b>C</b> have confidence in their potential to succeed.</label><label><input type="radio" name="q_mc115" value="D"> <b>D</b> concentrate on where their particular strengths lie.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="Fixed-mindset students took on &lsquo;only those tasks that would not risk their sense of worth&rsquo; &mdash; afraid to push beyond their limits. (D)"><div class="qnum">16</div><div class="qmain"><div class="qtext">In the third paragraph, the writer suggests that students with a fixed mindset</div><label><input type="radio" name="q_mc116" value="A"> <b>A</b> tend to be less competitive.</label><label><input type="radio" name="q_mc116" value="B"> <b>B</b> generally have a low sense of self-esteem.</label><label><input type="radio" name="q_mc116" value="C"> <b>C</b> will only work hard if they are given constant encouragement.</label><label><input type="radio" name="q_mc116" value="D"> <b>D</b> are afraid to push themselves beyond what they see as their limitations.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 17&ndash;22 &middot; Matching.</b> Match each statement with the correct option from the list below.</div><div class="endbank"><div class="ebt">List of options</div><div class="ebi"><b>A</b> &nbsp;Alfred Binet</div><div class="ebi"><b>B</b> &nbsp;Carol Dweck</div><div class="ebi"><b>C</b> &nbsp;Andrew Gelman</div><div class="ebi"><b>D</b> &nbsp;Timothy Bates</div><div class="ebi"><b>E</b> &nbsp;David Yeager and Gregory Walton</div></div><div class="q" data-type="sel" data-answer="C" data-exp="&rarr; Andrew Gelman (C): the designs had &lsquo;enough degrees of freedom&rsquo; to support any theory &mdash; the methodology was not strict enough."><div class="qnum">17</div><div class="qmain"><div class="qtext">The methodology behind the growth mindset studies was not strict enough.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="&rarr; Carol Dweck (B): she argues her work &lsquo;has been misunderstood and misapplied&rsquo;."><div class="qnum">18</div><div class="qmain"><div class="qtext">The idea of the growth mindset has been incorrectly interpreted.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="&rarr; Alfred Binet (A): presented as holding the earlier 19th-century view of intelligence as innate and fixed."><div class="qnum">19</div><div class="qmain"><div class="qtext">Intellectual ability is an unchangeable feature of each individual.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="&rarr; Yeager and Walton (E): interventions should be &lsquo;subtle&rsquo; so students don&rsquo;t feel they are being singled out for help."><div class="qnum">20</div><div class="qmain"><div class="qtext">The growth mindset should be promoted without students being aware of it.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="&rarr; Carol Dweck (B): &lsquo;the growth mindset is a tool for learning&hellip; not just a vehicle for making children feel good&rsquo; &mdash; not simply about morale."><div class="qnum">21</div><div class="qmain"><div class="qtext">The growth mindset is not simply about boosting students&#x27; morale.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="D" data-exp="&rarr; Timothy Bates (D): trying to replicate the work, he finds &lsquo;the results are repeatedly null&rsquo; &mdash; no effect on achievement."><div class="qnum">22</div><div class="qmain"><div class="qtext">Research shows that the growth mindset has no effect on academic achievement.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23&ndash;26 &middot; Yes / No / Not Given.</b> Do the following statements agree with the claims of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;this criticism is not lost on Dweck, and she deserves great credit for responding to it and adapting her work&rsquo;."><div class="qnum">23</div><div class="qmain"><div class="qtext">Dweck has handled criticisms of her work in an admirable way.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; &lsquo;the actual effect of achievement on self-perception is stronger than the other way round&rsquo;: self-perception is not the stronger driver."><div class="qnum">24</div><div class="qmain"><div class="qtext">Students&#x27; self-perception is a more effective driver of self-confidence than actual achievement is.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the text does not say the recent evidence attracted unfair attention."><div class="qnum">25</div><div class="qmain"><div class="qtext">Recent evidence about growth mindset interventions has attracted unfair coverage in the media.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; praising real achievement/effort is &lsquo;a far better way of improving confidence&rsquo; than vague motivation."><div class="qnum">26</div><div class="qmain"><div class="qtext">Deliberate attempts to encourage students to strive for high achievement may have a negative effect.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="m3">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="m3">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-m3">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-m4">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128214; The case for mixed-ability classes</h3>
+          <div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="m4" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="m4" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="m4" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="m4" title="Highlight blue"></button><button class="btn sm eraser" data-erase="m4">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="m4">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div>
+        </div>
+        <div class="passage" id="passage-m4">
+<div class="para">Picture this scene. It&#x27;s an English literature lesson in a UK school, and the teacher has just read an extract from Shakespeare&#x27;s Romeo and Juliet with a class of 15-year-olds. He&#x27;s given some of the students copies of No Fear Shakespeare, a kid-friendly translation of the original. For three students, even these literacy demands are beyond them. Another girl simply can&#x27;t focus and he gives her pens and paper to draw with.</div>
+<div class="para">The teacher can ask the No Fear group to identify the key characters and maybe provide a tentative plot summary. He can ask most of the class about character development, and five of them might be able to support their statements with textual evidence. Now two curious students are wondering whether Shakespeare advocates living a life of moderation or one of passionate engagement. As a teacher myself, I&#x27;d think my lesson would be going rather well if the discussion went as described above. But wouldn&#x27;t this kind of class work better if there weren&#x27;t such a huge gap between the top and the bottom?</div>
+<div class="para">If we put all the kids who needed literacy support into one class, and all the students who want to discuss the virtue of moderation into another? The practice of &#x27;streaming&#x27;, or &#x27;tracking&#x27;, involves separating students into classes depending on their diagnosed levels of attainment. At a macro level, it requires the establishment of academically selective schools for the brightest students, and comprehensive schools for the rest. Within schools, it means selecting students into a &#x27;stream&#x27; of general ability, or &#x27;sets&#x27; of subject-specific ability. The practice is intuitively appealing to almost every stakeholder.</div>
+<div class="para">I have heard the mixed-ability model attacked by way of analogy: a group hike. The fittest in the group take the lead and set a brisk pace, only to have to stop and wait every 20 minutes. This is frustrating, and their enthusiasm wanes. Meanwhile, the slowest ones are not only embarrassed but physically struggling to keep up. What&#x27;s worse, they never get a long enough break.</div>
+<div class="para">They honestly just want to quit. Hiking, they feel, is not for them. Mixed-ability classes bore students, frustrate parents and bum out teachers. The brightest ones will never summit Mount Qomolangma, and the stragglers won&#x27;t enjoy the lovely stroll in the park they are perhaps more suited to. Individuals suffer at the demands of the collective, mediocrity prevails.</div>
+<div class="para">So: is learning like hiking? The current pedagogical paradigm is arguably that of constructivism, which emerged out of the work of psychologist Lev Vygotsky. In the 1930s, Vygotsky emphasised the importance of targeting a student&#x27;s specific ‘zone of proximal development&#x27; (ZPD). This is the gap between what they can achieve only with support – teachers, textbooks, worked examples, parents and so on and what they can achieve independently. The purpose of teaching is to provide and then gradually remove this &#x27;scaffolding&#x27; until they are autonomous.</div>
+<div class="para">If we accept this model, it follows that streaming students with similar ZPDs would be an efficient and effective solution. And that forcing everyone on the same hike – regardless of aptitude – would be madness. Despite all this, there is limited empirical evidence to suggest that streaming results in better outcomes for students. Professor John Hattie, director of the Melbourne Education Research Institute, notes that &#x27;tracking has minimal effects on learning outcomes&#x27;. What is more, streaming appears to significantly – and negatively – affect those students assigned to the lowest sets.</div>
+<div class="para">These students tend to have much higher representation of low socioeconomic class. Less significant is the small benefit for those lucky clever students in the higher sets. The overall result is that the smart stay smart and the dumb get dumber, further entrenching the social divide. In the latest update of Hattie&#x27;s influential meta-analysis of factors influencing student achievement, one of the most significant factors is the teachers&#x27; estimate of achievement. Streaming students by diagnosed achievement automatically limits what the teacher feels the student is capable of.</div>
+<div class="para">Meanwhile, in a mixed environment, teachers&#x27; estimates need to be more diverse and flexible. While streaming might seem to help teachers effectively target a student&#x27;s ZPD, it can underestimate the importance of peer-to-peer learning. A crucial aspect of constructivist theory is the role of the MKO – &#x27;more knowledgeable other&#x27; – in knowledge construction. While teachers are traditionally the MKOs in classrooms, the value of knowledgeable student peers must not go unrecognised either. I find it amazing to watch students get over an idea to their peers in ways that I would never think of.</div>
+<div class="para">They operate with different language tools and different social tools from teachers and, having just learnt it themselves, they possess similar cognitive structures to their struggling classmates. There is also something exciting about passing on skills and knowledge that you yourself have just mastered - a certain pride and zeal, a certain freshness to the interaction between &#x27;teacher&#x27; and &#x27;learner&#x27; that is often lost by the expert for whom the steps are obvious and the joy of discovery forgotten. Having a variety of different abilities in a collaborative learning environment provides valuable resources for helping students meet their learning needs, not to mention improving their communication and social skills. And today, more than ever, we need the many to flourish – not suffer at the expense of a few bright stars. Once a year, I go on a hike with my class, a mixed bunch of students.</div>
+<div class="para">It is challenging. The fittest students realise they need to encourage the reluctant. There are lookouts who report back, and extra items to carry for others. We make it – together.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-m4" data-test="m4">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 27&ndash;30 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="B" data-exp="The Romeo and Juliet lesson shows &lsquo;how a teacher handles a range of learning needs&rsquo; in one class. (B)"><div class="qnum">27</div><div class="qmain"><div class="qtext">The writer describes the Romeo and Juliet lesson in order to demonstrate</div><label><input type="radio" name="q_mc127" value="A"> <b>A</b> how few students are interested in literature.</label><label><input type="radio" name="q_mc127" value="B"> <b>B</b> how a teacher handles a range of learning needs.</label><label><input type="radio" name="q_mc127" value="C"> <b>C</b> how unsuitable Shakespeare is for most teenagers.</label><label><input type="radio" name="q_mc127" value="D"> <b>D</b> how weaker students can disrupt their classmates&#x27; learning.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="A" data-exp="In the third paragraph the writer says streaming &lsquo;is intuitively appealing to almost every stakeholder&rsquo; &mdash; it has broad appeal. (A)"><div class="qnum">28</div><div class="qmain"><div class="qtext">What does the writer say about streaming in the third paragraph?</div><label><input type="radio" name="q_mc128" value="A"> <b>A</b> It has a very broad appeal.</label><label><input type="radio" name="q_mc128" value="B"> <b>B</b> It favours cleverer students.</label><label><input type="radio" name="q_mc128" value="C"> <b>C</b> It is relatively simple to implement.</label><label><input type="radio" name="q_mc128" value="D"> <b>D</b> It works better in some schools than others.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="C" data-exp="The Mount Qomolangma reference suggests students &lsquo;not achieving their full potential&rsquo;. (C)"><div class="qnum">29</div><div class="qmain"><div class="qtext">What idea is suggested by the reference to Mount Qomolangma in the fifth paragraph?</div><label><input type="radio" name="q_mc129" value="A"> <b>A</b> students following unsuitable paths</label><label><input type="radio" name="q_mc129" value="B"> <b>B</b> students attempting interesting tasks</label><label><input type="radio" name="q_mc129" value="C"> <b>C</b> students not achieving their full potential</label><label><input type="radio" name="q_mc129" value="D"> <b>D</b> students not being aware of their limitations</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="C" data-exp="&lsquo;scaffolding&rsquo; = &lsquo;the assistance given to a student in their initial stages of learning&rsquo;. (C)"><div class="qnum">30</div><div class="qmain"><div class="qtext">What does the word &#x27;scaffolding&#x27; in the sixth paragraph refer to?</div><label><input type="radio" name="q_mc130" value="A"> <b>A</b> the factors which prevent a student from learning effectively</label><label><input type="radio" name="q_mc130" value="B"> <b>B</b> the environment where most of a student&#x27;s learning takes place</label><label><input type="radio" name="q_mc130" value="C"> <b>C</b> the assistance given to a student in their initial stages of learning</label><label><input type="radio" name="q_mc130" value="D"> <b>D</b> the setting of appropriate learning targets for a student&#x27;s aptitude</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 31&ndash;35 &middot; Summary completion.</b> Complete the summary — choose the correct letter for each gap from the box below.</div><div class="endbank"><div class="ebt">Word box</div><div class="ebi"><b>A</b> &nbsp;wrong classes</div><div class="ebi"><b>B</b> &nbsp;lower expectations</div><div class="ebi"><b>C</b> &nbsp;average learners</div><div class="ebi"><b>D</b> &nbsp;bottom sets</div><div class="ebi"><b>E</b> &nbsp;brightest pupils</div><div class="ebi"><b>F</b> &nbsp;disadvantaged backgrounds</div><div class="ebi"><b>G</b> &nbsp;weaker students</div><div class="ebi"><b>H</b> &nbsp;higher achievements</div><div class="ebi"><b>I</b> &nbsp;positive impressions</div></div><div class="q" data-type="sel" data-answer="H" data-exp="&rarr; higher achievements (H): little sign streaming leads to higher achievements."><div class="qnum">31</div><div class="qmain"><div class="qtext">there is very little indication that streaming leads to <span class="blank">______</span></div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="D" data-exp="&rarr; bottom sets (D): the biggest &mdash; negative &mdash; impact is on students in the lowest sets."><div class="qnum">32</div><div class="qmain"><div class="qtext">the biggest impact is on students placed in the <span class="blank">______</span></div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="F" data-exp="&rarr; disadvantaged backgrounds (F): these students have &lsquo;much higher representation of low socioeconomic class&rsquo;."><div class="qnum">33</div><div class="qmain"><div class="qtext">especially where a large proportion of them come from <span class="blank">______</span></div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="&rarr; brightest pupils (E): for the clever students in higher sets there is only a &lsquo;small benefit&rsquo;."><div class="qnum">34</div><div class="qmain"><div class="qtext">for the <span class="blank">______</span>, there appears to be only minimal advantage</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="&rarr; lower expectations (B): streaming &lsquo;automatically limits what the teacher feels the student is capable of&rsquo;."><div class="qnum">35</div><div class="qmain"><div class="qtext">teachers tend to have <span class="blank">______</span> of students in streamed groups</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 36&ndash;40 &middot; Yes / No / Not Given.</b> Do the following statements agree with the claims of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; the writer says the ZPD model implies &lsquo;streaming students with similar ZPDs would be&hellip; effective&rsquo;: it supports streaming, not mixed-ability."><div class="qnum">36</div><div class="qmain"><div class="qtext">The Vygotsky model of education supports the concept of a mixed-ability class.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; teachers&rsquo; uncertainty about students taking on MKO roles is not mentioned."><div class="qnum">37</div><div class="qmain"><div class="qtext">Some teachers are uncertain about allowing students to take on MKO roles in the classroom.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;something exciting about passing on skills&hellip; you yourself have just mastered &mdash; a certain pride and zeal&rsquo;."><div class="qnum">38</div><div class="qmain"><div class="qtext">It can be rewarding to teach knowledge which you have only recently acquired.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; &lsquo;we need the many to flourish &mdash; not suffer at the expense of a few bright stars&rsquo;: the top students are not the priority."><div class="qnum">39</div><div class="qmain"><div class="qtext">The priority should be to ensure that the highest-achieving students attain their goals.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the hike is described, but no claim is made that it improves students&rsquo; self-confidence."><div class="qnum">40</div><div class="qmain"><div class="qtext">Taking part in collaborative outdoor activities with teachers and classmates can improve student outcomes in the classroom.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="m4">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="m4">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-m4">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-m5">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128214; An inquiry into the existence of the gifted child</h3>
+          <div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="m5" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="m5" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="m5" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="m5" title="Highlight blue"></button><button class="btn sm eraser" data-erase="m5">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="m5">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div>
+        </div>
+        <div class="passage" id="passage-m5">
+<div class="para">Let us start by looking at a modern &#x27;genius&#x27;, Maryam Mirzakhani, who died at the early age of 40. She was the only woman to win the Fields Medal – the mathematical equivalent of a Nobel prize. It would be easy to assume that someone as special as Mirzakhani must have been one of those &#x27;gifted&#x27; children, those who have an extraordinary ability in a specific sphere of activity or knowledge. But look closer and a different story emerges. Mirzakhani was born in Tehran, Iran. She went to a highly selective girls&#x27; school but maths wasn&#x27;t her interest – reading was. She loved novels and would read anything she could lay her hands on. As for maths, she did rather poorly at it for the first couple of years in her middle school, but became interested when her elder brother told her about what he&#x27;d learned. He shared a famous maths problem from a magazine that fascinated her – and she was hooked.</div>
+<div class="para">In adult life it is clear that she was curious, excited by what she did and also resolute in the face of setbacks. One of her comments sums it up. &#x27;Of course, the most rewarding part is the &quot;Aha&quot; moment, the excitement of discovery and enjoyment of understanding something new. . But most of the time, doing mathematics for me is like being on a long hike with no trail and no end in sight.&#x27; That trail took her to the heights of original research into mathematics.</div>
+<div class="para">Is her background unusual? Apparently not. Most Nobel prize winners were unexceptional in childhood. Einstein was slow to talk as a baby. He failed the general part of the entry test to Zurich Polytechnic – though they let him in because of high physics and maths scores. He struggled at work initially, but he kept plugging away and eventually rewrote the laws of Newtonian mechanics with his theory of relativity.</div>
+<div class="para">There has been a considerable amount of research on high performance over the last century that suggests it goes way beyond tested intelligence. On top of that, research is clear that brains are flexible, new neural pathways can be created, and IQ isn&#x27;t fixed. For example, just because you can read stories with hundreds of pages at the age of five doesn&#x27;t mean you will still be ahead of your contemporaries in your teens.</div>
+<div class="para">While the jury is out on giftedness being innate and other factors potentially making the difference, what is certain is that the behaviours associated with high levels of performance are replicable and most can be taught – even traits such as curiosity.</div>
+<div class="para">According to my colleague Prof Deborah Eyre, with whom I&#x27;ve collaborated on the book Great Minds and How to Grow Them, the latest neuroscience and psychological research suggests most individuals can reach levels of performance associated in school with the gifted and talented. However, they must be taught the right attitudes and approaches to their learning and develop the attributes of high performers – curiosity, persistence and hard work, for example – an approach Eyre calls &#x27;high performance learning&#x27;. Critically, they need the right support in developing those approaches at home as well as at school.</div>
+<div class="para">Prof Anders Ericsson, an eminent education psychologist at Florida State University, US, is the co-author of Peak: Secrets from the New Science of Expertise. After research going back to 1980 into diverse achievements, from music to memory to sport, he doesn&#x27;t think unique and innate talents are at the heart of performance. Deliberate practice, that stretches you every step of the way, and around 10,000 hours of it, is what produces the goods. It&#x27;s not a magic number – the highest performers move on to doing a whole lot more, of course. Ericsson&#x27;s memory research is particularly interesting because random students, trained in memory techniques for the study, went on to outperform others thought to have innately superior memories – those who you might call gifted.</div>
+<div class="para">But it is perhaps the work of Benjamin Bloom, another distinguished American educationist working in the 1980s, that gives the most pause for thought. Bloom&#x27;s team looked at a group of extraordinarily high achieving people in disciplines as varied as ballet, swimming, piano, tennis, maths, sculpture and neurology. He found a pattern of parents encouraging and supporting their children, often in areas they enjoyed themselves. Bloom&#x27;s outstanding people had worked very hard and consistently at something they had become hooked on when at a young age, and their parents all emerged as having strong work ethics themselves.</div>
+<div class="para">Eyre says we know how high performers learn. From that she has developed a high performing learning approach. She is working on this with a group of schools, both in Britain and abroad. Some spin-off research, which looked in detail at 24 of the 3,000 children being studied who were succeeding despite difficult circumstances, found something remarkable. Half were getting free school meals because of poverty, more than half were living with a single parent, and four in five were living in disadvantaged areas. Interviews uncovered strong evidence of an adult or adults in the child&#x27;s life who valued and supported education, either in the immediate or extended family or in the child&#x27;s wider community. Children talked about the need to work hard at school, to listen in class and keep trying.</div>
+<div class="para">Let us end with Einstein, the epitome of a genius. He clearly had curiosity, character and determination. He struggled against rejection in early life but was undeterred. Did he think he was a genius or even gifted? He once wrote: &#x27;It&#x27;s not that I&#x27;m so smart, it&#x27;s just that I stay with problems longer. Most people say it is the intellect which makes a great scientist. They are wrong: it is character.&#x27;</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-m5" data-test="m5">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 27&ndash;32 &middot; Summary completion.</b> Complete the summary — choose the correct letter for each gap from the box below.</div><div class="endbank"><div class="ebt">Word box</div><div class="ebi"><b>A</b> &nbsp;appeal</div><div class="ebi"><b>B</b> &nbsp;determined</div><div class="ebi"><b>C</b> &nbsp;intrigued</div><div class="ebi"><b>D</b> &nbsp;single</div><div class="ebi"><b>E</b> &nbsp;achievement</div><div class="ebi"><b>F</b> &nbsp;devoted</div><div class="ebi"><b>G</b> &nbsp;involved</div><div class="ebi"><b>H</b> &nbsp;unique</div><div class="ebi"><b>I</b> &nbsp;innovative</div><div class="ebi"><b>J</b> &nbsp;satisfaction</div><div class="ebi"><b>K</b> &nbsp;intent</div></div><div class="q" data-type="sel" data-answer="H" data-exp="&rarr; unique (H): Mirzakhani was &lsquo;the only woman to win the Fields Medal&rsquo; &mdash; a unique figure."><div class="qnum">27</div><div class="qmain"><div class="qtext">Maryam Mirzakhani is regarded as <span class="blank">______</span> in mathematics (the only female Fields Medal holder)</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="&rarr; appeal (A): &lsquo;maths wasn&rsquo;t her interest&rsquo; as a child &mdash; it held little appeal."><div class="qnum">28</div><div class="qmain"><div class="qtext">as a child, maths held little <span class="blank">______</span> for her</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="&rarr; intrigued (C): a famous maths problem &lsquo;fascinated her &mdash; and she was hooked&rsquo;."><div class="qnum">29</div><div class="qmain"><div class="qtext">her interest grew after she was <span class="blank">______</span> by a difficult puzzle</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="&rarr; determined (B): as a professional she was &lsquo;resolute in the face of setbacks&rsquo;."><div class="qnum">30</div><div class="qmain"><div class="qtext">as a professional she proved <span class="blank">______</span> when things did not go smoothly</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="J" data-exp="&rarr; satisfaction (J): &lsquo;the most rewarding part is the &ldquo;Aha&rdquo; moment&rsquo; &mdash; her greatest satisfaction came from discovery."><div class="qnum">31</div><div class="qmain"><div class="qtext">she got the greatest <span class="blank">______</span> from making discoveries</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="I" data-exp="&rarr; innovative (I): she did &lsquo;original research&rsquo; / ground-breaking, innovative studies."><div class="qnum">32</div><div class="qmain"><div class="qtext">she produced some extremely <span class="blank">______</span> mathematical studies</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 33&ndash;37 &middot; Yes / No / Not Given.</b> Do the following statements agree with the claims of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;Most Nobel prize winners were unexceptional in childhood.&rsquo;"><div class="qnum">33</div><div class="qmain"><div class="qtext">Many people who ended up winning prestigious intellectual prizes only reached an average standard when young.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; his early failures are noted, but not that they were caused by a lack of confidence."><div class="qnum">34</div><div class="qmain"><div class="qtext">Einstein&#x27;s failures as a young man were due to his lack of confidence.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;the jury is out on giftedness being innate&rsquo; &mdash; there is no agreement on whether some children are born gifted."><div class="qnum">35</div><div class="qmain"><div class="qtext">It is difficult to reach agreement on whether some children are actually born gifted.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the passage never says Einstein was upset by the public&rsquo;s view of his work."><div class="qnum">36</div><div class="qmain"><div class="qtext">Einstein was upset by the public&#x27;s view of his life&#x27;s work.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; Einstein said &lsquo;it&rsquo;s just that I stay with problems longer&rsquo; &mdash; persistence, not speed."><div class="qnum">37</div><div class="qmain"><div class="qtext">Einstein put his success down to the speed at which he dealt with scientific questions.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 38&ndash;40 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="C" data-exp="&rarr; C: children need &lsquo;curiosity, persistence and hard work&rsquo; &mdash; the development of a spirit of inquiry."><div class="qnum">38</div><div class="qmain"><div class="qtext">What does Eyre believe is needed for children to equal &#x27;gifted&#x27; standards?</div><label><input type="radio" name="q_mc138" value="A"> <b>A</b> strict discipline from the teaching staff</label><label><input type="radio" name="q_mc138" value="B"> <b>B</b> assistance from their peers in the classroom</label><label><input type="radio" name="q_mc138" value="C"> <b>C</b> the development of a spirit of inquiry towards their studies</label><label><input type="radio" name="q_mc138" value="D"> <b>D</b> the determination to surpass everyone else&#x27;s achievements</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="&rarr; B: Ericsson &lsquo;doesn&rsquo;t think unique and innate talents are at the heart of performance&rsquo;."><div class="qnum">39</div><div class="qmain"><div class="qtext">What is the result of Ericsson&#x27;s research?</div><label><input type="radio" name="q_mc139" value="A"> <b>A</b> Very gifted students do not need to work on improving memory skills.</label><label><input type="radio" name="q_mc139" value="B"> <b>B</b> Being born with a special gift is not the key factor in becoming expert.</label><label><input type="radio" name="q_mc139" value="C"> <b>C</b> Including time for physical exercise is crucial in raising performance.</label><label><input type="radio" name="q_mc139" value="D"> <b>D</b> 10,000 hours of relevant and demanding work will create a genius.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="&rarr; D: deprived children succeeded where an adult &lsquo;valued and supported education&rsquo; &mdash; guidance from someone who values learning."><div class="qnum">40</div><div class="qmain"><div class="qtext">In the penultimate paragraph, it is stated the key to some deprived children&#x27;s success is</div><label><input type="radio" name="q_mc140" value="A"> <b>A</b> a regular and nourishing diet at home.</label><label><input type="radio" name="q_mc140" value="B"> <b>B</b> the loving support of more than one parent.</label><label><input type="radio" name="q_mc140" value="C"> <b>C</b> a community which has well-funded facilities for learning.</label><label><input type="radio" name="q_mc140" value="D"> <b>D</b> the guidance of someone who recognises the benefits of learning.</label><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="m5">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="m5">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-m5">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-m6">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>&#128214; The growth of intelligence</h3>
+          <div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="m6" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="m6" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="m6" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="m6" title="Highlight blue"></button><button class="btn sm eraser" data-erase="m6">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="m6">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div>
+        </div>
+        <div class="passage" id="passage-m6">
+<div class="para">No one doubts that intelligence develops as children grow older. Yet the concept of intelligence has proved both quite difficult to define in unambiguous terms and unexpectedly controversial in some respects. Although, at one level, there seem to be almost as many definitions of intelligence as people who have tried to define it, there is broad agreement on two key features. That is, intelligence involves the capacity not only to learn from experience but also to adapt to one’s environment. However, we cannot leave the concept there. Before turning to what is known about the development of intelligence, it is necessary to consider whether we are considering the growth of one or many skills. That question has been tackled in rather different ways by psychometricians and by developmentalists.</div>
+<div class="para">The former group has examined the issue by determining how children’s abilities on a wide range of tasks intercorrelate, or go together. Statistical techniques have been used to find out whether the patterns are best explained by one broad underlying capacity, general intelligence, or by a set of multiple, relatively separate, special skills in domains such as verbal and visuospatial ability. While it cannot be claimed that everyone agrees on what the results mean, most people now accept that for practical purposes it is reasonable to suppose that both are involved. In brief, the evidence in favour of some kind of general intellectual capacity is that people who are superior (or inferior) on one type of task tend also to be superior (or inferior) on others. Moreover, general measures of intelligence tend to have considerable powers to predict a person’s performance on a wide range of tasks requiring special skills. Nevertheless, it is plain that it is not at all uncommon for individuals to be very good at some sorts of task and yet quite poor at some others. Furthermore the influences that affect verbal skills are not quite the same as those that affect other skills.</div>
+<div class="para">This approach to investigating intelligence is based on the nature of the task involved, but studies of age-related changes show that this is not the only, or necessarily the most important, approach. For instance, some decades ago, Horn and Cattell argued for a differentiation between what they termed ‘fluid’ and ‘crystallised’ intelligence. Fluid abilities are best assessed by tests that require mental manipulation of abstract symbols. Crystallised abilities, by contrast, reflect knowledge of the environment in which we live and past experience of similar tasks; they may be assessed by tests of comprehension and information. It seems that fluid abilities peak in early adult life, whereas crystallised abilities increase up to advanced old age.</div>
+<div class="para">Developmental studies also show that the interconnections between different skills vary with age. Thus in the first year of life an interest in perceptual patterns is a major contributor to cognitive abilities, whereas verbal abilities are more important later on. These findings seemed to suggest a substantial lack of continuity between infancy and middle childhood. However, it is important to realise that the apparent discontinuity will vary according to which of the cognitive skills were assessed in infancy. It has been found that tests of coping with novelty do predict later intelligence. These findings reinforce the view that young children’s intellectual performance needs to be assessed from their interest in and curiosity about the environment, and the extent to which this is applied to new situations, as well as by standardised intelligence testing.</div>
+<div class="para">These psychometric approaches have focused on children’s increase in cognitive skills as they grow older. Piaget brought about a revolution in the approach to cognitive development through his arguments (backed up by observations) that the focus should be on the thinking processes involved rather than on levels of cognitive achievement. These ideas of Piaget gave rise to an immense body of research and it would be true to say that subsequent thinking has been heavily dependent on his genius in opening up new ways of thinking about cognitive development. Nevertheless, most of his concepts have had to be so radically revised, or rejected, that his theory no longer provides an appropriate basis for thinking about cognitive development. To appreciate why that is so, we need to focus on some rather different elements of Piaget’s theorising.</div>
+<div class="para">The first element, which has stood the test of time, is his view that the child is an active agent of learning and of the importance of this activity in cognitive development. Numerous studies have shown how infants actively scan their environment; how they prefer patterned to non-patterned objects, how they choose novel over familiar stimuli, and how they explore their environment as if to see how it works. Children’s questions and comments vividly illustrate the ways in which they are constantly constructing schemes of what they know and trying out their ideas of how to fit new knowledge into those schemes or deciding that the schemes need modification. Moreover, a variety of studies have shown that active experiences have a greater effect on learning than comparable passive experiences. However, a second element concerns the notion that development proceeds through a series of separate stages that have to be gone through step-by-step, in a set order, each of which is characterised by a particular cognitive structure. That has turned out to be a rather misleading way of thinking about cognitive development, although it is not wholly wrong.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-m6" data-test="m6">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 27&ndash;30 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="A" data-exp="&rarr; A: intelligence is the capacity to &lsquo;learn from experience&rsquo; and to &lsquo;adapt to one&rsquo;s environment&rsquo; &mdash; changing behaviour to suit the situation."><div class="qnum">27</div><div class="qmain"><div class="qtext">Most researchers accept that one feature of intelligence is the ability to</div><label><input type="radio" name="q_mc127" value="A"> <b>A</b> change our behaviour according to our situation.</label><label><input type="radio" name="q_mc127" value="B"> <b>B</b> react to others&#x27; behaviour patterns.</label><label><input type="radio" name="q_mc127" value="C"> <b>C</b> experiment with environmental features.</label><label><input type="radio" name="q_mc127" value="D"> <b>D</b> cope with unexpected setbacks.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="&rarr; B: statistics were used to see whether one general capacity or &lsquo;a set of multiple&hellip; special skills&rsquo; is involved."><div class="qnum">28</div><div class="qmain"><div class="qtext">What have psychometricians used statistics for?</div><label><input type="radio" name="q_mc128" value="A"> <b>A</b> to find out if cooperative tasks are a useful tool in measuring certain skills</label><label><input type="radio" name="q_mc128" value="B"> <b>B</b> to explore whether several abilities are involved in the development of intelligence</label><label><input type="radio" name="q_mc128" value="C"> <b>C</b> to demonstrate that mathematical models can predict test results for different skills</label><label><input type="radio" name="q_mc128" value="D"> <b>D</b> to discover whether common sense is fundamental to developing children&#x27;s abilities</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="&rarr; D: Horn and Cattell are cited to introduce the &lsquo;fluid&rsquo; vs &lsquo;crystallised&rsquo; distinction &mdash; abilities that change differently with age."><div class="qnum">29</div><div class="qmain"><div class="qtext">Why are Horn and Cattell mentioned?</div><label><input type="radio" name="q_mc129" value="A"> <b>A</b> They disagreed about the interpretation of different intelligence tests.</label><label><input type="radio" name="q_mc129" value="B"> <b>B</b> Their research concerned both linguistic and mathematical abilities.</label><label><input type="radio" name="q_mc129" value="C"> <b>C</b> They were the first to prove that intelligence can be measured by testing a range of special skills.</label><label><input type="radio" name="q_mc129" value="D"> <b>D</b> Their work was an example of research into how people&#x27;s cognitive skills vary with age.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="&rarr; B: Piaget said the focus should be on &lsquo;the thinking processes involved rather than on levels of cognitive achievement&rsquo;."><div class="qnum">30</div><div class="qmain"><div class="qtext">What was innovative about Piaget&#x27;s research?</div><label><input type="radio" name="q_mc130" value="A"> <b>A</b> He refused to accept that children developed according to a set pattern.</label><label><input type="radio" name="q_mc130" value="B"> <b>B</b> He emphasised the way children thought more than how well they did in tests.</label><label><input type="radio" name="q_mc130" value="C"> <b>C</b> He used visually appealing materials instead of traditional intelligence tests.</label><label><input type="radio" name="q_mc130" value="D"> <b>D</b> He studied children of all ages and levels of intelligence.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 31&ndash;36 &middot; Yes / No / Not Given.</b> Do the following statements agree with the claims of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; there are &lsquo;almost as many definitions of intelligence as people who have tried to define it&rsquo;: academics do not agree."><div class="qnum">31</div><div class="qmain"><div class="qtext">A surprising number of academics have come to the same conclusion about what the term intelligence means.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; individuals can be &lsquo;very good at some sorts of task and yet quite poor at some others&rsquo;, so a general score may miss a specific aptitude."><div class="qnum">32</div><div class="qmain"><div class="qtext">A general test of intelligence is unlikely to indicate the level of performance in every type of task.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; &lsquo;crystallised abilities&hellip; increase up to advanced old age&rsquo; (comprehension), so the elderly do not do worse."><div class="qnum">33</div><div class="qmain"><div class="qtext">The elderly perform less well on comprehension tests than young adults.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;the apparent discontinuity will vary according to which of the cognitive skills were assessed&rsquo;."><div class="qnum">34</div><div class="qmain"><div class="qtext">We must take into account which skills are tested when comparing intelligence at different ages.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the text does not compare Piaget&rsquo;s influence on theory versus practical research."><div class="qnum">35</div><div class="qmain"><div class="qtext">Piaget&#x27;s work influenced theoretical studies more than practical research.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; his view that &lsquo;the child is an active agent of learning&rsquo; &lsquo;has stood the test of time&rsquo;."><div class="qnum">36</div><div class="qmain"><div class="qtext">Piaget&#x27;s emphasis on active learning has been discredited by later researchers.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 37&ndash;40 &middot; Summary completion.</b> Complete the summary — choose the correct letter for each gap from the box below.</div><div class="endbank"><div class="ebt">Word box</div><div class="ebi"><b>A</b> &nbsp;adult</div><div class="ebi"><b>B</b> &nbsp;practical</div><div class="ebi"><b>C</b> &nbsp;verbal</div><div class="ebi"><b>D</b> &nbsp;spatial</div><div class="ebi"><b>E</b> &nbsp;inquisitive</div><div class="ebi"><b>F</b> &nbsp;uncertain</div><div class="ebi"><b>G</b> &nbsp;academic</div><div class="ebi"><b>H</b> &nbsp;plentiful</div><div class="ebi"><b>I</b> &nbsp;unfamiliar</div></div><div class="q" data-type="sel" data-answer="C" data-exp="&rarr; verbal (C): &lsquo;verbal abilities are more important later on&rsquo; &mdash; these skills grow more significant with age."><div class="qnum">37</div><div class="qmain"><div class="qtext"><span class="blank">______</span> skills become more significant with age</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="&rarr; adult (A): tests of &lsquo;coping with novelty do predict later&rsquo; (adult) intelligence."><div class="qnum">38</div><div class="qmain"><div class="qtext">a good predictor of <span class="blank">______</span> intelligence</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="&rarr; inquisitive (E): performance is judged by children&rsquo;s &lsquo;interest in and curiosity about the environment&rsquo;."><div class="qnum">39</div><div class="qmain"><div class="qtext">how <span class="blank">______</span> small children are about their surroundings</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="I" data-exp="&rarr; unfamiliar (I): and how they apply it &lsquo;to new situations&rsquo; &mdash; an unfamiliar setting."><div class="qnum">40</div><div class="qmain"><div class="qtext">how much interest they show on finding themselves in an <span class="blank">______</span> setting</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="m6">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="m6">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-m6">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">🧩 Vocabulary practice — Prefixes &amp; negative word-formation</h2>
+      <p class="small">Word-building skills for Module 4: making opposites and negatives with <b>un-, in-, im-, il-, ir-, dis-, mis-, over-, under-</b>. No time limit — the timer just records how long you take. Reach 70% to unlock answers. (20 marks)</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+        <div class="cdbar countup" data-mode="countup" title="Time used to complete this section (no limit)">&#9201; <span class="cdlab">Time used</span> <b class="cdd">00:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+
+        <div class="qgroup"><div class="ginstr"><b>Exercise 1 · Negative prefixes.</b> Choose the prefix that makes the opposite of each word.</div>
+          <div class="q" data-type="sel" data-answer="un" data-exp="unable — the prefix un- makes the opposite of &lsquo;able&rsquo;."><div class="qnum">1</div><div class="qmain"><div class="qtext">______ + able</div><select><option value="">— choose —</option><option value="un">un-</option><option value="in">in-</option><option value="dis">dis-</option><option value="ir">ir-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="im" data-exp="impossible — im- is used before p, b, m."><div class="qnum">2</div><div class="qmain"><div class="qtext">______ + possible</div><select><option value="">— choose —</option><option value="un">un-</option><option value="im">im-</option><option value="dis">dis-</option><option value="il">il-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="il" data-exp="illegal — il- is used before l."><div class="qnum">3</div><div class="qmain"><div class="qtext">______ + legal</div><select><option value="">— choose —</option><option value="in">in-</option><option value="il">il-</option><option value="un">un-</option><option value="ir">ir-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="ir" data-exp="irregular — ir- is used before r."><div class="qnum">4</div><div class="qmain"><div class="qtext">______ + regular</div><select><option value="">— choose —</option><option value="in">in-</option><option value="ir">ir-</option><option value="un">un-</option><option value="im">im-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="dis" data-exp="disagree — dis- reverses the verb &lsquo;agree&rsquo;."><div class="qnum">5</div><div class="qmain"><div class="qtext">______ + agree</div><select><option value="">— choose —</option><option value="un">un-</option><option value="mis">mis-</option><option value="dis">dis-</option><option value="in">in-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="mis" data-exp="misunderstand — mis- = &lsquo;wrongly / badly&rsquo;."><div class="qnum">6</div><div class="qmain"><div class="qtext">______ + understand</div><select><option value="">— choose —</option><option value="dis">dis-</option><option value="mis">mis-</option><option value="un">un-</option><option value="im">im-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="ir" data-exp="irrelevant — ir- before r."><div class="qnum">7</div><div class="qmain"><div class="qtext">______ + relevant</div><select><option value="">— choose —</option><option value="in">in-</option><option value="un">un-</option><option value="ir">ir-</option><option value="il">il-</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="im" data-exp="immature — im- before m."><div class="qnum">8</div><div class="qmain"><div class="qtext">______ + mature</div><select><option value="">— choose —</option><option value="un">un-</option><option value="in">in-</option><option value="im">im-</option><option value="dis">dis-</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="qgroup"><div class="ginstr"><b>Exercise 2 · Spell the opposite.</b> Choose the correctly formed negative word.</div>
+          <div class="q" data-type="sel" data-answer="impossible" data-exp="im- before p → impossible."><div class="qnum">9</div><div class="qmain"><div class="qtext">the opposite of <b>possible</b></div><select><option value="">— choose —</option><option>unpossible</option><option>impossible</option><option>dispossible</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="illegal" data-exp="il- before l → illegal."><div class="qnum">10</div><div class="qmain"><div class="qtext">the opposite of <b>legal</b></div><select><option value="">— choose —</option><option>illegal</option><option>inlegal</option><option>unlegal</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="irresponsible" data-exp="ir- before r → irresponsible."><div class="qnum">11</div><div class="qmain"><div class="qtext">the opposite of <b>responsible</b></div><select><option value="">— choose —</option><option>unresponsible</option><option>disresponsible</option><option>irresponsible</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="dishonest" data-exp="dis- → dishonest."><div class="qnum">12</div><div class="qmain"><div class="qtext">the opposite of <b>honest</b></div><select><option value="">— choose —</option><option>unhonest</option><option>dishonest</option><option>inhonest</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="impatient" data-exp="im- before p → impatient."><div class="qnum">13</div><div class="qmain"><div class="qtext">the opposite of <b>patient</b></div><select><option value="">— choose —</option><option>unpatient</option><option>impatient</option><option>inpatient</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="illogical" data-exp="il- before l → illogical."><div class="qnum">14</div><div class="qmain"><div class="qtext">the opposite of <b>logical</b></div><select><option value="">— choose —</option><option>unlogical</option><option>dislogical</option><option>illogical</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="qgroup"><div class="ginstr"><b>Exercise 3 · Gap-fill.</b> Complete each sentence with a word from the box.</div>
+          <div class="endbank"><div class="ebt">Word box — use each once</div><div class="ebi">misunderstood · unfamiliar · disadvantaged · underestimate · overconfident · irrelevant</div></div>
+          <div class="q" data-type="sel" data-answer="misunderstood" data-exp="mis- = wrongly understood."><div class="qnum">15</div><div class="qmain"><div class="qtext">Dweck argues that her work has been ______ and misapplied.</div><select><option value="">— choose —</option><option>misunderstood</option><option>unfamiliar</option><option>disadvantaged</option><option>underestimate</option><option>overconfident</option><option>irrelevant</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="unfamiliar" data-exp="un- = not familiar."><div class="qnum">16</div><div class="qmain"><div class="qtext">AI is still fairly new and ______ to most people.</div><select><option value="">— choose —</option><option>misunderstood</option><option>unfamiliar</option><option>disadvantaged</option><option>underestimate</option><option>overconfident</option><option>irrelevant</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="disadvantaged" data-exp="dis- = lacking advantages."><div class="qnum">17</div><div class="qmain"><div class="qtext">Some able children grow up in ______ areas.</div><select><option value="">— choose —</option><option>misunderstood</option><option>unfamiliar</option><option>disadvantaged</option><option>underestimate</option><option>overconfident</option><option>irrelevant</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="underestimate" data-exp="under- = too little; to judge below the true level."><div class="qnum">18</div><div class="qmain"><div class="qtext">Streaming can lead teachers to ______ students in the lower sets.</div><select><option value="">— choose —</option><option>misunderstood</option><option>unfamiliar</option><option>disadvantaged</option><option>underestimate</option><option>overconfident</option><option>irrelevant</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="overconfident" data-exp="over- = too much confidence."><div class="qnum">19</div><div class="qmain"><div class="qtext">Praised only for being clever, some children became ______ and avoided hard tasks.</div><select><option value="">— choose —</option><option>misunderstood</option><option>unfamiliar</option><option>disadvantaged</option><option>underestimate</option><option>overconfident</option><option>irrelevant</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="irrelevant" data-exp="ir- = not relevant."><div class="qnum">20</div><div class="qmain"><div class="qtext">In True/False/Not Given, ignore detail that is ______ to the statement.</div><select><option value="">— choose —</option><option>misunderstood</option><option>unfamiliar</option><option>disadvantaged</option><option>underestimate</option><option>overconfident</option><option>irrelevant</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">&#10004; Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">&#8635; Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Vocabulary Glossary — by passage</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic and topic vocabulary, grouped by reading passage. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage note and useful collocations. <span id="glossCount"></span></p>
+      <div id="glossWrap"></div>
+    </div>
+  </section>
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong (after unlocking a test at 70%+) is recorded here with the correct answer and the reason.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+    </div>
+  </section>
+</div>
+<div class="srcfoot">Sources: Attitudes towards Artificial Intelligence (Cambridge 16 · Test 4 · Passage 3) &nbsp;·&nbsp; Is there a psychologist in the building? (TR1 · Test 2 · Passage 2) &nbsp;·&nbsp; The growth mindset (Cambridge 18 · Test 4 · Passage 2) &nbsp;·&nbsp; The case for mixed-ability classes (Cambridge 18 · Test 3 · Passage 3) &nbsp;·&nbsp; An inquiry into the existence of the gifted child (Cambridge 19 · Test 2 · Passage 3) &nbsp;·&nbsp; The growth of intelligence (TR1 · Test 4 · Passage 3)</div>
+<div class="flash" id="flash"></div>
+<script>
+(function(){
+"use strict";
+
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 4 Homework";
+const LS_KEY = "ielts_reading_studio_module4_homework_v1";
+const PASS_PCT = 70;
+const SEQ = ["m1", "m2", "m3", "m4", "m5", "m6", "vocab"];   // ordered test ids for sequential unlock
+const TEACHER = false;   // teacher edition: all tabs open, answers always shown
+function TLABEL(k){const m=TEST_META[k];if(!m)return k;return m.label+((TEACHER&&m.src)?(" ("+m.src+")"):"");}
+
+const TEST_META = {
+  m1:{label:"AI attitudes", src:"Cam 16 \u00b7 Test 4", short:"1 \u00b7 AI attitudes", pill:"rd"},
+  m2:{label:"Env. psychology", src:"TR1 \u00b7 Test 2", short:"2 \u00b7 Env. psychology", pill:"rd"},
+  m3:{label:"Growth mindset", src:"Cam 18 \u00b7 Test 4", short:"3 \u00b7 Growth mindset", pill:"rd"},
+  m4:{label:"Mixed-ability", src:"Cam 18 \u00b7 Test 3", short:"4 \u00b7 Mixed-ability", pill:"rd"},
+  m5:{label:"Gifted child", src:"Cam 19 \u00b7 Test 2", short:"5 \u00b7 Gifted child", pill:"rd"},
+  m6:{label:"Intelligence", src:"TR1 \u00b7 Test 4", short:"6 \u00b7 Intelligence", pill:"rd"},
+  vocab:{label:"Vocabulary practice", src:"", short:"🧩 Vocab", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    tests:{
+      m1:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      m2:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      m3:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      m4:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      m5:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      m6:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:20,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");if(d)d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+function isLockedTab(id){
+  const i=SEQ.indexOf(id);
+  return !TEACHER && i>0 && !state.tests[SEQ[i-1]].unlocked;
+}
+function refreshTabLocks(){
+  SEQ.forEach((id,i)=>{
+    const btn=document.querySelector('#tabs button[data-tab="'+id+'"]');
+    if(!btn)return;
+    const locked = !TEACHER && i>0 && !state.tests[SEQ[i-1]].unlocked;
+    btn.classList.toggle("locked",locked);
+    let lk=btn.querySelector(".tlock");
+    if(locked){if(!lk){lk=document.createElement("span");lk.className="tlock";lk.textContent=" 🔒";btn.appendChild(lk);}}
+    else if(lk){lk.remove();}
+  });
+}
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  const _t=b.dataset.tab;
+  if(SEQ.indexOf(_t)>=0 && isLockedTab(_t)){
+    const prev=SEQ[SEQ.indexOf(_t)-1];
+    flash("🔒 Finish "+(TEST_META[prev]?TEST_META[prev].short:"the previous test")+" with "+PASS_PCT+"% to unlock this one.");
+    return;
+  }
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
+  updateHeaderStats();
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+
+// header on-tab timer (records time on the currently-open test tab; feeds report/sheet)
+setInterval(()=>{
+  if(state.tests[activeTab]){state.tests[activeTab].timeSec++;updateHeaderStats();}
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "00:00";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- highlighting (multi-colour + eraser) ----------
+const HL_IDS=["m1", "m2", "m3", "m4", "m5", "m6"];
+let hlTool={};HL_IDS.forEach(id=>hlTool[id]=null);   // null | 'y' | 'g' | 'p' | 'b' | 'erase'
+function setTool(id,tool,tb){
+  hlTool[id]=(hlTool[id]===tool)?null:tool;
+  tb.querySelectorAll('[data-hlcolor]').forEach(b=>b.classList.toggle('on',b.dataset.hlcolor===hlTool[id]));
+  const er=tb.querySelector('[data-erase]');if(er)er.classList.toggle('on',hlTool[id]==='erase');
+}
+$$('.hl-tools').forEach(tb=>{
+  tb.querySelectorAll('[data-hlcolor]').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.hlid,b.dataset.hlcolor,tb)));
+  const er=tb.querySelector('[data-erase]');if(er)er.addEventListener('click',()=>setTool(er.dataset.erase,'erase',tb));
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+    flash("All highlights cleared.");
+  });
+});
+HL_IDS.forEach(id=>{
+  const p=$("#passage-"+id);if(!p)return;
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    const tool=hlTool[id];
+    if(!tool||tool==="erase")return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.className="hl-"+tool;
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();p.normalize();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){}
+  });
+  p.addEventListener("click",(e)=>{
+    if(hlTool[id]!=="erase")return;
+    const m=e.target.closest?e.target.closest("mark"):null;
+    if(!m||!p.contains(m))return;
+    const t=document.createTextNode(m.textContent);
+    m.parentNode.replaceChild(t,m);p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"||type==="sel"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>'+overBadge(t.overtimeSec);
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>'+overBadge(t.overtimeSec);
+      }
+    }
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so"||type==="sel")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+function overBadge(sec){return (sec&&sec>0)?' <span class="over-badge">⏰ +'+fmt(sec)+' over 20:00</span>':"";}
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so"||type==="sel")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="",points=0,max=1;
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
+  }else if(type==="tfng"||type==="so"||type==="sel"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);points=ok?1:0;
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;points=ok?1:0;
+  }else if(type==="mc2"){
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());max=correctSet.length;
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");correct=correctSet.slice().sort().join(",");
+    points=(sel.length>max)?0:sel.filter(v=>correctSet.includes(v)).length;ok=points===max;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
+}
+function questionLabel(q){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{if(!peekAnswer(q))blanks++;});
+  const msg="Submit "+TLABEL(test)+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  let score=0,total=0;const graded=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q);
+    total+=r.max;score+=r.points;graded.push({q,r,num,txt});
+  });
+  const pct=Math.round(score/total*100);
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  const _cd=body.querySelector(".cdbar");
+  t.overtimeSec=(_cd&&_cd.__overtime)?_cd.__overtime():0;
+  const passedNow=TEACHER?true:(pct>=PASS_PCT);
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{fb.className="fb";fb.innerHTML="";}
+  });
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+  save();updateHeaderStats();refreshTabLocks();
+
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>')+overBadge(t.overtimeSec);
+    flash(TLABEL(test)+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>'+overBadge(t.overtimeSec);
+    const note=document.createElement("div");note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
+  syncToSheet({test:MODULE_TAG+" — "+TLABEL(test),score:score,total:total,percent:pct,attempt:t.attempts,timeSec:t.timeSec,timeFmt:fmt(t.timeSec),overtimeSec:t.overtimeSec||0,overtimeFmt:fmt(t.overtimeSec||0),details:details});
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  clearLockNote(body);
+  const cd=body.querySelector(".cdbar");
+  if(cd&&cd.__resetCountdown)cd.__resetCountdown();
+  state.tests[test].answers={};save();
+  flash("Answers cleared and timer reset.");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload){
+  if(!WEBAPP_URL)return;
+  const full=Object.assign({name:state.student.name||"(no name)",email:state.student.email||"(no email)"},payload);
+  fetch(WEBAPP_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(full)})
+    .then(()=>{$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a passage (and reach 70%) to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{short:e.test,pill:"rd"};
+    return '<tr><td><span class="pill '+(meta.pill||"rd")+'">'+escapeHtml(meta.short||meta.label)+'</span></td>'
+      +'<td><b>'+e.num+'</b></td><td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Passage</th><th>Q</th><th>Statement</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=metric("Student",state.student.name||"—")+metric("Overall score",totMax?totScore+"/"+totMax:"—")+metric("Total time",fmt(totTime))+metric("Total attempts",totAtt)+metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    const ot=(t.overtimeSec&&t.overtimeSec>0)?('<span style="color:var(--bad);font-weight:700">+'+fmt(t.overtimeSec)+'</span>'):'—';
+    return "<tr><td><b>"+escapeHtml(TLABEL(k))+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td><td>"+ot+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time used</th><th>Overtime (&gt;20:00)</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595,M=40;let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(15);
+  doc.text("IELTS Reading Studio — Module 2 Homework — Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+  line("Results by passage",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(TLABEL(k),11,"bold");
+    const ot=(t.overtimeSec&&t.overtimeSec>0)?("+"+fmt(t.overtimeSec)):"none";
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time used: "+fmt(t.timeSec)+"    Overtime: "+ot,10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{state.errorLog.forEach((e,i)=>{
+    const meta=TEST_META[e.test]||{short:e.test};
+    line((i+1)+". ["+(meta.short||meta.label)+" Q"+e.num+"] "+e.q,10,"bold");
+    line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+    if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"").replace(/&lsquo;|&rsquo;/g,"'").replace(/&mdash;/g,"-").replace(/&hellip;/g,"...");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+    y+=2;
+  });}
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module2_homework_report.pdf";
+  doc.save(fn);flash("PDF report downloaded.");
+});
+
+// ---------- glossary (grouped by passage) ----------
+const GLOSSARY=[
+ {grp:"Attitudes towards AI",w:"forecast",pos:"noun / verb",en:"a statement about what will happen in the future based on information; to make such a statement.",vi:"d\u1ef1 b\u00e1o",ex:"AI is almost always better at forecasting than we are.",nu:"Neutral; noun & verb same form.",co:"an accurate forecast; forecast the weather / demand"},
+ {grp:"Attitudes towards AI",w:"reluctant",pos:"adjective",en:"unwilling and hesitant to do something.",vi:"mi\u1ec5n c\u01b0\u1ee1ng, kh\u00f4ng mu\u1ed1n",ex:"We need to understand why people are so reluctant to trust AI.",nu:"Formal; adv: reluctantly; noun: reluctance.",co:"reluctant to do sth; a reluctant participant"},
+ {grp:"Attitudes towards AI",w:"competent",pos:"adjective",en:"having enough skill or knowledge to do something well.",vi:"c\u00f3 n\u0103ng l\u1ef1c, gi\u1ecfi",ex:"Doctors concluded that Watson wasn&rsquo;t competent.",nu:"Positive; opposite: incompetent; noun: competence.",co:"highly competent; competent at / in sth"},
+ {grp:"Attitudes towards AI",w:"algorithm",pos:"noun",en:"a set of steps a computer follows to solve a problem or make a decision.",vi:"thu\u1eadt to\u00e1n",ex:"Its machine-learning algorithms were too complex to be fully understood.",nu:"Technical; adj: algorithmic.",co:"a machine-learning algorithm; design / run an algorithm"},
+ {grp:"Attitudes towards AI",w:"polarise",pos:"verb",en:"to divide people into two groups with opposing opinions.",vi:"ph\u00e2n c\u1ef1c, chia r\u1ebd (\u00fd ki\u1ebfn)",ex:"Watching the film polarised the participants&rsquo; attitudes.",nu:"Formal (US: polarize); noun: polarisation.",co:"polarise opinion / attitudes / a debate"},
+ {grp:"Attitudes towards AI",w:"transparency",pos:"noun",en:"the quality of being open and clear so that people can see how decisions are made.",vi:"s\u1ef1 minh b\u1ea1ch",ex:"Companies release transparency reports about surveillance.",nu:"Positive; adj: transparent; opposite: secrecy.",co:"transparency reports; greater / financial transparency"},
+ {grp:"Attitudes towards AI",w:"implement",pos:"verb",en:"to put a plan, system or decision into action.",vi:"tri\u1ec3n khai, th\u1ef1c thi",ex:"People are given responsibility for how AI is implemented.",nu:"Formal; noun: implementation.",co:"implement a plan / policy / system"},
+ {grp:"Environmental psychology",w:"cognitive",pos:"adjective",en:"relating to thinking, understanding and mental processes.",vi:"(thu\u1ed9c) nh\u1eadn th\u1ee9c",ex:"Space affects us emotionally, behaviourally and cognitively.",nu:"Formal; noun: cognition.",co:"cognitive ability / development / skills"},
+ {grp:"Environmental psychology",w:"deter",pos:"verb",en:"to make someone decide not to do something, especially by fear.",vi:"ng\u0103n c\u1ea3n, r\u0103n \u0111e",ex:"The presence of people deters criminals.",nu:"Formal; noun: deterrent.",co:"deter sb from doing sth; deter crime"},
+ {grp:"Environmental psychology",w:"collaborative",pos:"adjective",en:"involving two or more people working together.",vi:"mang t\u00ednh h\u1ee3p t\u00e1c",ex:"The collaborative project stands as a one-off experiment.",nu:"Positive; verb: collaborate; noun: collaboration.",co:"a collaborative project / approach / effort"},
+ {grp:"Environmental psychology",w:"occupant",pos:"noun",en:"a person who lives or works in a building or space.",vi:"ng\u01b0\u1eddi s\u1eed d\u1ee5ng/\u1edf (to\u00e0 nh\u00e0)",ex:"Studies identify how occupants are using their building.",nu:"Formal; synonym: occupier.",co:"the building&rsquo;s occupants; occupant behaviour"},
+ {grp:"Environmental psychology",w:"layout",pos:"noun",en:"the way the parts of something, e.g. a building, are arranged.",vi:"c\u00e1ch b\u1ed1 tr\u00ed, m\u1eb7t b\u1eb1ng",ex:"The basic layout of a building helps people find their way.",nu:"Neutral; verb form: lay out.",co:"the basic / overall layout; the layout of a building"},
+ {grp:"Environmental psychology",w:"criteria",pos:"noun (plural)",en:"standards or rules used to judge or decide something.",vi:"ti\u00eau ch\u00ed",ex:"Hospitals must meet a checklist of design criteria.",nu:"Plural of &lsquo;criterion&rsquo;; formal.",co:"meet / set the criteria; selection criteria"},
+ {grp:"Environmental psychology",w:"evidence-based",pos:"adjective",en:"based on proven facts and research rather than opinion.",vi:"d\u1ef1a tr\u00ean b\u1eb1ng ch\u1ee9ng",ex:"Most industries now recognise the importance of an evidence-based approach.",nu:"Positive; compound adjective.",co:"an evidence-based approach / policy / practice"},
+ {grp:"The growth mindset",w:"innate",pos:"adjective",en:"existing in a person from birth; natural rather than learned.",vi:"b\u1ea9m sinh",ex:"The concept of intelligence as something innate has been supplanted.",nu:"Formal; opposite: acquired / learned.",co:"innate ability / talent; an innate sense of sth"},
+ {grp:"The growth mindset",w:"supplant",pos:"verb",en:"to take the place of someone or something else.",vi:"thay th\u1ebf, h\u1ea5t c\u1eb3ng",ex:"The idea of fixed intelligence has been supplanted.",nu:"Formal; synonym: replace.",co:"supplant sth with sth; be supplanted by"},
+ {grp:"The growth mindset",w:"mindset",pos:"noun",en:"a person&rsquo;s established set of attitudes or way of thinking.",vi:"t\u01b0 duy, l\u1ed1i ngh\u0129",ex:"A major focus is coaxing students towards a growth mindset.",nu:"Neutral; compound noun.",co:"a growth / fixed mindset; a change of mindset"},
+ {grp:"The growth mindset",w:"impediment",pos:"noun",en:"something that makes progress or action difficult; an obstacle.",vi:"tr\u1edf ng\u1ea1i, c\u1ea3n tr\u1edf",ex:"One of the greatest impediments is the education system itself.",nu:"Formal; synonym: barrier, obstacle.",co:"an impediment to sth; a major / serious impediment"},
+ {grp:"The growth mindset",w:"replicate",pos:"verb",en:"to repeat a study or experiment exactly to check its results.",vi:"l\u1eb7p l\u1ea1i (th\u00ed nghi\u1ec7m), t\u00e1i l\u1eadp",ex:"Bates has been trying to replicate Dweck&rsquo;s work.",nu:"Academic; noun: replication.",co:"replicate a study / experiment / result"},
+ {grp:"The growth mindset",w:"intervention",pos:"noun",en:"an action taken to improve a situation or deal with a problem.",vi:"s\u1ef1 can thi\u1ec7p",ex:"Growth mindset interventions don&rsquo;t seem to work in the classroom.",nu:"Formal; verb: intervene.",co:"a targeted / classroom intervention; carry out an intervention"},
+ {grp:"The growth mindset",w:"self-esteem",pos:"noun",en:"confidence in and respect for oneself.",vi:"l\u00f2ng t\u1ef1 tr\u1ecdng, s\u1ef1 t\u1ef1 tin",ex:"The theory is being conflated with the self-esteem movement.",nu:"Neutral; compound noun.",co:"high / low self-esteem; boost self-esteem"},
+ {grp:"Mixed-ability classes",w:"streaming",pos:"noun",en:"separating students into classes according to their ability.",vi:"ph\u00e2n ban/l\u1edbp theo tr\u00ecnh \u0111\u1ed9",ex:"The practice of streaming separates students by attainment.",nu:"British (US: tracking); also &lsquo;setting&rsquo;.",co:"streaming students; ability streaming"},
+ {grp:"Mixed-ability classes",w:"attainment",pos:"noun",en:"the level of achievement someone has reached.",vi:"th\u00e0nh t\u00edch, m\u1ee9c \u0111\u1ea1t \u0111\u01b0\u1ee3c",ex:"Students are separated by their diagnosed levels of attainment.",nu:"Formal; verb: attain.",co:"levels of attainment; educational / academic attainment"},
+ {grp:"Mixed-ability classes",w:"scaffolding",pos:"noun",en:"temporary support a teacher gives a learner, removed as they improve.",vi:"gi\u00e0n gi\u00e1o (h\u1ed7 tr\u1ee3 h\u1ecdc t\u1eadp)",ex:"Teaching provides and then removes this &lsquo;scaffolding&rsquo;.",nu:"Metaphor from building; education register.",co:"provide / remove scaffolding; scaffolding for learning"},
+ {grp:"Mixed-ability classes",w:"peer",pos:"noun",en:"a person of the same age or status as another.",vi:"b\u1ea1n \u0111\u1ed3ng trang l\u1ee9a",ex:"The value of knowledgeable student peers must be recognised.",nu:"Neutral; adj use: peer support.",co:"peer-to-peer learning; one&rsquo;s peers; peer pressure"},
+ {grp:"Mixed-ability classes",w:"socioeconomic",pos:"adjective",en:"relating to both social class and economic factors.",vi:"kinh t\u1ebf-x\u00e3 h\u1ed9i",ex:"Lower sets have higher representation of low socioeconomic class.",nu:"Formal; compound adjective.",co:"socioeconomic status / background / factors"},
+ {grp:"Mixed-ability classes",w:"pedagogical",pos:"adjective",en:"relating to teaching methods.",vi:"(thu\u1ed9c) ph\u01b0\u01a1ng ph\u00e1p s\u01b0 ph\u1ea1m",ex:"The current pedagogical paradigm is constructivism.",nu:"Formal; noun: pedagogy.",co:"a pedagogical approach / paradigm / method"},
+ {grp:"Mixed-ability classes",w:"autonomous",pos:"adjective",en:"able to act or learn independently, without help.",vi:"t\u1ef1 ch\u1ee7, \u0111\u1ed9c l\u1eadp",ex:"Scaffolding is removed until learners are autonomous.",nu:"Formal; noun: autonomy.",co:"autonomous learners; become autonomous"},
+ {grp:"The gifted child",w:"gifted",pos:"adjective",en:"having exceptional natural ability.",vi:"c\u00f3 n\u0103ng khi\u1ebfu, t\u00e0i n\u0103ng thi\u00ean b\u1ea9m",ex:"the &lsquo;gifted&rsquo; children who have extraordinary ability.",nu:"Neutral&ndash;positive; often &lsquo;gifted and talented&rsquo;.",co:"a gifted child / student; gifted and talented"},
+ {grp:"The gifted child",w:"resolute",pos:"adjective",en:"determined; firm in purpose and not giving up.",vi:"ki\u00ean \u0111\u1ecbnh, quy\u1ebft t\u00e2m",ex:"She was resolute in the face of setbacks.",nu:"Formal; adv: resolutely.",co:"resolute in doing sth; remain resolute"},
+ {grp:"The gifted child",w:"replicable",pos:"adjective",en:"able to be repeated or copied with the same result.",vi:"c\u00f3 th\u1ec3 t\u00e1i l\u1eadp/l\u1eb7p l\u1ea1i",ex:"The behaviours of high performers are replicable.",nu:"Academic; verb: replicate.",co:"replicable results / behaviours / findings"},
+ {grp:"The gifted child",w:"deliberate practice",pos:"noun",en:"focused, effortful practice designed to improve performance.",vi:"luy\u1ec7n t\u1eadp c\u00f3 ch\u1ee7 \u0111\u00edch",ex:"Deliberate practice, that stretches you, is what produces the goods.",nu:"Education/psychology term (Ericsson).",co:"deliberate practice; hours of deliberate practice"},
+ {grp:"The gifted child",w:"disadvantaged",pos:"adjective",en:"lacking the money and opportunities that most people have.",vi:"thi\u1ec7t th\u00f2i, kh\u00f3 kh\u0103n",ex:"Four in five were living in disadvantaged areas.",nu:"Neutral&ndash;formal; noun: disadvantage.",co:"disadvantaged children / areas / backgrounds"},
+ {grp:"The gifted child",w:"persistence",pos:"noun",en:"the quality of continuing to try despite difficulty.",vi:"s\u1ef1 ki\u00ean tr\u00ec",ex:"High performers need curiosity, persistence and hard work.",nu:"Positive; verb: persist; adj: persistent.",co:"persistence pays off; sheer persistence"},
+ {grp:"The gifted child",w:"epitome",pos:"noun",en:"a perfect example of a quality or type.",vi:"h\u00ecnh m\u1eabu \u0111i\u1ec3n h\u00ecnh",ex:"Einstein, the epitome of a genius.",nu:"Formal; the epitome of sth.",co:"the epitome of elegance / genius"},
+ {grp:"The growth of intelligence",w:"intelligence",pos:"noun",en:"the ability to learn, understand and adapt to one&rsquo;s environment.",vi:"tr\u00ed th\u00f4ng minh",ex:"Intelligence involves the capacity to learn and to adapt.",nu:"Neutral; adj: intelligent.",co:"general intelligence; measure / test intelligence"},
+ {grp:"The growth of intelligence",w:"adapt",pos:"verb",en:"to change your behaviour to suit a new situation.",vi:"th\u00edch nghi, \u0111i\u1ec1u ch\u1ec9nh",ex:"Intelligence is the capacity to adapt to one&rsquo;s environment.",nu:"Neutral; noun: adaptation; adj: adaptable.",co:"adapt to sth; adapt quickly / well"},
+ {grp:"The growth of intelligence",w:"fluid intelligence",pos:"noun",en:"the ability to reason and solve new problems, independent of knowledge.",vi:"tr\u00ed th\u00f4ng minh linh ho\u1ea1t",ex:"Fluid abilities peak in early adult life.",nu:"Psychology term (Horn & Cattell).",co:"fluid intelligence / abilities"},
+ {grp:"The growth of intelligence",w:"crystallised intelligence",pos:"noun",en:"knowledge and skills built up from experience.",vi:"tr\u00ed th\u00f4ng minh k\u1ebft tinh",ex:"Crystallised abilities increase up to advanced old age.",nu:"Psychology term (US: crystallized).",co:"crystallised intelligence / abilities"},
+ {grp:"The growth of intelligence",w:"novelty",pos:"noun",en:"the quality of being new, original or unusual.",vi:"s\u1ef1 m\u1edbi l\u1ea1",ex:"Tests of coping with novelty predict later intelligence.",nu:"Neutral; adj: novel.",co:"cope with novelty; the novelty of sth"},
+ {grp:"The growth of intelligence",w:"perceptual",pos:"adjective",en:"relating to the ability to notice things through the senses.",vi:"(thu\u1ed9c) tri gi\u00e1c",ex:"An interest in perceptual patterns contributes to cognitive abilities.",nu:"Formal; noun: perception.",co:"perceptual patterns / skills"},
+ {grp:"The growth of intelligence",w:"cognitive development",pos:"noun",en:"the growth of a child&rsquo;s ability to think and understand.",vi:"s\u1ef1 ph\u00e1t tri\u1ec3n nh\u1eadn th\u1ee9c",ex:"Piaget brought a revolution in the approach to cognitive development.",nu:"Psychology term.",co:"cognitive development; stages of cognitive development"}
+];
+const GRP_ORDER=["Attitudes towards AI", "Environmental psychology", "The growth mindset", "Mixed-ability classes", "The gifted child", "The growth of intelligence"];
+function renderGlossary(filter){
+  const wrap=$("#glossWrap");if(!wrap)return;
+  const f=norm(filter||($("#glossSearch")?$("#glossSearch").value:"")||"");
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  let out="",shown=0;
+  GRP_ORDER.forEach((grp,gi)=>{
+    const rows=GLOSSARY.filter(g=>g.grp===grp && (!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0));
+    if(!rows.length)return;shown+=rows.length;
+    out+='<div class="gloss-section"><h3><span class="gnum">'+(gi+1)+'</span>'+escapeHtml(grp)+'</h3><div class="gloss-grid">'+
+      rows.map(g=>'<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span></div>'
+      +'<dl><dt>EN</dt><dd>'+g.en+'</dd>'
+      +'<dt>VI</dt><dd class="vi">'+g.vi+'</dd>'
+      +'<dt>e.g.</dt><dd class="ex">'+g.ex+'</dd>'
+      +'<dt>Note</dt><dd class="nu">'+g.nu+'</dd>'
+      +'<dt>Colloc.</dt><dd class="co">'+g.co+'</dd></dl></div>').join("")
+      +'</div></div>';
+  });
+  wrap.innerHTML = shown ? out : '<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
+
+// ---------- timers: reading = 20-min countdown with overtime; vocab = count-up ----------
+$$(".cdbar").forEach(bar=>{
+  const mode=bar.dataset.mode||"countdown";
+  const total=+bar.dataset.secs||0;
+  const d=bar.querySelector(".cdd"),b=bar.querySelector(".cdb"),r=bar.querySelector(".cdr");
+  let el=0,tick=null,run=false,flagged=false,over=bar.querySelector(".cdover");
+  function ensureOver(){if(!over){over=document.createElement("b");over.className="cdover";bar.appendChild(over);}return over;}
+  function render(){
+    if(mode==="countup"){d.textContent=fmt(el);return;}
+    const left=total-el;
+    if(left>0){d.textContent=fmt(left);bar.classList.toggle("warn",left<=300);bar.classList.remove("over");if(over)over.textContent="";}
+    else{d.textContent="00:00";bar.classList.remove("warn");bar.classList.add("over");ensureOver().textContent=" +"+fmt(el-total)+" over";}
+  }
+  function stop(){run=false;b.textContent=(el>0?"Resume":"Start");if(tick){clearInterval(tick);tick=null;}}
+  function start(){
+    if(run){stop();return;}
+    run=true;b.textContent="Pause";
+    tick=setInterval(()=>{el++;
+      if(mode==="countdown"&&el===total&&!flagged){flagged=true;flash("⏰ 20 minutes are up — you are now in overtime.");}
+      render();
+    },1000);
+  }
+  function doReset(){stop();el=0;flagged=false;bar.classList.remove("over","warn");if(over)over.textContent="";b.textContent="Start";render();}
+  b.addEventListener("click",start);
+  r.addEventListener("click",doReset);
+  bar.__resetCountdown=doReset;
+  bar.__overtime=()=>(mode==="countdown"?Math.max(0,el-total):0);
+  bar.__elapsed=()=>el;
+  render();
+});
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+refreshTabLocks();
+save(true);
+})();
+
+</script>
+</body>
+</html>
