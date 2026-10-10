@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Listening Part 3 - Education</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--ink:#14263a;--teal:#0f766e;--tealbg:#e3f1ef;--paper:#f6f8f7;--card:#fff;--line:#d5dedb;--bad:#b3261e;--badbg:#fbe9e7;--ok:#146c43;--okbg:#e2f3e8;--warn:#9a5b00}
+@media(prefers-color-scheme:dark){:root{--ink:#e6eef5;--teal:#5fd0c4;--tealbg:#16302f;--paper:#0f1a24;--card:#17232f;--line:#2b3b4a;--bad:#ff8a80;--badbg:#3a1f1d;--ok:#7be0a4;--okbg:#14301f;--warn:#f0b15c}}
+*{box-sizing:border-box}html,body{margin:0}
+body{font:16px/1.55 system-ui,sans-serif;background:var(--paper);color:var(--ink);padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+h1,h2,h3{font-family:Georgia,'Times New Roman',serif;line-height:1.25;margin:0 0 .5rem}
+header{background:var(--ink);color:var(--paper);padding:1.2rem max(1rem,calc(50% - 400px))}
+@media(prefers-color-scheme:dark){header{background:#0b131b}}
+header h1{font-size:1.5rem;color:#fff}header p{margin:.2rem 0 .9rem;opacity:.8}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.who label{font-size:.85rem}.who input{width:100%;padding:.55rem .7rem;border-radius:6px;border:1px solid #5b7186;background:#fff;color:#14263a;font:inherit}
+@media(max-width:560px){.who{grid-template-columns:1fr}}
+main{max-width:800px;margin:0 auto;padding:1rem}
+nav{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;border-bottom:2px solid var(--line)}
+nav button{background:none;border:0;padding:.7rem 1rem;font:inherit;font-weight:600;color:var(--ink);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+nav button[aria-selected=true]{border-color:var(--teal);color:var(--teal)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.1rem;margin-bottom:1rem}
+.it{padding:.6rem 0;border-top:1px solid var(--line)}.it:first-of-type{border-top:0}
+.n{display:inline-block;min-width:2.2rem;font-weight:700;color:var(--teal)}
+select,input[type=text]{font:inherit;padding:.25rem .4rem;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);max-width:100%}
+input[type=text]{width:9.5rem}
+.opt{display:block;padding:.2rem .3rem;border-radius:5px;cursor:pointer}
+.chips span{display:inline-block;background:var(--tealbg);color:var(--teal);border-radius:99px;padding:.1rem .7rem;margin:.15rem;font-size:.9rem;font-weight:600}
+.ok{background:var(--okbg)!important;border-color:var(--ok)!important}.bad{background:var(--badbg)!important;border-color:var(--bad)!important}
+.fb{font-size:.9rem;margin-top:.3rem;color:var(--ok)}.fb.x{color:var(--bad)}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}
+.btn{font:inherit;font-weight:700;padding:.7rem 1.3rem;border-radius:8px;border:2px solid var(--teal);background:var(--teal);color:#fff;cursor:pointer}
+.btn.sec{background:none;color:var(--teal)}.btn:disabled{opacity:.45;cursor:not-allowed}
+#msg{color:var(--bad);font-weight:600}
+#score{display:none;border-left:6px solid var(--teal)}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin:.2rem 0 .7rem}.bar i{display:block;height:100%;background:var(--teal)}
+dialog{border:0;border-radius:12px;padding:1.4rem;max-width:420px;background:var(--card);color:var(--ink)}dialog::backdrop{background:#0008}
+.tip{border-left:4px solid var(--teal);padding:.2rem .8rem;margin:.6rem 0;background:var(--tealbg)}
+.tip.w{border-color:var(--warn)}ul{padding-left:1.2rem;margin:.3rem 0}
+.w{display:grid;grid-template-columns:1fr auto;gap:.2rem .6rem;padding:.6rem 0;border-top:1px solid var(--line)}
+.w b{font-size:1.05rem}.w .ipa{color:var(--teal);font-family:'Segoe UI',sans-serif}.w small{color:var(--warn)}
+.sp{border:1px solid var(--teal);background:none;color:var(--teal);border-radius:99px;cursor:pointer;padding:.2rem .7rem;font:inherit;font-size:.85rem;align-self:start}
+audio{width:100%;margin-top:.4rem}
+@media print{header,nav,.actions,.sp{display:none}.panel{display:block!important}}
+</style></head><body>
+<header>
+<h1>Listening Part 3 - Education</h1>
+<p>Enter your details, work through the tasks, then submit for automatic scoring.</p>
+<div class="who"><label>Full name<input id="nm" type="text" autocomplete="name" style="width:100%"></label>
+<label>Email<input id="em" type="text" inputmode="email" autocomplete="email" style="width:100%"></label></div>
+</header>
+<main>
+<nav role="tablist"><button role="tab" aria-selected="true" data-t="v">Vocabulary</button><button role="tab" aria-selected="false" data-t="l">Listening Part 3</button><button role="tab" aria-selected="false" data-t="s">Strategies</button><button role="tab" aria-selected="false" data-t="g">Vocabulary Bank</button></nav>
+<div id="score" class="card" aria-live="polite"></div>
+<div id="p-v" class="panel on"></div>
+<div id="p-l" class="panel"><div class="card"><h3>Audio player</h3><p style="margin:0">Load your own recording for each test (Phoebe, Mel, Howard &amp; Joanne). Audio is not included in this file.</p><input type="file" id="af" accept="audio/*"><audio id="au" controls></audio></div></div>
+<div id="p-s" class="panel"></div>
+<div id="p-g" class="panel"></div>
+<div class="actions"><button class="btn" id="sub">Submit answers</button><button class="btn sec" id="pdf" disabled>Download PDF report</button><button class="btn sec" id="rt">Start over</button></div>
+<p id="msg" role="alert"></p>
+</main>
+<dialog id="dlg"><h3>Submit your answers?</h3><p id="dtx"></p><p>Once submitted, you cannot change your answers.</p><div class="actions"><button class="btn" id="yes">Yes, submit</button><button class="btn sec" id="no">Keep working</button></div></dialog>
+<script>
+const $=s=>document.querySelector(s),O=a=>a.map(x=>[x,x]),L=(...t)=>t.map((x,i)=>['ABCDE'[i],'ABCDE'[i]+'  '+x]);
+const VB=['project','module','dissertation','Diploma','MA','sign','PhD','in-sessional'];
+const P2=['deadlines','list','activities','plan','management','loan','notes','taking','an extension','draft','learning','mind maps'];
+const C3=['meet deadlines','to-do list','extra-curricular activities','study plan','time management','long-term loan','lecture notes','note-taking','request an extension','first draft','rote learning','draw mind maps'];
+const DIF=['A  Obtaining permission','B  Deciding on a suitable focus','C  Concentrating while gathering data','D  Working collaboratively','E  Processing data she had gathered','F  Finding a suitable time to conduct the research','G  Getting hold of suitable equipment'].map(x=>[x[0],x]);
+const SECS=[
+{tab:'v',t:'Vocabulary 1: Email from a student',i:'Complete the email with words from the box.',bank:VB,items:[{type:'sel',opts:O(VB),a:['project','module','dissertation','Diploma','MA','sign','PhD','in-sessional'],q:"Hi Erika, I'm sorry not to have written sooner but I've been desperately busy with the linguistics ___ I have to do for the elective ___ I'm taking this term. I might decide to do my final ___ on a similar topic. At first I was only planning to do the ___ but now I'll have a go at an ___. I might even ___ up for a ___ if they'll have me! PhD students are usually offered some language teaching on the ___ EAP courses they run for foreign students."}]},
+{tab:'v',t:'Vocabulary 2: Word partnerships',i:'Match the first part with the second part.',items:[['meet','deadlines'],['to-do','list'],['extra-curricular','activities'],['study','plan'],['time','management'],['long-term','loan'],['lecture','notes'],['note-','taking'],['request','an extension'],['first','draft'],['rote','learning'],['draw','mind maps']].map(p=>({type:'sel',opts:O(P2),a:[p[1]],q:p[0]+' ___'}))},
+{tab:'v',t:'Vocabulary 3: Complete the sentences',i:'Choose a word combination from Task 2 for each gap.',items:[
+{a:['meet deadlines','request an extension','study plan'],q:"I always try to ___ but this time I'm afraid I'm going to have to ___. If only I could stick to the ___ I make at the beginning of every semester!"},
+{a:['first draft'],q:'You should show the ___ of your essay to your tutor before you do any more work on it.'},
+{a:['lecture notes'],q:'Helena missed the class but she borrowed the ___ from a friend.'},
+{a:['draw mind maps'],q:'Some people find it more helpful to ___ when they are studying than to take traditional notes.'},
+{a:['long-term loan'],q:"This is an incredibly useful book. Fortunately, I've been able to take it out of the library on ___."},
+{a:['time management'],q:'Students who are working part-time as well as studying have to be particularly good at ___.'},
+{a:['extra-curricular activities'],q:'Some students get distracted from their studies by all the ___ which most universities offer.'},
+{a:['to-do list'],q:"I always make a ___ when I'm getting ready to go on a trip."},
+{a:['rote learning'],q:'___ is often considered a very old-fashioned way of learning nowadays.'},
+{a:['note-taking'],q:"___ is very important during lectures; you can't remember everything."}].map(x=>({type:'sel',opts:O(C3),...x}))},
+{tab:'v',t:'Vocabulary 4: Academic words',i:'Complete each sentence with a word from the box. Add plural -s where appropriate.',bank:['acknowledgement','bibliography','statistics','proposal','analysis','anecdote','scientific journal'],items:[
+['As a researcher, it is important to me that you know the difference between ___ and data.','anecdotes'],["The reproduction on page 50 wasn't mentioned in the ___.",'acknowledgements'],['When they peer reviewed research ___, a dilemma they faced was whether to focus on a research perspective or a consumer perspective.','proposals'],['The test results at the middle level of difficulty have not been included in the following ___.','analyses'],["Aitken's mathematical work was in ___, numerical analysis, and algebra.",'statistics'],['Authors should write a good abstract when preparing their manuscript for a ___ or conference presentation.','scientific journal'],['The extensive ___ refers to books, periodicals and theses, government and media materials, and websites.','bibliography']].map(x=>({type:'txt',q:x[0],a:[x[1]]}))},
+{tab:'l',t:'Test A (Phoebe): Questions 21-25',i:'Research project on attitudes towards study. Choose the correct letter, A, B or C.',start:21,items:[
+['Phoebe\'s main reason for choosing her topic was that',['her classmates had been very interested in it.','it would help prepare her for her first teaching post.','she had been inspired by a particular book.'],'C'],
+["Phoebe's main research question related to",['the effect of teacher discipline.','the variety of learning activities.','levels of pupil confidence.'],'A'],
+['Phoebe was most surprised by her finding that',['gender did not influence behaviour significantly.','girls were more negative about school than boys.','boys were more talkative than girls in class.'],'B'],
+['Regarding teaching, Phoebe says she has learned that',['teachers should be flexible in their lesson planning.','brighter children learn from supporting weaker ones.','children vary from each other in unpredictable ways.'],'A'],
+["Tony is particularly impressed by Phoebe's ability to",['recognise the limitations of such small-scale research.','reflect on her own research experience in an interesting way.','design her research in such a way as to minimise difficulties.'],'B']].map(x=>({type:'mc',q:x[0],opts:L(...x[1]),a:[x[2]]}))},
+{tab:'l',t:'Test A (Phoebe): Questions 26-30',i:'What did Phoebe find difficult about each research technique? Choose FIVE answers from the box.',bank:DIF.map(d=>d[1]),start:26,items:[['Observing lessons','E'],['Interviewing teachers','G'],['Interviewing pupils','A'],['Using questionnaires','D'],['Taking photographs','B']].map(x=>({type:'sel',opts:DIF,q:x[0]+' ___',a:[x[1]]}))},
+{tab:'l',t:'Test B (Mel): Questions 21-25',i:'Q21: choose the correct letter. Q22-25: Mel should A include it, B remove it, or C increase it.',start:21,items:[{type:'mc',q:"Why was the tutor initially concerned about Mel's choice of subject?",opts:L('There was not enough information on the subject.','The subject was not new or different.','Mel had taken a different approach to the subject.'),a:['B']},
+...[['the introduction','C'],['statistics about flooding','A'],['acknowledgement of visual material','A'],['a graph about rainfall','B']].map(x=>({type:'sel',opts:[['A','A  include it'],['B','B  remove it'],['C','C  increase it']],q:x[0]+' ___',a:[x[1]]}))]},
+{tab:'l',t:'Test B (Mel): Questions 26-30',i:'Advice on presentation. Complete the flow chart. Write NO MORE THAN TWO WORDS OR A NUMBER.',start:26,items:[['No bright colours, ___ or sound effects.','animation|animations'],['Make ___ with audience.','eye contact'],['Use a ___ mouse or keyboard.','wireless'],['Use cue cards as a ___.','memory aid'],['Deal with ___ from audience at end.','questions']].map(x=>({type:'txt',q:x[0],a:[x[1]]}))},
+{tab:'l',t:'Test C (Howard & Joanne): Questions 21-24',i:'Advice on writing a dissertation. Choose the correct letter, A, B or C.',start:21,items:[
+['What does Howard say about the experience of writing his dissertation?',['It was difficult in unexpected ways.','It was more enjoyable than he\'d anticipated.','It helped him understand previous course work.'],'C'],
+['What is Joanne most worried about?',['Finding enough material.','Missing deadlines.','Writing too much.'],'C'],
+['What does Howard say was his main worry a year previously?',['Forgetting what he\'d read about.','Not understanding what he\'d read.','Taking such a long time to read each book.'],'A'],
+['What motivated Howard to start writing his dissertation?',['Talking to his tutor about his problems.','Seeing an inspirational TV show.','Reading a controversial journal article.'],'B']].map(x=>({type:'mc',q:x[0],opts:L(...x[1]),a:[x[2]]}))},
+{tab:'l',t:'Test C (Howard & Joanne): Questions 25-30',i:'Choose TWO letters, A-E, for each question.',start:25,items:[
+['What TWO things does Howard advise Joanne to do in the first month of tutorials?',['See her tutor every week.','Review all the module booklists.','Buy all the key books.','Write full references for everything she reads.','Write a draft of the first chapter.'],['B','E']],
+['What TWO things does Howard say about library provision?',['Staff are particularly helpful to undergraduates.','Inter-library loans are very reliable.','Students can borrow extra books when writing a dissertation.','Staff recommend relevant old dissertations.','It\'s difficult to access electronic resources.'],['C','D']],
+['What TWO things does Joanne agree to discuss with her tutor?',['The best ways to collaborate with other students.','Who to get help from during college vacations.','The best way to present the research.','Whether she can use web sources.','How to manage her study time.'],['B','D']]].map(x=>({type:'multi',q:x[0],opts:L(...x[1]),a:x[2]}))}];
+const STR=[['Multiple choice (A, B or C)',['Read the question stem first, then underline key words. Options are paraphrases of the audio, so do not wait for the exact words.','The speakers often mention all three options. Listen for the final decision, a change of mind, or words like "actually", "in the end", "but" and "what surprised me was".','Eliminate options that are mentioned but then rejected. Never choose an answer only because you heard a matching word.','Questions follow the order of the recording. If you miss one, move on at once to the next.']],
+['Matching (choose from a box, A-G)',['Read the box heading first (here "Difficulties") so you know exactly what to listen for.','Pre-think synonyms: "Obtaining permission" may be "getting the head teacher to agree".','Items follow the audio order, but box letters do not. Each letter is used once, and there are extra options.','If the speaker discusses two difficulties for one item, choose the one she says was the main problem.']],
+['Choose TWO letters (A-E)',['Treat it as two separate answers that can come in either order. You get a mark for each correct letter.','Mark each option as you hear it, with a tick, a cross or a question mark. Decide at the end of the section.','Beware of distractors: a speaker may recommend something and then change the advice.']],
+['Flow chart and sentence completion',['Check the word limit (NO MORE THAN TWO WORDS) and read the chart to predict the type of word: noun, adjective or number.','Follow the arrows. The chart shows the order in which information appears in the audio.','Write exactly what you hear. Spelling and singular/plural count, so check grammar around the gap.','Listen for signpost words: "firstly", "then", "finally", "make sure you".']],
+['Section 3 in general',['Section 3 is a conversation between 2 to 4 speakers in an academic setting, such as students and a tutor. Expect opinions, disagreement and changes of plan.','Use the 30 seconds before each part to read ahead. During the audio, keep reading the next question while listening to the current one.','Learn the education lexicon (dissertation, module, deadline, bibliography). Recognising words by sound is as important as knowing the spelling.','Transfer answers carefully. Check capital letters for A-E and never leave a blank.']],
+['Vocabulary gap-fill tasks',['Decide the part of speech needed for each gap before looking at the word bank.','Look for collocations: meet + deadlines, request + an extension, draw + mind maps.','Check singular or plural. Words such as "analysis" become "analyses", and "anecdote" becomes "anecdotes".']]];
+const V=[['dissertation','dɪsəˈteɪʃn','noun','a long piece of academic writing for a university degree','I am writing my dissertation on pupil motivation.'],['bibliography','bɪbliˈɒɡrəfi','noun','a list of all the books and articles used in a piece of research','Add every source to your bibliography.'],['acknowledgement','əkˈnɒlɪdʒmənt','noun','a statement thanking people or crediting sources','The photo needs an acknowledgement.'],['anecdote','ˈænɪkdəʊt','noun','a short personal story, not scientific evidence','An anecdote is not the same as data.'],['statistics','stəˈtɪstɪks','noun','numerical facts, or the maths of collecting and analysing them','Include statistics about flooding.'],['analysis (pl. analyses)','əˈnæləsɪs / əˈnæləsiːz','noun','a detailed examination of something','The analysis showed no gender difference.'],['proposal','prəˈpəʊzl','noun','a formal plan put forward for approval','She submitted a research proposal.'],['scientific journal','saɪənˈtɪfɪk ˈdʒɜːnl','noun','a regular publication of academic research','Write a clear abstract for the journal.'],['module','ˈmɒdjuːl','noun','a unit of a university course','I chose a linguistics module.'],['in-sessional','ɪn ˈseʃənl','adj.','a support course during, not before, the degree','He takes an in-sessional writing class.'],['elective','ɪˈlektɪv','noun','an optional course you choose','My elective is phonetics.'],['rote learning','rəʊt ˈlɜːnɪŋ','noun','learning by repetition without deep understanding','Rote learning is seen as old-fashioned.'],['extension','ɪkˈstenʃn','noun','extra time to finish work','Request an extension before the deadline.'],['deadline','ˈdedlaɪn','noun','the latest time to finish something','I always try to meet deadlines.'],['draft','drɑːft','noun','an early version of a piece of writing','Show your tutor the first draft.'],['inter-library loan','ɪntə ˈlaɪbrəri ləʊn','noun','borrowing a book from another library','An inter-library loan took a week.'],['tutorial','tjuːˈtɔːriəl','noun','a small-group or one-to-one teaching session','Book a tutorial with your supervisor.'],['collaborate','kəˈlæbəreɪt','verb','to work together with others','Pupils collaborate on group tasks.'],['questionnaire','kwestʃəˈneə','noun','a set of written questions for collecting data','Few pupils returned the questionnaire.'],['observation','ɒbzəˈveɪʃn','noun','watching carefully to gather information','Lesson observation was difficult.'],['permission','pəˈmɪʃn','noun','official approval to do something','You need permission to take photographs.'],['discipline','ˈdɪsəplɪn','noun','control of behaviour; also an academic subject','Teacher discipline affects results.'],['confidence','ˈkɒnfɪdəns','noun','belief in your own ability','Pupil confidence grew over the term.'],['flexible','ˈfleksəbl','adj.','able to change easily','Teachers should be flexible.'],['unpredictable','ʌnprɪˈdɪktəbl','adj.','impossible to know in advance','Children are unpredictable.'],['cue card','ˈkjuː kɑːd','noun','a small card with key words to prompt a speaker','Use cue cards, not a script.'],['memory aid','ˈmeməri eɪd','noun','something that helps you remember','A cue card is a memory aid.'],['animation','ænɪˈmeɪʃn','noun','moving images in a slide','Avoid animation in slides.'],['wireless','ˈwaɪələs','adj.','working without cables','Use a wireless mouse.'],['eye contact','ˈaɪ kɒntækt','noun','looking directly at someone','Make eye contact with the audience.'],['extra-curricular','ekstrə kəˈrɪkjələ','adj.','outside the normal course of study','Clubs are extra-curricular activities.'],['mind map','ˈmaɪnd mæp','noun','a diagram linking ideas around a central topic','Draw a mind map to revise.'],['time management','ˈtaɪm mænɪdʒmənt','noun','the skill of organising your time','Good time management is vital.'],['visual material','ˈvɪʒuəl məˈtɪəriəl','noun','pictures, charts or videos used to support a text','Acknowledge visual material.']];
+let K=0;const ITEMS=[];
+SECS.forEach((s,si)=>{let c=s.start||1;s.items.forEach(it=>{it.k=K++;it.s=s;it.m=it.a.length;it.n=it.m>1?c+'-'+(c+it.m-1):c;c+=it.m;ITEMS.push(it)})});
+const ctl=(it,j)=>it.type==='sel'?(it.m>1&&it.s.items.length==1?'<sup>'+(j+1)+'</sup>':'')+'<select data-k="'+it.k+'" data-b="'+j+'" aria-label="gap '+(j+1)+'"><option value="">choose</option>'+it.opts.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('')+'</select>':'<input type="text" data-k="'+it.k+'" data-b="'+j+'" autocomplete="off" aria-label="answer">';
+function itemHTML(it){let b;
+ if(it.type=='mc'||it.type=='multi')b='<p style="margin:0 0 .3rem"><span class="n">'+it.n+'</span>'+it.q+'</p>'+it.opts.map(o=>'<label class="opt"><input type="'+(it.type=='mc'?'radio':'checkbox')+'" name="q'+it.k+'" value="'+o[0]+'" data-k="'+it.k+'"> '+o[1]+'</label>').join('');
+ else{const p=it.q.split('___');b='<span class="n">'+it.n+'</span>'+p.map((x,j)=>x+(j<p.length-1?ctl(it,j):'')).join('')}
+ return '<div class="it" id="it'+it.k+'">'+b+'<div class="fb" id="fb'+it.k+'"></div></div>'}
+SECS.forEach(s=>{s.h='<section class="card"><h3>'+s.t+'</h3><p style="margin-top:0">'+s.i+'</p>'+(s.bank?'<div class="chips">'+s.bank.map(w=>'<span>'+w+'</span>').join('')+'</div>':'')+s.items.map(itemHTML).join('')+'</section>'});
+function build(){['v','l'].forEach(t=>{const e=$('#p-'+t);[...e.querySelectorAll('section')].forEach(x=>x.remove());e.insertAdjacentHTML('beforeend',SECS.filter(s=>s.tab==t).map(s=>s.h).join(''))});
+ $('#p-s').innerHTML='<div class="card"><h2>IELTS Listening: strategies by question type</h2><p>Advice from years of IELTS classroom experience, focused on Section 3 and the vocabulary tasks above.</p></div>'+STR.map(s=>'<div class="card"><h3>'+s[0]+'</h3><ul>'+s[1].map(x=>'<li>'+x+'</li>').join('')+'</ul></div>').join('')+'<div class="tip w"><b>Common traps:</b> answers with the wrong number or plural form, copying a word you heard in a distractor, and spending too long on one question.</div>';
+ $('#p-g').innerHTML='<div class="card"><h2>Vocabulary Bank</h2><p>Words from the listening tests and tasks, with British IPA. Press Listen to hear the word.</p>'+V.map(v=>'<div class="w"><div><b>'+v[0]+'</b> <span class="ipa">/'+v[1]+'/</span> <small>'+v[2]+'</small><br>'+v[3]+'<br><i>'+v[4]+'</i></div><button class="sp" data-w="'+v[0].replace(/ \(.*\)/,'')+'">Listen</button></div>').join('')+'</div>'}
+build();
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.dataset.t){document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',b==t));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id=='p-'+t.dataset.t))}
+ if(t.dataset.w&&speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.dataset.w);u.lang='en-GB';u.rate=.85;speechSynthesis.speak(u)}});
+document.addEventListener('change',e=>{const t=e.target;if(t.type=='checkbox'&&t.dataset.k){const it=ITEMS[t.dataset.k],c=[...document.querySelectorAll('input[name=q'+it.k+']')];c.forEach(x=>x.disabled=!x.checked&&c.filter(y=>y.checked).length>=it.m)}});
+$('#af').onchange=e=>{const f=e.target.files[0];if(f)$('#au').src=URL.createObjectURL(f)};
+const els=it=>[...document.querySelectorAll('#it'+it.k+' [data-k]')];
+const norm=x=>x.trim().toLowerCase().replace(/\s+/g,' ');
+function getAns(it){const e=els(it);if(it.type=='mc'||it.type=='multi')return e.filter(x=>x.checked).map(x=>x.value);return e.map(x=>x.value)}
+function mark(it){const u=getAns(it);let got=0,det=[];
+ if(it.type=='multi'||it.type=='mc'){got=u.filter(x=>it.a.includes(x)).length;if(it.type=='mc')got=u[0]==it.a[0]?1:0;return{got,u,ok:[got==it.m]}}
+ const ok=it.a.map((a,j)=>norm(u[j]||'')!=''&&a.split('|').map(norm).includes(norm(u[j])));return{got:ok.filter(Boolean).length,u,ok}}
+let done=false,R=null;
+const total=()=>ITEMS.reduce((s,i)=>s+i.m,0);
+function answered(it){const u=getAns(it);return it.type=='multi'?u.length:u.filter(x=>x&&x.trim()).length}
+$('#sub').onclick=()=>{const m=$('#msg');m.textContent='';
+ if(!$('#nm').value.trim()){m.textContent='Please enter your full name in the header.';$('#nm').focus();scrollTo(0,0);return}
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('#em').value.trim())){m.textContent='Please enter a valid email address in the header.';$('#em').focus();scrollTo(0,0);return}
+ const left=ITEMS.reduce((s,i)=>s+Math.max(0,i.m-answered(i)),0);
+ $('#dtx').textContent=left?'You have '+left+' unanswered question'+(left>1?'s':'')+'. Are you sure you want to submit?':'You have answered every question. Are you sure you want to submit?';
+ $('#dlg').showModal()};
+$('#no').onclick=()=>$('#dlg').close();
+$('#yes').onclick=()=>{$('#dlg').close();finish()};
+$('#rt').onclick=()=>{if(!done&&!confirm('Clear all answers and start over?'))return;location.reload()};
+function finish(){done=true;document.querySelectorAll('main input:not(#af),main select').forEach(x=>x.disabled=true);$('#sub').disabled=true;$('#pdf').disabled=false;
+ let g=0,secs=SECS.map(s=>({t:s.t,tab:s.tab,got:0,max:0,rows:[]}));
+ const res=ITEMS.map(it=>({it,...mark(it)}));const T=total();res.forEach(r=>{g+=r.got});const pct=Math.round(g/T*100),open=pct>=70;
+ res.forEach(r=>{const it=r.it,si=SECS.indexOf(it.s),sc=secs[si];sc.got+=r.got;sc.max+=it.m;const e=els(it);
+  if(it.type=='sel'||it.type=='txt')e.forEach((x,j)=>x.classList.add(r.ok[j]?'ok':'bad'));else $('#it'+it.k).classList.add(r.got==it.m?'ok':'bad');
+  const ca=it.a.map(x=>x.split('|')[0]).join(' / ');
+  $('#fb'+it.k).className='fb'+(r.got==it.m?'':' x');$('#fb'+it.k).textContent=(r.got==it.m?'Correct':r.got?'Partly correct ('+r.got+'/'+it.m+')':'Incorrect')+(open&&r.got<it.m?'. Correct answer: '+ca:'');
+  sc.rows.push({n:it.n,q:it.q.replace(/___/g,'____').slice(0,64),u:(r.u.join(' / ')||'(blank)'),st:r.got==it.m?'Correct':r.got?'Partly correct':'Incorrect',ca:open&&r.got<it.m?ca:''})});
+ R={g,T,pct,open,secs};
+ const s=$('#score');s.style.display='block';
+ s.innerHTML='<h2>Your score: '+g+' / '+T+' ('+pct+'%)</h2><div class="bar"><i style="width:'+pct+'%"></i></div>'+secs.map(x=>'<div>'+x.t+': <b>'+x.got+'/'+x.max+'</b></div>').join('')+'<p><b>'+(open?'Well done! Correct answers are shown below each question you missed.':'Correct answers are unlocked at 70% or higher. Review the Strategies and Vocabulary Bank tabs, then try again.')+'</b></p>';
+ scrollTo(0,0)}
+$('#pdf').onclick=()=>{if(!R)return;const J=window.jspdf;if(!J){alert('PDF library could not load. Use your browser Print dialog and choose "Save as PDF".');print();return}
+ const d=new J.jsPDF({unit:'mm',format:'a4'}),W=210,M=16;let y=0;const need=h=>{if(y+h>280){d.addPage();y=18}};
+ const tx=(t,sz=10,b=0,c=[20,38,58],x=M,gap=1.2)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(sz);d.setTextColor(...c);d.splitTextToSize(String(t),W-M-x).forEach(l=>{need(sz*.45);d.text(l,x,y);y+=sz*.42+gap})};
+ d.setFillColor(15,118,110);d.rect(0,0,W,32,'F');d.setTextColor(255,255,255);d.setFont('helvetica','bold');d.setFontSize(18);d.text('Listening Part 3 - Education',M,15);d.setFontSize(10);d.setFont('helvetica','normal');d.text('Practice Report',M,23);y=44;
+ tx('Name: '+$('#nm').value.trim(),11,1);tx('Email: '+$('#em').value.trim(),11);tx('Date: '+new Date().toLocaleString(),11,0,[20,38,58],M,3);
+ d.setFillColor(227,241,239);d.roundedRect(M,y-4,W-2*M,16,2,2,'F');y+=3;tx('Overall score: '+R.g+' / '+R.T+'  ('+R.pct+'%)',14,1,[15,118,110]);y+=5;
+ tx(R.open?'Result: 70% or above. Correct answers are included for missed questions.':'Result: below 70%. Correct answers are not shown. Review the strategies and try again.',10,0,[154,91,0],M,4);
+ tx('Score by section',12,1);R.secs.forEach(s=>tx(s.t+':  '+s.got+' / '+s.max,10,0,[20,38,58],M+3));y+=4;
+ R.secs.forEach(s=>{need(20);d.setDrawColor(15,118,110);d.line(M,y,W-M,y);y+=5;tx((s.tab=='v'?'Vocabulary':'Listening')+' | '+s.t+'  ('+s.got+'/'+s.max+')',11,1,[15,118,110]);
+  s.rows.forEach(r=>{const c=r.st=='Correct'?[20,108,67]:r.st=='Incorrect'?[179,38,30]:[154,91,0];tx('Q'+r.n+'  '+r.q,9,0,[90,100,110],M+2,.4);tx('Your answer: '+r.u+'   ['+r.st+']'+(r.ca?'   Correct answer: '+r.ca:''),9,1,c,M+6,1.6)});y+=3});
+ const n=d.getNumberOfPages();for(let i=1;i<=n;i++){d.setPage(i);d.setFontSize(8);d.setTextColor(120);d.text('Page '+i+' of '+n,W-M-18,290)}
+ d.save('practice-report-'+($('#nm').value.trim().replace(/\W+/g,'-')||'student')+'.pdf')};
+</script></body></html>
