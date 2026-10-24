@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio — Module 5</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:1px 0 0;font-size:11.5px;opacity:.82;font-weight:500}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.endbank{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0 14px;font-size:15px;color:var(--ink);line-height:1.6}
+.endbank .ebt{font-weight:700;color:var(--brand);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.endbank .ebi{padding:3px 0;border-bottom:1px dashed var(--line)}
+.endbank .ebi:last-child{border-bottom:none}
+.chip.cd{gap:6px}
+.chip.cd select{border:none;border-radius:6px;font-size:11.5px;padding:2px 4px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:600}
+.cdbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:14px;padding:2px 10px;font-size:11.5px;font-weight:700;cursor:pointer}
+.cdbtn:hover{background:rgba(255,255,255,.30)}
+.chip.cd.warn{background:rgba(255,193,7,.32);border-color:#ffd45e}
+.chip.cd.done{background:rgba(192,57,43,.5);border-color:#ff8a7a}
+.swbar{display:flex;align-items:center;gap:8px;background:#eef3fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content}
+.swbar b{font-variant-numeric:tabular-nums;font-weight:700}
+.swbar .swb,.swbar .swr{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:14px;padding:2px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.swbar .swr{background:#fff;color:var(--brand)}
+</style>
+</head>
+<body>
+
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio — Module 5</h1><p>Academic Reading · Summary with a Word List · Selecting Statements · Global Multiple-Choice · Suffixes &amp; Word-Formation · Vocabulary</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategies</button>
+    <button data-tab="r1">📗 Reading 1</button>
+    <button data-tab="r2">📘 Reading 2</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+  </nav>
+
+    <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Reading strategies from your IELTS teacher</h2>
+      <p class="small">Module 5 focuses on <b>Summary completion with a word list</b>, <b>Selecting statements from a list</b>, <b>Global multiple-choice</b> and <b>suffixes &amp; word-formation</b>. Every wrong answer is saved to your Error Logbook once a test is unlocked.</p>
+    </div>
+    <div class="strat-grid">
+      <div class="strat"><span class="tag">Task type</span><h3>Summary with a word list</h3><ol><li><b>Find the section first.</b> Use words in the summary (e.g. a name, a number) to scan for where it begins and ends.</li><li><b>Predict the part of speech</b> from the grammar around each gap (article → noun; <i>a/an</i> → check the first sound).</li><li><b>Match the meaning</b> and narrow the list to 2–3 candidates; the answers follow the passage order.</li><li><b>Check paraphrase:</b> the list word is usually a synonym of the passage wording, not a copy.</li></ol><div class="tip">💡 Read the finished summary aloud — it must make sense grammatically and logically.</div></div>
+      <div class="strat"><span class="tag">Task type</span><h3>Selecting statements from a list (choose THREE)</h3><ul><li>Skim all statements first; decide which part of the passage each relates to – whole text or one paragraph.</li><li>Scan with <b>nouns / noun phrases</b>, not with phrases that repeat often (e.g. <i>electronic gadgets</i>).</li><li>1 mark per correct letter, but <b>choosing more than the number asked scores 0</b>.</li></ul><div class="trap">⚠️ Traps: a statement that <i>reverses</i> the idea, goes <i>too far</i> (<i>definitely</i>, <i>all</i>), or is not mentioned at all.</div></div>
+      <div class="strat"><span class="tag">Task type</span><h3>Global multiple-choice</h3><ol><li>The stem (<i>concludes</i>, <i>mainly</i>, <i>purpose</i>) tells you where the answer lies – for <i>concludes</i>, the <b>last paragraph</b>.</li><li>Do not re-read one detail; the question is about the whole text.</li><li>Eliminate options that are only a <b>specific point</b> made earlier.</li><li>Do these last, after all other questions.</li></ol></div>
+      <div class="strat"><span class="tag">Vocabulary</span><h3>Noun and adjective suffixes</h3><ul><li><b>Noun:</b> <i>-ion</i> (action), <i>-ment</i> (settlement), <i>-ing</i> (training), <i>-ness</i> (awareness, loneliness), <i>-ship</i> (friendship), <i>-al</i> (denial, proposal).</li><li><b>Adjective:</b> <i>-al</i> (financial), <i>-ic</i> (strategic), <i>-ful</i> (useful), <i>-less</i> (worthless), <i>-ous</i> (courageous), <i>-ive</i> (attractive).</li><li><b>Spelling changes:</b> drop silent <i>-e</i> (produce → production); <i>-y</i> → <i>-ic</i> (strategy → strategic).</li></ul><div class="tip">💡 Learn the whole word family together: <i>contribute – contribution – contributor</i>.</div></div>
+    </div>
+  </section>
+
+<!-- ============ READING 1 ============ -->
+  <section class="panel" id="tab-r1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📗 Reading 1 &middot; Youth: The Future of Travel</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r1">✎ Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r1">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r1">
+          <div class="para">Young people are invariably at the leading edge of change and innovation – and the travel industry is no exception. Young people think outside the box, push boundaries and experiment with the new. In an era of unprecedented challenge for the travel industry, youth travel represents not just an important market segment, but also a vital resource for innovation and change.</div>
+          <div class="para">The travel industry is itself undergoing rapid change. Traditional vertical distribution chains are giving way to a more complex value network involving a wide range of different suppliers from within and beyond the travel sector. Travel is no longer solely dependent on the infrastructure of the old economy – airline seats, hotel beds and travel agents’ shelves. We are entering a new, flexible, networked economy in which information and communications technology (ICT), local culture and society, education, work and play have become part of the tourism value chain. In fact, the inter-relationships between travel, other economic sectors and society as a whole have become so integrated that we might conceive of a ‘value web’ rather than the old value chain.</div>
+          <div class="para"><b>New value web</b><br>In the new tourism value web, value is created by linking actors inside and outside the tourism sector in different combinations to create and exploit new opportunities. Young people are often at the forefront of such innovation, because they are willing to cross boundaries and make new links. As early-adopting, heavy users of new technology, young people are pioneering the use of social networking sites and mobile media in searching for travel information and purchasing products.</div>
+          <div class="para"><b>Young people are the future of travel</b><br>Youth travel has grown rapidly in recent decades as living standards have risen and the populations of developing countries are starting to travel for the first time. Indeed, these first-time travellers are often characterized by being young and comparatively affluent. The global youth travel industry is now estimated to represent almost 190 million international trips a year, and the youth travel industry has grown faster than global travel overall. By 2020 there will be almost 300 million international youth trips per year, according to UNWTO forecasts.</div>
+          <div class="para">The youth market therefore represents a major opportunity for future growth in the travel industry. With effective development and marketing, the potential of the youth market can be increased still further.</div>
+          <div class="para"><b>Why youth travel is important</b><br>Youth travel is important because it is a market for the future – not just for the future development of the young people themselves, but also the places they visit. WYSE Travel Confederation research shows that young travellers often spend more than other tourists and they are likely to return and give more value to the destination over their lifetime. Moreover, young travellers are a growth market globally, while the spending power of older generations in Western economies may decline in the long term. Another reason why young people are important is that they are less likely to be discouraged from travelling by factors such as disease or natural disasters. They are also the pioneers who discover new destinations and are at the cutting edge of using new technology. Last but not least, young travellers gain cultural benefits from their travel, and contribute to the places they visit.</div>
+          <div class="para">UNWTO and WYSE Travel Confederation are convinced that youth travel has moved far beyond its original status as a specialized travel niche to become an important element of the travel mix in any tourism destination. One of the reasons for this is that travel underpins many different aspects of youth lifestyles. For young people: travel is a form of learning · a way of meeting other people · a way of getting in touch with other cultures · a source of career development · a means of self-development · part of their identity – you are where you’ve been.</div>
+          <div class="para">Young people see travel as an essential part of their everyday lives, rather than just a brief escape from reality. This has far-reaching consequences for the places they visit. Because of the way they travel, the social and cultural consequences of hosting young people are becoming even more important than the economic effects. So the added value to be extracted from youth travel lies in innovation, positioning, cultural links, international trade and exchange, social support, education, learning support for local communities, and so on.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-r1" data-test="r1">
+          <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+          <div class="qgroup"><div class="ginstr"><b>Questions 1–7 · Summary with a word list.</b> Complete the summary using the list of words A–O. Write the correct letter in each gap.</div><div class="endbank"><div class="ebt">Word list (A–O)</div><div class="ebi"><b>A</b> &nbsp;transformation</div><div class="ebi"><b>B</b> &nbsp;impact</div><div class="ebi"><b>C</b> &nbsp;developments</div><div class="ebi"><b>D</b> &nbsp;transforming</div><div class="ebi"><b>E</b> &nbsp;crucial force</div><div class="ebi"><b>F</b> &nbsp;conflict</div><div class="ebi"><b>G</b> &nbsp;interest</div><div class="ebi"><b>H</b> &nbsp;block</div><div class="ebi"><b>I</b> &nbsp;role</div><div class="ebi"><b>J</b> &nbsp;network</div><div class="ebi"><b>K</b> &nbsp;link</div><div class="ebi"><b>L</b> &nbsp;older travellers</div><div class="ebi"><b>M</b> &nbsp;integration</div><div class="ebi"><b>N</b> &nbsp;circumstances</div><div class="ebi"><b>O</b> &nbsp;youth travel</div></div><div class="para" style="margin:10px 0"><b>Youth travel: a force for change.</b> In all fields, including the travel industry, young people are usually at the forefront of any new <b>(1)</b> ……. They set trends and so are a <b>(2)</b> ……. for innovation and change. This is important as the travel industry is also experiencing its own <b>(3)</b> ……. The modern travel industry is not about airline seats and hotel beds any more, but a new more open economy where factors such as local culture and society have a <b>(4)</b> ……. in tourism. Indeed, the <b>(5)</b> ……. of travel and other parts of the economy and society means that traditional vertical distribution chains have been replaced by a <b>(6)</b> ……. , or value web. Due to increased numbers of fairly rich young travellers from developing countries, <b>(7)</b> ……. now accounts for nearly 190 million trips annually.</div><div class="q" data-type="sel" data-answer="C" data-exp="The passage says young people are at the leading edge of change and innovation – ‘new developments’."><div class="qnum">1</div><div class="qmain"><div class="qtext">Gap (1)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="Youth travel is called ‘a vital resource for innovation and change’ – a crucial force."><div class="qnum">2</div><div class="qmain"><div class="qtext">Gap (2)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="‘The travel industry is itself undergoing rapid change’ – a transformation."><div class="qnum">3</div><div class="qmain"><div class="qtext">Gap (3)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="I" data-exp="Local culture and society ‘have become part of the tourism value chain’ – they now play a role."><div class="qnum">4</div><div class="qmain"><div class="qtext">Gap (4)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="M" data-exp="Travel and other sectors are so ‘integrated’ that we can speak of a value web – integration."><div class="qnum">5</div><div class="qmain"><div class="qtext">Gap (5)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="J" data-exp="‘Traditional vertical distribution chains are giving way to a more complex value network’ – network."><div class="qnum">6</div><div class="qmain"><div class="qtext">Gap (6)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="O" data-exp="‘The global youth travel industry is now estimated to represent almost 190 million international trips a year’."><div class="qnum">7</div><div class="qmain"><div class="qtext">Gap (7)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option><option>N</option><option>O</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 8–10 · Choose THREE letters, A–G.</b> Which THREE reasons for the importance of youth travel are given by the writer? (1 mark per correct letter; choosing more than three scores 0.)</div><div class="q" data-type="mc2" data-answer="A,D,G" data-exp="A: young travellers are ‘at the cutting edge of using new technology’. D: they ‘are likely to return and give more value to the destination over their lifetime’. G: they ‘contribute to the places they visit’. B is a trap (they spend more than other tourists, not a large proportion of their money); C, E, F are not given."><div class="qnum">8–10</div><div class="qmain"><div class="qtext">Which <b>THREE</b> reasons for the importance of youth travel are given by the writer?</div><div class="mc"><label><input type="checkbox" name="r1q810" value="A"> <b>A</b> They make use of the latest technology that is available.</label><label><input type="checkbox" name="r1q810" value="B"> <b>B</b> They spend a large proportion of their money on travelling worldwide.</label><label><input type="checkbox" name="r1q810" value="C"> <b>C</b> They avoid conflicts with local people more than older people.</label><label><input type="checkbox" name="r1q810" value="D"> <b>D</b> They will probably return to the places they have visited later in their lives.</label><label><input type="checkbox" name="r1q810" value="E"> <b>E</b> They are more likely to learn the local language than older people are.</label><label><input type="checkbox" name="r1q810" value="F"> <b>F</b> They are experiencing a rapid increase in their disposable income.</label><label><input type="checkbox" name="r1q810" value="G"> <b>G</b> They give something back to the destinations they have been to.</label></div><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 11–13 · Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q" data-type="mc1" data-answer="B" data-exp="Para: ‘Travel is a form of learning’ – it is an educational experience. Relaxing, confidence and maturity are never mentioned."><div class="qnum">11</div><div class="qmain"><div class="qtext">Travel is central to young people’s lifestyle, partly because</div><div class="mc"><label><input type="radio" name="r1q11" value="A"> <b>A</b> it helps them to relax.</label><label><input type="radio" name="r1q11" value="B"> <b>B</b> it is an educational experience.</label><label><input type="radio" name="r1q11" value="C"> <b>C</b> it improves their confidence.</label><label><input type="radio" name="r1q11" value="D"> <b>D</b> it makes them more mature.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="C" data-exp="The social and cultural consequences ‘are becoming even more important than the economic effects’ – so the economic impact is of lesser consequence."><div class="qnum">12</div><div class="qmain"><div class="qtext">According to the writer, the economic impact of hosting young people is</div><div class="mc"><label><input type="radio" name="r1q12" value="A"> <b>A</b> of no consequence compared to the social and cultural effects.</label><label><input type="radio" name="r1q12" value="B"> <b>B</b> of greater consequence than the social and cultural effects.</label><label><input type="radio" name="r1q12" value="C"> <b>C</b> of lesser consequence than the social and cultural effects.</label><label><input type="radio" name="r1q12" value="D"> <b>D</b> just as valuable as the social and cultural effects.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="D" data-exp="The last sentence lists many sources of added value (innovation, positioning, cultural links, trade, education…). B is a trap: innovation is only one item."><div class="qnum">13</div><div class="qmain"><div class="qtext">The writer concludes that</div><div class="mc"><label><input type="radio" name="r1q13" value="A"> <b>A</b> youth travel is not an important area for the travel industry.</label><label><input type="radio" name="r1q13" value="B"> <b>B</b> the main contribution of young people to the travel industry is in innovation.</label><label><input type="radio" name="r1q13" value="C"> <b>C</b> young people value the cultural links gained from travelling more than anything else.</label><label><input type="radio" name="r1q13" value="D"> <b>D</b> there is a wide range of additional benefits to be derived from youth travel.</label></div><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r1">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r1">↻ Reset answers</button>
+            <div class="scorebox" id="score-r1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 2 ============ -->
+  <section class="panel" id="tab-r2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📘 Reading 2 &middot; Excessive demands on young people</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r2">✎ Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r2">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r2">
+          <div class="para">Being able to multi-task is hailed by most people as a welcome skill, but not according to a recent study which claims that young people between the ages of eight and eighteen of the so-called ‘Generation M’ are spending a considerable amount of their time on fruitless efforts as they multi-task. It argues that, in fact, these young people are frittering away as much as half of their time again as they would if they performed the very same tasks one after the other.</div>
+          <div class="para">Some young people are juggling an ever larger number of electronic devices as they study. At the same time as they are working, young adults are also surfing the Internet, or sending out emails to their friends, and/or answering the telephone and listening to music on their iPods or on another computer. As some new device comes along, it too is added to the list rather than replacing one of the existing devices.</div>
+          <div class="para">Other research has indicated that this multi-tasking is even affecting the way families themselves function as young people are too wrapped up in their own isolated worlds to interact with the other people around them. They can no longer greet family members when they enter the house, nor can they eat at the family table.</div>
+          <div class="para">All this electronic wizardry is supposedly also seriously affecting young people’s performance at university and in the workplace. When asked about their perception of the impact of modern gadgets on their performance of tasks, the overwhelming majority of young people gave a favourable response.</div>
+          <div class="para">The response from the academic and business worlds was not quite as positive. The former feel that multi-tasking with electronic gadgets by children affects later development of study skills, resulting in a decline in the quality of writing, for example, because of the lack of concentration on task completion. They feel that many undergraduates now urgently need remedial help with study skills. Similarly, employers feel that young people entering the workforce need to be taught all over again, as they have become deskilled.</div>
+          <div class="para">While all this may be true, it must be borne in mind that more and more is expected of young people nowadays; in fact, too much. Praise rather than criticism is due in respect of the way today’s youth are able to cope, despite what the older generation throw at them.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">11 marks</span></div>
+        <div class="q-body" id="qbody-r2" data-test="r2">
+          <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+          <div class="qgroup"><div class="ginstr"><b>Questions 1–7 · Summary with a word list.</b> Complete the summary using the list of words A–M. Write the correct letter in each gap.</div><div class="endbank"><div class="ebt">Word list (A–M)</div><div class="ebi"><b>A</b> &nbsp;in sequence</div><div class="ebi"><b>B</b> &nbsp;revolution</div><div class="ebi"><b>C</b> &nbsp;beneficial effect</div><div class="ebi"><b>D</b> &nbsp;much</div><div class="ebi"><b>E</b> &nbsp;messages</div><div class="ebi"><b>F</b> &nbsp;letters</div><div class="ebi"><b>G</b> &nbsp;electronics</div><div class="ebi"><b>H</b> &nbsp;negative impact</div><div class="ebi"><b>I</b> &nbsp;electronic gizmos</div><div class="ebi"><b>J</b> &nbsp;behaviour</div><div class="ebi"><b>K</b> &nbsp;development</div><div class="ebi"><b>L</b> &nbsp;significant amounts</div><div class="ebi"><b>M</b> &nbsp;all together</div></div><div class="para" style="margin:10px 0">According to a recent report, young people aged 8–18 are wasting <b>(1)</b> ……. of time by multi-tasking. In fact, they are spending as much as 50 per cent longer than if they did the same tasks <b>(2)</b> ……. . Some young people are juggling a larger and larger array of <b>(3)</b> ……. as they study, while surfing the net, sending <b>(4)</b> ……. , answering the phone and listening to music simultaneously. Other studies have shown that this <b>(5)</b> ……. is affecting the way families operate, with young people too self-absorbed to talk to other family members or to eat at the family table. The electronic <b>(6)</b> ……. is also apparently having a <b>(7)</b> ……. on young people’s studies and work.</div><div class="q" data-type="sel" data-answer="L" data-exp="‘a considerable amount of their time’ – wasting significant amounts of time."><div class="qnum">1</div><div class="qmain"><div class="qtext">Gap (1)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="‘one after the other’ – in sequence."><div class="qnum">2</div><div class="qmain"><div class="qtext">Gap (2)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="I" data-exp="‘an ever larger number of electronic devices’ – electronic gizmos."><div class="qnum">3</div><div class="qmain"><div class="qtext">Gap (3)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="‘sending out emails to their friends’ – messages."><div class="qnum">4</div><div class="qmain"><div class="qtext">Gap (4)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="J" data-exp="‘this multi-tasking is even affecting the way families themselves function’ – behaviour."><div class="qnum">5</div><div class="qmain"><div class="qtext">Gap (5)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="‘All this electronic wizardry’ – the electronic revolution."><div class="qnum">6</div><div class="qmain"><div class="qtext">Gap (6)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="H" data-exp="‘seriously affecting young people’s performance’ – a negative impact."><div class="qnum">7</div><div class="qmain"><div class="qtext">Gap (7)</div><select><option value="">— choose —</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>L</option><option>M</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 8–10 · Choose THREE letters, A–G.</b> Which THREE opinions about electronic gadgetry are mentioned by the writer? (1 mark per correct letter; choosing more than three scores 0.)</div><div class="q" data-type="mc2" data-answer="B,D,F" data-exp="B: academics feel multi-tasking ‘affects later development of study skills’. D: ‘the overwhelming majority of young people gave a favourable response’. F: employers feel young people entering the workforce ‘have become deskilled’. A and E are not given; C reverses the idea (undergraduates ‘urgently need’ help); G is too strong (‘definitely’)."><div class="qnum">8–10</div><div class="qmain"><div class="qtext">Which <b>THREE</b> opinions are mentioned by the writer of the text?</div><div class="mc"><label><input type="checkbox" name="r2q810" value="A"> <b>A</b> According to students, electronic gadgets are now an inevitable part of the university landscape.</label><label><input type="checkbox" name="r2q810" value="B"> <b>B</b> Academics feel multi-tasking with electronic gadgets affects children’s subsequent acquisition of study skills.</label><label><input type="checkbox" name="r2q810" value="C"> <b>C</b> Academics feel students are offered help with their writing and study skills.</label><label><input type="checkbox" name="r2q810" value="D"> <b>D</b> Most young people see no problems related to using electronic gadgets.</label><label><input type="checkbox" name="r2q810" value="E"> <b>E</b> Computer use at school fails to prepare students for academic life at university, according to academics.</label><label><input type="checkbox" name="r2q810" value="F"> <b>F</b> Employers feel that the use of electronic gadgets among children affects capacity to perform in the work environment.</label><label><input type="checkbox" name="r2q810" value="G"> <b>G</b> Employers think that overuse of computers and other gadgets definitely affects job prospects later in life.</label></div><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Question 11 · Global multiple choice.</b> Choose the correct letter, A, B, C or D. (Look at the conclusion of the text.)</div><div class="q" data-type="mc1" data-answer="B" data-exp="Final paragraph: ‘more and more is expected of young people… Praise rather than criticism is due in respect of the way today’s youth are able to cope’."><div class="qnum">11</div><div class="qmain"><div class="qtext">The writer concludes that</div><div class="mc"><label><input type="radio" name="r2q11" value="A"> <b>A</b> the use of electronic gadgets at school is affecting academic study.</label><label><input type="radio" name="r2q11" value="B"> <b>B</b> more is required of young people today and they cope well in the circumstances.</label><label><input type="radio" name="r2q11" value="C"> <b>C</b> the use of electronic gadgets at school needs to be controlled.</label><label><input type="radio" name="r2q11" value="D"> <b>D</b> electronic gadgets should be totally banned as they harm young people’s job prospects.</label></div><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r2">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r2">↻ Reset answers</button>
+            <div class="scorebox" id="score-r2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOCABULARY ============ -->
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">🧩 Vocabulary — Suffixes &amp; word-formation (nouns / adjectives)</h2>
+      <p class="small">Word skills built around the two reading passages. Submit to score — mistakes go to your Error Logbook. Spelling must be exact (42 marks).</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+        <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 1 · Noun or adjective suffix?</b> Which suffixes form nouns and which form adjectives?</div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>-al</b> forms adjectives (adjective)."><div class="qnum">a</div><div class="qmain"><div class="qtext"><b>-al</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>-ic</b> forms adjectives (adjective)."><div class="qnum">b</div><div class="qmain"><div class="qtext"><b>-ic</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="noun" data-exp="<b>-ion</b> forms nouns (noun)."><div class="qnum">c</div><div class="qmain"><div class="qtext"><b>-ion</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="noun" data-exp="<b>-ment</b> forms nouns (noun)."><div class="qnum">d</div><div class="qmain"><div class="qtext"><b>-ment</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="noun" data-exp="<b>-ing</b> forms nouns (noun)."><div class="qnum">e</div><div class="qmain"><div class="qtext"><b>-ing</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 2 · Nouns.</b> Add a suffix from Exercise 1 to form a noun (small spelling changes may be needed). Type the whole word.</div><div class="q" data-type="text" data-answers="action|actions" data-exp="act → <b>action</b>."><div class="qnum">a</div><div class="qmain"><div class="qtext">act</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="detection" data-exp="detect → <b>detection</b>."><div class="qnum">b</div><div class="qmain"><div class="qtext">detect</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="fulfilment|fulfillment" data-exp="fulfil → <b>fulfilment</b>."><div class="qnum">c</div><div class="qmain"><div class="qtext">fulfil</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="training" data-exp="train → <b>training</b>."><div class="qnum">d</div><div class="qmain"><div class="qtext">train</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="competition" data-exp="compete → <b>competition</b>."><div class="qnum">e</div><div class="qmain"><div class="qtext">compete</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="production" data-exp="produce → <b>production</b>."><div class="qnum">f</div><div class="qmain"><div class="qtext">produce</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="settlement" data-exp="settle → <b>settlement</b>."><div class="qnum">g</div><div class="qmain"><div class="qtext">settle</div><input type="text" placeholder="noun" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 3 · Adjectives.</b> Add a suffix from Exercise 1 to form an adjective. Type the whole word.</div><div class="q" data-type="text" data-answers="strategic" data-exp="strategy → <b>strategic</b> (-ic)."><div class="qnum">a</div><div class="qmain"><div class="qtext">strategy</div><input type="text" placeholder="adjective" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="energetic" data-exp="energy → <b>energetic</b> (-ic)."><div class="qnum">b</div><div class="qmain"><div class="qtext">energy</div><input type="text" placeholder="adjective" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="democratic" data-exp="democracy → <b>democratic</b> (-ic)."><div class="qnum">c</div><div class="qmain"><div class="qtext">democracy</div><input type="text" placeholder="adjective" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="habitual" data-exp="habit → <b>habitual</b> (-al)."><div class="qnum">d</div><div class="qmain"><div class="qtext">habit</div><input type="text" placeholder="adjective" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="beneficial" data-exp="benefit → <b>beneficial</b> (-al)."><div class="qnum">e</div><div class="qmain"><div class="qtext">benefit</div><input type="text" placeholder="adjective" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="influential" data-exp="influence → <b>influential</b> (-al)."><div class="qnum">f</div><div class="qmain"><div class="qtext">influence</div><input type="text" placeholder="adjective" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 4a · -ful, -less, -al, -ous.</b> Add the correct suffix. Type the whole word.</div><div class="q" data-type="text" data-answers="courageous" data-exp="courage → <b>courageous</b> (-ous)."><div class="qnum">a</div><div class="qmain"><div class="qtext">courage</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="denial" data-exp="deny → <b>denial</b> (-al)."><div class="qnum">b</div><div class="qmain"><div class="qtext">deny</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="priceless" data-exp="price → <b>priceless</b> (-less)."><div class="qnum">c</div><div class="qmain"><div class="qtext">price</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="useful" data-exp="use → <b>useful</b> (-ful)."><div class="qnum">d</div><div class="qmain"><div class="qtext">use</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="survival" data-exp="survive → <b>survival</b> (-al)."><div class="qnum">e</div><div class="qmain"><div class="qtext">survive</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="wonderful" data-exp="wonder → <b>wonderful</b> (-ful)."><div class="qnum">f</div><div class="qmain"><div class="qtext">wonder</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="worthless" data-exp="worth → <b>worthless</b> (-less)."><div class="qnum">g</div><div class="qmain"><div class="qtext">worth</div><input type="text" placeholder="word + suffix" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 4b · Word class.</b> Is each word you formed in 4a a noun or an adjective?</div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>courageous</b> is an adjective."><div class="qnum">a</div><div class="qmain"><div class="qtext"><b>courageous</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="noun" data-exp="<b>denial</b> is an noun."><div class="qnum">b</div><div class="qmain"><div class="qtext"><b>denial</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>priceless</b> is an adjective."><div class="qnum">c</div><div class="qmain"><div class="qtext"><b>priceless</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>useful</b> is an adjective."><div class="qnum">d</div><div class="qmain"><div class="qtext"><b>useful</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="noun" data-exp="<b>survival</b> is an noun."><div class="qnum">e</div><div class="qmain"><div class="qtext"><b>survival</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>wonderful</b> is an adjective."><div class="qnum">f</div><div class="qmain"><div class="qtext"><b>wonderful</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="adjective" data-exp="<b>worthless</b> is an adjective."><div class="qnum">g</div><div class="qmain"><div class="qtext"><b>worthless</b></div><select><option value="">— choose —</option><option>adjective</option><option>noun</option></select><div class="fb"></div></div></div></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 5 · Text completion.</b> Complete the text by adding suffixes to the words in brackets.</div><div class="para" style="margin:10px 0">A workforce made up entirely of young people is not necessarily the key to success and there is a growing <b>(1)</b> ……. among employers of the special <b>(2)</b> ……. that older people can make. Yet while attitudes in the workplace may have changed, it seems that the <b>(3)</b> ……. industry continues to look the other way. TV advertisements still often show older people in a negative or <b>(4)</b> ……. way and tend to feature younger users. This, however, makes no sense. Older people usually have a higher income than the young and it is fairly easy to adjust the image of a product to make it more <b>(5)</b> ……. to them. For example, mobile phones can be presented as a way to maintain <b>(6)</b> ……. across distances, a welcome <b>(7)</b> ……. to older people who often fear <b>(8)</b> ……. in their later years. Showing more older people using a product not only makes good <b>(9)</b> ……. sense but it can also play a wider role in society in general by challenging age <b>(10)</b> ……. .</div><div class="q" data-type="text" data-answers="awareness" data-exp="aware → <b>awareness</b>."><div class="qnum">1</div><div class="qmain"><div class="qtext">(1) (aware)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="contribution" data-exp="contribute → <b>contribution</b>."><div class="qnum">2</div><div class="qmain"><div class="qtext">(2) (contribute)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="advertising" data-exp="advertise → <b>advertising</b>."><div class="qnum">3</div><div class="qmain"><div class="qtext">(3) (advertise)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="stereotypical" data-exp="stereotype → <b>stereotypical</b>."><div class="qnum">4</div><div class="qmain"><div class="qtext">(4) (stereotype)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="attractive" data-exp="attract → <b>attractive</b>."><div class="qnum">5</div><div class="qmain"><div class="qtext">(5) (attract)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="friendship" data-exp="friend → <b>friendship</b>."><div class="qnum">6</div><div class="qmain"><div class="qtext">(6) (friend)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="proposal" data-exp="propose → <b>proposal</b>."><div class="qnum">7</div><div class="qmain"><div class="qtext">(7) (propose)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="loneliness" data-exp="lonely → <b>loneliness</b>."><div class="qnum">8</div><div class="qmain"><div class="qtext">(8) (lonely)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="financial" data-exp="finance → <b>financial</b>."><div class="qnum">9</div><div class="qmain"><div class="qtext">(9) (finance)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="discrimination" data-exp="discriminate → <b>discrimination</b>."><div class="qnum">10</div><div class="qmain"><div class="qtext">(10) (discriminate)</div><input type="text" placeholder="word form" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">✔ Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">↻ Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Topic Glossary — Youth, Travel &amp; Technology</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic vocabulary pulled from both reading passages. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage/nuance note, and the collocations examiners reward. <span id="glossCount"></span></p>
+      <div id="glossGrid" class="gloss-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ ERROR LOGBOOK ============ -->
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong is recorded here with the correct answer and the reason. Review before your next attempt — this is where score gains come from.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+      <p class="small" style="margin-top:16px">The PDF includes student details, per-test scores, time spent, attempts, and the full error logbook.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =======================================================================
+   TEACHER SETUP — paste your Google Apps Script Web App URL between the
+   quotes below (see the separate setup guide). Leave empty to turn sync off.
+   Example: const WEBAPP_URL = "https://script.google.com/macros/s/AKf.../exec";
+   ======================================================================= */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 5";
+
+const LS_KEY = "ielts_reading_studio_module5_v1";
+const TEST_META = {
+  r1:{label:"Reading 1 — Youth: The Future of Travel", pill:"r1"},
+  r2:{label:"Reading 2 — Excessive Demands on Young People", pill:"r2"},
+  vocab:{label:"Vocabulary", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    tests:{
+      r1:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false},
+      r2:{attempts:0,timeSec:0,lastScore:null,total:11,best:null,answers:{},highlights:"",unlocked:false},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:42,best:null,answers:{},highlights:"",unlocked:false}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
+  updateHeaderStats();
+}));
+
+// timer ticks for the currently-open test tab
+setInterval(()=>{
+  if(state.tests[activeTab]){
+    state.tests[activeTab].timeSec++;
+    updateHeaderStats();
+  }
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "—:—";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+
+// autosave every 10s
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- highlighting ----------
+let hlMode={r1:false,r2:false};
+$$("[data-hl]").forEach(btn=>{
+  const id=btn.dataset.hl;
+  btn.addEventListener("click",()=>{
+    hlMode[id]=!hlMode[id];
+    btn.classList.toggle("on",hlMode[id]);
+    btn.querySelector("span").textContent=hlMode[id]?"ON":"OFF";
+  });
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+["r1","r2"].forEach(id=>{
+  const p=$("#passage-"+id);
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    if(!hlMode[id])return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){/* cross-node selection */}
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"||type==="sel"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>';
+        // re-show feedback so a returning student keeps their reviewed answers
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+      }
+    }
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so"||type==="sel")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+// live-save on input
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so"||type==="sel")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="",points=0,max=1;
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");
+    correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
+  }else if(type==="tfng"||type==="so"||type==="sel"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);points=ok?1:0;
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;points=ok?1:0;
+  }else if(type==="mc2"){
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());
+    max=correctSet.length;   // "choose TWO" = 2 marks
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");
+    correct=correctSet.slice().sort().join(",");
+    // IELTS style: 1 mark per correct letter, but over-selecting scores 0
+    points = (sel.length>max) ? 0 : sel.filter(v=>correctSet.includes(v)).length;
+    ok = points===max;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
+}
+function questionLabel(q,test){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+
+const PASS_PCT=70;
+
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  // count blanks to warn the student, then confirm to avoid accidental submits
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{const r=peekAnswer(q);if(!r)blanks++;});
+  const msg="Submit "+TEST_META[test].label+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  // grade everything first (do not reveal yet)
+  let score=0,total=0;const graded=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q,test);
+    total+=r.max;score+=r.points;
+    graded.push({q,r,num,txt});
+  });
+  const pct=Math.round(score/total*100);
+
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  const passedNow=pct>=PASS_PCT;
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;   // once unlocked (>=70% at any point), answers stay visible
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{
+      fb.className="fb";fb.innerHTML="";   // gate: hide right/wrong and answers
+    }
+  });
+
+  // only record errors once the student has earned the answers (avoids leaking via the logbook)
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+
+  save();
+  updateHeaderStats();
+
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>');
+    flash(TEST_META[test].label+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+    const note=document.createElement("div");
+    note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still being recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+
+  // sync full detail to the teacher's sheet regardless of the gate
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
+  syncToSheet({
+    test:MODULE_TAG+" — "+TEST_META[test].label,score:score,total:total,
+    percent:pct,attempt:t.attempts,
+    timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
+  });
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  clearLockNote(body);
+  state.tests[test].answers={};save();
+  flash("Answers cleared (attempts & time kept).");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload,isTest){
+  if(!WEBAPP_URL)return;
+  const full=Object.assign({
+    name:state.student.name||"(no name)",
+    email:state.student.email||"(no email)"
+  },payload);
+  fetch(WEBAPP_URL,{
+    method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(full)
+  }).then(()=>{if(!isTest)$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a test to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{label:e.test,pill:"r1"};
+    return '<tr><td><span class="pill '+meta.pill+'">'+meta.label.split(" —")[0]+'</span></td>'
+      +'<td><b>'+e.num+'</b></td>'
+      +'<td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Test</th><th>Q</th><th>Question</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=
+    metric("Student",state.student.name||"—")+
+    metric("Overall score",totMax?totScore+"/"+totMax:"—")+
+    metric("Total time",fmt(totTime))+
+    metric("Total attempts",totAtt)+
+    metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    return "<tr><td><b>"+meta.label+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595, M=40; let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);
+    doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(16);
+  doc.text("IELTS Reading Studio — Module 5 — Performance Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+
+  line("Results by test",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(meta.label,11,"bold");
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time: "+fmt(t.timeSec),10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{
+    state.errorLog.forEach((e,i)=>{
+      const meta=TEST_META[e.test]||{label:e.test};
+      line((i+1)+". ["+meta.label.split(" —")[0]+" Q"+e.num+"] "+e.q,10,"bold");
+      line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+      if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+      y+=2;
+    });
+  }
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module5_report.pdf";
+  doc.save(fn);
+  flash("PDF report downloaded.");
+});
+
+// ---------- glossary ----------
+const GLOSSARY=[
+ {w:'invariably',pos:'adverb',src:'R1',en:'always; without exception.',vi:'luôn luôn, không ngoại lệ.',ex:'Young people are invariably at the leading edge of change.',nu:'Formal; stronger than ‘usually’.',co:'invariably the case / true; almost invariably'},
+ {w:'unprecedented',pos:'adjective',src:'R1',en:'never having happened or existed before.',vi:'chưa từng có tiền lệ.',ex:'…an era of unprecedented challenge for the travel industry.',nu:'Formal; often with ‘level’, ‘scale’, ‘challenge’.',co:'unprecedented growth / levels / scale'},
+ {w:'segment',pos:'noun',src:'R1',en:'a distinct part of a market or group.',vi:'phân khúc (thị trường).',ex:'Youth travel is an important market segment.',nu:'Business register; verb: segment.',co:'market / customer segment; a growing segment'},
+ {w:'infrastructure',pos:'noun',src:'R1',en:'the basic systems and structures a society or industry needs.',vi:'cơ sở hạ tầng.',ex:'Travel no longer depends solely on the infrastructure of the old economy.',nu:'Uncountable; do not add -s.',co:'transport / tourism infrastructure; invest in infrastructure'},
+ {w:'conceive of',pos:'phrasal verb',src:'R1',en:'to think of something as; to imagine.',vi:'hình dung, quan niệm.',ex:'We might conceive of a ‘value web’ rather than a chain.',nu:'Formal; noun: conception.',co:'conceive of something as…; hard to conceive'},
+ {w:'forefront',pos:'noun',src:'R1',en:'the most important or advanced position.',vi:'vị trí đi đầu.',ex:'Young people are often at the forefront of such innovation.',nu:'Fixed phrase ‘at the forefront of’.',co:'at the forefront of innovation / research / change'},
+ {w:'affluent',pos:'adjective',src:'R1',en:'having a lot of money; wealthy.',vi:'giàu có, sung túc.',ex:'First-time travellers are often young and comparatively affluent.',nu:'Formal; noun: affluence. Neutral-positive.',co:'an affluent society / neighbourhood / consumer'},
+ {w:'pioneer',pos:'verb / noun',src:'R1',en:'to be the first to develop or use something; a person who does so.',vi:'đi tiên phong; người tiên phong.',ex:'Young people are pioneering the use of social networking sites.',nu:'Positive connotation; also used for people in the noun form.',co:'pioneer a method / technique; a pioneer in…'},
+ {w:'discourage',pos:'verb',src:'R1',en:'to make someone less willing to do something.',vi:'làm nản lòng, ngăn cản.',ex:'They are less likely to be discouraged from travelling by disease.',nu:'Opposite: encourage. Pattern: discourage someone FROM doing.',co:'discourage someone from doing; actively discourage'},
+ {w:'niche',pos:'noun',src:'R1',en:'a small, specialised part of a market.',vi:'thị trường ngách.',ex:'Youth travel has moved beyond its status as a specialized niche.',nu:'Pronounced /niːʃ/ or /nɪtʃ/; often in business contexts.',co:'niche market / product; find a niche'},
+ {w:'underpin',pos:'verb',src:'R1',en:'to support or form the basis of something.',vi:'làm nền tảng cho.',ex:'Travel underpins many different aspects of youth lifestyles.',nu:'Formal; stronger than ‘support’; often abstract subjects.',co:'underpin a theory / economy / argument'},
+ {w:'far-reaching',pos:'adjective',src:'R1',en:'having wide influence or many effects.',vi:'có tầm ảnh hưởng rộng.',ex:'This has far-reaching consequences for the places they visit.',nu:'Almost always with ‘consequences’, ‘implications’, ‘changes’.',co:'far-reaching consequences / reforms / implications'},
+ {w:'hail',pos:'verb',src:'R2',en:'to praise publicly as something good; to describe enthusiastically.',vi:'ca ngợi, tung hô.',ex:'Multi-tasking is hailed by most people as a welcome skill.',nu:'Often passive: ‘be hailed as’. Journalistic.',co:'be hailed as a success / hero / breakthrough'},
+ {w:'fruitless',pos:'adjective',src:'R2',en:'producing no useful results.',vi:'vô ích, không có kết quả.',ex:'…a considerable amount of their time on fruitless efforts.',nu:'Opposite: fruitful. Often with ‘search’, ‘attempt’, ‘effort’.',co:'a fruitless search / attempt / exercise'},
+ {w:'fritter away',pos:'phrasal verb',src:'R2',en:'to waste time or money on unimportant things.',vi:'lãng phí (thời gian, tiền bạc).',ex:'They are frittering away half of their time again.',nu:'Informal-to-neutral; implies small, careless waste.',co:'fritter away time / money / an opportunity'},
+ {w:'juggle',pos:'verb',src:'R2',en:'to try to do several things or keep several things at once.',vi:'xoay xở nhiều việc cùng lúc.',ex:'Some young people are juggling an ever larger number of devices.',nu:'Often figurative: juggle work and family.',co:'juggle work and family / commitments / priorities'},
+ {w:'wrapped up in',pos:'phrasal verb',src:'R2',en:'so involved in something that you pay no attention to anything else.',vi:'mải mê, đắm chìm vào.',ex:'…too wrapped up in their own isolated worlds.',nu:'Informal; pattern: be wrapped up IN something.',co:'wrapped up in work / oneself / a book'},
+ {w:'perception',pos:'noun',src:'R2',en:'the way you think about or understand something.',vi:'nhận thức, cách nhìn nhận.',ex:'…asked about their perception of the impact of modern gadgets.',nu:'Not the same as ‘reality’; verb: perceive.',co:'public perception; perception of risk / quality'},
+ {w:'favourable',pos:'adjective',src:'R2',en:'showing approval or advantage; positive.',vi:'thuận lợi, tán thành.',ex:'The majority of young people gave a favourable response.',nu:'US: favorable. Opposite: unfavourable.',co:'a favourable response / impression / review'},
+ {w:'remedial',pos:'adjective',src:'R2',en:'intended to correct something that is wrong or weak.',vi:'phụ đạo, khắc phục.',ex:'Many undergraduates now urgently need remedial help with study skills.',nu:'Common in education: remedial class / lesson.',co:'remedial help / class / action / teaching'},
+ {w:'deskilled',pos:'adjective',src:'R2',en:'having lost skills or the need for skills.',vi:'bị mất kỹ năng.',ex:'Young people… have become deskilled.',nu:'Verb: deskill; opposite: upskill. Formal/labour-market term.',co:'a deskilled workforce / job; become deskilled'},
+ {w:'cope',pos:'verb',src:'R2',en:'to deal successfully with a difficult situation.',vi:'đương đầu, xoay xở được.',ex:'Praise is due for the way today’s youth are able to cope.',nu:'Pattern: cope WITH something; noun: coping.',co:'cope with stress / change / pressure; struggle to cope'},
+ {w:'decline',pos:'noun / verb',src:'R2',en:'a gradual fall in quality or quantity; to fall.',vi:'sự suy giảm; giảm sút.',ex:'…resulting in a decline in the quality of writing.',nu:'Pattern: a decline IN something; opposite: increase / rise.',co:'a sharp / steady decline; decline in standards'},
+ {w:'gadget',pos:'noun',src:'R2',en:'a small, clever electronic or mechanical device.',vi:'thiết bị nhỏ, đồ công nghệ.',ex:'…the impact of modern gadgets on their performance.',nu:'Informal-neutral; synonym in the text: ‘gizmo’.',co:'electronic gadgets; the latest gadget'},
+];
+function renderGlossary(filter){
+  const grid=$("#glossGrid");if(!grid)return;
+  const f=norm(filter||$("#glossSearch").value||"");
+  const rows=GLOSSARY.filter(g=>!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0);
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  if(!rows.length){grid.innerHTML='<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';return;}
+  grid.innerHTML=rows.map(g=>
+    '<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span><span class="pill '+(g.src.indexOf("R1")>=0?"r1":"r2")+'">'+escapeHtml(g.src)+'</span></div>'
+    +'<dl>'
+    +'<dt>EN</dt><dd>'+escapeHtml(g.en)+'</dd>'
+    +'<dt>VI</dt><dd class="vi">'+escapeHtml(g.vi)+'</dd>'
+    +'<dt>e.g.</dt><dd class="ex">'+escapeHtml(g.ex)+'</dd>'
+    +'<dt>Note</dt><dd class="nu">'+escapeHtml(g.nu)+'</dd>'
+    +'<dt>Colloc.</dt><dd class="co">'+escapeHtml(g.co)+'</dd>'
+    +'</dl></div>'
+  ).join("");
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+save(true);
+})();
+</script>
+
+<script>
+(function(){
+ var bars=document.querySelectorAll('.swbar');
+ bars.forEach(function(bar){
+   var d=bar.querySelector('.swd'),b=bar.querySelector('.swb'),r=bar.querySelector('.swr');
+   var el=0,tick=null,run=false;
+   function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+   function render(){d.textContent=fmt(el);}
+   function stop(){run=false;b.textContent='Start';if(tick){clearInterval(tick);tick=null;}}
+   function start(){if(run){stop();return;}run=true;b.textContent='Pause';tick=setInterval(function(){el++;render();},1000);}
+   b.addEventListener('click',start);
+   r.addEventListener('click',function(){stop();el=0;render();});
+   render();
+ });
+})();
+</script>
+</body>
+</html>
