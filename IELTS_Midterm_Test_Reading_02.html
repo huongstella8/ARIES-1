@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Midterm Test – Reading 02</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f0f4f8;overflow:hidden}
+#loginScreen{position:fixed;inset:0;background:linear-gradient(145deg,#001a52 0%,#003fa3 60%,#005fc7 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-card{background:#fff;border-radius:16px;padding:44px 40px 36px;width:100%;max-width:460px;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.login-title{font-size:20px;font-weight:800;color:#002d72;text-align:center;margin-bottom:4px}
+.login-sub{font-size:13px;color:#888;text-align:center;margin-bottom:16px}
+.login-card label{display:block;font-size:11px;font-weight:700;color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.login-card input{width:100%;padding:13px 15px;border:2px solid #dde2ea;border-radius:9px;font-size:15px;margin-bottom:18px;font-family:inherit;color:#222;outline:none}
+.login-card input:focus{border-color:#0057b7;box-shadow:0 0 0 3px rgba(0,87,183,.12)}
+.btn-start{width:100%;padding:15px;background:#002d72;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:800;cursor:pointer;letter-spacing:1.5px;text-transform:uppercase}
+.btn-start:hover{background:#0057b7}
+.login-note{font-size:12px;color:#bbb;text-align:center;margin-top:16px;line-height:1.6}
+.err{color:#dc3545;font-size:12px;margin-top:-12px;margin-bottom:10px;display:none}
+#examScreen{display:none;flex-direction:column;height:100vh}
+.sticky-top{position:sticky;top:0;z-index:100}
+.top-bar{background:#001840;color:#fff;padding:0 22px;display:flex;align-items:center;justify-content:space-between;height:58px;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.top-bar .logo{font-size:16px;font-weight:900;letter-spacing:1px}
+.top-bar .sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.timer-label{font-size:10px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px}
+#timerDisplay{font-size:26px;font-weight:900;font-family:monospace;letter-spacing:3px;color:#fff}
+#timerDisplay.warn{color:#ffd700}
+#timerDisplay.danger{color:#ff4444;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.btn-submit{background:rgba(255,255,255,.18);color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.3);padding:10px 22px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer}
+.btn-submit:hover{background:rgba(255,255,255,.28);color:#fff}
+.tabs-nav{background:#00264d;display:flex;align-items:flex-end;padding:0 22px;height:46px;gap:4px}
+.tab-btn{background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);border:none;padding:7px 18px;border-radius:6px 6px 0 0;font-size:12px;font-weight:700;cursor:pointer;height:38px;display:inline-flex;align-items:center;gap:7px}
+.tab-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+.tab-btn.active{background:#fff;color:#001840}
+.tab-btn.complete{color:#8ef5a0}
+.student-bar{margin-left:auto;align-self:center;color:rgba(255,255,255,.55);font-size:11px}
+.passage-wrap{display:flex;flex:1;overflow:hidden;height:calc(100vh - 104px)}
+.left-panel{flex:0 0 55%;max-width:55%;border-right:3px solid #d4dde8;overflow-y:auto;padding:26px 30px;background:#fff;font-size:14.5px;line-height:1.85;color:#1a1a1a}
+.right-panel{flex:0 0 45%;max-width:45%;overflow-y:auto;padding:22px 20px;background:#f5f7fa}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:#b0c4de;border-radius:3px}
+.p-label{font-size:11px;font-weight:800;color:#0055a4;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.p-instruction{font-size:12.5px;font-style:italic;color:#555;background:#f0f5ff;border-left:3px solid #0055a4;padding:9px 13px;border-radius:0 5px 5px 0;margin-bottom:18px;line-height:1.5}
+.p-title{font-size:21px;font-weight:900;color:#001840;text-align:center;margin-bottom:14px}
+.p-text p{margin-bottom:13px}
+.p-text .para-id{font-weight:900;color:#0055a4;margin-right:8px;font-size:14px}
+.q-block{margin-bottom:26px}
+.q-head{background:#001840;color:#fff;padding:10px 15px;border-radius:7px;margin-bottom:12px}
+.q-head h3{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.q-head .q-inst{font-size:12.5px;color:rgba(255,255,255,.78);margin-top:4px;font-style:italic;line-height:1.4}
+.q-note{font-size:13px;font-style:italic;color:#555;background:#fff;border-left:3px solid #0055a4;padding:8px 12px;border-radius:0 5px 5px 0;margin-bottom:12px;line-height:1.5}
+.q-note strong{color:#001840}
+hr.divider{border:none;border-top:2px dashed #d4dde8;margin:20px 0}
+.tfng-item,.yng-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#fff;border-radius:7px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.tfng-qn,.yng-qn{font-weight:800;color:#0055a4;min-width:22px;font-size:15px;padding-top:1px}
+.tfng-txt,.yng-txt{flex:1;font-size:14px;line-height:1.5}
+.tfng-opts,.yng-opts{display:flex;gap:5px;flex-shrink:0}
+.tfng-btn,.yng-btn{padding:5px 8px;border:2px solid #dde3ed;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;background:#fff;white-space:nowrap}
+.tfng-btn:hover,.yng-btn:hover{border-color:#0055a4;color:#0055a4}
+.tfng-btn.sel,.yng-btn.sel{background:#001840;color:#fff;border-color:#001840}
+.match-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:#fff;border-radius:7px;margin-bottom:7px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.match-qn{font-weight:800;color:#0055a4;min-width:24px;font-size:15px;padding-top:2px}
+.match-txt{flex:1;font-size:14px;line-height:1.5}
+.match-sel{border:2px solid #dde3ed;border-radius:5px;padding:5px 8px;font-size:14px;font-weight:700;color:#001840;cursor:pointer;outline:none;min-width:64px}
+.match-sel:focus{border-color:#0055a4}
+.q-n{font-weight:800;color:#0055a4;margin-right:4px}
+.ans-input{border:none;border-bottom:2px solid #0055a4;background:transparent;font-size:14px;width:150px;padding:2px 4px;color:#001840;outline:none;font-family:inherit}
+.ans-input:focus{border-bottom-color:#e8380d}
+.flow-box{background:#fff;border-radius:7px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:14px 16px;margin-bottom:12px}
+.flow-step{border:2px solid #dde3ed;border-radius:7px;padding:9px 12px;font-size:13.5px;line-height:1.6;background:#f8fbff}
+.flow-arrow{text-align:center;color:#0055a4;font-size:17px;margin:4px 0}
+.summary-box{font-size:14px;line-height:2.1;background:#fff;padding:14px 16px;border-radius:7px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:12px}
+.summary-box p{margin-bottom:9px;line-height:2.1}
+.headings-box,.endings-box,.word-bank{background:#fff;border:2px solid #dde3ed;border-radius:7px;padding:11px 13px;margin-bottom:12px}
+.hb-title{font-size:12px;font-weight:800;color:#0055a4;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.head-item,.end-item{display:flex;gap:8px;padding:4px 0;font-size:13px;line-height:1.5;border-bottom:1px solid #f0f4f8}
+.head-item:last-child,.end-item:last-child{border-bottom:none}
+.head-num,.end-letter{font-weight:800;color:#0055a4;flex-shrink:0;min-width:26px}
+.mc-q{padding:10px 13px;background:#fff;border-radius:7px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.mc-q-text{font-size:14px;font-weight:700;color:#222;line-height:1.5;margin-bottom:10px}
+.mc-q-num{color:#0055a4;margin-right:6px}
+.mc-opt{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border:2px solid #e8edf4;border-radius:5px;margin-bottom:5px;cursor:pointer;font-size:14px;line-height:1.4}
+.mc-opt:hover{border-color:#0055a4}
+.mc-opt.sel{border-color:#001840;background:#f0f4ff}
+.mc-opt input{margin-top:2px;flex-shrink:0}
+.mc-letter{font-weight:800;color:#0055a4;margin-right:5px}
+.chk-group{background:#fff;border-radius:7px;padding:4px 6px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:8px}
+.chk-opt{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:2px solid #e8edf4;border-radius:5px;margin-bottom:5px;cursor:pointer;font-size:14px;line-height:1.4}
+.chk-opt:hover{border-color:#0055a4}
+.chk-opt.sel{border-color:#001840;background:#f0f4ff}
+.chk-opt input{margin-top:2px;flex-shrink:0}
+.q-hint{font-size:12px;color:#777;margin:2px 2px 10px}
+.passage-nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0 6px;margin-top:8px;border-top:2px dashed #d4dde8}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:2px solid #001840;background:#fff;color:#001840}
+.nav-btn:hover{background:#001840;color:#fff}
+.nav-btn.next{background:#001840;color:#fff}
+.nav-btn.next:hover{background:#0055a4;border-color:#0055a4}
+.nav-spacer{flex:1}
+mark.hl-yellow{background:#fff176;border-radius:2px;cursor:pointer}
+mark.hl-green{background:#b9f6ca;border-radius:2px;cursor:pointer}
+mark.hl-pink{background:#fce4ec;border-radius:2px;cursor:pointer}
+mark.hl-blue{background:#bbdefb;border-radius:2px;cursor:pointer}
+mark[class^="hl-"]:hover{filter:brightness(.88)}
+.hl-toolbar{position:fixed;background:#1a1a2e;border-radius:9px;padding:7px 10px;display:none;flex-direction:row;gap:7px;align-items:center;z-index:9000;box-shadow:0 6px 24px rgba(0,0,0,.45);user-select:none}
+.hl-toolbar::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#1a1a2e;border-bottom:none}
+.hl-color{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer}
+.hl-color:hover{transform:scale(1.25);border-color:#fff}
+.hl-sep{width:1px;height:18px;background:rgba(255,255,255,.2)}
+.hl-label{font-size:10px;color:rgba(255,255,255,.55);white-space:nowrap}
+.hl-erase-btn{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.3);color:#fff;border-radius:5px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer}
+.hl-erase-btn:hover{background:rgba(255,80,80,.4)}
+.hl-hint{background:#fffde7;border:1.5px solid #f9c333;border-radius:7px;padding:7px 12px;font-size:12px;color:#555;margin-bottom:14px;display:flex;align-items:center;gap:8px;line-height:1.5}
+.hl-swatches{display:inline-flex;gap:4px}
+.hl-swatch{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(0,0,0,.12)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#001840;color:#fff;padding:12px 26px;border-radius:8px;font-size:13px;z-index:9998;display:none}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,32,.6);z-index:9997;align-items:center;justify-content:center}
+.modal-card{background:#fff;border-radius:12px;padding:32px;width:380px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.modal-card h2{font-size:20px;color:#001840;margin-bottom:10px}
+.modal-card p{font-size:13px;color:#666;margin-bottom:22px;line-height:1.5}
+.modal-btns{display:flex;gap:10px;justify-content:center}
+.modal-btns button{padding:10px 24px;border-radius:7px;font-size:14px;font-weight:800;cursor:pointer;border:none}
+.btn-cancel{background:#e8edf4;color:#444}
+.btn-confirm{background:#001840;color:#fff}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div class="hl-toolbar" id="hlToolbar">
+  <span class="hl-label">Highlight:</span>
+  <div class="hl-color" style="background:#fff176" onclick="applyHL('yellow')"></div>
+  <div class="hl-color" style="background:#b9f6ca" onclick="applyHL('green')"></div>
+  <div class="hl-color" style="background:#fce4ec" onclick="applyHL('pink')"></div>
+  <div class="hl-color" style="background:#bbdefb" onclick="applyHL('blue')"></div>
+  <div class="hl-sep"></div>
+  <button class="hl-erase-btn" onclick="eraseHL()">✕ Clear</button>
+</div>
+
+<!-- DRAFT MODAL -->
+<div id="modalDraft" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:36px 32px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.25)">
+    <div style="font-size:50px;margin-bottom:12px">💾</div>
+    <h3 style="margin:0 0 10px;font-size:20px;color:#001840">Unsaved answers found!</h3>
+    <p style="color:#444;font-size:14.5px;line-height:1.6;margin:0 0 22px">Found an unfinished attempt by <strong id="draftName"></strong> saved at <strong id="draftTime"></strong>.<br>Continue from where you left off?</p>
+    <div style="display:flex;gap:12px;justify-content:center">
+      <button onclick="discardReadingDraft()" style="padding:10px 22px;border:2px solid #bbb;border-radius:8px;background:#fff;color:#555;font-size:14px;cursor:pointer;font-weight:600">Start Fresh</button>
+      <button onclick="restoreReadingDraft()" style="padding:10px 22px;border:none;border-radius:8px;background:#001840;color:#fff;font-size:14px;cursor:pointer;font-weight:700">Restore Answers</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal">
+  <div class="modal-card"><h2>Submit Test?</h2><p>You still have <strong id="timeLeft"></strong> remaining. Are you sure you want to submit now?</p>
+  <div class="modal-btns"><button class="btn-cancel" onclick="closeConfirm()">Continue</button><button class="btn-confirm" onclick="submitTest()">Submit Now</button></div></div>
+</div>
+<div id="timeupModal" class="modal">
+  <div class="modal-card"><div style="font-size:48px;margin-bottom:10px">⏰</div><h2>Time's Up!</h2><p>Your 60 minutes have ended. Your test will be submitted automatically.</p>
+  <button class="btn-confirm" style="width:100%;padding:13px" onclick="submitTest()">View My Results</button></div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-title">IELTS MIDTERM TEST · READING</div>
+    <div class="login-sub">Huong Stella Paradigm</div>
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" placeholder="Enter your full name" autocomplete="off" spellcheck="false">
+    <div class="err" id="nameErr">Please enter your full name.</div>
+    <label for="dob">Date of Birth</label>
+    <input type="date" id="dob">
+    <div class="err" id="dobErr">Please enter your date of birth.</div>
+    <button class="btn-start" onclick="startExam()">Begin Test ›</button>
+    <p class="login-note">Reading Module · 3 Passages · 40 Questions · 60 minutes<br>Results are sent to your teacher automatically</p>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div id="examScreen">
+  <div class="sticky-top">
+    <div class="top-bar">
+      <div><div class="logo">IELTS MIDTERM TEST · READING 02</div><div class="sub">Huong Stella Paradigm</div></div>
+      <div style="text-align:center"><div class="timer-label">TIME REMAINING</div><div id="timerDisplay">60:00</div></div>
+      <button class="btn-submit" onclick="confirmSubmit()">SUBMIT TEST ✓</button>
+    </div>
+    <div class="tabs-nav">
+      <button class="tab-btn active" id="tab1btn" onclick="switchTab(1)">Passage 1 · Sport Science</button>
+      <button class="tab-btn" id="tab2btn" onclick="switchTab(2)">Passage 2 · Micro-wind Turbines</button>
+      <button class="tab-btn" id="tab3btn" onclick="switchTab(3)">Passage 3 · Akrotiri Pottery</button>
+      <div class="student-bar" id="studentBar"></div>
+    </div>
+  </div>
+
+  <!-- ===== PASSAGE 1 ===== -->
+  <div class="passage-wrap" id="pw1">
+    <div class="left-panel">
+      <div class="hl-hint">🖊 <strong>Highlight:</strong> select text → choose a colour. Click a highlight to remove.
+        <span class="hl-swatches"><span class="hl-swatch" style="background:#fff176"></span><span class="hl-swatch" style="background:#b9f6ca"></span><span class="hl-swatch" style="background:#fce4ec"></span><span class="hl-swatch" style="background:#bbdefb"></span></span>
+      </div>
+      <div class="p-label">Reading Passage 1</div>
+      <div class="p-instruction">You should spend about 20 minutes on <strong>Questions 1–13</strong>, which are based on Reading Passage 1 below.</div>
+      <div class="p-title">Sport Science in Australia</div>
+      <div class="p-text">
+        <p>The professional career paths available to graduates from courses relating to human movement and sport science are as diverse as the graduate's imagination. However, undergraduate courses with this type of content, in Australia as well as in most other Western countries, were originally designed as preparation programmes for Physical Education (PE) teachers.</p>
+        <p>The initial programmes commenced soon after the conclusion of World War II in the mid-1940s. One of the primary motives for these initiatives was the fact that, during the war effort, so many of the men who were assessed for military duty had been declared unfit. The government saw the solution in the providing of Physical Education programmes in schools, delivered by better prepared and specifically educated PE teachers.</p>
+        <p>Later, in the 1970s and early 1980s, the surplus of Australians graduating with a PE degree obliged institutions delivering this qualification to identify new employment opportunities for their graduates, resulting in the first appearance of degrees catering for recreation professionals. In many instances, this diversity of programme delivery merely led to degrees, delivered by physical educators, as a side-line activity to the production of PE teachers.</p>
+        <p>Whilst the need to produce Physical Education teachers remains a significant social need, and most developed societies demand the availability of quality leisure programmes for their citizens, the career options of graduates within this domain are still developing. The two most evident growth domains are in the area of the professional delivery of sport, and the role of a physical lifestyle for community health.</p>
+        <p>The sports industry is developing at an unprecedented rate of growth. From a business perspective, sport is now seen as an area with the potential for high returns. It is quite significant that the businessman Rupert Murdoch broadened his business base from media to sport, having purchased an American baseball team and an Australian Rugby League competition, as well as seeking opportunities to invest in an English football club. No business person of such international stature would see fit to invest in sport unless he was satisfied that this was a sound business venture with ideal revenue-generating opportunities.</p>
+        <p>These developments have confirmed sport as a business with professional management structures, marketing processes, and development strategies in place. They have indicated new and developing career paths for graduates of human movement science, sport science, exercise science and related degrees. Graduates can now visualise career paths extending into such diverse domains as sport management, sport marketing, event and facility management, government policy development pertaining to sport, sport journalism, sport psychology, and sport or athletic coaching.</p>
+        <p>Business leaders will only continue their enthusiasm for sport if they receive returns for their money. Such returns will only be forthcoming if astute, enthusiastic and properly educated professionals are delivering the programs that earn appropriate financial returns. The successful universities of the 21st century will be those that have responded to this challenge by delivering such degrees.</p>
+        <p>A second professional growth area for this group of graduates is associated with community health. The increasing demand for government expenditure within health budgets is reaching the stage where most governments are simply unable to function in a manner that is satisfying their constituents. One of the primary reasons for this problem is the unhelpful emphasis on treatment in medical care programmes. Governments have traditionally given their senior health official the title of 'Minister for Health', when in fact this officer has functioned as 'Minister for Sickness and the Construction of Hospitals'. Government focus simply has to change. If the change is not brought about for philosophical reasons, it will occur naturally, because insufficient funding will be available to address the ever-increasing costs of medical support.</p>
+        <p>Graduates of human movement, exercise science and sport science have the potential to become major players in this shift in policy focus. It is these graduates who already have the skills, knowledge and understanding to initiate community health education programmes to reduce cardio-vascular disease, to reduce medical dependency upon diabetes, to improve workplace health leading to increased productivity, to initiate and promote programmes of activity for the elderly that reduce medical dependency, and to maintain an active lifestyle for the unemployed and disadvantaged groups in society. This is the graduate that governments will be calling upon to shift the community focus from medical dependency to healthy lifestyles in the decades ahead.</p>
+        <p>The career paths of these graduates are developing at a pace that is not evident in other professions. The contribution that these graduates can make to society, and the recognition of this contribution is at an unprecedented high, and all indications are that it will continue to grow.</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 1–5</h3><div class="q-inst">Complete the flow chart below. Choose NO MORE THAN TWO WORDS from the passage for each answer.</div></div>
+        <div class="q-note" style="text-align:center;font-weight:700;color:#001840">The history of sports and physical science in Australia</div>
+        <div class="flow-box">
+          <div class="flow-step">A lot of people identified as being <span class="q-n">1</span><input type="text" class="ans-input" id="q1" placeholder="......" oninput="updateBadge()" spellcheck="false"></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">Introduction of PE to <span class="q-n">2</span><input type="text" class="ans-input" id="q2" placeholder="......" oninput="updateBadge()" spellcheck="false"></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">Special training programmes for <span class="q-n">3</span><input type="text" class="ans-input" id="q3" placeholder="......" oninput="updateBadge()" spellcheck="false"></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step"><span class="q-n">4</span><input type="text" class="ans-input" id="q4" placeholder="......" oninput="updateBadge()" spellcheck="false"> of PE graduates</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">Identification of alternative <span class="q-n">5</span><input type="text" class="ans-input" id="q5" placeholder="......" oninput="updateBadge()" spellcheck="false"></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">Diversification of course delivery</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 6–13</h3><div class="q-inst">Do the following statements agree with the information given in Reading Passage 1?</div></div>
+        <div class="q-note"><strong>TRUE</strong> – if the statement agrees with the information<br><strong>FALSE</strong> – if the statement contradicts the information<br><strong>NOT GIVEN</strong> – if there is no information on this</div>
+        <div class="tfng-item" id="row6"><div class="tfng-qn">6</div><div class="tfng-txt">Sport is generally regarded as a profitable area for investment.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(6,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(6,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(6,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row7"><div class="tfng-qn">7</div><div class="tfng-txt">Rupert Murdoch has a personal as well as a business interest in sport.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(7,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(7,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(7,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row8"><div class="tfng-qn">8</div><div class="tfng-txt">The range of career opportunities available to sport graduates is increasing.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(8,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(8,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(8,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row9"><div class="tfng-qn">9</div><div class="tfng-txt">The interests of business and the interests of universities are linked.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(9,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(9,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(9,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row10"><div class="tfng-qn">10</div><div class="tfng-txt">Governments have been focusing too much attention on preventative medicine.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(10,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(10,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(10,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row11"><div class="tfng-qn">11</div><div class="tfng-txt">It is inevitable that government priorities for health spending will change.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(11,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(11,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(11,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row12"><div class="tfng-qn">12</div><div class="tfng-txt">Existing degree courses are unsuitable for careers in community health.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(12,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(12,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(12,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="tfng-item" id="row13"><div class="tfng-qn">13</div><div class="tfng-txt">Funding for sport science and related degrees has been increased considerably.</div><div class="tfng-opts"><button class="tfng-btn" data-val="TRUE" onclick="setTFNG(13,'TRUE',this)">TRUE</button><button class="tfng-btn" data-val="FALSE" onclick="setTFNG(13,'FALSE',this)">FALSE</button><button class="tfng-btn" data-val="NOT GIVEN" onclick="setTFNG(13,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="passage-nav"><span class="nav-spacer"></span><button class="nav-btn next" onclick="switchTab(2)">Passage 2 · Micro-wind Turbines &nbsp;→</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PASSAGE 2 ===== -->
+  <div class="passage-wrap" id="pw2" style="display:none">
+    <div class="left-panel">
+      <div class="hl-hint">🖊 <strong>Highlight:</strong> select text → choose a colour. Click a highlight to remove.
+        <span class="hl-swatches"><span class="hl-swatch" style="background:#fff176"></span><span class="hl-swatch" style="background:#b9f6ca"></span><span class="hl-swatch" style="background:#fce4ec"></span><span class="hl-swatch" style="background:#bbdefb"></span></span>
+      </div>
+      <div class="p-label">Reading Passage 2</div>
+      <div class="p-instruction">You should spend about 20 minutes on <strong>Questions 14–26</strong>, which are based on Reading Passage 2 below.</div>
+      <div class="p-title">An assessment of micro-wind turbines</div>
+      <div class="p-text">
+        <p><span class="para-id">A</span>In terms of micro-renewable energy sources suitable for private use, a 15-kilowatt (kW) turbine is at the biggest end of the spectrum. With a nine metre diameter and a pole as high as a four-storey house, this is the most efficient form of wind micro-turbine, and the sort of thing you could install only if you had plenty of space and money. According to one estimate, a 15-kW micro-turbine (that's one with the maximum output), costing £41,000 to purchase and a further £9,000 to install, is capable of delivering 25,000 kilowatt-hours (kWh) of electricity each year if placed on a suitably windy site.</p>
+        <p><span class="para-id">B</span>I don't know of any credible studies of the greenhouse gas emissions involved in producing and installing turbines, so my estimates here are going to be even more broad than usual. However, it is worth trying. If turbine manufacture is about as carbon intensive per pound sterling of product as other generators and electrical motors, which seems a reasonable assumption, the carbon intensity of manufacture will be around 640 kilograms (kg) per £1,000 of value. Installation is probably about as carbon intensive as typical construction, at around 380 kg per £1,000. That makes the carbon footprint (the total amount of greenhouse gases that installing a turbine creates) 30 tonnes.</p>
+        <p><span class="para-id">C</span>The carbon savings from wind-powered electricity generation depend on the carbon intensity of the electricity that you're replacing. Let's assume that your generation replaces the coal-fuelled part of the country's energy mix. In other words, if you live in the UK, let's say that rather than replacing typical grid electricity, which comes from a mix of coal, gas, oil and renewable energy sources, the effect of your turbine is to reduce the use of coal-fired power stations. That's reasonable, because coal is the least preferable source in the electricity mix. In this case the carbon saving is roughly one kilogram per kWh, so you save 25 tonnes per year and pay back the embodied carbon in just 14 months - a great start.</p>
+        <p><span class="para-id">D</span>The UK government has recently introduced a subsidy for renewable energy that pays individual producers 24p per energy unit on top of all the money they save on their own fuel bill, and on selling surplus electricity back to the grid at approximately 5p per unit. With all this taken into account, individuals would get back £7,250 per year on their investment. That pays back the costs in about six years. It makes good financial sense and, for people who care about the carbon savings for their own sake, it looks like a fantastic move. The carbon investment pays back in just over a year, and every year after that is a 25-tonne carbon saving. (It's important to remember that all these sums rely on a wind turbine having a favourable location.)</p>
+        <p><span class="para-id">E</span>So, at face value, the turbine looks like a great idea environmentally, and a fairly good long-term investment economically for the person installing it. However, there is a crucial perspective missing from the analysis so far. Has the government spent its money wisely? It has invested 24p per unit into each micro-turbine. That works out at a massive £250 per tonne of carbon saved. My calculations tell me that had the government invested its money in offshore wind farms, instead of subsidising smaller domestic turbines, they would have broken even after eight years. In other words, the micro-turbine works out as a good investment for individuals, but only because the government spends, and arguably wastes, so much money subsidising it. Carbon savings are far lower too.</p>
+        <p><span class="para-id">F</span>Nevertheless, although the micro-wind turbine subsidy doesn't look like the very best way of spending government resources on climate change mitigation, we are talking about investing only about 0.075 percent per year of the nation's GDP to get a one percent reduction in carbon emissions, which is a worthwhile benefit. In other words, it could be much better, but it could be worse. In addition, such investment helps to promote and sustain developing technology.</p>
+        <p><span class="para-id">G</span>There is one extra favourable way of looking at the micro-wind turbine, even if it is not the single best way of investing money in cutting carbon. Input-output modelling has told us that it is actually quite difficult to spend money without having a negative carbon impact. So if the subsidy encourages people to spend their money on a carbon-reducing technology such as a wind turbine, rather than on carbon-producing goods like cars, and services such as overseas holidays, then the reductions in emissions will be greater than my simple sums above have suggested.</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 14–20</h3><div class="q-inst">Reading Passage 2 has seven paragraphs, A–G. Choose the correct heading for each paragraph from the list of headings below. Write the correct number, i–ix.</div></div>
+        <div class="headings-box">
+          <div class="hb-title">List of Headings</div>
+          <div class="head-item"><span class="head-num">i</span> A better use for large sums of money.</div>
+          <div class="head-item"><span class="head-num">ii</span> The environmental costs of manufacture and installation.</div>
+          <div class="head-item"><span class="head-num">iii</span> Estimates of the number of micro-turbines in use.</div>
+          <div class="head-item"><span class="head-num">iv</span> The environmental benefits of running a micro-turbine.</div>
+          <div class="head-item"><span class="head-num">v</span> The size and output of the largest type of micro-turbine.</div>
+          <div class="head-item"><span class="head-num">vi</span> A limited case for subsidising micro-turbines.</div>
+          <div class="head-item"><span class="head-num">vii</span> Recent improvements in the design of micro-turbines.</div>
+          <div class="head-item"><span class="head-num">viii</span> An indirect method of reducing carbon emissions.</div>
+          <div class="head-item"><span class="head-num">ix</span> The financial benefits of running a micro-turbine.</div>
+        </div>
+        <div class="match-item"><div class="match-qn">14</div><div class="match-txt">Paragraph A</div><select class="match-sel" id="q14" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+        <div class="match-item"><div class="match-qn">15</div><div class="match-txt">Paragraph B</div><select class="match-sel" id="q15" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+        <div class="match-item"><div class="match-qn">16</div><div class="match-txt">Paragraph C</div><select class="match-sel" id="q16" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+        <div class="match-item"><div class="match-qn">17</div><div class="match-txt">Paragraph D</div><select class="match-sel" id="q17" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+        <div class="match-item"><div class="match-qn">18</div><div class="match-txt">Paragraph E</div><select class="match-sel" id="q18" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+        <div class="match-item"><div class="match-qn">19</div><div class="match-txt">Paragraph F</div><select class="match-sel" id="q19" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+        <div class="match-item"><div class="match-qn">20</div><div class="match-txt">Paragraph G</div><select class="match-sel" id="q20" onchange="updateBadge()"><option value="">—</option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option><option>ix</option></select></div>
+      </div>
+      <hr class="divider">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 21 and 22</h3><div class="q-inst">Choose TWO letters, A–E. Which TWO of these statements are made by the writer of the passage?</div></div>
+        <div class="chk-group" id="group21_22">
+          <label class="chk-opt" id="c21A"><input type="checkbox" value="A" onchange="updateCheck('21_22',this,2)"> <span><span class="mc-letter">A</span> In certain areas, permission is required to install them.</span></label>
+          <label class="chk-opt" id="c21B"><input type="checkbox" value="B" onchange="updateCheck('21_22',this,2)"> <span><span class="mc-letter">B</span> Their exact energy output depends on their position.</span></label>
+          <label class="chk-opt" id="c21C"><input type="checkbox" value="C" onchange="updateCheck('21_22',this,2)"> <span><span class="mc-letter">C</span> They probably take less energy to make than other engines.</span></label>
+          <label class="chk-opt" id="c21D"><input type="checkbox" value="D" onchange="updateCheck('21_22',this,2)"> <span><span class="mc-letter">D</span> The UK government contributes towards their purchase cost.</span></label>
+          <label class="chk-opt" id="c21E"><input type="checkbox" value="E" onchange="updateCheck('21_22',this,2)"> <span><span class="mc-letter">E</span> They can produce more energy than a household needs.</span></label>
+        </div>
+        <div class="q-hint">Select exactly 2 options (Q21 &amp; Q22)</div>
+      </div>
+      <hr class="divider">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 23–26</h3><div class="q-inst">Complete the sentences below. Choose NO MORE THAN THREE WORDS from the passage for each answer.</div></div>
+        <div class="summary-box">
+          <p><span class="q-n">23</span><input type="text" class="ans-input" id="q23" placeholder="........" oninput="updateBadge()" spellcheck="false"> would be a more effective target for government investment than micro-turbines.</p>
+          <p>An indirect benefit of subsidising micro-turbines is the support it provides for <span class="q-n">24</span><input type="text" class="ans-input" id="q24" placeholder="........" oninput="updateBadge()" spellcheck="false">.</p>
+          <p>Most spending has a <span class="q-n">25</span><input type="text" class="ans-input" id="q25" placeholder="........" oninput="updateBadge()" spellcheck="false"> effect on the environment.</p>
+          <p>If people buy a micro-turbine, they have less money to spend on things like foreign holidays and <span class="q-n">26</span><input type="text" class="ans-input" id="q26" placeholder="........" oninput="updateBadge()" spellcheck="false">.</p>
+        </div>
+        <div class="passage-nav"><button class="nav-btn" onclick="switchTab(1)">← Passage 1</button><button class="nav-btn next" onclick="switchTab(3)">Passage 3 · Akrotiri Pottery &nbsp;→</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PASSAGE 3 ===== -->
+  <div class="passage-wrap" id="pw3" style="display:none">
+    <div class="left-panel">
+      <div class="hl-hint">🖊 <strong>Highlight:</strong> select text → choose a colour. Click a highlight to remove.
+        <span class="hl-swatches"><span class="hl-swatch" style="background:#fff176"></span><span class="hl-swatch" style="background:#b9f6ca"></span><span class="hl-swatch" style="background:#fce4ec"></span><span class="hl-swatch" style="background:#bbdefb"></span></span>
+      </div>
+      <div class="p-label">Reading Passage 3</div>
+      <div class="p-instruction">You should spend about 20 minutes on <strong>Questions 27–40</strong>, which are based on Reading Passage 3 below.</div>
+      <div class="p-title">Pottery production in ancient Akrotiri</div>
+      <div class="p-text">
+        <p>Excavations at the site of prehistoric Akrotiri, on the coast of the Aegean Sea, have revealed much about the technical aspects of pottery manufacture, indisputably one of the basic industries of this Greek city. However, considerably less is known about the socio-economic context and the way production was organised.</p>
+        <p>The bulk of pottery found at Akrotiri is locally made, and dates from the late fifteenth century BC. It clearly fulfilled a vast range of the settlement's requirements: more than fifty different types of pots can be distinguished. The pottery found includes a wide variety of functional types like storage jars, smaller containers, pouring vessels, cooking pots, drinking vessels and so on, which all relate to specific activities and which would have been made and distributed with those activities in mind. Given the large number of shapes produced and the relatively high degree of standardisation, it has generally been assumed that most, if not all, of Akrotiri pottery was produced by specialised craftsmen in a non-domestic context. Unfortunately neither the potters' workshops nor kilns have been found within the excavated area. The reason may be that the ceramic workshops were located on the periphery of the site, which has not yet been excavated. In any event, the ubiquity of the pottery, and the consistent repetition of the same types in different sizes, suggests production on an industrial scale.</p>
+        <p>The Akrotirian potters seem to have responded to pressures beyond their households, namely to the increasing complexity of regional distribution and exchange systems. We can imagine them as full time craftsmen working permanently in a high production-rate craft such as pottery manufacture, and supporting themselves entirely from the proceeds of their craft. In view of the above, one can begin to speak in terms of mass-produced pottery and the existence of organised workshops of craftsmen during the period 1550-1500 BC.</p>
+        <p>Yet, how pottery production was organised at Akrotiri remains an open question, as there is no real documentary evidence. Our entire knowledge comes from the ceramic material itself, and the tentative conclusions which can be drawn from it. The invention of units of quantity and of a numerical system to count them was of capital importance for an exchange-geared society such as that of Akrotiri. In spite of the absence of any written records, the archaeological evidence reveals that concepts of measurements, both of weight and number, had been formulated. Standard measures may already have been in operation, such as those evidenced by a graduated series of lead weights made in disc form found at the site. The existence of units of capacity in Late Bronze Age times is also evidenced, by the notation of units of a liquid measure for wine on excavated containers.</p>
+        <p>It must be recognised that the function of pottery vessels plays a very important role in determining their characteristics. The intended function affects the choice of clay, the production technique, and the shape and the size of the pots. For example, large storage jars (pithoi) would be needed to store commodities, whereas smaller containers would be used for transport. In fact, the length of a man's arm limits the size of a smaller pot to a capacity of about twenty litres; that is also the maximum a man can comfortably carry.</p>
+        <p>The various sizes of container would thus represent standard quantities of a commodity, which is a fundamental element in the function of exchange. Akrotirian merchants handling a commodity such as wine would have been able to determine easily the amount of wine they were transporting from the number of containers they carried in their ships, since the capacity of each container was known to be 14-18 litres. (We could draw a parallel here with the current practice in Greece of selling oil in 17 kilogram tins.)</p>
+        <p>We may therefore assume that the shape, capacity, and, sometimes decoration of vessels are indicative of the commodity contained by them. Since individual transactions would normally involve different quantities of a given commodity, a range of 'standardised' types of vessel would be needed to meet traders' requirements.</p>
+        <p>In trying to reconstruct systems of capacity by measuring the volume of excavated pottery, a rather generous range of tolerances must be allowed. It seems possible that the potters of that time had specific sizes of vessel in mind, and tried to reproduce them using a specific type and amount of clay. However, it would be quite difficult for them to achieve the exact size required every time, without any mechanical means of regulating symmetry and wall thickness, and some potters would be more skilled than others. In addition, variations in the repetition of types and size may also occur because of unforeseen circumstances during the throwing process. For instance, instead of destroying the entire pot if the clay in the rim contained a piece of grit, a potter might produce a smaller pot by simply cutting off the rim. Even where there is no noticeable external difference between pots meant to contain the same quantity of a commodity, differences in their capacity can actually reach one or two litres. In one case the deviation from the required size appears to be as much as 10-20 percent.</p>
+        <p>The establishment of regular trade routes within the Aegean led to increased movement of goods; consequently a regular exchange of local, luxury and surplus goods, including metals, would have become feasible as a result of the advances in transport technology. The increased demand for standardised exchanges, inextricably linked to commercial transactions, might have been one of the main factors which led to the standardisation of pottery production. Thus, the whole network of ceramic production and exchange would have depended on specific regional economic conditions, and would reflect the socio-economic structure of prehistoric Akrotiri.</p>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 27–28</h3><div class="q-inst">Choose the correct letter, A, B, C or D.</div></div>
+        <div class="mc-q">
+          <div class="mc-q-text"><span class="mc-q-num">27</span> What does the writer say about items of pottery excavated at Akrotiri?</div>
+          <label class="mc-opt" id="q27A"><input type="radio" name="q27" value="A" onchange="setMC(27,'A')"> <span><span class="mc-letter">A</span> There was very little duplication.</span></label>
+          <label class="mc-opt" id="q27B"><input type="radio" name="q27" value="B" onchange="setMC(27,'B')"> <span><span class="mc-letter">B</span> They would have met a big variety of needs.</span></label>
+          <label class="mc-opt" id="q27C"><input type="radio" name="q27" value="C" onchange="setMC(27,'C')"> <span><span class="mc-letter">C</span> Most of them had been imported from other places.</span></label>
+          <label class="mc-opt" id="q27D"><input type="radio" name="q27" value="D" onchange="setMC(27,'D')"> <span><span class="mc-letter">D</span> The intended purpose of each piece was unclear.</span></label>
+        </div>
+        <div class="mc-q" style="margin-top:10px">
+          <div class="mc-q-text"><span class="mc-q-num">28</span> The assumption that pottery from Akrotiri was produced by specialists is partly based on</div>
+          <label class="mc-opt" id="q28A"><input type="radio" name="q28" value="A" onchange="setMC(28,'A')"> <span><span class="mc-letter">A</span> the discovery of kilns.</span></label>
+          <label class="mc-opt" id="q28B"><input type="radio" name="q28" value="B" onchange="setMC(28,'B')"> <span><span class="mc-letter">B</span> the central location of workshops.</span></label>
+          <label class="mc-opt" id="q28C"><input type="radio" name="q28" value="C" onchange="setMC(28,'C')"> <span><span class="mc-letter">C</span> the sophistication of decorative patterns.</span></label>
+          <label class="mc-opt" id="q28D"><input type="radio" name="q28" value="D" onchange="setMC(28,'D')"> <span><span class="mc-letter">D</span> the wide range of shapes represented.</span></label>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 29–32</h3><div class="q-inst">Complete each sentence with the correct ending, A–F, below. Write the correct letter, A–F.</div></div>
+        <div class="endings-box">
+          <div class="hb-title">Endings</div>
+          <div class="end-item"><span class="end-letter">A</span> the discovery of a collection of metal discs.</div>
+          <div class="end-item"><span class="end-letter">B</span> the size and type of the sailing ships in use.</div>
+          <div class="end-item"><span class="end-letter">C</span> variations in the exact shape and thickness of similar containers.</div>
+          <div class="end-item"><span class="end-letter">D</span> the physical characteristics of workmen.</div>
+          <div class="end-item"><span class="end-letter">E</span> marks found on wine containers.</div>
+          <div class="end-item"><span class="end-letter">F</span> the variety of commodities for which they would have been used.</div>
+        </div>
+        <div class="match-item"><div class="match-qn">29</div><div class="match-txt">The assumption that standard units of weight were in use could be based on</div><select class="match-sel" id="q29" onchange="updateBadge()"><option value="">—</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+        <div class="match-item"><div class="match-qn">30</div><div class="match-txt">Evidence of the use of standard units of volume is provided by</div><select class="match-sel" id="q30" onchange="updateBadge()"><option value="">—</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+        <div class="match-item"><div class="match-qn">31</div><div class="match-txt">The size of certain types of containers would have been restricted by</div><select class="match-sel" id="q31" onchange="updateBadge()"><option value="">—</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+        <div class="match-item"><div class="match-qn">32</div><div class="match-txt">Attempts to identify the intended capacity of containers are complicated by</div><select class="match-sel" id="q32" onchange="updateBadge()"><option value="">—</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></div>
+      </div>
+      <hr class="divider">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 33–38</h3><div class="q-inst">Do the following statements agree with the views of the writer in Reading Passage 3?</div></div>
+        <div class="q-note"><strong>YES</strong> – if the statement agrees with the claims of the writer<br><strong>NO</strong> – if the statement contradicts the claims of the writer<br><strong>NOT GIVEN</strong> – if it is impossible to say what the writer thinks about this</div>
+        <div class="yng-item" id="row33"><div class="yng-qn">33</div><div class="yng-txt">There are plans to excavate new areas of the archaeological site in the near future.</div><div class="yng-opts"><button class="yng-btn" data-val="YES" onclick="setYNG(33,'YES',this)">YES</button><button class="yng-btn" data-val="NO" onclick="setYNG(33,'NO',this)">NO</button><button class="yng-btn" data-val="NOT GIVEN" onclick="setYNG(33,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="yng-item" id="row34"><div class="yng-qn">34</div><div class="yng-txt">Some of the evidence concerning pottery production in ancient Akrotiri comes from written records.</div><div class="yng-opts"><button class="yng-btn" data-val="YES" onclick="setYNG(34,'YES',this)">YES</button><button class="yng-btn" data-val="NO" onclick="setYNG(34,'NO',this)">NO</button><button class="yng-btn" data-val="NOT GIVEN" onclick="setYNG(34,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="yng-item" id="row35"><div class="yng-qn">35</div><div class="yng-txt">Pots for transporting liquids would have held no more than about 20 litres.</div><div class="yng-opts"><button class="yng-btn" data-val="YES" onclick="setYNG(35,'YES',this)">YES</button><button class="yng-btn" data-val="NO" onclick="setYNG(35,'NO',this)">NO</button><button class="yng-btn" data-val="NOT GIVEN" onclick="setYNG(35,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="yng-item" id="row36"><div class="yng-qn">36</div><div class="yng-txt">It would have been hard for merchants to calculate how much wine was on their ships.</div><div class="yng-opts"><button class="yng-btn" data-val="YES" onclick="setYNG(36,'YES',this)">YES</button><button class="yng-btn" data-val="NO" onclick="setYNG(36,'NO',this)">NO</button><button class="yng-btn" data-val="NOT GIVEN" onclick="setYNG(36,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="yng-item" id="row37"><div class="yng-qn">37</div><div class="yng-txt">The capacity of containers intended to hold the same amounts differed by up to 20 percent.</div><div class="yng-opts"><button class="yng-btn" data-val="YES" onclick="setYNG(37,'YES',this)">YES</button><button class="yng-btn" data-val="NO" onclick="setYNG(37,'NO',this)">NO</button><button class="yng-btn" data-val="NOT GIVEN" onclick="setYNG(37,'NOT GIVEN',this)">NG</button></div></div>
+        <div class="yng-item" id="row38"><div class="yng-qn">38</div><div class="yng-txt">Regular trading of goods around the Aegean would have led to the general standardisation of quantities.</div><div class="yng-opts"><button class="yng-btn" data-val="YES" onclick="setYNG(38,'YES',this)">YES</button><button class="yng-btn" data-val="NO" onclick="setYNG(38,'NO',this)">NO</button><button class="yng-btn" data-val="NOT GIVEN" onclick="setYNG(38,'NOT GIVEN',this)">NG</button></div></div>
+      </div>
+      <hr class="divider">
+      <div class="q-block">
+        <div class="q-head"><h3>Questions 39–40</h3><div class="q-inst">Choose the correct letter, A, B, C or D.</div></div>
+        <div class="mc-q">
+          <div class="mc-q-text"><span class="mc-q-num">39</span> What does the writer say about the standardisation of container sizes?</div>
+          <label class="mc-opt" id="q39A"><input type="radio" name="q39" value="A" onchange="setMC(39,'A')"> <span><span class="mc-letter">A</span> Containers which looked the same from the outside often varied in capacity.</span></label>
+          <label class="mc-opt" id="q39B"><input type="radio" name="q39" value="B" onchange="setMC(39,'B')"> <span><span class="mc-letter">B</span> The instruments used to control container size were unreliable.</span></label>
+          <label class="mc-opt" id="q39C"><input type="radio" name="q39" value="C" onchange="setMC(39,'C')"> <span><span class="mc-letter">C</span> The unsystematic use of different types of clay resulted in size variations.</span></label>
+          <label class="mc-opt" id="q39D"><input type="radio" name="q39" value="D" onchange="setMC(39,'D')"> <span><span class="mc-letter">D</span> Potters usually discarded containers which were of a non-standard size.</span></label>
+        </div>
+        <div class="mc-q" style="margin-top:10px">
+          <div class="mc-q-text"><span class="mc-q-num">40</span> What is probably the main purpose of Reading Passage 3?</div>
+          <label class="mc-opt" id="q40A"><input type="radio" name="q40" value="A" onchange="setMC(40,'A')"> <span><span class="mc-letter">A</span> To evaluate the quality of pottery containers found in prehistoric Akrotiri.</span></label>
+          <label class="mc-opt" id="q40B"><input type="radio" name="q40" value="B" onchange="setMC(40,'B')"> <span><span class="mc-letter">B</span> To suggest how features of pottery production at Akrotiri reflected other developments in the region.</span></label>
+          <label class="mc-opt" id="q40C"><input type="radio" name="q40" value="C" onchange="setMC(40,'C')"> <span><span class="mc-letter">C</span> To outline the development of pottery-making skills in ancient Greece.</span></label>
+          <label class="mc-opt" id="q40D"><input type="radio" name="q40" value="D" onchange="setMC(40,'D')"> <span><span class="mc-letter">D</span> To describe methods for storing and transporting household goods in prehistoric societies.</span></label>
+        </div>
+        <div class="passage-nav"><button class="nav-btn" onclick="switchTab(2)">← Passage 2</button><span class="nav-spacer"></span></div>
+      </div>
+    </div>
+  </div>
+</div><!-- end examScreen -->
+
+<!-- RESULTS -->
+<div id="resultsScreen" style="display:none;min-height:100vh;background:linear-gradient(145deg,#001840,#0055a4);padding:40px 20px;overflow-y:auto">
+  <div style="background:#fff;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.4);max-width:520px;width:100%;text-align:center;padding:48px 40px;margin:auto">
+    <div style="font-size:64px;margin-bottom:16px">✅</div>
+    <h2 style="font-size:24px;font-weight:900;color:#001840;margin-bottom:10px">Test Completed!</h2>
+    <p id="resSubtitle" style="font-size:15px;color:#555;margin-bottom:24px"></p>
+    <div style="background:#f0f5ff;border-radius:10px;padding:18px 24px;margin-bottom:24px;font-size:15px;color:#333;line-height:1.8">
+      Your results have been recorded and<br><strong>automatically sent to your teacher</strong>.<br>You will receive feedback as soon as possible.
+    </div>
+    <div id="emailStatus" style="font-size:14px;color:#888">✉ Sending results to teacher…</div>
+  </div>
+</div>
+
+<script>
+let studentName='',studentDOB='',examStartTime='';
+let timerInterval=null,timeLeft=3600;
+let answers={};
+let submitted=false;
+const DRAFT_KEY='ielts_midterm_reading02';
+let draftSaveTimer=null;
+
+function saveDraft(){
+  if(submitted||!studentName) return;
+  try{
+    const saved={};
+    document.querySelectorAll('input.ans-input').forEach(el=>{if(el.id) saved[el.id]=el.value;});
+    document.querySelectorAll('select.match-sel').forEach(el=>{if(el.id) saved[el.id]=el.value;});
+    localStorage.setItem(DRAFT_KEY,JSON.stringify({name:studentName,dob:studentDOB,timeLeft,inputs:saved,btnAnswers:{...answers},savedAt:new Date().toISOString()}));
+  }catch(e){}
+}
+function saveDraftDebounced(){clearTimeout(draftSaveTimer);draftSaveTimer=setTimeout(saveDraft,2000);}
+function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);}catch(e){}}
+function checkReadingDraft(){
+  try{const raw=localStorage.getItem(DRAFT_KEY);if(!raw)return;const d=JSON.parse(raw);if(!d||!d.name)return;
+    const t=new Date(d.savedAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('draftName').textContent=d.name;document.getElementById('draftTime').textContent=t;
+    document.getElementById('modalDraft').style.display='flex';}catch(e){}
+}
+function restoreReadingDraft(){
+  try{const d=JSON.parse(localStorage.getItem(DRAFT_KEY));if(!d){document.getElementById('modalDraft').style.display='none';return;}
+    document.getElementById('fullName').value=d.name||'';document.getElementById('dob').value=d.dob||'';
+    document.getElementById('modalDraft').style.display='none';startExam();
+    if(d.timeLeft>0)timeLeft=d.timeLeft;
+    if(d.inputs){Object.entries(d.inputs).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.value=v;});}
+    if(d.btnAnswers){Object.assign(answers,d.btnAnswers);
+      for(let i=6;i<=13;i++){const v=answers['q'+i];if(!v)continue;const row=document.getElementById('row'+i);if(row)row.querySelectorAll('.tfng-btn').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));}
+      for(let i=33;i<=38;i++){const v=answers['q'+i];if(!v)continue;const row=document.getElementById('row'+i);if(row)row.querySelectorAll('.yng-btn').forEach(b=>b.classList.toggle('sel',b.dataset.val===v));}
+      [27,28,39,40].forEach(i=>{const v=answers['q'+i];if(!v)return;const r=document.querySelector('input[name="q'+i+'"][value="'+v+'"]');if(r)r.checked=true;['A','B','C','D'].forEach(l=>{const el=document.getElementById('q'+i+l);if(el)el.classList.toggle('sel',l===v);});});
+      const sel=answers['21_22']||[];['A','B','C','D','E'].forEach(l=>{const cb=document.querySelector('#group21_22 input[value="'+l+'"]');if(cb){cb.checked=sel.includes(l);const lab=document.getElementById('c21'+l);if(lab)lab.classList.toggle('sel',sel.includes(l));}});
+    }
+    updateBadge();
+  }catch(e){document.getElementById('modalDraft').style.display='none';}
+}
+function discardReadingDraft(){clearDraft();document.getElementById('modalDraft').style.display='none';}
+document.addEventListener('input',e=>{if(e.target.classList.contains('ans-input'))saveDraftDebounced();});
+document.addEventListener('change',e=>{if(e.target.classList.contains('match-sel'))saveDraftDebounced();});
+window.addEventListener('beforeunload',e=>{if(studentName&&!submitted){saveDraft();e.preventDefault();return e.returnValue='';}});
+window.addEventListener('load',()=>{checkReadingDraft();setInterval(saveDraft,30000);});
+
+const ANSWER_KEY={
+  q1:'unfit',q2:'schools',q3:['pe teachers','p.e. teachers','teachers','pe teacher'],q4:'surplus',
+  q5:['employment opportunities','careers','routes','employment opportunity','opportunities'],
+  q6:'TRUE',q7:'NOT GIVEN',q8:'TRUE',q9:'TRUE',q10:'FALSE',q11:'TRUE',q12:'FALSE',q13:'NOT GIVEN',
+  q14:'v',q15:'ii',q16:'iv',q17:'ix',q18:'i',q19:'vi',q20:'viii',
+  '21_22':['B','E'],
+  q23:['offshore wind farms','offshore wind farm','wind farms','offshore windfarms'],
+  q24:['developing technology','developing technologies'],q25:'negative',q26:'cars',
+  q27:'B',q28:'D',q29:'A',q30:'E',q31:'D',q32:'C',
+  q33:'NOT GIVEN',q34:'NO',q35:'YES',q36:'NO',q37:'YES',q38:'YES',q39:'A',q40:'B'
+};
+const BAND_TABLE=[[39,9.0],[37,8.5],[35,8.0],[33,7.5],[30,7.0],[27,6.5],[23,6.0],[19,5.5],[15,5.0],[13,4.5],[10,4.0],[8,3.5],[6,3.0],[4,2.5]];
+function getBand(s){for(const[min,b]of BAND_TABLE){if(s>=min)return b.toFixed(1);}return'2.0';}
+
+function startExam(){
+  const name=document.getElementById('fullName').value.trim();const dob=document.getElementById('dob').value;
+  let ok=true;document.getElementById('nameErr').style.display='none';document.getElementById('dobErr').style.display='none';
+  if(!name){document.getElementById('nameErr').style.display='block';ok=false;}
+  if(!dob){document.getElementById('dobErr').style.display='block';ok=false;}
+  if(!ok)return;
+  studentName=name;studentDOB=dob;examStartTime=new Date().toLocaleString('en-GB');
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('examScreen').style.display='flex';
+  document.getElementById('studentBar').textContent='👤 '+studentName;
+  startTimer();showToast('Good luck, '+studentName.split(' ')[0]+'! You have 60 minutes.',3000);
+}
+function startTimer(){
+  timerInterval=setInterval(()=>{
+    timeLeft--;const m=Math.floor(timeLeft/60),s=timeLeft%60;const d=document.getElementById('timerDisplay');
+    d.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');d.className='';
+    if(timeLeft<=300)d.classList.add('warn');if(timeLeft<=60)d.classList.add('danger');
+    if(timeLeft<=0){clearInterval(timerInterval);d.textContent='00:00';document.getElementById('timeupModal').style.display='flex';}
+  },1000);
+}
+function switchTab(n){[1,2,3].forEach(i=>{document.getElementById('pw'+i).style.display=i===n?'flex':'none';document.getElementById('tab'+i+'btn').classList.toggle('active',i===n);});}
+function setTFNG(q,v,btn){const row=document.getElementById('row'+q);row.querySelectorAll('.tfng-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');answers['q'+q]=v;saveDraftDebounced();updateBadge();}
+function setYNG(q,v,btn){const row=document.getElementById('row'+q);row.querySelectorAll('.yng-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');answers['q'+q]=v;saveDraftDebounced();updateBadge();}
+function setMC(q,v){answers['q'+q]=v;['A','B','C','D'].forEach(l=>{const el=document.getElementById('q'+q+l);if(el)el.classList.toggle('sel',l===v);});saveDraftDebounced();updateBadge();}
+function updateCheck(grp,el,max){
+  const c=document.getElementById('group'+grp);const checks=c.querySelectorAll('input[type=checkbox]');
+  const selected=Array.from(checks).filter(x=>x.checked);
+  if(selected.length>max&&el.checked){el.checked=false;}
+  c.querySelectorAll('.chk-opt').forEach(l=>l.classList.toggle('sel',l.querySelector('input').checked));
+  answers[grp]=Array.from(c.querySelectorAll('input:checked')).map(i=>i.value);
+  saveDraftDebounced();updateBadge();
+}
+
+function countAnswered(){
+  let p1=0,p2=0,p3=0;
+  [1,2,3,4,5].forEach(i=>{const el=document.getElementById('q'+i);if(el&&el.value.trim())p1++;});
+  for(let i=6;i<=13;i++)if(answers['q'+i])p1++;
+  [14,15,16,17,18,19,20].forEach(i=>{const el=document.getElementById('q'+i);if(el&&el.value)p2++;});
+  if((answers['21_22']||[]).length>=1)p2+=Math.min((answers['21_22']||[]).length,2);
+  [23,24,25,26].forEach(i=>{const el=document.getElementById('q'+i);if(el&&el.value.trim())p2++;});
+  [27,28].forEach(i=>{if(document.querySelector('input[name="q'+i+'"]:checked'))p3++;});
+  [29,30,31,32].forEach(i=>{const el=document.getElementById('q'+i);if(el&&el.value)p3++;});
+  for(let i=33;i<=38;i++)if(answers['q'+i])p3++;
+  [39,40].forEach(i=>{if(document.querySelector('input[name="q'+i+'"]:checked'))p3++;});
+  return{p1,p2,p3};
+}
+function updateBadge(){const{p1,p2,p3}=countAnswered();
+  if(p1===13)document.getElementById('tab1btn').classList.add('complete');
+  if(p2===13)document.getElementById('tab2btn').classList.add('complete');
+  if(p3===14)document.getElementById('tab3btn').classList.add('complete');}
+
+function confirmSubmit(){const m=Math.floor(timeLeft/60),s=timeLeft%60;document.getElementById('timeLeft').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');document.getElementById('confirmModal').style.display='flex';}
+function closeConfirm(){document.getElementById('confirmModal').style.display='none';}
+function submitTest(){
+  clearInterval(timerInterval);document.getElementById('confirmModal').style.display='none';document.getElementById('timeupModal').style.display='none';
+  document.getElementById('examScreen').style.display='none';collectAllAnswers();showResults();
+}
+function collectAllAnswers(){
+  [1,2,3,4,5,23,24,25,26].forEach(i=>{const el=document.getElementById('q'+i);if(el)answers['q'+i]=(el.value||'').trim().toLowerCase();});
+  [14,15,16,17,18,19,20,29,30,31,32].forEach(i=>{const el=document.getElementById('q'+i);if(el)answers['q'+i]=el.value;});
+  [27,28,39,40].forEach(i=>{const r=document.querySelector('input[name="q'+i+'"]:checked');if(r)answers['q'+i]=r.value;});
+  const c=document.getElementById('group21_22');answers['21_22']=Array.from(c.querySelectorAll('input:checked')).map(i=>i.value);
+}
+function scoreAnswers(){
+  let total=0,p1=0,p2=0,p3=0;const results={};
+  function chk(q,passage){
+    const k='q'+q;const correct=ANSWER_KEY[k];const student=answers[k]||'';let ok=false;
+    if(Array.isArray(correct))ok=correct.some(c=>c.toLowerCase()===student.toLowerCase());
+    else ok=(correct||'').toLowerCase()===(student||'').toLowerCase();
+    results[q]={student,correct:Array.isArray(correct)?correct.join(' / '):correct,ok};
+    if(ok){total++;if(passage===1)p1++;else if(passage===2)p2++;else p3++;}
+  }
+  for(let i=1;i<=13;i++)chk(i,1);
+  for(let i=14;i<=20;i++)chk(i,2);
+  // Q21-22 choose TWO
+  {const sel=answers['21_22']||[];const key=ANSWER_KEY['21_22'];const pts=key.map(k=>sel.includes(k)?1:0);
+   p2+=pts[0]+pts[1];total+=pts[0]+pts[1];const sStr=sel.slice().sort().join('+')||'—';const cStr=key.slice().sort().join('+');
+   results[21]={student:sStr,correct:cStr,ok:pts[0]===1};results[22]={student:sStr,correct:cStr,ok:pts[1]===1};}
+  for(let i=23;i<=26;i++)chk(i,2);
+  for(let i=27;i<=40;i++)chk(i,3);
+  return{total,p1,p2,p3,results};
+}
+function showResults(){
+  submitted=true;clearDraft();
+  const{total,p1,p2,p3,results}=scoreAnswers();const band=getBand(total);
+  window._results={total,p1,p2,p3,band,results};
+  document.getElementById('resultsScreen').style.display='block';
+  document.getElementById('resSubtitle').textContent=studentName+' · '+new Date().toLocaleDateString('en-GB');
+  setTimeout(()=>sendToTeacher(),1000);
+}
+function pdfSafe(s){if(!s)return '';return s
+  .replace(/[àáảãạăằắẳẵặâầấẩẫậ]/g,'a').replace(/[ÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬ]/g,'A').replace(/đ/g,'d').replace(/Đ/g,'D')
+  .replace(/[èéẻẽẹêềếểễệ]/g,'e').replace(/[ÈÉẺẼẸÊỀẾỂỄỆ]/g,'E').replace(/[ìíỉĩị]/g,'i').replace(/[ÌÍỈĨỊ]/g,'I')
+  .replace(/[òóỏõọôồốổỗộơờớởỡợ]/g,'o').replace(/[ÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢ]/g,'O')
+  .replace(/[ùúủũụưừứửữự]/g,'u').replace(/[ÙÚỦŨỤƯỪỨỬỮỰ]/g,'U').replace(/[ỳýỷỹỵ]/g,'y').replace(/[ỲÝỶỸỴ]/g,'Y');}
+function formatDOB(d){return d?new Date(d).toLocaleDateString('en-GB'):'';}
+function buildPDFDoc(){
+  const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,H=297,M=18,CW=W-M*2,safeName=pdfSafe(studentName);
+  doc.setFillColor(0,45,114);doc.rect(0,0,W,36,'F');doc.setFillColor(200,164,0);doc.rect(0,36,W,1.5,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(19);doc.text('IELTS Midterm Test - Reading 02',W/2,13,{align:'center'});
+  doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text('Student Result Report  ·  Huong Stella Paradigm',W/2,22,{align:'center'});
+  doc.setFontSize(9);doc.text('Date: '+examStartTime,W/2,30,{align:'center'});
+  let y=45;doc.setFillColor(240,244,252);doc.setDrawColor(0,45,114);doc.setLineWidth(0.6);doc.roundedRect(M,y,CW,30,2,2,'FD');
+  doc.setTextColor(0,45,114);doc.setFont('helvetica','bold');doc.setFontSize(9);doc.text('CANDIDATE INFORMATION',M+5,y+7);
+  doc.setTextColor(40,40,40);doc.setFontSize(10);const half=CW/2;
+  [['Full Name',safeName],['Date of Birth',formatDOB(studentDOB)],['Test Date',examStartTime.split(',')[0]||examStartTime],['Test Name','IELTS Midterm Test - Reading 02']].forEach((r,i)=>{
+    const col=i<2?0:1,row=i%2,rx=M+5+col*half,ry=y+15+row*9;doc.setFont('helvetica','bold');doc.text(r[0]+': ',rx,ry);
+    const lw=doc.getTextWidth(r[0]+': ');doc.setFont('helvetica','normal');doc.text(r[1],rx+lw,ry);});
+  y+=38;const{total,p1,p2,p3,band}=window._results;const pct=Math.round(total/40*100);
+  doc.setFillColor(0,45,114);doc.roundedRect(M,y,CW,28,4,4,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(28);
+  doc.text('Score: '+total+' / 40',W/2,y+13,{align:'center'});doc.setFontSize(13);doc.text('Band: '+band+'  ·  '+pct+'%',W/2,y+23,{align:'center'});
+  y+=34;const parts=[{qs:13,lbl:'Passage 1 (Q1–13)',sc:p1},{qs:13,lbl:'Passage 2 (Q14–26)',sc:p2},{qs:14,lbl:'Passage 3 (Q27–40)',sc:p3}];
+  const colW=(CW-8)/3;doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(0,51,102);doc.text('PASSAGE SCORES',M,y+6);y+=10;
+  parts.forEach((pt,i)=>{const x=M+i*(colW+4);doc.setFillColor(240,244,248);doc.roundedRect(x,y,colW,20,3,3,'F');doc.setFillColor(0,51,102);doc.rect(x,y,colW,4,'F');
+    doc.setTextColor(255,255,255);doc.setFontSize(7);doc.text(pt.lbl,x+colW/2,y+2.8,{align:'center'});doc.setTextColor(0,51,102);doc.setFont('helvetica','bold');doc.setFontSize(16);doc.text(pt.sc+'/'+pt.qs,x+colW/2,y+14,{align:'center'});});
+  y+=26;const{results}=window._results;
+  const blocks=[{from:1,to:13,label:'Passage 1 – Q1–13'},{from:14,to:26,label:'Passage 2 – Q14–26'},{from:27,to:40,label:'Passage 3 – Q27–40'}];
+  blocks.forEach(({from,to,label})=>{
+    if(y>255){doc.addPage();y=15;}
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(0,51,102);doc.text(label,M,y);y+=6;
+    const rowH=9,cols=5,cw=(W-M*2)/cols;let idx=0;
+    for(let q=from;q<=to;q++){const d=results[q]||{student:'—',correct:'',ok:false};const col=idx%cols,row=Math.floor(idx/cols);const x=M+col*cw;
+      if(y+row*rowH>265&&col===0&&row>0){doc.addPage();y=15;}
+      const ady=y+row*rowH;doc.setFillColor(d.ok?232:255,d.ok?245:235,d.ok?232:235);doc.rect(x,ady-5,cw-1,rowH-1,'F');
+      doc.setTextColor(d.ok?30:180,d.ok?110:30,d.ok?40:30);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('Q'+q+': '+(d.student||'—').substring(0,20),x+2,ady);
+      if(!d.ok){doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text('✓ '+(d.correct||'').substring(0,22),x+2,ady+3.5);}idx++;}
+    const rows=Math.ceil((to-from+1)/cols);y+=rows*rowH+6;
+  });
+  const tp=doc.internal.getNumberOfPages();for(let p=1;p<=tp;p++){doc.setPage(p);doc.setFillColor(0,45,114);doc.rect(0,H-11,W,11,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(8);
+    doc.text('IELTS Midterm Test - Reading 02  ·  Huong Stella Paradigm  ·  '+safeName,M,H-4);doc.text('Page '+p+' of '+tp,W-M,H-4,{align:'right'});}
+  return doc;
+}
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwXgN9lsPpTWRpxz09kG-OK8Zvb5I0yiugDdGvxzdghyEkqL6hs95p1JalHwNuSoG6ONw/exec';
+function setEmailStatus(msg,color){const el=document.getElementById('emailStatus');if(el){el.textContent=msg;el.style.color=color||'#888';}}
+function sendToTeacher(){
+  if(!window._results)return;const{total,p1,p2,p3,band,results}=window._results;const details={};
+  for(let i=1;i<=40;i++){if(results[i])details[i]=results[i];}
+  const doc=buildPDFDoc();const pdfBase64=doc.output('datauristring').split(',')[1];
+  setEmailStatus('✉ Sending results to teacher…','#888');
+  fetch(APPS_SCRIPT_URL,{method:'POST',body:JSON.stringify({
+    name:studentName,dob:studentDOB,date:examStartTime,testName:'IELTS Midterm Test - Reading 02',
+    raw:total,band:String(band),pct:Math.round(total/40*100),scores:{1:p1,2:p2,3:p3,4:'—'},details,pdf:pdfBase64
+  })}).then(r=>r.json()).then(res=>{
+    if(res.status==='ok')setEmailStatus('✅ Results sent to teacher successfully.','#27ae60');
+    else setEmailStatus('❌ Send failed: '+res.message,'#c0392b');
+  }).catch(err=>setEmailStatus('❌ Could not connect: '+err,'#c0392b'));
+}
+
+// ── HIGHLIGHT ──
+let _savedRange=null;
+function showToast(msg,ms){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>{t.style.display='none';},ms||2500);}
+function makeMarkListener(mark){mark.addEventListener('click',function(e){e.stopPropagation();const p=this.parentNode;while(this.firstChild)p.insertBefore(this.firstChild,this);p.removeChild(this);p.normalize();});}
+document.addEventListener('mouseup',e=>{
+  if(e.target.closest('#hlToolbar'))return;
+  if(!e.target.closest('.left-panel')){hideHL();return;}
+  const sel=window.getSelection();if(!sel||sel.isCollapsed||!sel.toString().trim()){hideHL();return;}
+  const range=sel.getRangeAt(0);_savedRange=range.cloneRange();const rect=range.getBoundingClientRect();
+  const bar=document.getElementById('hlToolbar');bar.style.display='flex';const barW=bar.offsetWidth||230;
+  let left=rect.left+rect.width/2-barW/2;left=Math.max(8,Math.min(left,window.innerWidth-barW-8));
+  let top=rect.top-52+window.scrollY;if(top<8)top=rect.bottom+10+window.scrollY;
+  bar.style.left=left+'px';bar.style.top=top+'px';
+});
+document.addEventListener('mousedown',e=>{if(!e.target.closest('#hlToolbar'))hideHL();});
+function hideHL(){document.getElementById('hlToolbar').style.display='none';_savedRange=null;}
+function applyHL(color){const range=_savedRange;if(!range)return;
+  try{const mark=document.createElement('mark');mark.className='hl-'+color;mark.title='Click to remove';makeMarkListener(mark);range.surroundContents(mark);}
+  catch(e){try{const frag=range.extractContents();const mark=document.createElement('mark');mark.className='hl-'+color;mark.title='Click to remove';makeMarkListener(mark);mark.appendChild(frag);range.insertNode(mark);}catch(e2){showToast('Please highlight within a single paragraph.',2500);}}
+  window.getSelection().removeAllRanges();hideHL();}
+function eraseHL(){if(_savedRange){const anc=_savedRange.commonAncestorContainer;const el=anc.nodeType===3?anc.parentElement:anc;const panel=el.closest('.left-panel');
+  if(panel){[...panel.querySelectorAll('mark[class^="hl-"]')].forEach(m=>{const mR=document.createRange();mR.selectNode(m);
+    if(_savedRange.compareBoundaryPoints(Range.END_TO_START,mR)<=0&&_savedRange.compareBoundaryPoints(Range.START_TO_END,mR)>=0){const p=m.parentNode;while(m.firstChild)p.insertBefore(m.firstChild,m);p.removeChild(m);p.normalize();}});}}
+  window.getSelection().removeAllRanges();hideHL();}
+
+// ── ANTI-CHEAT ──
+document.addEventListener('copy',e=>{if(!e.target.closest('.right-panel')&&!e.target.closest('#resultsScreen')){e.preventDefault();showToast('Text copying is disabled during the exam.',2000);}});
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('contextmenu',e=>{if(e.target.closest('.left-panel'))e.preventDefault();});
+document.addEventListener('keydown',e=>{const ctrl=e.ctrlKey||e.metaKey;
+  if(ctrl&&(e.key==='f'||e.key==='F')){e.preventDefault();showToast('🔒 Search is disabled during the exam.',2500);return;}
+  if(ctrl&&e.shiftKey&&e.key.toUpperCase()==='R'){e.preventDefault();if(!confirm('Register "'+TEST_META.testName+'" in Test Map?'))return;
+    fetch(APPS_SCRIPT_URL,{method:'POST',body:JSON.stringify(Object.assign({action:'registerTest'},TEST_META))}).then(r=>r.json()).then(res=>alert(res.status==='ok'?'✅ Registered':'❌ '+(res.message||'Error'))).catch(err=>alert('❌ '+err));}
+});
+const TEST_META={testName:"IELTS Midterm Test - Reading 02",skill:"Reading",mockNum:"MT-R02",file:"IELTS_Midterm_Test_Reading_02.html",source:"Test 2",draftKey:"ielts_midterm_reading02",audio:"-"};
+</script>
+</body>
+</html>
