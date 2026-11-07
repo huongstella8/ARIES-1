@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio — Module 5 Homework</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0 0 5px;font-size:19px;letter-spacing:.2px;line-height:1.3}
+.brand p{margin:0;font-size:11.5px;opacity:.82;font-weight:500;line-height:1.5}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.endbank{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0 14px;font-size:15px;color:var(--ink);line-height:1.6}
+.endbank .ebt{font-weight:700;color:var(--brand);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.endbank .ebi{padding:3px 0;border-bottom:1px dashed var(--line)}
+.endbank .ebi:last-child{border-bottom:none}
+.chip.cd{gap:6px}
+.chip.cd select{border:none;border-radius:6px;font-size:11.5px;padding:2px 4px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:600}
+.cdbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:14px;padding:2px 10px;font-size:11.5px;font-weight:700;cursor:pointer}
+.cdbtn:hover{background:rgba(255,255,255,.30)}
+.chip.cd.warn{background:rgba(255,193,7,.32);border-color:#ffd45e}
+.chip.cd.done{background:rgba(192,57,43,.5);border-color:#ff8a7a}
+.swbar{display:flex;align-items:center;gap:8px;background:#eef3fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content}
+.swbar b{font-variant-numeric:tabular-nums;font-weight:700}
+.swbar .swb,.swbar .swr{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:14px;padding:2px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.swbar .swr{background:#fff;color:var(--brand)}
+
+/* ---- Module 2 Homework additions ---- */
+.srcline{display:none;padding:4px 22px 10px;font-size:12px;color:#1550b3;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--line)}
+body.ed-teacher .srcline{display:block}
+.passage .byline{font-style:italic;color:#374357;margin:4px 0 12px;font-size:14px;border-left:3px solid var(--brand);padding-left:12px}
+.passage .fnote{font-size:12.5px;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.pill.rd{background:#e8f0ff;color:#1550b3}
+/* countdown bar */
+.cdbar{display:flex;align-items:center;gap:8px;background:#eef7f0;border:1px solid #bfe3cc;border-radius:8px;padding:6px 12px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content;max-width:100%;flex-wrap:wrap}
+.cdbar .cdlab{font-weight:600;color:var(--good)}
+.cdbar b.cdd{font-variant-numeric:tabular-nums;font-weight:800;font-size:18px;min-width:58px;text-align:center}
+.cdbar .cdb,.cdbar .cdr{border:1px solid var(--good);background:var(--good);color:#fff;border-radius:14px;padding:3px 14px;font-size:12px;font-weight:700;cursor:pointer}
+.cdbar .cdr{background:#fff;color:var(--good)}
+.cdbar.warn{background:var(--warn-bg);border-color:var(--warn)}
+.cdbar.warn .cdlab,.cdbar.warn b.cdd{color:var(--warn)}
+.cdbar.warn .cdb,.cdbar.warn .cdr{border-color:var(--warn);background:var(--warn)}
+.cdbar.warn .cdr{background:#fff;color:var(--warn)}
+.cdbar.done{background:var(--bad-bg);border-color:var(--bad)}
+.cdbar.done .cdlab,.cdbar.done b.cdd{color:var(--bad)}
+.cdbar.done .cdb{border-color:var(--bad);background:var(--bad);cursor:default}
+/* glossary sections */
+.gloss-section{margin-top:22px}
+.gloss-section:first-child{margin-top:6px}
+.gloss-section h3{font-size:15px;color:#12325f;border-bottom:2px solid var(--line);padding-bottom:6px;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.gloss-section h3 .gnum{background:var(--brand);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-grid;place-items:center;font-size:12px;flex:none}
+.gloss-section h3 .gsrc{font-size:11px;font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0}
+.strat-compact ul{margin:6px 0;padding-left:20px}
+.strat-compact li{margin:5px 0}
+/* multi-colour highlighter */
+.passage mark{border-radius:3px;padding:0 1px}
+.passage mark.hl-y{background:#fff3a3}
+.passage mark.hl-g{background:#c3f0cf}
+.passage mark.hl-p{background:#ffcfe0}
+.passage mark.hl-b{background:#c7e3ff}
+.hl-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.swatch{width:22px;height:22px;border-radius:6px;border:2px solid rgba(0,0,0,.12);cursor:pointer;padding:0;position:relative}
+.swatch.sw-y{background:#fff3a3}.swatch.sw-g{background:#c3f0cf}.swatch.sw-p{background:#ffcfe0}.swatch.sw-b{background:#c7e3ff}
+.swatch.on{border-color:#12325f;box-shadow:0 0 0 2px rgba(31,111,235,.35)}
+.btn.eraser.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.hl-hint{font-size:11px;color:var(--muted);width:100%;margin-top:2px}
+.qsub{font-weight:700;color:#12325f;font-size:13.5px;margin:2px 0 8px}
+.q .blank{color:var(--brand);font-weight:700;letter-spacing:1px}
+/* sequential-unlock locked tabs */
+nav.tabs button.locked{opacity:.4;cursor:not-allowed;background:var(--panel);border-color:var(--line);color:var(--muted)}
+nav.tabs button.locked:hover{border-color:var(--line);color:var(--muted)}
+nav.tabs button .tlock{font-size:11px}
+/* Roman-tunnel diagram */
+.diagram{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 10px 6px;margin:2px 0 16px;box-shadow:var(--shadow)}
+.diagram svg{width:100%;height:auto;display:block;border-radius:6px}
+.diagram .dgcap{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:center}
+/* very faint source footer */
+.srcfoot{max-width:1280px;margin:30px auto 0;padding:14px 18px 26px;border-top:1px solid #edf0f5;font-size:8px;line-height:1.6;color:#e4e8ee;letter-spacing:.2px}
+/* overtime + count-up timer states */
+.cdbar.over{background:var(--bad-bg);border-color:var(--bad)}
+.cdbar.over .cdlab,.cdbar.over b.cdd{color:var(--bad)}
+.cdbar.over .cdb,.cdbar.over .cdr{border-color:var(--bad);background:var(--bad)}
+.cdbar.over .cdr{background:#fff;color:var(--bad)}
+.cdover{color:var(--bad);font-weight:800;font-variant-numeric:tabular-nums}
+.over-badge{display:inline-block;background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.cdbar.countup{background:#eef3fb;border-color:#c7d8f0}
+.cdbar.countup .cdlab{color:var(--brand)}
+.cdbar.countup .cdb,.cdbar.countup .cdr{border-color:var(--brand);background:var(--brand)}
+.cdbar.countup .cdr{background:#fff;color:var(--brand)}
+</style>
+</head>
+<body class="ed-student">
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio — Module 5 · Homework</h1><p>Academic Reading · Young people &amp; the modern world · Summary completion · Selecting from a list · Multiple choice · Word formation (suffixes)</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ On-tab <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategy</button>
+    <button data-tab="p1">1 · Reading habits</button>
+    <button data-tab="p2">2 · Big business</button>
+    <button data-tab="p3">3 · Art museums</button>
+    <button data-tab="p4">4 · Bike-sharing</button>
+    <button data-tab="p5">5 · Driverless cars</button>
+    <button data-tab="p6">6 · Zoos</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+  </nav>
+  <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Module 5 Homework — Summary Completion &amp; Selecting from a List</h2>
+      <p class="small">Six Academic Reading passages on young people &amp; the modern world (Cambridge 10, 14, 15, 16). Each passage has a <b>20-minute countdown</b> that then records your <b>overtime</b>. Score <b>70%+</b> to unlock the answers, and finish each passage to open the next.</p>
+    </div>
+    <div class="strat-grid">
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Summary completion (wordlist)</h3>
+        <ul>
+          <li><b>Read the whole summary first</b> for meaning, then fill the gaps.</li>
+          <li><b>Predict the word class</b> of each gap (noun, verb, adjective).</li>
+          <li>The box words are <b>paraphrases</b> of the passage — match meaning, not exact words.</li>
+          <li><b>There are extra words</b> you will not use — don&rsquo;t force them in.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Selecting from a list (choose TWO)</h3>
+        <ul>
+          <li><b>Find the part of the text</b> the question points to, then test each option against it.</li>
+          <li>An option can be <b>true in general but not stated</b> here — only choose what the text actually says.</li>
+          <li><b>Order doesn&rsquo;t matter;</b> both marks are separate, so never leave one blank.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Global &amp; writer&rsquo;s-view multiple choice</h3>
+        <ul>
+          <li><b>Global / &lsquo;main point&rsquo;</b> questions test the whole paragraph or passage — choose the option that covers it all, not one detail.</li>
+          <li><b>Writer&rsquo;s view:</b> look for what the writer <i>claims or implies</i>, signalled by opinion language.</li>
+          <li>Reject options that are true but don&rsquo;t answer the exact question.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Yes / No / Not Given</h3>
+        <ul>
+          <li><b>YES</b> = the writer makes this claim; <b>NO</b> = the writer claims the opposite.</li>
+          <li><b>NOT GIVEN</b> = the writer gives no view on it.</li>
+          <li>These follow the passage order — work top to bottom.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Task type</span>
+        <h3>Which paragraph contains…?</h3>
+        <ul>
+          <li><b>Scan</b> for the specific detail, not the paragraph&rsquo;s main idea.</li>
+          <li>A paragraph letter <b>may be used more than once</b>, and some won&rsquo;t be used.</li>
+          <li>Underline the anchor word in the statement and hunt for its paraphrase.</li>
+        </ul>
+      </div>
+      <div class="strat strat-compact">
+        <span class="tag">Vocabulary</span>
+        <h3>Suffixes (word formation)</h3>
+        <ul>
+          <li><b>Noun suffixes:</b> -ness, -ion/-ation, -ment, -ity, -ship, -ism.</li>
+          <li><b>Adjective suffixes:</b> -al, -ous, -ive, -able/-ible, -ful, -less.</li>
+          <li><b>Watch spelling changes:</b> contribute → contribution; lonely → loneliness.</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="panel" id="tab-p1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head"><h3>&#128214; Changes in reading habits</h3><div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="p1" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="p1" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="p1" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="p1" title="Highlight blue"></button><button class="btn sm eraser" data-erase="p1">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="p1">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div></div>
+        <div class="srcline">Cambridge 16 · Test 4 · Passage 2</div>
+        <div class="passage" id="passage-p1">
+<div class="para">Look around on your next plane trip. The iPad is the new pacifier for babies and toddlers. Younger school-aged children read stories on smartphones; older kids don&#x27;t read at all, but hunch over video games. Parents and other passengers read on tablets or skim a flotilla of email and news feeds. Unbeknown to most of us, an invisible, game-changing transformation links everyone in this picture: the neuronal circuit that underlies the brain&#x27;s ability to read is subtly, rapidly changing and this has implications for everyone from the pre-reading toddler to the expert adult.</div>
+<div class="para">As work in neurosciences indicates, the acquisition of literacy necessitated a new circuit in our species&#x27; brain more than 6,000 years ago. That circuit evolved from a very simple mechanism for decoding basic information, like the number of goats in one&#x27;s herd, to the present, highly elaborated reading brain. My research depicts how the present reading brain enables the development of some of our most important intellectual and affective processes: internalized knowledge, analogical reasoning, and inference; perspective-taking and empathy; critical analysis and the generation of insight. Research surfacing in many parts of the world now cautions that each of these essential &#x27;deep reading&#x27; processes may be under threat as we move into digital-based modes of reading.</div>
+<div class="para">This is not a simple, binary issue of print versus digital reading and technological innovation. As MIT scholar Sherry Turkle has written, we do not err as a society when we innovate but when we ignore what we disrupt or diminish while innovating. In this hinge moment between print and digital cultures, society needs to confront what is diminishing in the expert reading circuit, what our children and older students are not developing, and what we can do about it.</div>
+<div class="para">We know from research that the reading circuit is not given to human beings through a genetic blueprint like vision or language; it needs an environment to develop. Further, it will adapt to that environment&#x27;s requirements – from different writing systems to the characteristics of whatever medium is used. If the dominant medium advantages processes that are fast, multi-task oriented and well-suited for large volumes of information, like the current digital medium, so will the reading circuit. As UCLA psychologist Patricia Greenfield writes, the result is that less attention and time will be allocated to slower, time-demanding deep reading processes.</div>
+<div class="para">Increasing reports from educators and from researchers in psychology and the humanities bear this out. English literature scholar and teacher Mark Edmundson describes how many college students actively avoid the classic literature of the 19th and 20th centuries in favour of something simpler as they no longer have the patience to read longer, denser, more difficult texts. We should be less concerned with students&#x27; &#x27;cognitive impatience&#x27;, however, than by what may underlie it: the potential inability of large numbers of students to read with a level of critical analysis sufficient to comprehend the complexity of thought and argument found in more demanding texts.</div>
+<div class="para">Multiple studies show that digital screen use may be causing a variety of troubling downstream effects on reading comprehension in older high school and college students. In Stavanger, Norway, psychologist Anne Mangen and her colleagues studied how high school students comprehend the same material in different mediums. Mangen&#x27;s group asked subjects questions about a short story whose plot had universal student appeal; half of the students read the story on a tablet, the other half in paperback. Results indicated that students who read on print were superior in their comprehension to screen-reading peers, particularly in their ability to sequence detail and reconstruct the plot in chronological order.</div>
+<div class="para">Ziming Liu from San Jose State University has conducted a series of studies which indicate that the &#x27;new norm&#x27; in reading is skimming, involving word-spotting and browsing through the text. Many readers now use a pattern when reading in which they sample the first line and then word-spot through the rest of the text. When the reading brain skims like this, it reduces time allocated to deep reading processes. In other words, we don&#x27;t have time to grasp complexity, to understand another&#x27;s feelings, to perceive beauty, and to create thoughts of the reader&#x27;s own.</div>
+<div class="para">The possibility that critical analysis, empathy and other deep reading processes could become the unintended &#x27;collateral damage&#x27; of our digital culture is not a straightforward binary issue about print versus digital reading. It is about how we all have begun to read on various mediums and how that changes not only what we read, but also the purposes for which we read. Nor is it only about the young. The subtle atrophy of critical analysis and empathy affects us all equally. It affects our ability to navigate a constant bombardment of information. It incentivizes a retreat to the most familiar stores of unchecked information, which require and receive no analysis, leaving us susceptible to false information and irrational ideas.</div>
+<div class="para">There&#x27;s an old rule in neuroscience that does not alter with age: use it or lose it. It is a very hopeful principle when applied to critical thought in the reading brain because it implies choice. The story of the changing reading brain is hardly finished. We possess both the science and the technology to identify and redress the changes in how we read before they become entrenched. If we work to understand exactly what we will lose, alongside the extraordinary new capacities that the digital world has brought us, there is as much reason for excitement as caution.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-p1" data-test="p1">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 14&ndash;17 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="A" data-exp="The opening shows how screens have quietly changed the reading brain &mdash; technology is having a hidden effect on us. (A)"><div class="qnum">14</div><div class="qmain"><div class="qtext">What is the writer&#x27;s main point in the first paragraph?</div><label><input type="radio" name="q_14_mc1" value="A"> <b>A</b> Our use of technology is having a hidden effect on us.</label><label><input type="radio" name="q_14_mc1" value="B"> <b>B</b> Technology can be used to help youngsters to read.</label><label><input type="radio" name="q_14_mc1" value="C"> <b>C</b> Travellers should be encouraged to use technology on planes.</label><label><input type="radio" name="q_14_mc1" value="D"> <b>D</b> Playing games is a more popular use of technology than reading.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="Turkle: &lsquo;we do not err when we innovate but when we ignore what we disrupt&rsquo; &mdash; notice what might be lost. (B)"><div class="qnum">15</div><div class="qmain"><div class="qtext">What main point does Sherry Turkle make about innovation?</div><label><input type="radio" name="q_15_mc1" value="A"> <b>A</b> Technological innovation has led to a reduction in print reading.</label><label><input type="radio" name="q_15_mc1" value="B"> <b>B</b> We should pay attention to what might be lost when innovation occurs.</label><label><input type="radio" name="q_15_mc1" value="C"> <b>C</b> We should encourage more young people to become involved in innovation.</label><label><input type="radio" name="q_15_mc1" value="D"> <b>D</b> There is a difference between developing products and developing ideas.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="Para 4: the reading circuit &lsquo;will adapt to that environment&rsquo;s requirements&rsquo; &mdash; brain circuits adjust to whatever is required. (D)"><div class="qnum">16</div><div class="qmain"><div class="qtext">What point is the writer making in the fourth paragraph?</div><label><input type="radio" name="q_16_mc1" value="A"> <b>A</b> Humans have an inborn ability to read and write.</label><label><input type="radio" name="q_16_mc1" value="B"> <b>B</b> Reading can be done using many different mediums.</label><label><input type="radio" name="q_16_mc1" value="C"> <b>C</b> Writing systems make unexpected demands on the brain.</label><label><input type="radio" name="q_16_mc1" value="D"> <b>D</b> Some brain circuits adjust to whatever is required of them.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="Edmundson says students &lsquo;actively avoid the classic literature&hellip; in favour of something simpler&rsquo; &mdash; it influences what they select to read. (B)"><div class="qnum">17</div><div class="qmain"><div class="qtext">According to Mark Edmundson, the attitude of college students</div><label><input type="radio" name="q_17_mc1" value="A"> <b>A</b> has changed the way he teaches.</label><label><input type="radio" name="q_17_mc1" value="B"> <b>B</b> has influenced what they select to read.</label><label><input type="radio" name="q_17_mc1" value="C"> <b>C</b> does not worry him as much as it does others.</label><label><input type="radio" name="q_17_mc1" value="D"> <b>D</b> does not match the views of the general public.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 18&ndash;22 &middot; Summary completion (word list).</b> Complete the summary — choose the correct letter for each gap from the box below.</div><div class="endbank"><div class="ebt">Word box</div><div class="ebi"><b>A</b> &nbsp;fast</div><div class="ebi"><b>B</b> &nbsp;isolated</div><div class="ebi"><b>C</b> &nbsp;emotional</div><div class="ebi"><b>D</b> &nbsp;worrying</div><div class="ebi"><b>E</b> &nbsp;many</div><div class="ebi"><b>F</b> &nbsp;hard</div><div class="ebi"><b>G</b> &nbsp;combined</div><div class="ebi"><b>H</b> &nbsp;thorough</div></div><div class="q" data-type="sel" data-answer="D" data-exp="&rarr; worrying (D): digital screen use causes &lsquo;troubling downstream effects&rsquo;."><div class="qnum">18</div><div class="qmain"><div class="qtext">There have been many studies on digital screen use, showing some  <span class="blank">______</span> trends.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="H" data-exp="&rarr; thorough (H): the question-and-answer technique tested how thoroughly students comprehended."><div class="qnum">19</div><div class="qmain"><div class="qtext">Her team then used a question-and-answer technique to find out how  <span class="blank">______</span> each group&#x27;s understanding of the plot was.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="F" data-exp="&rarr; hard (F): screen-readers found it harder to sequence detail and reconstruct the plot."><div class="qnum">20</div><div class="qmain"><div class="qtext">The findings showed a clear pattern in the responses, with those who read screens finding the order of information  <span class="blank">______</span> to recall.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="&rarr; fast (A): Liu shows the &lsquo;new norm&rsquo; is skimming/word-spotting &mdash; reading fast, not deeply."><div class="qnum">21</div><div class="qmain"><div class="qtext">Studies by Ziming Liu show that students are tending to read  <span class="blank">______</span> words and phrases in a text to save time.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="&rarr; emotional (C): skimming loses the time to &lsquo;understand another&rsquo;s feelings&rsquo; &mdash; the emotional depth."><div class="qnum">22</div><div class="qmain"><div class="qtext">This approach, she says, gives the reader a superficial understanding of the  <span class="blank">______</span> content of material, leaving no time for thought.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23&ndash;26 &middot; Yes / No / Not Given.</b> Do the following statements agree with the views of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; the writer links the medium to how deeply we read, not to which content we choose (that is blamed on &lsquo;cognitive impatience&rsquo;)."><div class="qnum">23</div><div class="qmain"><div class="qtext">The medium we use to read can affect our choice of reading content.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; no age group is singled out as more likely to lose these complex skills."><div class="qnum">24</div><div class="qmain"><div class="qtext">Some age groups are more likely to lose their complex reading skills than others.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; skimming leaves us &lsquo;susceptible to false information&rsquo; in today&rsquo;s digital era."><div class="qnum">25</div><div class="qmain"><div class="qtext">False information has become more widespread in today&#x27;s digital era.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;use it or lose it&rsquo;: we &lsquo;possess both the science and the technology to&hellip; redress the changes&rsquo;."><div class="qnum">26</div><div class="qmain"><div class="qtext">We still have opportunities to rectify the problems that technology is presenting.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="p1">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="p1">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-p1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-p2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head"><h3>&#128214; Environmental practices of big businesses</h3><div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="p2" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="p2" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="p2" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="p2" title="Highlight blue"></button><button class="btn sm eraser" data-erase="p2">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="p2">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div></div>
+        <div class="srcline">Cambridge 15 · Test 4 · Passage 3</div>
+        <div class="passage" id="passage-p2">
+<div class="para">The environmental practices of big businesses are shaped by a fundamental fact that for many of us offends our sense of justice. Depending on the circumstances, a business may maximize the amount of money it makes, at least in the short term, by damaging the environment and hurting people. That is still the case today for fishermen in an unmanaged fishery without quotas, and for international logging companies with short-term leases on tropical rainforest land in places with corrupt officials and unsophisticated landowners. When government regulation is effective, and when the public is environmentally aware, environmentally clean big businesses may out-compete dirty ones, but the reverse is likely to be true if government regulation is ineffective and if the public doesn&#x27;t care.</div>
+<div class="para">It is easy for the rest of us to blame a business for helping itself by hurting other people. But blaming alone is unlikely to produce change. It ignores the fact that businesses are not charities but profit-making companies, and that publicly owned companies with shareholders are under obligation to those shareholders to maximize profits, provided that they do so by legal means. US laws make a company&#x27;s directors legally liable for something termed &#x27;breach of fiduciary responsibility&#x27; if they knowingly manage a company in a way that reduces profits. The car manufacturer Henry Ford was in fact successfully sued by shareholders in 1919 for raising the minimum wage of his workers to $5 per day: the courts declared that, while Ford&#x27;s humanitarian sentiments about his employees were nice, his business existed to make profits for its stockholders.</div>
+<div class="para">Our blaming of businesses also ignores the ultimate responsibility of the public for creating the conditions that let a business profit through destructive environmental policies. In the long run, it is the public, either directly or through its politicians, that has the power to make such destructive policies unprofitable and illegal, and to make sustainable environmental policies profitable.</div>
+<div class="para">The public can do that by suing businesses for harming them, as happened after the Exxon Valdez disaster, in which over 40,000 m³ of oil were spilled off the coast of Alaska. The public may also make their opinion felt by preferring to buy sustainably harvested products; by making employees of companies with poor track records feel ashamed of their company and complain to their own management; by preferring their governments to award valuable contracts to businesses with a good environmental track record; and by pressing their governments to pass and enforce laws and regulations requiring good environmental practices.</div>
+<div class="para">In turn, big businesses can exert powerful pressure on any suppliers that might ignore public or government pressure. For instance, after the US public became concerned about the spread of a disease known as BSE, which was transmitted to humans through infected meat, the US government&#x27;s Food and Drug Administration introduced rules demanding that the meat industry abandon practices associated with the risk of the disease spreading. But for five years the meat packers refused to follow these, claiming that they would be too expensive to obey. However, when a major fast-food company then made the same demands after customer purchases of its hamburgers plummeted, the meat industry complied within weeks. The public&#x27;s task is therefore to identify which links in the supply chain are sensitive to public pressure: for instance, fast-food chains or jewelry stores, but not meat packers or gold miners.</div>
+<div class="para">Some readers may be disappointed or outraged that I place the ultimate responsibility for business practices harming the public on the public itself. I also believe that the public must accept the necessity for higher prices for products to cover the added costs, if any, of sound environmental practices. My views may seem to ignore the belief that businesses should act in accordance with moral principles even if this leads to a reduction in their profits. But I think we have to recognize that, throughout human history, in all politically complex human societies, government regulation has arisen precisely because it was found that not only did moral principles need to be made explicit, they also needed to be enforced.</div>
+<div class="para">To me, the conclusion that the public has the ultimate responsibility for the behavior of even the biggest businesses is empowering and hopeful, rather than disappointing. My conclusion is not a moralistic one about who is right or wrong, admirable or selfish, a good guy or a bad guy. In the past, businesses have changed when the public came to expect and require different behavior, to reward businesses for behavior that the public wanted, and to make things difficult for businesses practicing behaviors that the public didn&#x27;t want. I predict that in the future, just as in the past, changes in public attitudes will be essential for changes in businesses&#x27; environmental practices.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-p2" data-test="p2">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 27&ndash;31 &middot; Summary completion (word list).</b> Complete the summary — choose the correct letter for each gap from the box below.</div><div class="endbank"><div class="ebt">Word box</div><div class="ebi"><b>A</b> &nbsp;funding</div><div class="ebi"><b>B</b> &nbsp;trees</div><div class="ebi"><b>C</b> &nbsp;rare species</div><div class="ebi"><b>D</b> &nbsp;moral standards</div><div class="ebi"><b>E</b> &nbsp;control</div><div class="ebi"><b>F</b> &nbsp;involvement</div><div class="ebi"><b>G</b> &nbsp;flooding</div><div class="ebi"><b>H</b> &nbsp;overfishing</div><div class="ebi"><b>I</b> &nbsp;worker support</div></div><div class="q" data-type="sel" data-answer="D" data-exp="&rarr; moral standards (D): businesses may profit by harming people and the environment &mdash; a lapse in moral standards."><div class="qnum">27</div><div class="qmain"><div class="qtext">Big businesses may harm people and the environment, showing weak <span class="blank">______</span> .</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="&rarr; control (E): &lsquo;when government regulation is ineffective&rsquo; &mdash; a lack of control by governments."><div class="qnum">28</div><div class="qmain"><div class="qtext">a lack of <span class="blank">______</span> by governments (weak regulation)</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="F" data-exp="&rarr; involvement (F): &lsquo;if the public doesn&rsquo;t care&rsquo; &mdash; a lack of public involvement."><div class="qnum">29</div><div class="qmain"><div class="qtext">and a lack of public <span class="blank">______</span> (people not caring)</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="H" data-exp="&rarr; overfishing (H): an example of damage &mdash; an unmanaged fishery without quotas."><div class="qnum">30</div><div class="qmain"><div class="qtext">examples of damage include <span class="blank">______</span> in unmanaged fisheries</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="&rarr; trees (B): logging companies clearing tropical rainforest &mdash; loss of trees."><div class="qnum">31</div><div class="qmain"><div class="qtext">and the loss of <span class="blank">______</span> cleared by logging companies</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 32&ndash;34 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="C" data-exp="&rarr; C: environmental damage &lsquo;could be prevented by the action of ordinary people&rsquo; &mdash; the public&rsquo;s power."><div class="qnum">32</div><div class="qmain"><div class="qtext">The main idea of the third paragraph is that environmental damage</div><label><input type="radio" name="q_32_mc1" value="A"> <b>A</b> requires political action if it is to be stopped.</label><label><input type="radio" name="q_32_mc1" value="B"> <b>B</b> is the result of ignorance on the part of the public.</label><label><input type="radio" name="q_32_mc1" value="C"> <b>C</b> could be prevented by the action of ordinary people.</label><label><input type="radio" name="q_32_mc1" value="D"> <b>D</b> can only be stopped by educating business leaders.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="&rarr; D: the public can influence the environmental impact of business (suing, buying sustainably, pressing governments)."><div class="qnum">33</div><div class="qmain"><div class="qtext">In the fourth paragraph, the writer describes ways in which the public can</div><label><input type="radio" name="q_33_mc1" value="A"> <b>A</b> reduce their own individual impact on the environment.</label><label><input type="radio" name="q_33_mc1" value="B"> <b>B</b> learn more about the impact of business on the environment.</label><label><input type="radio" name="q_33_mc1" value="C"> <b>C</b> raise awareness of the effects of specific environmental disasters.</label><label><input type="radio" name="q_33_mc1" value="D"> <b>D</b> influence the environmental policies of businesses and governments.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="B" data-exp="&rarr; B: after sales &lsquo;plummeted&rsquo;, a fast-food company forced its meat suppliers to follow the law."><div class="qnum">34</div><div class="qmain"><div class="qtext">What pressure was exerted by big business in the case of the disease BSE?</div><label><input type="radio" name="q_34_mc1" value="A"> <b>A</b> Meat packers stopped supplying hamburgers to fast-food chains.</label><label><input type="radio" name="q_34_mc1" value="B"> <b>B</b> A fast-food company forced their meat suppliers to follow the law.</label><label><input type="radio" name="q_34_mc1" value="C"> <b>C</b> Meat packers persuaded the government to reduce their expenses.</label><label><input type="radio" name="q_34_mc1" value="D"> <b>D</b> A fast-food company encouraged the government to introduce legislation.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 35&ndash;39 &middot; Yes / No / Not Given.</b> Do the following statements agree with the views of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; the public &lsquo;must accept the necessity for higher prices&rsquo; to cover sound environmental practices."><div class="qnum">35</div><div class="qmain"><div class="qtext">The public should be prepared to fund good environmental practices.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the writer does not compare the moral principles of different businesses."><div class="qnum">36</div><div class="qmain"><div class="qtext">There is a contrast between the moral principles of different businesses.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; the writer argues that making a distinction is not enough; moral principles must also be &lsquo;enforced&rsquo;."><div class="qnum">37</div><div class="qmain"><div class="qtext">It is important to make a clear distinction between acceptable and unacceptable behaviour.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; &lsquo;businesses have changed when the public came to expect&hellip; different behavior&rsquo;."><div class="qnum">38</div><div class="qmain"><div class="qtext">The public have successfully influenced businesses in the past.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the writer predicts public attitudes will drive change, not that businesses themselves will become more concerned."><div class="qnum">39</div><div class="qmain"><div class="qtext">In the future, businesses will show more concern for the environment.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 40&ndash;40 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="D" data-exp="&rarr; D: the passage argues the public shares ultimate responsibility &mdash; &lsquo;Are big businesses to blame for the damage they cause the environment?&rsquo;"><div class="qnum">40</div><div class="qmain"><div class="qtext">What would be the best subheading for this passage?</div><label><input type="radio" name="q_40_mc1" value="A"> <b>A</b> Will the world survive the threat caused by big businesses?</label><label><input type="radio" name="q_40_mc1" value="B"> <b>B</b> How can big businesses be encouraged to be less driven by profit?</label><label><input type="radio" name="q_40_mc1" value="C"> <b>C</b> What environmental dangers are caused by the greed of businesses?</label><label><input type="radio" name="q_40_mc1" value="D"> <b>D</b> Are big businesses to blame for the damage they cause the environment?</label><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="p2">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="p2">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-p2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-p3">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head"><h3>&#128214; Museums of fine art and their public</h3><div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="p3" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="p3" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="p3" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="p3" title="Highlight blue"></button><button class="btn sm eraser" data-erase="p3">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="p3">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div></div>
+        <div class="srcline">Cambridge 10 · Test 2 · Passage 3</div>
+        <div class="passage" id="passage-p3">
+<div class="para">The fact that people go to the Louvre museum in Paris to see the original painting Mona Lisa when they can see a reproduction anywhere leads us to question some assumptions about the role of museums of fine art in today&#x27;s world</div>
+<div class="para">One of the most famous works of art in the world is Leonardo da Vinci&#x27;s Mona Lisa. Nearly everyone who goes to see the original will already be familiar with it from reproductions, but they accept that fine art is more rewardingly viewed in its original form.</div>
+<div class="para">However, if Mona Lisa was a famous novel, few people would bother to go to a museum to read the writer&#x27;s actual manuscript rather than a printed reproduction. This might be explained by the fact that the novel has evolved precisely because of technological developments that made it possible to print out huge numbers of texts, whereas oil paintings have always been produced as unique objects. In addition, it could be argued that the practice of interpreting or &#x27;reading&#x27; each medium follows different conventions. With novels, the reader attends mainly to the meaning of words rather than the way they are printed on the page, whereas the &#x27;reader&#x27; of a painting must attend just as closely to the material form of marks and shapes in the picture as to any ideas they may signify.</div>
+<div class="para">Yet it has always been possible to make very accurate facsimiles of pretty well any fine art work. The seven surviving versions of Mona Lisa bear witness to the fact that in the 16th century, artists seemed perfectly content to assign the reproduction of their creations to their workshop apprentices as regular &#x27;bread and butter&#x27; work. And today the task of reproducing pictures is incomparably more simple and reliable, with reprographic techniques that allow the production of high-quality prints made exactly to the original scale, with faithful colour values, and even with duplication of the surface relief of the painting.</div>
+<div class="para">But despite an implicit recognition that the spread of good reproductions can be culturally valuable, museums continue to promote the special status of original work. Unfortunately, this seems to place severe limitations on the kind of experience offered to visitors.</div>
+<div class="para">One limitation is related to the way the museum presents its exhibits. As repositories of unique historical objects, art museums are often called &#x27;treasure houses&#x27;. We are reminded of this even before we view a collection by the presence of security guards, attendants, ropes and display cases to keep us away from the exhibits. In many cases, the architectural style of the building further reinforces that notion. In addition, a major collection like that of London&#x27;s National Gallery is housed in numerous rooms, each with dozens of works, any one of which is likely to be worth more than all the average visitor possesses. In a society that judges the personal status of the individual so much by their material worth, it is therefore difficult not to be impressed by one&#x27;s own relative &#x27;worthlessness&#x27; in such an environment.</div>
+<div class="para">Furthermore, consideration of the &#x27;value&#x27; of the original work in its treasure house setting impresses upon the viewer that, since these works were originally produced, they have been assigned a huge monetary value by some person or institution more powerful than themselves. Evidently, nothing the viewer thinks about the work is going to alter that value, and so today&#x27;s viewer is deterred from trying to extend that spontaneous, immediate, self-reliant kind of reading which would originally have met the work.</div>
+<div class="para">The visitor may then be struck by the strangeness of seeing such diverse paintings, drawings and sculptures brought together in an environment for which they were not originally created. This &#x27;displacement effect&#x27; is further heightened by the sheer volume of exhibits. In the case of a major collection, there are probably more works on display than we could realistically view in weeks or even months.</div>
+<div class="para">This is particularly distressing because time seems to be a vital factor in the appreciation of all art forms. A fundamental difference between paintings and other art forms is that there is no prescribed time over which a painting is viewed. By contrast, the audience encounters an opera or a play over a specific time, which is the duration of the performance. Similarly, novels and poems are read in a prescribed temporal sequence, whereas a picture has no clear place at which to start viewing, or at which to finish. Thus art works themselves encourage us to view them superficially, without appreciating the richness of detail and labour that is involved.</div>
+<div class="para">Consequently, the dominant critical approach becomes that of the art historian, a specialised academic approach devoted to &#x27;discovering the meaning&#x27; of art within the cultural context of its time. This is in perfect harmony with the museum&#x27;s function, since the approach is dedicated to seeking out and conserving &#x27;authentic&#x27;, &#x27;original&#x27; readings of the exhibits. Again, this seems to put paid to that spontaneous, participatory criticism which can be found in abundance in criticism of classic works of literature, but is absent from most art history.</div>
+<div class="para">The displays of art museums serve as a warning of what critical practices can emerge when spontaneous criticism is suppressed. The museum public, like any other audience, experience art more rewardingly when given the confidence to express their views. If appropriate works of fine art could be rendered permanently accessible to the public by means of high-fidelity reproductions, as literature and music already are, the public may feel somewhat less in awe of them. Unfortunately, that may be too much to ask from those who seek to maintain and control the art establishment.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">14 marks</span></div>
+        <div class="q-body" id="qbody-p3" data-test="p3">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 27&ndash;31 &middot; Summary completion (word list).</b> Complete the summary — choose the correct letter for each gap from the box below.</div><div class="endbank"><div class="ebt">Word box</div><div class="ebi"><b>A</b> &nbsp;institution</div><div class="ebi"><b>B</b> &nbsp;mass production</div><div class="ebi"><b>C</b> &nbsp;mechanical processes</div><div class="ebi"><b>D</b> &nbsp;public</div><div class="ebi"><b>E</b> &nbsp;paints</div><div class="ebi"><b>F</b> &nbsp;artist</div><div class="ebi"><b>G</b> &nbsp;size</div><div class="ebi"><b>H</b> &nbsp;underlying ideas</div><div class="ebi"><b>I</b> &nbsp;basic technology</div><div class="ebi"><b>J</b> &nbsp;readers</div><div class="ebi"><b>K</b> &nbsp;picture frames</div><div class="ebi"><b>L</b> &nbsp;assistants</div></div><div class="q" data-type="sel" data-answer="B" data-exp="&rarr; mass production (B): the novel evolved through printing &mdash; technology for mass production."><div class="qnum">27</div><div class="qmain"><div class="qtext">A novel can be read in a copy because of <span class="blank">______</span> (printing).</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="H" data-exp="&rarr; underlying ideas (H): a novel reader attends to meaning/ideas, a &lsquo;reader&rsquo; of a painting to its material form."><div class="qnum">28</div><div class="qmain"><div class="qtext">A novel reader attends mainly to the <span class="blank">______</span> (meaning).</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="L" data-exp="&rarr; assistants (L): Leonardo assigned reproduction of his work to his workshop apprentices/assistants."><div class="qnum">29</div><div class="qmain"><div class="qtext">Leonardo had his <span class="blank">______</span> reproduce his work.</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="G" data-exp="&rarr; size (G): modern reprographics reproduce a painting exactly &lsquo;to the original scale&rsquo; (size)."><div class="qnum">30</div><div class="qmain"><div class="qtext">Modern reprographics copy a painting exactly to its original <span class="blank">______</span> .</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="D" data-exp="&rarr; public (D): museums still promote originals, limiting the experience offered to the public."><div class="qnum">31</div><div class="qmain"><div class="qtext">Museums still promote originals, limiting the experience for the <span class="blank">______</span> .</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option><option value="I">I</option><option value="J">J</option><option value="K">K</option><option value="L">L</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 32&ndash;35 &middot; Multiple choice.</b> Choose the correct letter, A, B, C or D.</div><div class="q mc" data-type="mc1" data-answer="C" data-exp="&rarr; C: the National Gallery example shows a museum&rsquo;s negative effect on visitors&rsquo; opinions of themselves (feeling &lsquo;worthless&rsquo;)."><div class="qnum">32</div><div class="qmain"><div class="qtext">The writer mentions London&#x27;s National Gallery to illustrate</div><label><input type="radio" name="q_32_mc1" value="A"> <b>A</b> the undesirable cost to a nation of maintaining a huge collection of art.</label><label><input type="radio" name="q_32_mc1" value="B"> <b>B</b> the conflict that may arise in society between financial and artistic values.</label><label><input type="radio" name="q_32_mc1" value="C"> <b>C</b> the negative effect a museum can have on visitors&#x27; opinions of themselves.</label><label><input type="radio" name="q_32_mc1" value="D"> <b>D</b> the need to put individual well-being above large-scale artistic schemes.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="&rarr; D: viewers won&rsquo;t criticise because they feel their personal reaction &lsquo;is of no significance&rsquo; (value fixed by others)."><div class="qnum">33</div><div class="qmain"><div class="qtext">The writer says that today, viewers may be unwilling to criticise a work because</div><label><input type="radio" name="q_33_mc1" value="A"> <b>A</b> they lack the knowledge needed to support an opinion.</label><label><input type="radio" name="q_33_mc1" value="B"> <b>B</b> they fear it may have financial implications.</label><label><input type="radio" name="q_33_mc1" value="C"> <b>C</b> they have no real concept of the work&#x27;s value.</label><label><input type="radio" name="q_33_mc1" value="D"> <b>D</b> they feel their personal reaction is of no significance.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="A" data-exp="&rarr; A: the &lsquo;displacement effect&rsquo; comes from the variety of works and the way they are arranged."><div class="qnum">34</div><div class="qmain"><div class="qtext">According to the writer, the &#x27;displacement effect&#x27; on the visitor is caused by</div><label><input type="radio" name="q_34_mc1" value="A"> <b>A</b> the variety of works on display and the way they are arranged.</label><label><input type="radio" name="q_34_mc1" value="B"> <b>B</b> the impossibility of viewing particular works of art over a long period.</label><label><input type="radio" name="q_34_mc1" value="C"> <b>C</b> the similar nature of the paintings and the lack of great works.</label><label><input type="radio" name="q_34_mc1" value="D"> <b>D</b> the inappropriate nature of the individual works selected for exhibition.</label><div class="fb"></div></div></div><div class="q mc" data-type="mc1" data-answer="D" data-exp="&rarr; D: unlike a play or novel, a painting has &lsquo;no prescribed time&rsquo; &mdash; no clear beginning or end."><div class="qnum">35</div><div class="qmain"><div class="qtext">The writer says that unlike other forms of art, a painting does not</div><label><input type="radio" name="q_35_mc1" value="A"> <b>A</b> involve direct contact with an audience.</label><label><input type="radio" name="q_35_mc1" value="B"> <b>B</b> require a specific location for a performance.</label><label><input type="radio" name="q_35_mc1" value="C"> <b>C</b> need the involvement of other professionals.</label><label><input type="radio" name="q_35_mc1" value="D"> <b>D</b> have a specific beginning or end.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 36&ndash;40 &middot; Yes / No / Not Given.</b> Do the following statements agree with the views of the writer? Write YES, NO or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; the writer does not say art history SHOULD use a range of media."><div class="qnum">36</div><div class="qmain"><div class="qtext">Art history should focus on discovering the meaning of art using a range of media.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; the art-historian approach is &lsquo;in perfect harmony with the museum&rsquo;s function&rsquo; &mdash; not in conflict."><div class="qnum">37</div><div class="qmain"><div class="qtext">The approach of art historians conflicts with that of art museums.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="YES" data-exp="YES &mdash; the public &lsquo;experience art more rewardingly when given the confidence to express their views&rsquo;."><div class="qnum">38</div><div class="qmain"><div class="qtext">People should be encouraged to give their opinions openly on works of art.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; nothing is said about only selling accurate reproductions."><div class="qnum">39</div><div class="qmain"><div class="qtext">Reproductions of fine art should only be sold to the public if they are of high quality.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NO" data-exp="NO &mdash; the writer doubts the art establishment will do this: &lsquo;that may be too much to ask&rsquo;."><div class="qnum">40</div><div class="qmain"><div class="qtext">In the future, those with power are likely to encourage more people to enjoy art.</div><select><option value="">— choose —</option><option>YES</option><option>NO</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="p3">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="p3">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-p3">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-p4">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head"><h3>&#128214; The growth of bike-sharing schemes around the world</h3><div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="p4" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="p4" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="p4" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="p4" title="Highlight blue"></button><button class="btn sm eraser" data-erase="p4">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="p4">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div></div>
+        <div class="srcline">Cambridge 14 · Test 1 · Passage 2</div>
+        <div class="passage" id="passage-p4">
+<div class="para"><span class="plabel">A</span>The original idea for an urban bike-sharing scheme dates back to a summer&#x27;s day in Amsterdam in 1965. Provo, the organisation that came up with the idea, was a group of Dutch activists who wanted to change society. They believed the scheme, which was known as the Witte Fietsenplan, was an answer to the perceived threats of air pollution and consumerism. In the centre of Amsterdam, they painted a small number of used bikes white. They also distributed leaflets describing the dangers of cars and inviting people to use the white bikes. The bikes were then left unlocked at various locations around the city, to be used by anyone in need of transport.</div>
+<div class="para"><span class="plabel">B</span>Luud Schimmelpennink, a Dutch industrial engineer who still lives and cycles in Amsterdam, was heavily involved in the original scheme. He recalls how the scheme succeeded in attracting a great deal of attention - particularly when it came to publicising Provo&#x27;s aims – but struggled to get off the ground. The police were opposed to Provo&#x27;s initiatives and almost as soon as the white bikes were distributed around the city, they removed them. However, for Schimmelpennink and for bike-sharing schemes in general, this was just the beginning. &#x27;The first Witte Fietsenplan was just a symbolic thing,&#x27; he says. &#x27;We painted a few bikes white, that was all. Things got more serious when I became a member of the Amsterdam city council two years later.&#x27;</div>
+<div class="para"><span class="plabel">C</span>Schimmelpennink seized this opportunity to present a more elaborate Witte Fietsenplan to the city council. &#x27;My idea was that the municipality of Amsterdam would distribute 10,000 white bikes over the city, for everyone to use,&#x27; he explains. &#x27;I made serious calculations. It turned out that a white bicycle - per person, per kilometre - would cost the municipality only 10% of what it contributed to public transport per person per kilometre.&#x27; Nevertheless, the council unanimously rejected the plan. &#x27;They said that the bicycle belongs to the past. They saw a glorious future for the car,&#x27; says Schimmelpennink. But he was not in the least discouraged.</div>
+<div class="para"><span class="plabel">D</span>Schimmelpennink never stopped believing in bike-sharing, and in the mid-90s, two Danes asked for his help to set up a system in Copenhagen. The result was the world&#x27;s first large-scale bike-share programme. It worked on a deposit: &#x27;You dropped a coin in the bike and when you returned it, you got your money back.&#x27; After setting up the Danish system, Schimmelpennink decided to try his luck again in the Netherlands – and this time he succeeded in arousing the interest of the Dutch Ministry of Transport. &#x27;Times had changed,&#x27; he recalls. &#x27;People had become more environmentally conscious, and the Danish experiment had proved that bike-sharing was a real real possibility.&#x27; A new Witte Fietsenplan was launched in 1999 in Amsterdam. However, riding a white bike was no longer free; it cost one guilder per trip and payment was made with a chip card developed by the Dutch bank Postbank. Schimmelpennink designed conspicuous, sturdy white bikes locked in special racks which could be opened with the chip card - the plan started with 250 bikes, distributed over five stations.</div>
+<div class="para"><span class="plabel">E</span>Theo Molenaar, who was a system designer for the project, worked alongside Schimmelpennink. &#x27;I remember when we were testing the bike racks, he announced that he had already designed better ones. But of course, we had to go through with the ones we had.&#x27; The system, however, was prone to vandalism and theft. &#x27;After every weekend there would always be a couple of bikes missing,&#x27; Molenaar says. &#x27;I really have no idea what people did with them, because they could instantly be recognised as white bikes.&#x27; But the biggest blow came when Postbank decided to abolish the chip card, because it wasn&#x27;t profitable. &#x27;That chip card was pivotal to the system,&#x27; Molenaar says. &#x27;To continue the project we would have needed to set up another system, but the business partner had lost interest.&#x27;</div>
+<div class="para"><span class="plabel">F</span>Schimmelpennink was disappointed, but - characteristically – not for long. In 2002 he got a call from the French advertising corporation JC Decaux, who wanted to set up his bike-sharing scheme in Vienna. &#x27;That went really well. After Vienna, they set up a system in Lyon. Then in 2007, Paris followed. That was a decisive moment in the history of bike-sharing.&#x27; The huge and unexpected success of the Parisian bike-sharing programme, which now boasts more than 20,000 bicycles, inspired cities all over the world to set up their own schemes, all modelled on Schimmelpennink&#x27;s. &#x27;It&#x27;s wonderful that this happened,&#x27; he says. &#x27;But financially I didn&#x27;t really benefit from it, because I never filed for a patent.&#x27;</div>
+<div class="para"><span class="plabel">G</span>In Amsterdam today, 38% of all trips are made by bike and, along with Copenhagen, it is regarded as one of the two most cycle-friendly capitals in the world - but the city never got another Witte Fietsenplan. Molenaar believes this may be because everybody in Amsterdam already has a bike. Schimmelpennink, however, cannot see that this changes Amsterdam&#x27;s need for a bike-sharing scheme. &#x27;People who travel on the underground don&#x27;t carry their bikes around. But often they need additional transport to reach their final destination.&#x27; Although he thinks it is strange that a city like Amsterdam does not have a successful bike- sharing scheme, he is optimistic about the future. &#x27;In the &#x27;60s we didn&#x27;t stand a chance because people were prepared to give their lives to keep cars in the city. But that mentality has totally changed. Today everybody longs for cities that are not dominated by cars.&#x27;</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-p4" data-test="p4">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 14&ndash;18 &middot; Which paragraph contains….</b> Which paragraph/section contains the following information? Write the correct letter, A–G. (A letter may be used more than once.)</div><div class="q" data-type="sel" data-answer="E" data-exp="Para E &mdash; the system was &lsquo;prone to vandalism and theft&rsquo;; bikes went missing (people misused the scheme)."><div class="qnum">14</div><div class="qmain"><div class="qtext">a description of how people misused a bike-sharing scheme</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="Para C &mdash; &lsquo;the council unanimously rejected the plan&rsquo; (a proposed scheme turned down)."><div class="qnum">15</div><div class="qmain"><div class="qtext">an explanation of why a proposed bike-sharing scheme was turned down</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="F" data-exp="Para F &mdash; &lsquo;I never filed for a patent&rsquo;, so he could not profit from his work."><div class="qnum">16</div><div class="qmain"><div class="qtext">a reference to a person being unable to profit from their work</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="Para C &mdash; a white bike would cost &lsquo;only 10%&rsquo; of public transport per km (potential savings)."><div class="qnum">17</div><div class="qmain"><div class="qtext">an explanation of the potential savings a bike-sharing scheme would bring</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Para A &mdash; the scheme answered &lsquo;air pollution and consumerism&rsquo; (the problems it aimed to solve)."><div class="qnum">18</div><div class="qmain"><div class="qtext">a reference to the problems a bike-sharing scheme was intended to solve</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 19&ndash;20 &middot; Selecting from a list — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="B,D" data-exp="B &amp; D &mdash; the 1999 scheme failed when the business partner (Postbank) withdrew support (B); it was made possible by a change in people&rsquo;s attitudes / greater environmental awareness (D)."><div class="qnum">19&ndash;20</div><div class="qmain"><div class="qtext">Which TWO of the following statements are made in the text about the Amsterdam bike-sharing scheme of 1999?</div><label><input type="checkbox" value="A"> <b>A</b> It was initially opposed by a government department.</label><label><input type="checkbox" value="B"> <b>B</b> It failed when a partner in the scheme withdrew support.</label><label><input type="checkbox" value="C"> <b>C</b> It aimed to be more successful than the Copenhagen scheme.</label><label><input type="checkbox" value="D"> <b>D</b> It was made possible by a change in people&#x27;s attitudes.</label><label><input type="checkbox" value="E"> <b>E</b> It attracted interest from a range of bike designers.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 21&ndash;22 &middot; Selecting from a list — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="D,E" data-exp="D &amp; E &mdash; a scheme would benefit residents who use the underground and need extra transport (D); Schimmelpennink finds it strange the city still has no scheme (E)."><div class="qnum">21&ndash;22</div><div class="qmain"><div class="qtext">Which TWO of the following statements are made in the text about Amsterdam today?</div><label><input type="checkbox" value="A"> <b>A</b> The majority of residents would like to prevent all cars from entering the city.</label><label><input type="checkbox" value="B"> <b>B</b> There is little likelihood of the city having another bike-sharing scheme.</label><label><input type="checkbox" value="C"> <b>C</b> More trips in the city are made by bike than by any other form of transport.</label><label><input type="checkbox" value="D"> <b>D</b> A bike-sharing scheme would benefit residents who use public transport.</label><label><input type="checkbox" value="E"> <b>E</b> The city has a reputation as a place that welcomes cyclists.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23&ndash;26 &middot; Summary completion.</b> Complete the summary. Choose words from the passage for each answer.</div><div class="q" data-type="text" data-answers="activists" data-exp="&rarr; activists: Provo were &lsquo;a group of Dutch activists&rsquo;."><div class="qnum">23</div><div class="qmain"><div class="qtext">The first bike-sharing scheme was the idea of the Dutch group Provo. The people who belonged to this group were  <span class="blank">______</span> . They were concerned about damage to the environment and about consumerism, and believed that the bike-sharing scheme would draw attention to these issues.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="consumerism" data-exp="&rarr; consumerism: a response to &lsquo;air pollution and consumerism&rsquo;."><div class="qnum">24</div><div class="qmain"><div class="qtext">The first bike-sharing scheme was the idea of the Dutch group Provo. The people who belonged to this group were activists. They were concerned about damage to the environment and about  <span class="blank">______</span> , and believed that the bike-sharing scheme would draw attention to these issues.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="leaflets" data-exp="&rarr; leaflets: they &lsquo;distributed leaflets describing the dangers of cars&rsquo;."><div class="qnum">25</div><div class="qmain"><div class="qtext">As well as painting some bikes white, they handed out  <span class="blank">______</span> that condemned the use of cars.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="police" data-exp="&rarr; police: &lsquo;the police&hellip; removed them&rsquo; almost immediately."><div class="qnum">26</div><div class="qmain"><div class="qtext">However, the scheme was not a great success: almost as quickly as Provo left the bikes around the city, the  <span class="blank">______</span> took them away. According to Schimmelpennink, the scheme was intended to be symbolic. The idea was to get people thinking about the issues.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="p4">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="p4">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-p4">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-p5">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head"><h3>&#128214; Driverless cars</h3><div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="p5" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="p5" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="p5" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="p5" title="Highlight blue"></button><button class="btn sm eraser" data-erase="p5">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="p5">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div></div>
+        <div class="srcline">Cambridge 15 · Test 1 · Passage 2</div>
+        <div class="passage" id="passage-p5">
+<div class="para"><span class="plabel">A</span>The automotive sector is well used to adapting to automation in manufacturing. The implementation of robotic car manufacture from the 1970s onwards led to significant cost savings and improvements in the reliability and flexibility of vehicle mass production. A new challenge to vehicle production is now on the horizon and, again, it comes from automation. However, this time it is not to do with the manufacturing process, but with the vehicles themselves. Research projects on vehicle automation are not new. Vehicles with limited self-driving capabilities have been around for more than 50 years, resulting in significant contributions towards driver assistance systems. But since Google announced in 2010 that it had been trialling self-driving cars on the streets of California, progress in this field has quickly gathered pace.</div>
+<div class="para"><span class="plabel">B</span>There are many reasons why technology is advancing so fast. One frequently cited motive is safety; indeed, research at the UK&#x27;s Transport Research Laboratory has demonstrated that more than 90 percent of road collisions involve human error as a contributory factor, and it is the primary cause in the vast majority. Automation may help to reduce the incidence of this. Another aim is to free the time people spend driving for other purposes. If the vehicle can do some or all of the driving, it may be possible to be productive, to socialise or simply to relax while automation systems have responsibility for safe control of the vehicle. If the vehicle can do the driving, those who are challenged by existing mobility models - such as older or disabled travellers – may be able to enjoy significantly greater travel autonomy.</div>
+<div class="para"><span class="plabel">C</span>Beyond these direct benefits, we can consider the wider implications for transport and society, and how manufacturing processes might need to respond as a result. At present, the average car spends more than 90 percent of its life parked. Automation means that initiatives for car-sharing become much more viable, particularly in urban areas with significant travel demand. If a significant proportion of the population choose to use shared automated vehicles, mobility demand can be met by far fewer vehicles.</div>
+<div class="para"><span class="plabel">D</span>The Massachusetts Institute of Technology investigated automated mobility in Singapore, finding that fewer than 30 percent of the vehicles currently used would be required if fully automated car sharing could be implemented. If this is the case, it might mean that we need to manufacture far fewer vehicles to meet demand. However, the number of trips being taken would probably increase, partly because empty vehicles would have to be moved from one customer to the next. Modelling work by the University of Michigan Transportation Research Institute suggests automated vehicles might reduce vehicle ownership by 43 percent, but that vehicles&#x27; average annual mileage would double as a result. As a consequence, each vehicle would be used more intensively, and might need replacing sooner. This faster rate of turnover may mean that vehicle production will not necessarily decrease.</div>
+<div class="para"><span class="plabel">E</span>Automation may prompt other changes in vehicle manufacture. If we move to a model where consumers are tending not to own a single vehicle but to purchase access to a range of vehicles through a mobility provider, drivers will have the freedom to select one that best suits their needs for a particular journey, rather than making a compromise across all their requirements. Since, for most of the time, most of the seats in most cars are unoccupied, this may boost production of a smaller, more efficient range of vehicles that suit the needs of individuals. Specialised vehicles may then be available for exceptional journeys, such as going on a family camping trip or helping a son or daughter move to university.</div>
+<div class="para"><span class="plabel">F</span>There are a number of hurdles to overcome in delivering automated vehicles to our roads. These include the technical difficulties in ensuring that the vehicle works reliably in the infinite range of traffic, weather and road situations it might encounter; the regulatory challenges in understanding how liability and enforcement might change when drivers are no longer essential for vehicle operation; and the societal changes that may be required for communities to trust and accept automated vehicles as being a valuable part of the mobility landscape.</div>
+<div class="para"><span class="plabel">G</span>It&#x27;s clear that there are many challenges that need to be addressed but, through robust and targeted research, these can most probably be conquered within the next 10 years. Mobility will change in such potentially significant ways and in association with so many other technological developments, such as telepresence and virtual reality, that it is hard to make concrete predictions about the future. However, one thing is certain: change is coming, and the need to be flexible in response to this will be vital for those involved in manufacturing the vehicles that will deliver future mobility.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-p5" data-test="p5">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 14&ndash;18 &middot; Which paragraph contains….</b> Which paragraph/section contains the following information? Write the correct letter, A–G. (A letter may be used more than once.)</div><div class="q" data-type="sel" data-answer="C" data-exp="Section C &mdash; &lsquo;the average car spends more than 90% of its life parked&rsquo; (time not in use)."><div class="qnum">14</div><div class="qmain"><div class="qtext">reference to the amount of time when a car is not in use</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="B" data-exp="Section B &mdash; safety, free time, and autonomy for older/disabled travellers (several benefits for individuals)."><div class="qnum">15</div><div class="qmain"><div class="qtext">mention of several advantages of driverless vehicles for individual road-users</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="Section E &mdash; drivers could &lsquo;select one that best suits their needs for a particular journey&rsquo;."><div class="qnum">16</div><div class="qmain"><div class="qtext">reference to the opportunity of choosing the most appropriate vehicle for each trip</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="G" data-exp="Section G &mdash; challenges &lsquo;can most probably be conquered within the next 10 years&rsquo; (an estimate)."><div class="qnum">17</div><div class="qmain"><div class="qtext">an estimate of how long it will take to overcome a number of problems</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="D" data-exp="Section D &mdash; faster turnover means &lsquo;vehicle production will not necessarily decrease&rsquo;."><div class="qnum">18</div><div class="qmain"><div class="qtext">a suggestion that the use of driverless cars may have no effect on the number of vehicles manufactured</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 19&ndash;22 &middot; Summary completion.</b> Complete the summary. Choose words from the passage for each answer.</div><div class="q" data-type="text" data-answers="human error" data-exp="&rarr; human error: over 90% of collisions &lsquo;involve human error as a contributory factor&rsquo;."><div class="qnum">19</div><div class="qmain"><div class="qtext">Figures from the Transport Research Laboratory indicate that most motor accidents are partly due to  <span class="blank">______</span> , so the introduction of driverless vehicles will result in greater safety.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="car-sharing" data-exp="&rarr; car-sharing: automation makes &lsquo;initiatives for car-sharing&hellip; much more viable&rsquo;."><div class="qnum">20</div><div class="qmain"><div class="qtext">In addition to the direct benefits of automation, it may bring other advantages. For example, schemes for  <span class="blank">______</span> will be more workable, especially in towns and cities, resulting in fewer cars on the road.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="ownership" data-exp="&rarr; ownership: automation &lsquo;might reduce vehicle ownership by 43 percent&rsquo;."><div class="qnum">21</div><div class="qmain"><div class="qtext">According to the University of Michigan Transportation Research Institute, there could be a 43 percent drop in  <span class="blank">______</span> of cars.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="mileage" data-exp="&rarr; mileage: but &lsquo;average annual mileage would double&rsquo;."><div class="qnum">22</div><div class="qmain"><div class="qtext">However, this would mean that the yearly  <span class="blank">______</span> of each car would, on average, be twice as high as it currently is. This would lead to a higher turnover of vehicles, and therefore no reduction in automotive manufacturing.</div><input type="text" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23&ndash;24 &middot; Selecting from a list — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="C,D" data-exp="C &amp; D &mdash; travellers could do something other than driving (C); people who find driving difficult could travel independently (D)."><div class="qnum">23&ndash;24</div><div class="qmain"><div class="qtext">Which TWO benefits of automated vehicles does the writer mention?</div><label><input type="checkbox" value="A"> <b>A</b> Car travellers could enjoy considerable cost savings.</label><label><input type="checkbox" value="B"> <b>B</b> It would be easier to find parking spaces in urban areas.</label><label><input type="checkbox" value="C"> <b>C</b> Travellers could spend journeys doing something other than driving.</label><label><input type="checkbox" value="D"> <b>D</b> People who find driving physically difficult could travel independently.</label><label><input type="checkbox" value="E"> <b>E</b> A reduction in the number of cars would mean a reduction in pollution.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 25&ndash;26 &middot; Selecting from a list — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="A,E" data-exp="A &amp; E &mdash; making sure the public has confidence in automated vehicles (A), and getting the technology/road systems ready (E)."><div class="qnum">25&ndash;26</div><div class="qmain"><div class="qtext">Which TWO challenges to automated vehicle development does the writer mention?</div><label><input type="checkbox" value="A"> <b>A</b> making sure the general public has confidence in automated vehicles</label><label><input type="checkbox" value="B"> <b>B</b> managing the pace of transition from conventional to automated vehicles</label><label><input type="checkbox" value="C"> <b>C</b> deciding how to compensate professional drivers who become redundant</label><label><input type="checkbox" value="D"> <b>D</b> setting up the infrastructure to make roads suitable for automated vehicles</label><label><input type="checkbox" value="E"> <b>E</b> getting automated vehicles to adapt to various different driving conditions</label><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="p5">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="p5">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-p5">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-p6">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head"><h3>&#128214; Why zoos are good</h3><div class="hl-tools"><button class="swatch sw-y" data-hlcolor="y" data-hlid="p6" title="Highlight yellow"></button><button class="swatch sw-g" data-hlcolor="g" data-hlid="p6" title="Highlight green"></button><button class="swatch sw-p" data-hlcolor="p" data-hlid="p6" title="Highlight pink"></button><button class="swatch sw-b" data-hlcolor="b" data-hlid="p6" title="Highlight blue"></button><button class="btn sm eraser" data-erase="p6">&#9003; Erase</button><button class="btn sm ghost" data-clearhl="p6">Clear all</button><span class="hl-hint">Pick a colour then select text · Erase then click a highlight to remove it</span></div></div>
+        <div class="srcline">Cambridge 14 · Test 4 · Passage 2</div>
+        <div class="passage" id="passage-p6">
+<div class="para"><span class="plabel">A</span>In my view, it is perfectly possible for many species of animals living in zoos or wildlife parks to have a quality of life as high as, or higher than, in the wild. Animals in good zoos get a varied and high-quality diet with all the supplements required, and any illnesses they might have will be treated. Their movement might be somewhat restricted, but they have a safe environment in which to live, and they are spared bullying and social ostracism by others of their kind. They do not suffer from the threat or stress of predators, or the irritation and pain of parasites or injuries. The average captive animal will have a greater life expectancy compared with its wild counterpart, and will not die of drought, of starvation or in the jaws of a predator. A lot of very nasty things happen to truly &#x27;wild&#x27; animals that simply don&#x27;t happen in good zoos, and to view a life that is &#x27;free&#x27; as one that is automatically &#x27;good&#x27; is, I think, an error. Furthermore, zoos serve several key purposes.</div>
+<div class="para"><span class="plabel">B</span>Firstly, zoos aid conservation. Colossal numbers of species are becoming extinct across the world, and many more are increasingly threatened and therefore risk extinction. Moreover, some of these collapses have been sudden, dramatic and unexpected, or were simply discovered very late in the day. A species protected in captivity can be bred up to provide a reservoir population against a population crash or extinction in the wild. A good number of species only exist in captivity, with many of these living in zoos. Still more only exist in the wild because they have been reintroduced from zoos, or have wild populations that have been boosted by captive bred animals. Without these efforts there would be fewer species alive today. Although reintroduction successes are few and far between, the numbers are increasing, and the very fact that species have been saved or reintroduced as a result of captive breeding proves the value of such initiatives.</div>
+<div class="para"><span class="plabel">C</span>Zoos also provide education. Many children and adults, especially those in cities, will never see a wild animal beyond a fox or pigeon. While it is true that television documentaries are becoming ever more detailed and impressive, and many natural history specimens are on display in museums, there really is nothing to compare with seeing a living creature in the flesh, hearing it, smelling it, watching what it does and having the time to absorb details. That alone will bring a greater understanding and perspective to many, and hopefully give them a greater appreciation for wildlife, conservation efforts and how they can contribute.</div>
+<div class="para"><span class="plabel">D</span>In addition to this, there is also the education that can take place in zoos through signs, talks and presentations which directly communicate information to visitors about the animals they are seeing and their place in the world. This was an area where zoos used to be lacking, but they are now increasingly sophisticated in their communication and outreach work. Many zoos also work directly to educate conservation workers in other countries, or send their animal keepers abroad to contribute their knowledge and skills to those working in zoos and reserves, thereby helping to improve conditions and reintroductions all over the world.</div>
+<div class="para"><span class="plabel">E</span>Zoos also play a key role in research. If we are to save wild species and restore and repair ecosystems we need to know about how key species live, act and react. Being able to undertake research on animals in zoos where there is less risk and fewer variables means real changes can be effected on wild populations. Finding out about, for example, the oestrus cycle of an animal or its breeding rate helps us manage wild populations. Procedures such as capturing and moving at-risk or dangerous individuals are bolstered by knowledge gained in zoos about doses for anaesthetics, and by experience in handling and transporting animals. This can make a real difference to conservation efforts and to the reduction of human-animal conflicts, and can provide a knowledge base for helping with the increasing threats of habitat destruction and other problems.</div>
+<div class="para"><span class="plabel">F</span>In conclusion, considering the many ongoing global threats to the environment, it is hard for me to see zoos as anything other than essential to the long-term survival of numerous species. They are vital not just in terms of protecting animals, but as a means of learning about them to aid those still in the wild, as well as educating and informing the general population about these animals and their world so that they can assist or at least accept the need to be more environmentally conscious. Without them, the world would be, and would increasingly become, a much poorer place.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-p6" data-test="p6">
+          <div class="cdbar" data-mode="countdown" data-secs="1200" title="20-minute countdown for this passage">&#9203; <span class="cdlab">Exam timer</span> <b class="cdd">20:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+<div class="qgroup"><div class="ginstr"><b>Questions 14&ndash;17 &middot; Which paragraph contains….</b> Which paragraph/section contains the following information? Write the correct letter, A–F. (A letter may be used more than once.)</div><div class="q" data-type="sel" data-answer="B" data-exp="Para B &mdash; species becoming extinct &lsquo;suddenly, dramatically and unexpectedly&rsquo; (how quickly species die out)."><div class="qnum">14</div><div class="qmain"><div class="qtext">a reference to how quickly animal species can die out</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="E" data-exp="Para E &mdash; research in zoos has &lsquo;less risk and fewer variables&rsquo; than in the wild."><div class="qnum">15</div><div class="qmain"><div class="qtext">reasons why it is preferable to study animals in captivity rather than in the wild</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="Para C &mdash; television documentaries and museum specimens (two ways of learning other than visiting a zoo)."><div class="qnum">16</div><div class="qmain"><div class="qtext">mention of two ways of learning about animals other than visiting them in zoos</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Para A &mdash; varied diet, treated illnesses, no predators (why zoo animals may be healthier)."><div class="qnum">17</div><div class="qmain"><div class="qtext">reasons why animals in zoos may be healthier than those in the wild</div><select><option value="">— choose —</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 18&ndash;22 &middot; True / False / Not Given.</b> Do the following statements agree with the information in the passage? Write TRUE, FALSE or NOT GIVEN.</div><div class="q" data-type="sel" data-answer="TRUE" data-exp="TRUE &mdash; &lsquo;a greater life expectancy compared with its wild counterpart&rsquo;."><div class="qnum">18</div><div class="qmain"><div class="qtext">An animal is likely to live longer in a zoo than in the wild.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="TRUE" data-exp="TRUE &mdash; &lsquo;a good number of species only exist in captivity&rsquo;."><div class="qnum">19</div><div class="qmain"><div class="qtext">There are some species in zoos which can no longer be found in the wild.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="NOT GIVEN" data-exp="NOT GIVEN &mdash; no claim that better documentaries have reduced zoo visits."><div class="qnum">20</div><div class="qmain"><div class="qtext">Improvements in the quality of TV wildlife documentaries have resulted in increased numbers of zoo visitors.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="FALSE" data-exp="FALSE &mdash; communicating information &lsquo;was an area where zoos used to be lacking&rsquo; &mdash; not always excellent."><div class="qnum">21</div><div class="qmain"><div class="qtext">Zoos have always excelled at transmitting information about animals to the public.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="TRUE" data-exp="TRUE &mdash; research in zoos carries &lsquo;less risk&rsquo; and less stress for the animals than in the wild."><div class="qnum">22</div><div class="qmain"><div class="qtext">Studying animals in zoos is less stressful for the animals than studying them in the wild.</div><select><option value="">— choose —</option><option>TRUE</option><option>FALSE</option><option>NOT GIVEN</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 23&ndash;24 &middot; Selecting from a list — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="B,D" data-exp="B &amp; D &mdash; some staff travel abroad to join teams in zoos (B); some educate conservation workers (D)."><div class="qnum">23&ndash;24</div><div class="qmain"><div class="qtext">Which TWO of the following are stated about zoo staff in the text?</div><label><input type="checkbox" value="A"> <b>A</b> Some take part in television documentaries about animals.</label><label><input type="checkbox" value="B"> <b>B</b> Some travel to overseas locations to join teams in zoos.</label><label><input type="checkbox" value="C"> <b>C</b> Some get experience with species in the wild before taking up zoo jobs.</label><label><input type="checkbox" value="D"> <b>D</b> Some teach people who are involved with conservation projects.</label><label><input type="checkbox" value="E"> <b>E</b> Some specialise in caring for species which are under threat.</label><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 25&ndash;26 &middot; Selecting from a list — choose TWO.</b> Choose TWO letters, A–E.</div><div class="q mc" data-type="mc2" data-answer="B,E" data-exp="B &amp; E &mdash; zoos can raise public awareness of environmental issues (B) and raise animals that can later be released (E)."><div class="qnum">25&ndash;26</div><div class="qmain"><div class="qtext">Which TWO of these beliefs about zoos does the writer mention in the text?</div><label><input type="checkbox" value="A"> <b>A</b> They can help children overcome their fears of wild animals.</label><label><input type="checkbox" value="B"> <b>B</b> They can increase public awareness of environmental issues.</label><label><input type="checkbox" value="C"> <b>C</b> They can provide employment for a range of professional people.</label><label><input type="checkbox" value="D"> <b>D</b> They can generate income to support wildlife conservation projects.</label><label><input type="checkbox" value="E"> <b>E</b> They can raise animals which can later be released into the wild.</label><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="p6">&#10004; Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="p6">&#8635; Reset answers</button>
+            <div class="scorebox" id="score-p6">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">🧩 Vocabulary practice — Word formation (suffixes)</h2>
+      <p class="small">Building nouns, adjectives and verbs with suffixes: <b>-ness, -ion/-ation, -ship, -ity, -ism, -able, -ous, -ible, -ise</b>. No time limit — the timer just records how long you take. Reach 70% to unlock answers. (20 marks)</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+        <div class="cdbar countup" data-mode="countup" title="Time used to complete this section (no limit)">&#9201; <span class="cdlab">Time used</span> <b class="cdd">00:00</b><button type="button" class="cdb">Start</button><button type="button" class="cdr">Reset</button></div>
+
+        <div class="qgroup"><div class="ginstr"><b>Exercise 1 · Make the noun.</b> Choose the suffix that turns each word into a noun.</div>
+          <div class="q" data-type="sel" data-answer="-ness" data-exp="aware → awareness (-ness)."><div class="qnum">1</div><div class="qmain"><div class="qtext">aware + ______</div><select><option value="">— choose —</option><option>-ness</option><option>-ion</option><option>-ship</option><option>-ity</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="-ion" data-exp="contribute → contribution (drop e, + -ion)."><div class="qnum">2</div><div class="qmain"><div class="qtext">contribute + ______</div><select><option value="">— choose —</option><option>-ness</option><option>-ion</option><option>-ment</option><option>-al</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="-ship" data-exp="friend → friendship (-ship)."><div class="qnum">3</div><div class="qmain"><div class="qtext">friend + ______</div><select><option value="">— choose —</option><option>-ness</option><option>-ship</option><option>-ity</option><option>-ous</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="-ation" data-exp="inform → information (-ation)."><div class="qnum">4</div><div class="qmain"><div class="qtext">inform + ______</div><select><option value="">— choose —</option><option>-ment</option><option>-ation</option><option>-ness</option><option>-ity</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="-ation" data-exp="conserve → conservation (drop e, + -ation)."><div class="qnum">5</div><div class="qmain"><div class="qtext">conserve + ______</div><select><option value="">— choose —</option><option>-ment</option><option>-ation</option><option>-ion</option><option>-ship</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="-ness" data-exp="lonely → loneliness (y → i + -ness)."><div class="qnum">6</div><div class="qmain"><div class="qtext">lonely + ______</div><select><option value="">— choose —</option><option>-ness</option><option>-ity</option><option>-ion</option><option>-ship</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="-ship" data-exp="member → membership (-ship)."><div class="qnum">7</div><div class="qmain"><div class="qtext">member + ______</div><select><option value="">— choose —</option><option>-ment</option><option>-ness</option><option>-ship</option><option>-ity</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="qgroup"><div class="ginstr"><b>Exercise 2 · Choose the correct form.</b> Pick the correctly formed word for each sentence.</div>
+          <div class="q" data-type="sel" data-answer="conservation" data-exp="conserve → conservation (noun)."><div class="qnum">8</div><div class="qmain"><div class="qtext">Zoos play a key role in wildlife ______ .</div><select><option value="">— choose —</option><option>conservation</option><option>conservement</option><option>conservity</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="vandalism" data-exp="vandal → vandalism (-ism)."><div class="qnum">9</div><div class="qmain"><div class="qtext">The white-bike system was prone to ______ and theft.</div><select><option value="">— choose —</option><option>vandalation</option><option>vandalism</option><option>vandalness</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="autonomy" data-exp="autonomous → autonomy (noun)."><div class="qnum">10</div><div class="qmain"><div class="qtext">Driverless cars could give disabled people greater travel ______ .</div><select><option value="">— choose —</option><option>autonomness</option><option>autonomy</option><option>autonomation</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="susceptible" data-exp="suscept- → susceptible (-ible adjective)."><div class="qnum">11</div><div class="qmain"><div class="qtext">Skimming can make readers ______ to false information.</div><select><option value="">— choose —</option><option>susceptful</option><option>susceptive</option><option>susceptible</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="sustainable" data-exp="sustain → sustainable (-able adjective)."><div class="qnum">12</div><div class="qmain"><div class="qtext">A ______ policy can continue long-term without harming the environment.</div><select><option value="">— choose —</option><option>sustainable</option><option>sustainful</option><option>sustainive</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="pressurise" data-exp="pressure → pressurise (-ise verb; US -ize)."><div class="qnum">13</div><div class="qmain"><div class="qtext">The public can ______ businesses into changing their practices.</div><select><option value="">— choose —</option><option>pressurate</option><option>pressurise</option><option>pressurify</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="environmental" data-exp="environment → environmental (-al adjective)."><div class="qnum">14</div><div class="qmain"><div class="qtext">Big businesses are judged on their ______ record.</div><select><option value="">— choose —</option><option>environmentous</option><option>environmental</option><option>environmentable</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="qgroup"><div class="ginstr"><b>Exercise 3 · Gap-fill.</b> Complete each sentence with a word from the box.</div>
+          <div class="endbank"><div class="ebt">Word box — use each once</div><div class="ebi">extinction · regulation · comprehension · automation · awareness · participation</div></div>
+          <div class="q" data-type="sel" data-answer="extinction" data-exp="extinct → extinction (noun)."><div class="qnum">15</div><div class="qmain"><div class="qtext">Captive breeding can save a species from ______ .</div><select><option value="">— choose —</option><option>extinction</option><option>regulation</option><option>comprehension</option><option>automation</option><option>awareness</option><option>participation</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="regulation" data-exp="regulate → regulation (noun)."><div class="qnum">16</div><div class="qmain"><div class="qtext">Effective government ______ can make clean businesses more competitive.</div><select><option value="">— choose —</option><option>extinction</option><option>regulation</option><option>comprehension</option><option>automation</option><option>awareness</option><option>participation</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="comprehension" data-exp="comprehend → comprehension (noun)."><div class="qnum">17</div><div class="qmain"><div class="qtext">Print readers showed better ______ than screen readers.</div><select><option value="">— choose —</option><option>extinction</option><option>regulation</option><option>comprehension</option><option>automation</option><option>awareness</option><option>participation</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="automation" data-exp="automate → automation (noun)."><div class="qnum">18</div><div class="qmain"><div class="qtext">Robotic ______ cut the cost of car production.</div><select><option value="">— choose —</option><option>extinction</option><option>regulation</option><option>comprehension</option><option>automation</option><option>awareness</option><option>participation</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="awareness" data-exp="aware → awareness (noun)."><div class="qnum">19</div><div class="qmain"><div class="qtext">Zoos can raise public ______ of environmental issues.</div><select><option value="">— choose —</option><option>extinction</option><option>regulation</option><option>comprehension</option><option>automation</option><option>awareness</option><option>participation</option></select><div class="fb"></div></div></div>
+          <div class="q" data-type="sel" data-answer="participation" data-exp="participate → participation (noun)."><div class="qnum">20</div><div class="qmain"><div class="qtext">Spontaneous ______ by the public enriches the experience of art.</div><select><option value="">— choose —</option><option>extinction</option><option>regulation</option><option>comprehension</option><option>automation</option><option>awareness</option><option>participation</option></select><div class="fb"></div></div></div>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">&#10004; Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">&#8635; Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Vocabulary Glossary — by passage</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic and topic vocabulary, grouped by reading passage. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage note and useful collocations. <span id="glossCount"></span></p>
+      <div id="glossWrap"></div>
+    </div>
+  </section>
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong (after unlocking a test at 70%+) is recorded here with the correct answer and the reason.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+    </div>
+  </section>
+</div>
+<div class="srcfoot">Sources: Changes in reading habits (Cambridge 16 · Test 4 · Passage 2) &nbsp;·&nbsp; Environmental practices of big businesses (Cambridge 15 · Test 4 · Passage 3) &nbsp;·&nbsp; Museums of fine art and their public (Cambridge 10 · Test 2 · Passage 3) &nbsp;·&nbsp; The growth of bike-sharing schemes around the world (Cambridge 14 · Test 1 · Passage 2) &nbsp;·&nbsp; Driverless cars (Cambridge 15 · Test 1 · Passage 2) &nbsp;·&nbsp; Why zoos are good (Cambridge 14 · Test 4 · Passage 2)</div>
+<div class="flash" id="flash"></div>
+<script>
+
+(function(){
+"use strict";
+
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 5 Homework";
+const LS_KEY = "ielts_reading_studio_module5_homework_v1";
+const PASS_PCT = 70;
+const SEQ = ["p1", "p2", "p3", "p4", "p5", "p6", "vocab"];   // ordered test ids for sequential unlock
+const TEACHER = false;   // teacher edition: all tabs open, answers always shown
+function TLABEL(k){const m=TEST_META[k];if(!m)return k;return m.label+((TEACHER&&m.src)?(" ("+m.src+")"):"");}
+
+const TEST_META = {
+  p1:{label:"Reading habits", src:"Cam 16 \u00b7 Test 4", short:"1 \u00b7 Reading habits", pill:"rd"},
+  p2:{label:"Big business", src:"Cam 15 \u00b7 Test 4", short:"2 \u00b7 Big business", pill:"rd"},
+  p3:{label:"Art museums", src:"Cam 10 \u00b7 Test 2", short:"3 \u00b7 Art museums", pill:"rd"},
+  p4:{label:"Bike-sharing", src:"Cam 14 \u00b7 Test 1", short:"4 \u00b7 Bike-sharing", pill:"rd"},
+  p5:{label:"Driverless cars", src:"Cam 15 \u00b7 Test 1", short:"5 \u00b7 Driverless cars", pill:"rd"},
+  p6:{label:"Zoos", src:"Cam 14 \u00b7 Test 4", short:"6 \u00b7 Zoos", pill:"rd"},
+  vocab:{label:"Vocabulary practice", src:"", short:"🧩 Vocab", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    tests:{
+      p1:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      p2:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      p3:{attempts:0,timeSec:0,lastScore:null,total:14,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      p4:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      p5:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      p6:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:20,best:null,answers:{},highlights:"",unlocked:false,overtimeSec:0}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");if(d)d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+function isLockedTab(id){
+  const i=SEQ.indexOf(id);
+  return !TEACHER && i>0 && !state.tests[SEQ[i-1]].unlocked;
+}
+function refreshTabLocks(){
+  SEQ.forEach((id,i)=>{
+    const btn=document.querySelector('#tabs button[data-tab="'+id+'"]');
+    if(!btn)return;
+    const locked = !TEACHER && i>0 && !state.tests[SEQ[i-1]].unlocked;
+    btn.classList.toggle("locked",locked);
+    let lk=btn.querySelector(".tlock");
+    if(locked){if(!lk){lk=document.createElement("span");lk.className="tlock";lk.textContent=" 🔒";btn.appendChild(lk);}}
+    else if(lk){lk.remove();}
+  });
+}
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  const _t=b.dataset.tab;
+  if(SEQ.indexOf(_t)>=0 && isLockedTab(_t)){
+    const prev=SEQ[SEQ.indexOf(_t)-1];
+    flash("🔒 Finish "+(TEST_META[prev]?TEST_META[prev].short:"the previous test")+" with "+PASS_PCT+"% to unlock this one.");
+    return;
+  }
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
+  updateHeaderStats();
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+
+// header on-tab timer (records time on the currently-open test tab; feeds report/sheet)
+setInterval(()=>{
+  if(state.tests[activeTab]){state.tests[activeTab].timeSec++;updateHeaderStats();}
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "00:00";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- highlighting (multi-colour + eraser) ----------
+const HL_IDS=["p1", "p2", "p3", "p4", "p5", "p6"];
+let hlTool={};HL_IDS.forEach(id=>hlTool[id]=null);   // null | 'y' | 'g' | 'p' | 'b' | 'erase'
+function setTool(id,tool,tb){
+  hlTool[id]=(hlTool[id]===tool)?null:tool;
+  tb.querySelectorAll('[data-hlcolor]').forEach(b=>b.classList.toggle('on',b.dataset.hlcolor===hlTool[id]));
+  const er=tb.querySelector('[data-erase]');if(er)er.classList.toggle('on',hlTool[id]==='erase');
+}
+$$('.hl-tools').forEach(tb=>{
+  tb.querySelectorAll('[data-hlcolor]').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.hlid,b.dataset.hlcolor,tb)));
+  const er=tb.querySelector('[data-erase]');if(er)er.addEventListener('click',()=>setTool(er.dataset.erase,'erase',tb));
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+    flash("All highlights cleared.");
+  });
+});
+HL_IDS.forEach(id=>{
+  const p=$("#passage-"+id);if(!p)return;
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    const tool=hlTool[id];
+    if(!tool||tool==="erase")return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.className="hl-"+tool;
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();p.normalize();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){}
+  });
+  p.addEventListener("click",(e)=>{
+    if(hlTool[id]!=="erase")return;
+    const m=e.target.closest?e.target.closest("mark"):null;
+    if(!m||!p.contains(m))return;
+    const t=document.createTextNode(m.textContent);
+    m.parentNode.replaceChild(t,m);p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"||type==="sel"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>'+overBadge(t.overtimeSec);
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>'+overBadge(t.overtimeSec);
+      }
+    }
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so"||type==="sel")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+function overBadge(sec){return (sec&&sec>0)?' <span class="over-badge">⏰ +'+fmt(sec)+' over 20:00</span>':"";}
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so"||type==="sel")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="",points=0,max=1;
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
+  }else if(type==="tfng"||type==="so"||type==="sel"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);points=ok?1:0;
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;points=ok?1:0;
+  }else if(type==="mc2"){
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());max=correctSet.length;
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");correct=correctSet.slice().sort().join(",");
+    points=(sel.length>max)?0:sel.filter(v=>correctSet.includes(v)).length;ok=points===max;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
+}
+function questionLabel(q){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{if(!peekAnswer(q))blanks++;});
+  const msg="Submit "+TLABEL(test)+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  let score=0,total=0;const graded=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q);
+    total+=r.max;score+=r.points;graded.push({q,r,num,txt});
+  });
+  const pct=Math.round(score/total*100);
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  const _cd=body.querySelector(".cdbar");
+  t.overtimeSec=(_cd&&_cd.__overtime)?_cd.__overtime():0;
+  const passedNow=TEACHER?true:(pct>=PASS_PCT);
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{fb.className="fb";fb.innerHTML="";}
+  });
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+  save();updateHeaderStats();refreshTabLocks();
+
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>')+overBadge(t.overtimeSec);
+    flash(TLABEL(test)+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>'+overBadge(t.overtimeSec);
+    const note=document.createElement("div");note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
+  syncToSheet({test:MODULE_TAG+" — "+TLABEL(test),score:score,total:total,percent:pct,attempt:t.attempts,timeSec:t.timeSec,timeFmt:fmt(t.timeSec),overtimeSec:t.overtimeSec||0,overtimeFmt:fmt(t.overtimeSec||0),details:details});
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  clearLockNote(body);
+  const cd=body.querySelector(".cdbar");
+  if(cd&&cd.__resetCountdown)cd.__resetCountdown();
+  state.tests[test].answers={};save();
+  flash("Answers cleared and timer reset.");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload){
+  if(!WEBAPP_URL)return;
+  const full=Object.assign({name:state.student.name||"(no name)",email:state.student.email||"(no email)"},payload);
+  fetch(WEBAPP_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(full)})
+    .then(()=>{$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a passage (and reach 70%) to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{short:e.test,pill:"rd"};
+    return '<tr><td><span class="pill '+(meta.pill||"rd")+'">'+escapeHtml(meta.short||meta.label)+'</span></td>'
+      +'<td><b>'+e.num+'</b></td><td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Passage</th><th>Q</th><th>Statement</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=metric("Student",state.student.name||"—")+metric("Overall score",totMax?totScore+"/"+totMax:"—")+metric("Total time",fmt(totTime))+metric("Total attempts",totAtt)+metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    const ot=(t.overtimeSec&&t.overtimeSec>0)?('<span style="color:var(--bad);font-weight:700">+'+fmt(t.overtimeSec)+'</span>'):'—';
+    return "<tr><td><b>"+escapeHtml(TLABEL(k))+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td><td>"+ot+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time used</th><th>Overtime (&gt;20:00)</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595,M=40;let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(15);
+  doc.text("IELTS Reading Studio — Module 2 Homework — Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+  line("Results by passage",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(TLABEL(k),11,"bold");
+    const ot=(t.overtimeSec&&t.overtimeSec>0)?("+"+fmt(t.overtimeSec)):"none";
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time used: "+fmt(t.timeSec)+"    Overtime: "+ot,10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{state.errorLog.forEach((e,i)=>{
+    const meta=TEST_META[e.test]||{short:e.test};
+    line((i+1)+". ["+(meta.short||meta.label)+" Q"+e.num+"] "+e.q,10,"bold");
+    line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+    if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"").replace(/&lsquo;|&rsquo;/g,"'").replace(/&mdash;/g,"-").replace(/&hellip;/g,"...");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+    y+=2;
+  });}
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module2_homework_report.pdf";
+  doc.save(fn);flash("PDF report downloaded.");
+});
+
+// ---------- glossary (grouped by passage) ----------
+const GLOSSARY=[
+ {grp:"Changes in reading habits",w:"literacy",pos:"noun",en:"the ability to read and write.",vi:"kh\u1ea3 n\u0103ng \u0111\u1ecdc vi\u1ebft",ex:"the acquisition of literacy needed a new circuit in the brain.",nu:"Formal; opposite: illiteracy; adj: literate.",co:"adult / digital literacy; literacy skills"},
+ {grp:"Changes in reading habits",w:"circuit",pos:"noun",en:"here, a network of connected cells in the brain (a neural pathway).",vi:"m\u1ea1ch (th\u1ea7n kinh)",ex:"the neuronal circuit that underlies the brain&rsquo;s ability to read.",nu:"Technical here; also electrical circuit.",co:"a neural / reading circuit; wire a circuit"},
+ {grp:"Changes in reading habits",w:"atrophy",pos:"noun / verb",en:"a gradual weakening or wasting away through lack of use.",vi:"s\u1ef1 teo/suy y\u1ebfu d\u1ea7n",ex:"the subtle atrophy of critical analysis and empathy.",nu:"Formal; medical origin.",co:"muscle atrophy; skills atrophy"},
+ {grp:"Changes in reading habits",w:"comprehension",pos:"noun",en:"the ability to understand something.",vi:"s\u1ef1 hi\u1ec3u, kh\u1ea3 n\u0103ng \u0111\u1ecdc hi\u1ec3u",ex:"print readers were superior in their comprehension.",nu:"Formal; verb: comprehend.",co:"reading comprehension; beyond comprehension"},
+ {grp:"Changes in reading habits",w:"skim",pos:"verb",en:"to read quickly to get the main idea, not every word.",vi:"\u0111\u1ecdc l\u01b0\u1edbt",ex:"the &lsquo;new norm&rsquo; in reading is skimming.",nu:"Neutral; contrast: deep reading.",co:"skim through a text; skim-read"},
+ {grp:"Changes in reading habits",w:"susceptible",pos:"adjective",en:"easily influenced or harmed by something.",vi:"d\u1ec5 b\u1ecb \u1ea3nh h\u01b0\u1edfng/t\u1ed5n th\u01b0\u01a1ng",ex:"skimming leaves us susceptible to false information.",nu:"Formal; susceptible to sth.",co:"susceptible to influence / disease"},
+ {grp:"Changes in reading habits",w:"empathy",pos:"noun",en:"the ability to understand and share another person&rsquo;s feelings.",vi:"s\u1ef1 \u0111\u1ed3ng c\u1ea3m",ex:"deep reading builds perspective-taking and empathy.",nu:"Positive; adj: empathetic.",co:"show / feel empathy; empathy for others"},
+ {grp:"Environmental practices of big businesses",w:"regulation",pos:"noun",en:"an official rule, or the act of controlling something by rules.",vi:"quy \u0111\u1ecbnh, s\u1ef1 qu\u1ea3n l\u00fd",ex:"when government regulation is effective, clean businesses out-compete dirty ones.",nu:"Formal; verb: regulate.",co:"government / environmental regulation; strict regulation"},
+ {grp:"Environmental practices of big businesses",w:"shareholder",pos:"noun",en:"a person who owns shares in a company.",vi:"c\u1ed5 \u0111\u00f4ng",ex:"companies with shareholders are obliged to maximise profits.",nu:"Neutral (US: stockholder).",co:"shareholders&rsquo; interests; a major shareholder"},
+ {grp:"Environmental practices of big businesses",w:"liable",pos:"adjective",en:"legally responsible for something.",vi:"ch\u1ecbu tr\u00e1ch nhi\u1ec7m (ph\u00e1p l\u00fd)",ex:"US laws make a company&rsquo;s directors legally liable.",nu:"Formal; noun: liability.",co:"liable for sth; held liable"},
+ {grp:"Environmental practices of big businesses",w:"sustainable",pos:"adjective",en:"able to continue long-term without harming the environment.",vi:"b\u1ec1n v\u1eefng",ex:"preferring to buy sustainably harvested products.",nu:"Positive; adv: sustainably.",co:"sustainable practices / products"},
+ {grp:"Environmental practices of big businesses",w:"enforce",pos:"verb",en:"to make people obey a rule or law.",vi:"th\u1ef1c thi, c\u01b0\u1ee1ng ch\u1ebf",ex:"moral principles also needed to be enforced.",nu:"Formal; noun: enforcement.",co:"enforce a law / rule; strictly enforce"},
+ {grp:"Environmental practices of big businesses",w:"quota",pos:"noun",en:"a fixed limit on how much is allowed.",vi:"h\u1ea1n ng\u1ea1ch, \u0111\u1ecbnh m\u1ee9c",ex:"an unmanaged fishery without quotas.",nu:"Neutral/economics.",co:"a fishing / import quota; set a quota"},
+ {grp:"Environmental practices of big businesses",w:"supply chain",pos:"noun",en:"the whole system of making and delivering a product.",vi:"chu\u1ed7i cung \u1ee9ng",ex:"identify which links in the supply chain are sensitive to pressure.",nu:"Business term.",co:"a global supply chain; a link in the supply chain"},
+ {grp:"Museums of fine art and their public",w:"reproduction",pos:"noun",en:"a copy of a work of art.",vi:"b\u1ea3n sao, b\u1ea3n t\u00e1i t\u1ea1o",ex:"they are familiar with it from reproductions.",nu:"Neutral; verb: reproduce.",co:"a faithful / high-quality reproduction"},
+ {grp:"Museums of fine art and their public",w:"facsimile",pos:"noun",en:"an exact copy of something.",vi:"b\u1ea3n sao y h\u1ec7t",ex:"it is possible to make very accurate facsimiles.",nu:"Formal; synonym: exact copy.",co:"a facsimile of; facsimile edition"},
+ {grp:"Museums of fine art and their public",w:"repository",pos:"noun",en:"a place where things are stored or kept safe.",vi:"kho l\u01b0u gi\u1eef",ex:"art museums are repositories of unique historical objects.",nu:"Formal.",co:"a repository of knowledge / art"},
+ {grp:"Museums of fine art and their public",w:"exhibit",pos:"noun / verb",en:"an object shown in a museum; to show in public.",vi:"hi\u1ec7n v\u1eadt tr\u01b0ng b\u00e0y; tr\u01b0ng b\u00e0y",ex:"ropes and display cases keep us away from the exhibits.",nu:"Neutral; noun: exhibition.",co:"exhibit a painting; museum exhibits"},
+ {grp:"Museums of fine art and their public",w:"monetary",pos:"adjective",en:"relating to money.",vi:"(thu\u1ed9c) ti\u1ec1n t\u1ec7, ti\u1ec1n b\u1ea1c",ex:"works have been assigned a huge monetary value.",nu:"Formal.",co:"monetary value / policy"},
+ {grp:"Museums of fine art and their public",w:"spontaneous",pos:"adjective",en:"happening naturally, without planning.",vi:"t\u1ef1 ph\u00e1t, t\u1ef1 nhi\u00ean",ex:"a spontaneous, self-reliant kind of reading.",nu:"Positive; adv: spontaneously.",co:"a spontaneous reaction; spontaneous criticism"},
+ {grp:"Museums of fine art and their public",w:"displacement",pos:"noun",en:"the act of moving something from its usual place.",vi:"s\u1ef1 di d\u1eddi, \u0111\u1eb7t sai ch\u1ed7",ex:"this &lsquo;displacement effect&rsquo; is heightened by the volume of exhibits.",nu:"Formal; verb: displace.",co:"the displacement of; a displacement effect"},
+ {grp:"The growth of bike-sharing schemes",w:"activist",pos:"noun",en:"a person who works for political or social change.",vi:"nh\u00e0 ho\u1ea1t \u0111\u1ed9ng",ex:"Provo was a group of Dutch activists.",nu:"Neutral; noun: activism.",co:"a political / environmental activist"},
+ {grp:"The growth of bike-sharing schemes",w:"consumerism",pos:"noun",en:"the belief that buying lots of goods is good; a focus on buying.",vi:"ch\u1ee7 ngh\u0129a ti\u00eau d\u00f9ng",ex:"an answer to the threats of air pollution and consumerism.",nu:"Often negative.",co:"modern / rampant consumerism"},
+ {grp:"The growth of bike-sharing schemes",w:"municipality",pos:"noun",en:"a town or city with its own local government.",vi:"\u0111\u00f4 th\u1ecb / ch\u00ednh quy\u1ec1n th\u00e0nh ph\u1ed1",ex:"the municipality of Amsterdam would distribute bikes.",nu:"Formal; adj: municipal.",co:"the local municipality; municipal services"},
+ {grp:"The growth of bike-sharing schemes",w:"vandalism",pos:"noun",en:"deliberately damaging public or private property.",vi:"s\u1ef1 ph\u00e1 ho\u1ea1i (t\u00e0i s\u1ea3n)",ex:"the system was prone to vandalism and theft.",nu:"Negative; verb: vandalise.",co:"an act of vandalism; mindless vandalism"},
+ {grp:"The growth of bike-sharing schemes",w:"patent",pos:"noun",en:"a legal right to be the only maker of an invention.",vi:"b\u1eb1ng s\u00e1ng ch\u1ebf",ex:"he never filed for a patent.",nu:"Neutral.",co:"file for / hold a patent; a patent on sth"},
+ {grp:"The growth of bike-sharing schemes",w:"conspicuous",pos:"adjective",en:"easy to see or notice; standing out.",vi:"d\u1ec5 th\u1ea5y, n\u1ed5i b\u1eadt",ex:"he designed conspicuous, sturdy white bikes.",nu:"Formal; opposite: inconspicuous.",co:"conspicuous by its absence; highly conspicuous"},
+ {grp:"The growth of bike-sharing schemes",w:"deposit",pos:"noun",en:"money paid that is returned when you give something back.",vi:"ti\u1ec1n \u0111\u1eb7t c\u1ecdc",ex:"it worked on a deposit: you dropped a coin in the bike.",nu:"Neutral; also bank deposit.",co:"pay / get back a deposit; a refundable deposit"},
+ {grp:"Driverless cars",w:"automation",pos:"noun",en:"the use of machines to do work instead of people.",vi:"s\u1ef1 t\u1ef1 \u0111\u1ed9ng ho\u00e1",ex:"the automotive sector is used to adapting to automation.",nu:"Neutral; verb: automate.",co:"factory / vehicle automation"},
+ {grp:"Driverless cars",w:"autonomy",pos:"noun",en:"independence; the ability to act or move on one&rsquo;s own.",vi:"s\u1ef1 t\u1ef1 ch\u1ee7, \u0111\u1ed9c l\u1eadp",ex:"disabled travellers may enjoy greater travel autonomy.",nu:"Formal; adj: autonomous.",co:"greater autonomy; personal autonomy"},
+ {grp:"Driverless cars",w:"viable",pos:"adjective",en:"able to work successfully; practical.",vi:"kh\u1ea3 thi",ex:"car-sharing initiatives become much more viable.",nu:"Positive; noun: viability.",co:"a viable option / alternative; commercially viable"},
+ {grp:"Driverless cars",w:"liability",pos:"noun",en:"legal responsibility for something.",vi:"tr\u00e1ch nhi\u1ec7m ph\u00e1p l\u00fd",ex:"understanding how liability might change when drivers are not essential.",nu:"Formal; adj: liable.",co:"legal liability; accept liability"},
+ {grp:"Driverless cars",w:"turnover",pos:"noun",en:"the rate at which things are replaced.",vi:"t\u1ed1c \u0111\u1ed9 thay m\u1edbi/quay v\u00f2ng",ex:"a faster rate of turnover means production may not decrease.",nu:"Neutral; also business turnover (revenue).",co:"a high rate of turnover; staff turnover"},
+ {grp:"Driverless cars",w:"infrastructure",pos:"noun",en:"the basic systems a place needs, e.g. roads.",vi:"c\u01a1 s\u1edf h\u1ea1 t\u1ea7ng",ex:"setting up the infrastructure to make roads suitable.",nu:"Uncountable; formal.",co:"transport / road infrastructure; invest in infrastructure"},
+ {grp:"Driverless cars",w:"transition",pos:"noun",en:"the process of changing from one state to another.",vi:"s\u1ef1 chuy\u1ec3n \u0111\u1ed5i",ex:"managing the pace of transition to automated vehicles.",nu:"Formal; verb: transition.",co:"a smooth transition; the transition to / from"},
+ {grp:"Why zoos are good",w:"captivity",pos:"noun",en:"the state of being kept in a place, not free.",vi:"t\u00ecnh tr\u1ea1ng nu\u00f4i nh\u1ed1t",ex:"a species protected in captivity can be bred up.",nu:"Formal; opposite: the wild.",co:"in captivity; bred in captivity"},
+ {grp:"Why zoos are good",w:"conservation",pos:"noun",en:"the protection of animals, plants and natural resources.",vi:"s\u1ef1 b\u1ea3o t\u1ed3n",ex:"firstly, zoos aid conservation.",nu:"Positive; verb: conserve.",co:"wildlife conservation; conservation efforts"},
+ {grp:"Why zoos are good",w:"extinct",pos:"adjective",en:"no longer existing (of a species).",vi:"tuy\u1ec7t ch\u1ee7ng",ex:"colossal numbers of species are becoming extinct.",nu:"Neutral; noun: extinction.",co:"become / go extinct; an extinct species"},
+ {grp:"Why zoos are good",w:"reintroduce",pos:"verb",en:"to put a species back into the wild.",vi:"t\u00e1i th\u1ea3, \u0111\u01b0a tr\u1edf l\u1ea1i (t\u1ef1 nhi\u00ean)",ex:"species have been reintroduced from zoos.",nu:"Formal; noun: reintroduction.",co:"reintroduce a species; reintroduction programme"},
+ {grp:"Why zoos are good",w:"reservoir",pos:"noun",en:"a large supply kept for later use.",vi:"ngu\u1ed3n d\u1ef1 tr\u1eef",ex:"a reservoir population against a population crash.",nu:"Figurative here; also a water reservoir.",co:"a reservoir of; a reservoir population"},
+ {grp:"Why zoos are good",w:"outreach",pos:"noun",en:"work done to help or inform people in the community.",vi:"ho\u1ea1t \u0111\u1ed9ng ti\u1ebfp c\u1eadn c\u1ed9ng \u0111\u1ed3ng",ex:"they are more sophisticated in their communication and outreach work.",nu:"Neutral; compound noun.",co:"community / educational outreach; outreach work"},
+ {grp:"Why zoos are good",w:"ecosystem",pos:"noun",en:"all the living things in an area and how they interact.",vi:"h\u1ec7 sinh th\u00e1i",ex:"if we are to restore and repair ecosystems.",nu:"Neutral/scientific.",co:"a fragile / marine ecosystem; restore an ecosystem"}
+];
+const GRP_ORDER=["Changes in reading habits", "Environmental practices of big businesses", "Museums of fine art and their public", "The growth of bike-sharing schemes", "Driverless cars", "Why zoos are good"];
+function renderGlossary(filter){
+  const wrap=$("#glossWrap");if(!wrap)return;
+  const f=norm(filter||($("#glossSearch")?$("#glossSearch").value:"")||"");
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  let out="",shown=0;
+  GRP_ORDER.forEach((grp,gi)=>{
+    const rows=GLOSSARY.filter(g=>g.grp===grp && (!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0));
+    if(!rows.length)return;shown+=rows.length;
+    out+='<div class="gloss-section"><h3><span class="gnum">'+(gi+1)+'</span>'+escapeHtml(grp)+'</h3><div class="gloss-grid">'+
+      rows.map(g=>'<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span></div>'
+      +'<dl><dt>EN</dt><dd>'+g.en+'</dd>'
+      +'<dt>VI</dt><dd class="vi">'+g.vi+'</dd>'
+      +'<dt>e.g.</dt><dd class="ex">'+g.ex+'</dd>'
+      +'<dt>Note</dt><dd class="nu">'+g.nu+'</dd>'
+      +'<dt>Colloc.</dt><dd class="co">'+g.co+'</dd></dl></div>').join("")
+      +'</div></div>';
+  });
+  wrap.innerHTML = shown ? out : '<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
+
+// ---------- timers: reading = 20-min countdown with overtime; vocab = count-up ----------
+$$(".cdbar").forEach(bar=>{
+  const mode=bar.dataset.mode||"countdown";
+  const total=+bar.dataset.secs||0;
+  const d=bar.querySelector(".cdd"),b=bar.querySelector(".cdb"),r=bar.querySelector(".cdr");
+  let el=0,tick=null,run=false,flagged=false,over=bar.querySelector(".cdover");
+  function ensureOver(){if(!over){over=document.createElement("b");over.className="cdover";bar.appendChild(over);}return over;}
+  function render(){
+    if(mode==="countup"){d.textContent=fmt(el);return;}
+    const left=total-el;
+    if(left>0){d.textContent=fmt(left);bar.classList.toggle("warn",left<=300);bar.classList.remove("over");if(over)over.textContent="";}
+    else{d.textContent="00:00";bar.classList.remove("warn");bar.classList.add("over");ensureOver().textContent=" +"+fmt(el-total)+" over";}
+  }
+  function stop(){run=false;b.textContent=(el>0?"Resume":"Start");if(tick){clearInterval(tick);tick=null;}}
+  function start(){
+    if(run){stop();return;}
+    run=true;b.textContent="Pause";
+    tick=setInterval(()=>{el++;
+      if(mode==="countdown"&&el===total&&!flagged){flagged=true;flash("⏰ 20 minutes are up — you are now in overtime.");}
+      render();
+    },1000);
+  }
+  function doReset(){stop();el=0;flagged=false;bar.classList.remove("over","warn");if(over)over.textContent="";b.textContent="Start";render();}
+  b.addEventListener("click",start);
+  r.addEventListener("click",doReset);
+  bar.__resetCountdown=doReset;
+  bar.__overtime=()=>(mode==="countdown"?Math.max(0,el-total):0);
+  bar.__elapsed=()=>el;
+  render();
+});
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+refreshTabLocks();
+save(true);
+})();
+
+
+</script>
+</body>
+</html>
