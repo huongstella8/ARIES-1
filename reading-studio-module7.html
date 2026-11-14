@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Reading Studio — Module 7</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f6; --panel:#ffffff; --ink:#1c2431; --muted:#5f6b7c; --line:#e2e7ef;
+  --brand:#1f6feb; --brand-dark:#1550b3; --good:#1b8a5a; --good-bg:#e7f6ee;
+  --bad:#c0392b; --bad-bg:#fdecea; --warn:#b26a00; --warn-bg:#fdf3e2;
+  --mark:#fff3a3; --shadow:0 1px 3px rgba(20,30,50,.08),0 6px 20px rgba(20,30,50,.06);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.55;}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+a{color:var(--brand)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 60px}
+
+/* Header */
+header.top{background:linear-gradient(120deg,#12325f,#1f6feb);color:#fff;padding:16px 0;box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1280px;margin:0 auto;padding:0 18px;display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:20px}
+.brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+.brand p{margin:1px 0 0;font-size:11.5px;opacity:.82;font-weight:500}
+.hfields{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.hfields input{border:none;border-radius:8px;padding:8px 11px;font-size:13px;min-width:150px;background:rgba(255,255,255,.95);color:var(--ink)}
+.hstats{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip b{font-variant-numeric:tabular-nums;font-weight:700}
+.save-dot{font-size:11px;opacity:.9}
+
+/* Tabs */
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 18px}
+nav.tabs button{border:1px solid var(--line);background:var(--panel);color:var(--muted);
+  padding:9px 16px;border-radius:22px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s}
+nav.tabs button:hover{border-color:var(--brand);color:var(--brand)}
+nav.tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px}
+
+/* Reading split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.split{grid-template-columns:1fr}}
+.passage-col,.q-col{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+.passage-col{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow:auto}
+@media(max-width:900px){.passage-col{position:static;max-height:none}}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2;border-radius:var(--radius) var(--radius) 0 0}
+.col-head h3{margin:0;font-size:15px}
+.passage{padding:8px 22px 24px;font-size:15px;line-height:1.72}
+.passage .para{margin:14px 0}
+.passage .plabel{display:inline-block;font-weight:700;color:var(--brand);margin-right:8px}
+.passage mark{background:var(--mark);border-radius:3px;padding:0 1px}
+.q-body{padding:16px 20px 22px}
+
+/* highlight toolbar */
+.hl-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover{background:var(--brand-dark);color:#fff}
+.btn.ghost{background:transparent}
+.btn.on{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:5px 10px;font-size:12px}
+
+/* Questions */
+.qgroup{margin-bottom:24px}
+.qgroup .ginstr{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-left:3px solid var(--brand);padding:9px 13px;border-radius:8px;margin-bottom:12px}
+.q{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.q:last-child{border-bottom:none}
+.qnum{min-width:22px;font-weight:700;color:var(--brand)}
+.qmain{flex:1}
+.qtext{margin-bottom:7px}
+.q input[type=text]{width:100%;max-width:340px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.q select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;background:#fff;min-width:150px}
+.mc label{display:block;padding:5px 0;cursor:pointer}
+.mc input{margin-right:8px}
+.q .fb{margin-top:7px;font-size:13px;border-radius:8px;padding:8px 11px;display:none}
+.q.res .fb{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb .exp{color:var(--ink);margin-top:4px;font-size:12.5px;line-height:1.5}
+.q.correct input[type=text],.q.correct select{border-color:var(--good);background:var(--good-bg)}
+.q.wrong input[type=text],.q.wrong select{border-color:var(--bad);background:var(--bad-bg)}
+
+.submit-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.scorebox{margin-left:auto;font-weight:700;font-size:15px}
+.scorebox .pct{color:var(--brand)}
+
+/* Strategy cards */
+.strat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.strat-grid{grid-template-columns:1fr}}
+.strat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+.strat h3{color:var(--brand);font-size:16px}
+.strat .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff;background:var(--brand);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.strat ol,.strat ul{margin:8px 0;padding-left:20px}
+.strat li{margin:6px 0}
+.strat .tip{background:#f6f8fc;border-left:3px solid var(--good);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:10px}
+.strat .trap{background:var(--bad-bg);border-left:3px solid var(--bad);padding:9px 12px;border-radius:8px;font-size:13px;margin-top:8px}
+
+/* Error log & report */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f6f8fc;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px}
+.pill.r1{background:#e8f0ff;color:#1550b3}.pill.r2{background:#eafaf1;color:#1b8a5a}.pill.vc{background:#fdf3e2;color:#b26a00}
+.empty{color:var(--muted);text-align:center;padding:26px;font-style:italic}
+.report-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.metric{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.metric .lab{font-size:12px;color:var(--muted);font-weight:600}
+.metric .val{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.notice{font-size:13px;color:var(--muted);background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-top:10px}
+.setup-steps{counter-reset:s;list-style:none;padding:0;margin:12px 0}
+.setup-steps li{counter-increment:s;position:relative;padding:8px 0 8px 34px;border-bottom:1px solid var(--line)}
+.setup-steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:24px;height:24px;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700}
+pre{background:#0f1c30;color:#dbe7ff;padding:14px;border-radius:10px;overflow:auto;font-size:12px;line-height:1.5}
+code.inl{background:#eef1f6;padding:1px 6px;border-radius:5px;font-size:12.5px}
+.flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#12325f;color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;box-shadow:var(--shadow);opacity:0;transition:.25s;z-index:100;pointer-events:none}
+.flash.show{opacity:1;bottom:30px}
+.small{font-size:12.5px;color:var(--muted)}
+/* pass / lock badges */
+.pass-badge{display:inline-block;background:var(--good-bg);color:var(--good);border:1px solid var(--good);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge{display:inline-block;background:#eef3fb;color:var(--brand);border:1px solid var(--brand);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:700;margin-left:6px}
+.lock-badge.locked{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.lock-note{background:var(--warn-bg);border:1px solid var(--warn);border-left:4px solid var(--warn);color:#7a4a00;border-radius:8px;padding:11px 14px;font-size:13.5px;margin-top:14px}
+.lock-note b{color:var(--warn)}
+/* glossary */
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:820px){.gloss-grid{grid-template-columns:1fr}}
+.gloss{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#fff;box-shadow:var(--shadow)}
+.gloss .w{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gloss .w h4{margin:0;font-size:16.5px;color:var(--ink)}
+.gloss .pos{font-size:11px;font-weight:700;color:#fff;background:#6b7a90;border-radius:12px;padding:2px 9px;text-transform:lowercase}
+.gloss dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.gloss dt{font-weight:700;color:var(--brand);white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:2px}
+.gloss dd{margin:0}
+.gloss dd.vi{color:#0b6b45}
+.gloss dd.ex{font-style:italic;color:#374357}
+.gloss dd.nu{color:var(--muted);font-size:12.5px}
+.gloss dd.co{color:#7a4a00}
+.gloss-empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:24px;font-style:italic}
+.vocab-box{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:13.5px;font-style:italic}
+.reset-link{color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline}
+.endbank{background:#f6f8fc;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:10px 0 14px;font-size:15px;color:var(--ink);line-height:1.6}
+.endbank .ebt{font-weight:700;color:var(--brand);margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.endbank .ebi{padding:3px 0;border-bottom:1px dashed var(--line)}
+.endbank .ebi:last-child{border-bottom:none}
+.chip.cd{gap:6px}
+.chip.cd select{border:none;border-radius:6px;font-size:11.5px;padding:2px 4px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:600}
+.cdbtn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.16);color:#fff;border-radius:14px;padding:2px 10px;font-size:11.5px;font-weight:700;cursor:pointer}
+.cdbtn:hover{background:rgba(255,255,255,.30)}
+.chip.cd.warn{background:rgba(255,193,7,.32);border-color:#ffd45e}
+.chip.cd.done{background:rgba(192,57,43,.5);border-color:#ff8a7a}
+.swbar{display:flex;align-items:center;gap:8px;background:#eef3fb;border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin-bottom:14px;font-size:14px;color:var(--ink);width:fit-content}
+.swbar b{font-variant-numeric:tabular-nums;font-weight:700}
+.swbar .swb,.swbar .swr{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:14px;padding:2px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.swbar .swr{background:#fff;color:var(--brand)}
+</style>
+</head>
+<body>
+
+<div style="background:#0c2340;color:#fff;text-align:center;font-size:12.5px;letter-spacing:3px;font-weight:700;padding:7px 10px;text-transform:uppercase">Huong Stella Paradigm</div>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="logo">📖</div>
+      <div><h1>IELTS Reading Studio — Module 7</h1><p>Academic Reading · Summary Completion without a Wordlist · Multiple Choice · Classifying Information · Word Formation &amp; Prefixes · Vocabulary</p></div>
+    </div>
+    <div class="hfields">
+      <input id="stuName" type="text" placeholder="Student name" autocomplete="name">
+      <input id="stuEmail" type="email" placeholder="Email" autocomplete="email">
+    </div>
+    <div class="hstats">
+      <div class="chip">⏱ <b id="timerDisp">00:00</b></div>
+      <div class="chip">🔁 Attempts <b id="attemptDisp">0</b></div>
+      <div class="chip save-dot" id="saveDisp">saved</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs" id="tabs">
+    <button data-tab="strat" class="active">🎯 Strategies</button>
+    <button data-tab="r1">📗 Reading 1</button>
+    <button data-tab="r2">📘 Reading 2</button>
+    <button data-tab="vocab">🧩 Vocabulary</button>
+    <button data-tab="glossary">📚 Glossary</button>
+    <button data-tab="log">📕 Error Logbook</button>
+    <button data-tab="report">📊 Report / PDF</button>
+  </nav>
+
+  <section class="panel active" id="tab-strat">
+    <div class="card">
+      <h2 style="margin-top:0">Reading strategies from your IELTS teacher</h2>
+      <p class="small">Module 7 focuses on <b>completing summaries without a wordlist</b>, <b>multiple-choice questions</b> (reasons, consequences and the writer&rsquo;s view), <b>classifying information</b>, and <b>word formation with prefixes and suffixes</b>. Both passages explore the theme of <b>arts and sciences</b> &mdash; book clubs as a social reading phenomenon, and the Sciart programme linking artists and scientists. Read these before you start; every wrong answer is saved to your Error Logbook for review.</p>
+    </div>
+    <div class="strat-grid">
+      <div class="strat">
+        <span class="tag">Global habits</span>
+        <h3>Before you answer</h3>
+        <ol>
+          <li><b>Skim for structure (1&ndash;2 min).</b> Read the title and the first sentence of every paragraph; give each paragraph a one-line label.</li>
+          <li><b>Read instructions exactly.</b> &lsquo;ONE WORD ONLY&rsquo;, &lsquo;NO MORE THAN TWO WORDS&rsquo;, &lsquo;the writer concludes&rsquo; &mdash; breaking the rule scores zero.</li>
+          <li><b>Underline anchors</b> in each question: names, numbers and technical nouns are hardest to paraphrase, so they are fastest to scan for.</li>
+          <li><b>Most tasks follow passage order</b> &mdash; don&rsquo;t jump backwards to hunt for an answer.</li>
+        </ol>
+        <div class="tip">💡 Aim for ~20 minutes per passage; flag a hard item and return to it.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Completing summaries without a wordlist</h3>
+        <ol>
+          <li><b>Skim the summary first</b> and build your own picture of it before you look back at the passage &mdash; this is called &lsquo;activating schemata&rsquo;.</li>
+          <li><b>Predict the word class</b> each gap needs (noun? adjective? verb?) from the grammar around it.</li>
+          <li><b>Find the matching part of the passage</b> &mdash; the answer is an exact word <i>from the text</i>; don&rsquo;t invent your own synonym.</li>
+          <li><b>Respect the word limit</b> and check the completed sentence reads correctly.</li>
+        </ol>
+        <div class="trap">⚠️ The word must fit both the <i>meaning</i> and the <i>grammar</i> of the gap &mdash; and must be copied correctly from the passage.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Multiple-choice questions</h3>
+        <ul>
+          <li><b>Study the stem.</b> Is it asking for a <i>reason</i> (&lsquo;because&hellip;&rsquo;), a <i>consequence</i> (&lsquo;leads to&hellip;&rsquo;), or the <i>writer&rsquo;s opinion</i>?</li>
+          <li><b>Match the whole option,</b> not just a familiar word. A choice can be half-true and still wrong.</li>
+          <li><b>Eliminate the traps:</b> an option is wrong if it is the <i>opposite</i> of the text, or simply <i>not mentioned</i> (&lsquo;Not Given&rsquo;).</li>
+        </ul>
+        <div class="tip">💡 For a &lsquo;the writer thinks/concludes&rsquo; item, look to the <i>final</i> paragraph for the main view.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Task type</span>
+        <h3>Classifying information</h3>
+        <ol>
+          <li><b>Know your categories.</b> Here: did a <i>Scientist</i> (A), an <i>Artist</i> (B), or <i>Both</i> (C) make the comment?</li>
+          <li><b>Scan to the right section</b> &mdash; the testimonies are grouped, so locate &lsquo;Scientists&rsquo; testimonies&rsquo; and &lsquo;Artists&rsquo; testimonies&rsquo; first.</li>
+          <li><b>&lsquo;Both&rsquo; needs evidence on both sides</b> &mdash; only choose C when the same idea appears in a scientist&rsquo;s <i>and</i> an artist&rsquo;s words.</li>
+        </ol>
+        <div class="trap">⚠️ Classifying answers do <i>not</i> always follow passage order &mdash; read every option carefully.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Vocabulary</span>
+        <h3>Word formation: prefixes &amp; suffixes</h3>
+        <ul>
+          <li><b>The gap&rsquo;s grammar tells you the form.</b> &lsquo;a detailed ___&rsquo; needs a <i>noun</i> (assess &rarr; assessment); &lsquo;make it more ___&rsquo; needs an <i>adjective</i>.</li>
+          <li><b>Noun suffixes:</b> -ment, -tion, -al, -ance, -ism, -ity. <b>Negative prefixes:</b> un-, dis-, mis-, over-.</li>
+          <li><b>Contradicting a verb</b> often means a prefix: value &rarr; <i>under</i>value; understand &rarr; <i>mis</i>understand; approve &rarr; <i>dis</i>approve.</li>
+        </ul>
+        <div class="tip">💡 Record every new word with its whole family (noun / verb / adjective) and its opposite.</div>
+      </div>
+      <div class="strat">
+        <span class="tag">Method</span>
+        <h3>Reading for paraphrase</h3>
+        <p class="small" style="margin-top:0">Almost every Module 7 task rewards one skill: spotting the <b>same idea in different words</b>.</p>
+        <ol>
+          <li><b>Underline the key idea</b> in the question or summary.</li>
+          <li><b>Scan the passage</b> for a synonym or a rephrasing, not the identical phrase.</li>
+          <li><b>Confirm the meaning matches</b> &mdash; then commit to the answer.</li>
+        </ol>
+        <div class="tip">💡 For every answer, note the passage words that mean the same as the question.</div>
+      </div>
+  </section>
+
+  <!-- ============ READING 1 ============ -->
+  <section class="panel" id="tab-r1">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📗 Reading 1 &middot; Book clubs &mdash; from strength to strength</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r1">✎ Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r1">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r1">
+          <div class="para"><span class="plabel">A</span>The proliferation of book clubs, some 50,000 in the UK alone and who knows how many more worldwide, is quite a remarkable literary phenomenon. Participants of different ages and backgrounds gather on a weekly or monthly basis ostensibly to discuss books chosen by the members, but the primary attraction for most people, and the factor behind the explosion in the number of groups, is not literary, but social. Human interaction with some added mental stimulation in a relaxed environment is integral to their success.</div>
+          <div class="para"><span class="plabel">B</span>The social aspect apart, the spread of book clubs can also be attributed to the low cost and the availability of books, and the fact that compared to, say, the cinema or theatre, the clubs provide cheap entertainment. The Internet has played its part as well. Once seen as foreshadowing the end of reading, not only does the Internet allow people even cheaper access to books, but it also acts as a conduit for readers hungry to join a particular reading club. A further draw is the number of people who read for pleasure. With reading being listed as the most popular major leisure activity, according to a survey carried out over a four-week period in 2002 in the UK (65% constant since 1996), there is no shortage of willing participants.</div>
+          <div class="para"><span class="plabel">C</span>The clubs vary, ranging from cosy get-togethers in friends&rsquo; houses, with or without set rules and with or without food and drink, to more formal, official set-ups in educational-cum-literary establishments like libraries, sometimes with literary functions with guest speakers. The overwhelming majority are of a more unthreatening, easy-going nature. People come and go, but the cohesion of the groups seems to live on with new ones springing up to replace those which have faded away.</div>
+          <div class="para"><span class="plabel">D</span>From the literary point of view, the focus of each group is different as it depends solely on the make-up of the members and their predilections. There are reading clubs which specialize in football, romance, horror, science fiction and so on. Groups can focus on one type or they can be eclectic, combining different types of fiction like romance with, for example, cricket. Some may even dress up in the style of the characters or the time that a story took place to bring a mystery or an old classic to life. With such a variety of choice, book clubs are sure to survive and expand.</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">12 marks</span></div>
+        <div class="q-body" id="qbody-r1" data-test="r1">
+          <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+          <div class="qgroup"><div class="ginstr"><b>Questions 1&ndash;7 &middot; Summary completion (without a wordlist).</b> Complete the summary below. Use <b>ONE WORD ONLY</b> from the passage for each gap.</div><div class="vocab-box"><b>Why people join book clubs.</b> Most people join book clubs for <b>(1)</b> ______ reasons. The official reason is to discuss books, but members principally enjoy interacting with others in a <b>(2)</b> ______ atmosphere. Another reason for the popularity of book clubs is that reading is a <b>(3)</b> ______ pastime compared with cinema or theatre going. Some book clubs may <b>(4)</b> ______ on a particular genre, or they may decide to be <b>(5)</b> ______ in their choice of reading material. It all depends on the interest of the participants. Research suggests that the popularity of reading has remained <b>(6)</b> ______ since 1996, and it seems likely that the number of clubs will <b>(7)</b> ______ in the future.</div><div class="q" data-type="text" data-answers="social" data-exp="Para A: the primary attraction is &lsquo;not literary, but <b>social</b>&rsquo;."><div class="qnum">1</div><div class="qmain"><div class="qtext">(1) &mdash; the main kind of reasons people join</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="relaxed" data-exp="Para A: interaction &lsquo;in a <b>relaxed</b> environment&rsquo;."><div class="qnum">2</div><div class="qmain"><div class="qtext">(2) &mdash; the type of atmosphere members enjoy</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="cheap" data-exp="Para B: the clubs &lsquo;provide <b>cheap</b> entertainment&rsquo;."><div class="qnum">3</div><div class="qmain"><div class="qtext">(3) &mdash; reading is a ___ pastime vs cinema/theatre</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="focus" data-exp="Para D: &lsquo;Groups can <b>focus</b> on one type&rsquo;."><div class="qnum">4</div><div class="qmain"><div class="qtext">(4) &mdash; some clubs may ___ on one genre</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="eclectic" data-exp="Para D: &lsquo;or they can be <b>eclectic</b>, combining different types&rsquo;."><div class="qnum">5</div><div class="qmain"><div class="qtext">(5) &mdash; or they may be ___ in their choices</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="constant" data-exp="Para B: &lsquo;(65% <b>constant</b> since 1996)&rsquo;."><div class="qnum">6</div><div class="qmain"><div class="qtext">(6) &mdash; popularity of reading has stayed ___</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="expand" data-exp="Para D: &lsquo;book clubs are sure to survive and <b>expand</b>&rsquo;."><div class="qnum">7</div><div class="qmain"><div class="qtext">(7) &mdash; the number of clubs will ___ in future</div><input type="text" placeholder="one word" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 8&ndash;12 &middot; Multiple choice.</b> Choose the correct letter, <b>A</b>, <b>B</b>, <b>C</b> or <b>D</b>.</div><div class="q" data-type="mc1" data-answer="A" data-exp="Para A: the attraction is &lsquo;not literary, but social&rsquo; &mdash; book clubs <b>perform a social function</b>."><div class="qnum">8</div><div class="qmain"><div class="qtext">8 &middot; The increase in book clubs has occurred mainly because they</div><div class="mc"><label><input type="radio" name="r1q8" value="A"> <b>A</b>&nbsp; perform a social function.</label><label><input type="radio" name="r1q8" value="B"> <b>B</b>&nbsp; fulfil an intellectual need.</label><label><input type="radio" name="r1q8" value="C"> <b>C</b>&nbsp; cater for people from a variety of backgrounds.</label><label><input type="radio" name="r1q8" value="D"> <b>D</b>&nbsp; solve the social problems of the participants.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="C" data-exp="Para B: reading is the most popular leisure activity, so &lsquo;there is no shortage of willing participants&rsquo; &mdash; a steady pool of readers. D is never stated."><div class="qnum">9</div><div class="qmain"><div class="qtext">9 &middot; The number of people who read for pleasure in the UK</div><div class="mc"><label><input type="radio" name="r1q9" value="A"> <b>A</b>&nbsp; shows that the Internet has some benefits.</label><label><input type="radio" name="r1q9" value="B"> <b>B</b>&nbsp; means that the cost of books will be kept down.</label><label><input type="radio" name="r1q9" value="C"> <b>C</b>&nbsp; ensures there will always be a pool of readers to supply book clubs.</label><label><input type="radio" name="r1q9" value="D"> <b>D</b>&nbsp; means that cinemas and theatres are losing money.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="D" data-exp="Para C: &lsquo;The overwhelming majority are of a more unthreatening, easy-going nature&rsquo; = <b>informal</b>."><div class="qnum">10</div><div class="qmain"><div class="qtext">10 &middot; Which of the following best describes most book groups mentioned by the writer?</div><div class="mc"><label><input type="radio" name="r1q10" value="A"> <b>A</b>&nbsp; restrictive</label><label><input type="radio" name="r1q10" value="B"> <b>B</b>&nbsp; formal</label><label><input type="radio" name="r1q10" value="C"> <b>C</b>&nbsp; small</label><label><input type="radio" name="r1q10" value="D"> <b>D</b>&nbsp; informal</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="B" data-exp="Para D: the focus &lsquo;depends solely on the make-up of the members and their predilections&rsquo;."><div class="qnum">11</div><div class="qmain"><div class="qtext">11 &middot; Books for discussion in groups are</div><div class="mc"><label><input type="radio" name="r1q11" value="A"> <b>A</b>&nbsp; restricted to one type.</label><label><input type="radio" name="r1q11" value="B"> <b>B</b>&nbsp; dependent on member preference.</label><label><input type="radio" name="r1q11" value="C"> <b>C</b>&nbsp; limited to several different authors.</label><label><input type="radio" name="r1q11" value="D"> <b>D</b>&nbsp; dependent on the chairperson&rsquo;s reading list.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="A" data-exp="Para D (conclusion): &lsquo;book clubs are sure to survive and expand&rsquo; &mdash; a <b>certain future</b>."><div class="qnum">12</div><div class="qmain"><div class="qtext">12 &middot; The writer of the article thinks that</div><div class="mc"><label><input type="radio" name="r1q12" value="A"> <b>A</b>&nbsp; book clubs have a certain future.</label><label><input type="radio" name="r1q12" value="B"> <b>B</b>&nbsp; book clubs will expand slowly but surely.</label><label><input type="radio" name="r1q12" value="C"> <b>C</b>&nbsp; book clubs may not survive.</label><label><input type="radio" name="r1q12" value="D"> <b>D</b>&nbsp; the variety of book clubs will increase.</label></div><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r1">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r1">↻ Reset answers</button>
+            <div class="scorebox" id="score-r1">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READING 2 ============ -->
+  <section class="panel" id="tab-r2">
+    <div class="split">
+      <div class="passage-col">
+        <div class="col-head">
+          <h3>📘 Reading 2 &middot; Sciart &mdash; connections between two cultures</h3>
+          <div class="hl-tools">
+            <button class="btn sm" data-hl="r2">✎ Highlight: <span>OFF</span></button>
+            <button class="btn sm ghost" data-clearhl="r2">Clear</button>
+          </div>
+        </div>
+        <div class="passage" id="passage-r2">
+          <div class="para"><span class="plabel">1</span>Sciart was originally established to fund &lsquo;visual arts projects which involved an artist and a scientist working in collaboration to research, develop and produce work which explored contemporary biological and medical science&rsquo;. Over time, the programme expanded to cover a wider range of arts and science activity. In total, Sciart supported 118 projects with nearly &pound;3 million of funding to increase interest and excitement in biomedical science among adults; to encourage collaborative creative practice between disciplines in the arts and science; and to create a group of artists looking at biomedical science and build capacity in this field.</div>
+          <div class="para"><span class="plabel">2</span>Interview evidence from those involved in Sciart projects suggested that the collaborations between artists and scientists had helped to raise awareness among project participants and the wider public of connections between aspects of the arts and of the sciences. An effect of this had been to encourage, at policy making and funding levels, more interest to be taken and more resources to be devoted to encouraging interactions between the two. As one participant who was interviewed commented:</div>
+          <div class="para" style="font-style:italic;color:#374357;padding-left:14px;border-left:3px solid var(--line)">Connecting the sensory with the conceptual is something that is fundamental to artistic and scientific method. That awareness has got lost at a public level. And Sciart collaborations and the publicly visible outcomes help to demonstrate those connections, which have tended to become ignored. Sciart has made the similarities between science and art more evident.</div>
+          <div class="para"><span class="plabel">3</span>Interviews with a significant number of artists and scientists who had participated in Sciart-funded projects revealed that the process of collaboration and of observing each other&rsquo;s professional practices and cultures had led to previously unnoticed similarities between the &lsquo;two cultures&rsquo; being recognized. The process of recognition provided a point of familiarity that generally seemed to encourage or reassure those concerned. The combination of strangeness and familiarity was perceived by some as a basis on which to engage in collaboration across disciplines.</div>
+          <div class="para"><span class="plabel" style="color:var(--good)">Sci</span><b>Scientists&rsquo; testimonies.</b> <span style="font-style:italic;color:#374357">It has made me think more about the coming together of art and science. At the centre of scientific and artistic thinking there are acts of creativity, and I don&rsquo;t think that those acts of creativity necessarily differ, although the content may differ. In designing an experiment, a thought will come to you that &lsquo;something is worth looking at, and I have to be able to recognise what the value is within that&rsquo;.</span></div>
+          <div class="para" style="font-style:italic;color:#374357;padding-left:14px">There are surprising parallels with being a scientist. You spend a lot of time getting funding and writing reports, and only a small proportion doing the actual science. Each grant is for time-limited funding, so like the artists we are always thinking about where the next funding is going to come from.</div>
+          <div class="para"><span class="plabel" style="color:var(--warn)">Art</span><b>Artists&rsquo; testimonies.</b> <span style="font-style:italic;color:#374357">I was intrigued by the radical differences between the artistic process and the scientific method, but also by the overlaps, such as the opening up of new ideas, the creative manipulation of materials and the process of experimentation. Both science and art require creative thinking in their own ways, and they both require observation of the natural world. As an artist, as well as a scientist, you also need to pay attention to detail. There seems to be a lot in common but also a lot that is very different, and that seemed like a nice basis to form new relationships on.</span></div>
+          <div class="para" style="font-style:italic;color:#374357;padding-left:14px">The main thing is the similarities not the differences. You spend 75 per cent of your time applying for funding, and 20 per cent writing reports, and just 5 per cent actually doing the work. That is the same in both fields. Also there is that commercial lure in science to make money by working on cures for things like obesity, which means that if you remain within the academic research you effectively take a pay cut to do that. That is the same in the art world as well.</div>
+          <div class="para"><span class="plabel">4</span>It was very clear from the testimonies of interviewees from both sides of the art&ndash;science divide, and from those participating in projects as well as those observing them, that a great deal of mutual respect between the &lsquo;two cultures&rsquo; had grown up as a consequence of Sciart-funded collaborations.</div>
+          <div class="para" style="font-style:italic;color:#374357;padding-left:14px">I&rsquo;ve seen plenty of evidence that artists and scientists now view each other&rsquo;s cultures differently. There is a lot of anecdotal evidence of scientists being astonished by the level of both skill and hard labour that goes into the creation of artwork, and similarly a degree of astonishment amongst the artists about the ability and excitement of scientists in dealing with ideas and with imaginative concepts. So, there was I think a process of mutual eye-opening&hellip; (Scientist)</div>
+          <div class="para" style="font-style:italic;color:#374357;padding-left:14px">A strength is that it has enabled people from both sides of the Sciart divide to gain access to different ways of doing things, and that it has begun to break down some of the prejudices in the two camps. (Arts expert)</div>
+        </div>
+      </div>
+      <div class="q-col">
+        <div class="col-head"><h3>Questions</h3><span class="small">13 marks</span></div>
+        <div class="q-body" id="qbody-r2" data-test="r2">
+          <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+          <div class="qgroup"><div class="ginstr"><b>Questions 1&ndash;6 &middot; Summary completion (without a wordlist).</b> Complete the summary below. Choose <b>NO MORE THAN TWO WORDS</b> from the passage for each gap.</div><div class="vocab-box"><b>Background to the Sciart projects.</b> The Sciart programme was basically launched to encourage <b>(1)</b> ______ between scientists and artists, eventually covering 118 projects that were not just involved in art and biomedical science. When participants were interviewed about the Sciart projects, they felt the project increased <b>(2)</b> ______ of the connections between the <b>(3)</b> ______ among themselves and the general public. The result of this was that attempts were made to increase <b>(4)</b> ______ between both cultures. One interview comment was that Sciart had made the <b>(5)</b> ______ between science and art <b>(6)</b> ______.</div><div class="q" data-type="text" data-answers="collaboration" data-exp="Para 1: artists and scientists &lsquo;working in <b>collaboration</b>&rsquo;."><div class="qnum">1</div><div class="qmain"><div class="qtext">(1) &mdash; what the programme was launched to encourage</div><input type="text" placeholder="one–two words" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="awareness" data-exp="Para 2: collaborations &lsquo;helped to raise <b>awareness</b>&hellip; of connections&rsquo;."><div class="qnum">2</div><div class="qmain"><div class="qtext">(2) &mdash; the project increased ___ of the connections</div><input type="text" placeholder="one–two words" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="arts and sciences|the arts and sciences|arts, sciences|arts and the sciences|art and science|sciences and arts" data-exp="Para 2: connections between &lsquo;aspects of the <b>arts</b> and of the <b>sciences</b>&rsquo;."><div class="qnum">3</div><div class="qmain"><div class="qtext">(3) &mdash; the two fields linked (name both)</div><input type="text" placeholder="the two fields" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="interactions" data-exp="Para 2: resources devoted to encouraging <b>interactions</b> between the two."><div class="qnum">4</div><div class="qmain"><div class="qtext">(4) &mdash; attempts were made to increase ___</div><input type="text" placeholder="one–two words" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="similarities|connections" data-exp="Quote: &lsquo;Sciart has made the <b>similarities</b> between science and art more evident&rsquo; (&lsquo;connections&rsquo; is also accepted)."><div class="qnum">5</div><div class="qmain"><div class="qtext">(5) &mdash; Sciart made the ___ between science and art</div><input type="text" placeholder="one–two words" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="more evident|evident" data-exp="Quote: made the similarities &lsquo;<b>more evident</b>&rsquo;."><div class="qnum">6</div><div class="qmain"><div class="qtext">(6) &mdash; &hellip; between science and art more ___</div><input type="text" placeholder="one–two words" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 7&ndash;10 &middot; Classifying information.</b> Classify each comment about Sciart according to whether it was made by <b>A</b> Scientists, <b>B</b> Artists, or <b>C</b> Both scientists and artists.</div><div class="endbank"><div class="ebt">Classify as</div><div class="ebi"><b>A</b> &nbsp;Scientists</div><div class="ebi"><b>B</b> &nbsp;Artists</div><div class="ebi"><b>C</b> &nbsp;Both scientists and artists</div></div><div class="q" data-type="sel" data-answer="B" data-exp="Artists&rsquo; testimony: &lsquo;As an artist, as well as a scientist, you also need to pay attention to detail&rsquo; &mdash; said by an artist (B)."><div class="qnum">7</div><div class="qmain"><div class="qtext">7 &middot; Detail is important in both art and science.</div><select><option value="">— choose —</option><option value="A">A &mdash; Scientists</option><option value="B">B &mdash; Artists</option><option value="C">C &mdash; Both scientists and artists</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="C" data-exp="A scientist (&lsquo;a lot of time getting funding&rsquo;) and an artist (&lsquo;75 per cent of your time applying for funding&rsquo;) both say this &mdash; Both (C)."><div class="qnum">8</div><div class="qmain"><div class="qtext">8 &middot; The funding of projects takes up a lot of time.</div><select><option value="">— choose —</option><option value="A">A &mdash; Scientists</option><option value="B">B &mdash; Artists</option><option value="C">C &mdash; Both scientists and artists</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Official key: A (Scientists). The remark about the &lsquo;commercial lure&hellip; to make money&rsquo; applying in both fields is classified as a scientist&rsquo;s comment."><div class="qnum">9</div><div class="qmain"><div class="qtext">9 &middot; Making money is attractive to both artists and scientists.</div><select><option value="">— choose —</option><option value="A">A &mdash; Scientists</option><option value="B">B &mdash; Artists</option><option value="C">C &mdash; Both scientists and artists</option></select><div class="fb"></div></div></div><div class="q" data-type="sel" data-answer="A" data-exp="Scientists&rsquo; testimony: &lsquo;I don&rsquo;t think that those acts of creativity necessarily differ, although the content may differ&rsquo; &mdash; a scientist (A)."><div class="qnum">10</div><div class="qmain"><div class="qtext">10 &middot; While the content may be different, the creative process isn&rsquo;t.</div><select><option value="">— choose —</option><option value="A">A &mdash; Scientists</option><option value="B">B &mdash; Artists</option><option value="C">C &mdash; Both scientists and artists</option></select><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Questions 11&ndash;13 &middot; Multiple choice.</b> Choose the correct letter, <b>A</b>, <b>B</b>, <b>C</b> or <b>D</b>.</div><div class="q" data-type="mc1" data-answer="B" data-exp="Artist: &lsquo;just 5 per cent actually doing the work&rsquo;; scientist: &lsquo;only a small proportion doing the actual science&rsquo;."><div class="qnum">11</div><div class="qmain"><div class="qtext">11 &middot; In both the artistic and scientific fields</div><div class="mc"><label><input type="radio" name="r2q11" value="A"> <b>A</b>&nbsp; a majority of the time is devoted to work.</label><label><input type="radio" name="r2q11" value="B"> <b>B</b>&nbsp; only a small amount of time is spent working.</label><label><input type="radio" name="r2q11" value="C"> <b>C</b>&nbsp; funding applications require less time than writing reports.</label><label><input type="radio" name="r2q11" value="D"> <b>D</b>&nbsp; networking takes up a lot of valuable time.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="D" data-exp="Para 4: &lsquo;a great deal of mutual respect&hellip; had grown up as a consequence of Sciart-funded collaborations&rsquo;."><div class="qnum">12</div><div class="qmain"><div class="qtext">12 &middot; The programmes funded by Sciart have resulted in</div><div class="mc"><label><input type="radio" name="r2q12" value="A"> <b>A</b>&nbsp; a fall in respect between artists and scientists.</label><label><input type="radio" name="r2q12" value="B"> <b>B</b>&nbsp; government funding for similar collaborative projects.</label><label><input type="radio" name="r2q12" value="C"> <b>C</b>&nbsp; an increase in the divide between artists and scientists.</label><label><input type="radio" name="r2q12" value="D"> <b>D</b>&nbsp; an increase in respect between artists and scientists.</label></div><div class="fb"></div></div></div><div class="q" data-type="mc1" data-answer="C" data-exp="Final quote: &lsquo;scientists being astonished by the level of both skill and hard labour that goes into the creation of artwork&rsquo; &mdash; astonished = surprised a lot."><div class="qnum">13</div><div class="qmain"><div class="qtext">13 &middot; The amount of work involved in creating a piece of art</div><div class="mc"><label><input type="radio" name="r2q13" value="A"> <b>A</b>&nbsp; made little impression on scientists.</label><label><input type="radio" name="r2q13" value="B"> <b>B</b>&nbsp; made scientists a little surprised.</label><label><input type="radio" name="r2q13" value="C"> <b>C</b>&nbsp; surprised scientists a lot.</label><label><input type="radio" name="r2q13" value="D"> <b>D</b>&nbsp; only impressed imaginative scientists.</label></div><div class="fb"></div></div></div></div>
+          <div class="submit-row">
+            <button class="btn primary" data-submit="r2">✔ Submit &amp; Score</button>
+            <button class="btn ghost" data-retry="r2">↻ Reset answers</button>
+            <div class="scorebox" id="score-r2">Not attempted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOCABULARY ============ -->
+  <section class="panel" id="tab-vocab">
+    <div class="card">
+      <h2 style="margin-top:0">🧩 Vocabulary — Word Formation, Prefixes &amp; Opposites</h2>
+      <p class="small">Word skills built around the reading topics (arts and sciences). Form the right noun, or give the opposite verb, and type the whole word &mdash; spelling must be exact. Mistakes go to your Error Logbook.</p>
+    </div>
+    <div class="card">
+      <div class="q-body" data-test="vocab">
+        <div class="swbar" title="Stopwatch for this test">⏱ <b class="swd">00:00</b><button type="button" class="swb">Start</button><button type="button" class="swr">Reset</button></div>
+        <div class="qgroup"><div class="ginstr"><b>Exercise 1 &middot; Choose the right noun.</b> Complete each sentence with the correct noun formed from one of these verbs: <i>assess, condemn, disapprove, appraise, censure, endorse, condone, criticize, appreciate</i>.</div><div class="q" data-type="text" data-answers="assessment" data-exp="assess &rarr; <b>assessment</b> (a detailed assessment)."><div class="qnum">1</div><div class="qmain"><div class="qtext">1. The team carried out a detailed ______ of the risks involved.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="criticism" data-exp="criticize &rarr; <b>criticism</b> (literary criticism)."><div class="qnum">2</div><div class="qmain"><div class="qtext">2. The professor has published several works of literary ______.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="endorsement" data-exp="endorse &rarr; <b>endorsement</b> (a clear endorsement)."><div class="qnum">3</div><div class="qmain"><div class="qtext">3. The results of the election are a clear ______ of the government&rsquo;s policies.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="appreciation" data-exp="appreciate &rarr; <b>appreciation</b> (showed their appreciation)."><div class="qnum">4</div><div class="qmain"><div class="qtext">4. At the end of the opera, the audience showed their ______ by clapping enthusiastically.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="condemnation" data-exp="condemn &rarr; <b>condemnation</b> (strong condemnation)."><div class="qnum">5</div><div class="qmain"><div class="qtext">5. In his very critical article, the author expresses his strong ______ of reality TV.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 2 &middot; Make a noun.</b> Make a noun from the verb in brackets to complete each sentence.</div><div class="q" data-type="text" data-answers="condemnation" data-exp="condemn &rarr; <b>condemnation</b>."><div class="qnum">6</div><div class="qmain"><div class="qtext">6. Public ______ (condemn) of the use of money for arts promotion was very harsh.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="analysis" data-exp="analyse &rarr; <b>analysis</b>."><div class="qnum">7</div><div class="qmain"><div class="qtext">7. He carried out an in-depth ______ (analyse) of the extent of progress in this area.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="discrimination" data-exp="discriminate &rarr; <b>discrimination</b>."><div class="qnum">8</div><div class="qmain"><div class="qtext">8. There was obvious ______ (discriminate) in favour of funding for science.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="judgement|judgment" data-exp="judge &rarr; <b>judgement</b> (US spelling <i>judgment</i> also accepted)."><div class="qnum">9</div><div class="qmain"><div class="qtext">9. We need to reserve ______ (judge) until we are in possession of all the facts.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="belief|perception" data-exp="believe &rarr; <b>belief</b> (&lsquo;perception&rsquo; is also accepted)."><div class="qnum">10</div><div class="qmain"><div class="qtext">10. The general ______ (believe) appears to be that artists are somehow superior to scientists.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="perception|thinking" data-exp="perceive &rarr; <b>perception</b> (&lsquo;thinking&rsquo; is also accepted)."><div class="qnum">11</div><div class="qmain"><div class="qtext">11. News about current issues barely affects the public&rsquo;s ______ (perceive) generally.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="concept|conception" data-exp="conceive &rarr; <b>concept</b> / conception."><div class="qnum">12</div><div class="qmain"><div class="qtext">12. Some artists seem to have no ______ (conceive) of the way science is changing our view of the world.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div><div class="qgroup"><div class="ginstr"><b>Exercise 3 &middot; Contradict the verb.</b> Give the <b>opposite</b> of the verb in italics (in most cases by adding a prefix). Type the whole verb. <i>Example:</i> The government <i>defended</i> the arguments. &rarr; <b>opposed</b>.</div><div class="q" data-type="text" data-answers="valued|overvalued" data-exp="undervalued &rarr; <b>valued / overvalued</b>."><div class="qnum">13</div><div class="qmain"><div class="qtext">13. The government <i>undervalued</i> the contribution made by various people.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="misunderstood" data-exp="understood &rarr; <b>misunderstood</b> (mis-)."><div class="qnum">14</div><div class="qmain"><div class="qtext">14. The effects of lack of light on humans are <i>understood</i> by most people.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="disapproved|disapproved of" data-exp="approved &rarr; <b>disapproved (of)</b> (dis-)."><div class="qnum">15</div><div class="qmain"><div class="qtext">15. The local residents strongly <i>approved</i> of the building of the arts complex.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="condemned|disapproved of|disapproved" data-exp="praised &rarr; <b>condemned / disapproved of</b>."><div class="qnum">16</div><div class="qmain"><div class="qtext">16. The various publications <i>praised</i> the contents of the book.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="misjudged" data-exp="judged &rarr; <b>misjudged</b> (mis-)."><div class="qnum">17</div><div class="qmain"><div class="qtext">17. The company <i>judged</i> the timing of the film&rsquo;s release for maximum coverage.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div><div class="q" data-type="text" data-answers="disbelieved" data-exp="believed &rarr; <b>disbelieved</b> (dis-)."><div class="qnum">18</div><div class="qmain"><div class="qtext">18. It is clear that the scientific community <i>believed</i> the results of the research.</div><input type="text" placeholder="answer" autocomplete="off" spellcheck="false"><div class="fb"></div></div></div></div>
+        <div class="submit-row">
+          <button class="btn primary" data-submit="vocab">✔ Submit &amp; Score</button>
+          <button class="btn ghost" data-retry="vocab">↻ Reset answers</button>
+          <div class="scorebox" id="score-vocab">Not attempted</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section class="panel" id="tab-glossary">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📚 Topic Glossary — Arts &amp; Sciences: Book Clubs &amp; Sciart</h2>
+        <input id="glossSearch" type="text" placeholder="🔎 Search word / meaning…" style="border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;min-width:220px">
+      </div>
+      <p class="small">Key academic vocabulary pulled from both reading passages. Each entry gives the word class, an English definition, the Vietnamese meaning, a model sentence, a usage/nuance note, and the collocations examiners reward. <span id="glossCount"></span></p>
+      <div id="glossGrid" class="gloss-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ ERROR LOGBOOK ============ -->
+  <section class="panel" id="tab-log">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📕 Error Logbook</h2>
+        <button class="btn ghost sm" id="clearLog">Clear logbook</button>
+      </div>
+      <p class="small">Every question you get wrong is recorded here with the correct answer and the reason. Review before your next attempt — this is where score gains come from.</p>
+      <div id="logTable"></div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="panel" id="tab-report">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h2 style="margin:0">📊 Performance Report</h2>
+        <button class="btn primary" id="exportPdf">⬇ Export PDF report</button>
+      </div>
+      <div class="report-summary" id="reportMetrics" style="margin-top:16px"></div>
+      <h3>Results by test</h3>
+      <div id="reportTable"></div>
+      <p class="small" style="margin-top:16px">The PDF includes student details, per-test scores, time spent, attempts, and the full error logbook.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =======================================================================
+   TEACHER SETUP — paste your Google Apps Script Web App URL between the
+   quotes below (see the separate setup guide). Leave empty to turn sync off.
+   Example: const WEBAPP_URL = "https://script.google.com/macros/s/AKf.../exec";
+   ======================================================================= */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwt-h7E_3UVdhPKDNbYKLG5XnS_zMhPOotSQ04bOGlyR201lObq_Q1AWcL0qcMHlPJS/exec";
+const MODULE_TAG = "Module 7";
+
+const LS_KEY = "ielts_reading_studio_module7_v1";
+const TEST_META = {
+  r1:{label:"Reading 1 — Book Clubs: From Strength to Strength", pill:"r1"},
+  r2:{label:"Reading 2 — Sciart: Connections Between Two Cultures", pill:"r2"},
+  vocab:{label:"Vocabulary — Word Formation & Prefixes", pill:"vc"}
+};
+
+// ---------- state ----------
+let state = load();
+function blank(){
+  return {
+    student:{name:"",email:""},
+    tests:{
+      r1:{attempts:0,timeSec:0,lastScore:null,total:12,best:null,answers:{},highlights:"",unlocked:false},
+      r2:{attempts:0,timeSec:0,lastScore:null,total:13,best:null,answers:{},highlights:"",unlocked:false},
+      vocab:{attempts:0,timeSec:0,lastScore:null,total:18,best:null,answers:{},highlights:"",unlocked:false}
+    },
+    errorLog:[]
+  };
+}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(s&&s.tests)return Object.assign(blank(),s);}catch(e){}
+  return blank();
+}
+function save(silent){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  if(!silent){const d=document.getElementById("saveDisp");d.textContent="saved ✓";}
+}
+
+// ---------- helpers ----------
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function fmt(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function flash(msg){const f=$("#flash");f.textContent=msg;f.classList.add("show");clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove("show"),2600);}
+function norm(v){return (v||"").toLowerCase().trim().replace(/[.’']/g,"").replace(/\s+/g," ");}
+
+// ---------- tabs & timer ----------
+let activeTab="strat";
+$$("#tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#tabs button").forEach(x=>x.classList.remove("active"));
+  $$(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab=b.dataset.tab;
+  $("#tab-"+activeTab).classList.add("active");
+  if(activeTab==="log")renderLog();
+  if(activeTab==="report")renderReport();
+  if(activeTab==="glossary")renderGlossary();
+  updateHeaderStats();
+}));
+
+// timer ticks for the currently-open test tab
+setInterval(()=>{
+  if(state.tests[activeTab]){
+    state.tests[activeTab].timeSec++;
+    updateHeaderStats();
+  }
+},1000);
+function updateHeaderStats(){
+  const t=state.tests[activeTab];
+  $("#timerDisp").textContent = t ? fmt(t.timeSec) : "—:—";
+  $("#attemptDisp").textContent = t ? t.attempts : "0";
+}
+
+// autosave every 10s
+setInterval(()=>{save();},10000);
+
+// ---------- student fields ----------
+const nameEl=$("#stuName"),emailEl=$("#stuEmail");
+nameEl.value=state.student.name;emailEl.value=state.student.email;
+nameEl.addEventListener("input",()=>{state.student.name=nameEl.value;$("#saveDisp").textContent="editing…";});
+emailEl.addEventListener("input",()=>{state.student.email=emailEl.value;$("#saveDisp").textContent="editing…";});
+
+// ---------- highlighting ----------
+let hlMode={r1:false,r2:false};
+$$("[data-hl]").forEach(btn=>{
+  const id=btn.dataset.hl;
+  btn.addEventListener("click",()=>{
+    hlMode[id]=!hlMode[id];
+    btn.classList.toggle("on",hlMode[id]);
+    btn.querySelector("span").textContent=hlMode[id]?"ON":"OFF";
+  });
+});
+$$("[data-clearhl]").forEach(btn=>{
+  const id=btn.dataset.clearhl;
+  btn.addEventListener("click",()=>{
+    const p=$("#passage-"+id);
+    p.querySelectorAll("mark").forEach(m=>{const t=document.createTextNode(m.textContent);m.parentNode.replaceChild(t,m);});
+    p.normalize();
+    state.tests[id].highlights=p.innerHTML;save();
+  });
+});
+["r1","r2"].forEach(id=>{
+  const p=$("#passage-"+id);
+  if(state.tests[id].highlights)p.innerHTML=state.tests[id].highlights;
+  p.addEventListener("mouseup",()=>{
+    if(!hlMode[id])return;
+    const sel=window.getSelection();
+    if(!sel.rangeCount||sel.isCollapsed)return;
+    const range=sel.getRangeAt(0);
+    if(!p.contains(range.commonAncestorContainer))return;
+    try{
+      const mark=document.createElement("mark");
+      mark.appendChild(range.extractContents());
+      range.insertNode(mark);
+      sel.removeAllRanges();
+      state.tests[id].highlights=p.innerHTML;save();
+    }catch(e){/* cross-node selection */}
+  });
+});
+
+// ---------- restore saved answers ----------
+function restoreAnswers(){
+  Object.keys(state.tests).forEach(test=>{
+    const body=$('[data-test="'+test+'"]');if(!body)return;
+    const saved=state.tests[test].answers||{};
+    body.querySelectorAll(".q").forEach((q,i)=>{
+      const key="q"+i;const v=saved[key];if(v===undefined)return;
+      const type=q.dataset.type;
+      if(type==="text"){const inp=q.querySelector("input[type=text]");if(inp)inp.value=v;}
+      else if(type==="tfng"||type==="so"||type==="sel"){const sel=q.querySelector("select");if(sel)sel.value=v;}
+      else if(type==="mc1"){q.querySelectorAll("input[type=radio]").forEach(r=>{if(r.value===v)r.checked=true;});}
+      else if(type==="mc2"){const arr=(v||"").split(",");q.querySelectorAll("input[type=checkbox]").forEach(c=>{if(arr.includes(c.value))c.checked=true;});}
+    });
+    const t=state.tests[test];
+    if(t.lastScore!=null){
+      const pct=Math.round(t.lastScore/t.total*100);
+      const box=$("#score-"+test);
+      if(t.unlocked){
+        box.innerHTML=scoreText(t.lastScore,t.total)+'<span class="pass-badge">answers unlocked</span>';
+        // re-show feedback so a returning student keeps their reviewed answers
+        body.querySelectorAll(".q").forEach(q=>{
+          const r=gradeQuestion(q);const fb=q.querySelector(".fb");
+          q.classList.add("res",r.ok?"correct":"wrong");
+          if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+          else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+        });
+      }else{
+        box.innerHTML='Score: <span class="pct">'+t.lastScore+" / "+t.total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+      }
+    }
+  });
+}
+function collectAnswers(test){
+  const body=$('[data-test="'+test+'"]');const out={};
+  body.querySelectorAll(".q").forEach((q,i)=>{
+    const type=q.dataset.type,key="q"+i;
+    if(type==="text")out[key]=q.querySelector("input[type=text]").value;
+    else if(type==="tfng"||type==="so"||type==="sel")out[key]=q.querySelector("select").value;
+    else if(type==="mc1"){const c=q.querySelector("input[type=radio]:checked");out[key]=c?c.value:"";}
+    else if(type==="mc2"){out[key]=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value).join(",");}
+  });
+  return out;
+}
+// live-save on input
+$$('[data-test]').forEach(body=>{
+  body.addEventListener("input",()=>{
+    const test=body.dataset.test;
+    state.tests[test].answers=collectAnswers(test);
+    $("#saveDisp").textContent="editing…";
+  });
+});
+
+// ---------- scoring ----------
+function scoreText(sc,tot){const p=Math.round(sc/tot*100);return 'Score: <span class="pct">'+sc+" / "+tot+'</span> ('+p+"%)";}
+
+function peekAnswer(q){
+  const type=q.dataset.type;
+  if(type==="text")return q.querySelector("input[type=text]").value.trim()!=="";
+  if(type==="tfng"||type==="so"||type==="sel")return q.querySelector("select").value!=="";
+  if(type==="mc1")return !!q.querySelector("input[type=radio]:checked");
+  if(type==="mc2")return q.querySelectorAll("input[type=checkbox]:checked").length>0;
+  return false;
+}
+function gradeQuestion(q){
+  const type=q.dataset.type;
+  let ok=false,your="",correct="",points=0,max=1;
+  if(type==="text"){
+    your=q.querySelector("input[type=text]").value;
+    const accept=q.dataset.answers.split("|");
+    correct=accept[0];
+    ok=accept.some(a=>norm(a)===norm(your));points=ok?1:0;
+  }else if(type==="tfng"||type==="so"||type==="sel"){
+    your=q.querySelector("select").value;correct=q.dataset.answer;
+    ok=norm(your)===norm(correct);points=ok?1:0;
+  }else if(type==="mc1"){
+    const c=q.querySelector("input[type=radio]:checked");your=c?c.value:"";correct=q.dataset.answer;
+    ok=your===correct;points=ok?1:0;
+  }else if(type==="mc2"){
+    const correctSet=q.dataset.answer.split(",").map(s=>s.trim());
+    max=correctSet.length;   // "choose TWO" = 2 marks
+    const sel=Array.from(q.querySelectorAll("input[type=checkbox]:checked")).map(c=>c.value);
+    your=sel.slice().sort().join(",");
+    correct=correctSet.slice().sort().join(",");
+    // IELTS style: 1 mark per correct letter, but over-selecting scores 0
+    points = (sel.length>max) ? 0 : sel.filter(v=>correctSet.includes(v)).length;
+    ok = points===max;
+  }
+  return {ok,your:your||"(blank)",correct,exp:q.dataset.exp||"",points,max};
+}
+function questionLabel(q,test){
+  const num=q.querySelector(".qnum").textContent.trim();
+  const txt=(q.querySelector(".qtext")?q.querySelector(".qtext").textContent:"").trim();
+  return {num,txt};
+}
+
+const PASS_PCT=70;
+
+function clearLockNote(body){const n=body.querySelector(".lock-note");if(n)n.remove();}
+
+$$('[data-submit]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.submit;
+  const body=$('[data-test="'+test+'"]');
+  // count blanks to warn the student, then confirm to avoid accidental submits
+  let blanks=0;
+  body.querySelectorAll(".q").forEach(q=>{const r=peekAnswer(q);if(!r)blanks++;});
+  const msg="Submit "+TEST_META[test].label+" for scoring?"+(blanks?"\n\n"+blanks+" question(s) are still blank.":"")+"\n\nYou need "+PASS_PCT+"% or more to unlock the answers.\n\nThis will count as attempt #"+(state.tests[test].attempts+1)+".";
+  if(!confirm(msg))return;
+
+  // grade everything first (do not reveal yet)
+  let score=0,total=0;const graded=[];
+  body.querySelectorAll(".q").forEach(q=>{
+    const r=gradeQuestion(q);const {num,txt}=questionLabel(q,test);
+    total+=r.max;score+=r.points;
+    graded.push({q,r,num,txt});
+  });
+  const pct=Math.round(score/total*100);
+
+  const t=state.tests[test];
+  t.attempts++;t.answers=collectAnswers(test);t.lastScore=score;t.total=total;
+  t.best=(t.best==null)?score:Math.max(t.best,score);
+  const passedNow=pct>=PASS_PCT;
+  if(passedNow)t.unlocked=true;
+  const reveal=t.unlocked;   // once unlocked (>=70% at any point), answers stay visible
+
+  clearLockNote(body);
+  graded.forEach(g=>{
+    const q=g.q,r=g.r,fb=q.querySelector(".fb");
+    q.classList.remove("res","correct","wrong");
+    if(reveal){
+      q.classList.add("res",r.ok?"correct":"wrong");
+      if(r.ok){fb.className="fb ok";fb.innerHTML="✔ Correct.";}
+      else{fb.className="fb no";fb.innerHTML="✘ Correct answer: <b>"+escapeHtml(r.correct)+"</b>"+(r.exp?'<div class="exp">'+r.exp+"</div>":"");}
+    }else{
+      fb.className="fb";fb.innerHTML="";   // gate: hide right/wrong and answers
+    }
+  });
+
+  // only record errors once the student has earned the answers (avoids leaking via the logbook)
+  if(reveal){
+    graded.forEach(g=>{if(!g.r.ok)state.errorLog.push({test,num:g.num,q:g.txt,your:g.r.your,correct:g.r.correct,exp:g.r.exp,time:Date.now()});});
+  }
+
+  save();
+  updateHeaderStats();
+
+  const box=$("#score-"+test);
+  if(reveal){
+    box.innerHTML=scoreText(score,total)+(passedNow?'<span class="pass-badge">✓ '+pct+'% — passed</span>':'<span class="lock-badge">answers unlocked</span>');
+    flash(TEST_META[test].label+": "+score+"/"+total+" ("+pct+"%) — attempt "+t.attempts);
+  }else{
+    box.innerHTML='Score: <span class="pct">'+score+" / "+total+'</span> ('+pct+'%) <span class="lock-badge locked">🔒 need '+PASS_PCT+'%</span>';
+    const note=document.createElement("div");
+    note.className="lock-note";
+    note.innerHTML="🔒 You scored <b>"+pct+"%</b>. You need <b>"+PASS_PCT+"%</b> to unlock the correct answers and explanations. Re-read the passage, revise your answers and submit again — your attempts and time are still being recorded.";
+    body.querySelector(".submit-row").insertAdjacentElement("afterend",note);
+    flash("Score "+pct+"% — below "+PASS_PCT+"%. Answers stay hidden; please try again.");
+  }
+
+  // sync full detail to the teacher's sheet regardless of the gate
+  const details=graded.map(g=>"Q"+g.num+": "+g.r.your+(g.r.ok?" [correct]":" [x -> "+g.r.correct+"]")).join(" | ");
+  syncToSheet({
+    test:MODULE_TAG+" — "+TEST_META[test].label,score:score,total:total,
+    percent:pct,attempt:t.attempts,
+    timeSec:t.timeSec,timeFmt:fmt(t.timeSec),details:details
+  });
+  body.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+$$('[data-retry]').forEach(btn=>btn.addEventListener("click",()=>{
+  const test=btn.dataset.retry;
+  const body=$('[data-test="'+test+'"]');
+  body.querySelectorAll(".q").forEach(q=>{
+    q.classList.remove("res","correct","wrong");
+    const inp=q.querySelector("input[type=text]");if(inp)inp.value="";
+    const sel=q.querySelector("select");if(sel)sel.value="";
+    q.querySelectorAll("input[type=checkbox],input[type=radio]").forEach(c=>c.checked=false);
+    const fb=q.querySelector(".fb");if(fb){fb.className="fb";fb.innerHTML="";}
+  });
+  clearLockNote(body);
+  state.tests[test].answers={};save();
+  flash("Answers cleared (attempts & time kept).");
+}));
+
+// ---------- Google Sheet sync ----------
+function syncToSheet(payload,isTest){
+  if(!WEBAPP_URL)return;
+  const full=Object.assign({
+    name:state.student.name||"(no name)",
+    email:state.student.email||"(no email)"
+  },payload);
+  fetch(WEBAPP_URL,{
+    method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(full)
+  }).then(()=>{if(!isTest)$("#saveDisp").textContent="saved + synced ✓";})
+    .catch(()=>{flash("Sheet sync failed — check your internet connection.");});
+}
+
+// ---------- error logbook ----------
+function renderLog(){
+  const wrap=$("#logTable");
+  if(!state.errorLog.length){wrap.innerHTML='<div class="empty">No errors logged yet. Submit a test to populate your logbook.</div>';return;}
+  let rows=state.errorLog.slice().reverse().map(e=>{
+    const meta=TEST_META[e.test]||{label:e.test,pill:"r1"};
+    return '<tr><td><span class="pill '+meta.pill+'">'+meta.label.split(" —")[0]+'</span></td>'
+      +'<td><b>'+e.num+'</b></td>'
+      +'<td>'+escapeHtml(e.q)+'</td>'
+      +'<td style="color:var(--bad)">'+escapeHtml(e.your)+'</td>'
+      +'<td style="color:var(--good)"><b>'+escapeHtml(e.correct)+'</b></td>'
+      +'<td class="small">'+(e.exp||"")+'</td></tr>';
+  }).join("");
+  wrap.innerHTML='<table><thead><tr><th>Test</th><th>Q</th><th>Question</th><th>Your answer</th><th>Correct</th><th>Why</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function escapeHtml(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+$("#clearLog").addEventListener("click",()=>{if(confirm("Clear the entire error logbook?")){state.errorLog=[];save();renderLog();}});
+
+// ---------- report ----------
+function renderReport(){
+  const m=$("#reportMetrics");
+  let totScore=0,totMax=0,totTime=0,totAtt=0;
+  Object.keys(state.tests).forEach(k=>{const t=state.tests[k];totTime+=t.timeSec;totAtt+=t.attempts;if(t.lastScore!=null){totScore+=t.lastScore;totMax+=t.total;}});
+  m.innerHTML=
+    metric("Student",state.student.name||"—")+
+    metric("Overall score",totMax?totScore+"/"+totMax:"—")+
+    metric("Total time",fmt(totTime))+
+    metric("Total attempts",totAtt)+
+    metric("Errors logged",state.errorLog.length);
+  const tbl=$("#reportTable");
+  let rows=Object.keys(state.tests).map(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    const best=t.best!=null?(t.best+"/"+t.total):"—";
+    return "<tr><td><b>"+meta.label+"</b></td><td>"+sc+"</td><td>"+best+"</td><td>"+t.attempts+"</td><td>"+fmt(t.timeSec)+"</td></tr>";
+  }).join("");
+  tbl.innerHTML='<table><thead><tr><th>Test</th><th>Latest score</th><th>Best</th><th>Attempts</th><th>Time</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function metric(lab,val){return '<div class="metric"><div class="lab">'+lab+'</div><div class="val">'+escapeHtml(String(val))+'</div></div>';}
+
+// ---------- PDF export ----------
+$("#exportPdf").addEventListener("click",()=>{
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  const W=595, M=40; let y=54;
+  const line=(txt,size,style,color)=>{
+    doc.setFont("helvetica",style||"normal");doc.setFontSize(size||11);
+    doc.setTextColor.apply(doc,color||[28,36,49]);
+    const lines=doc.splitTextToSize(txt,W-2*M);
+    lines.forEach(l=>{if(y>800){doc.addPage();y=54;}doc.text(l,M,y);y+=size?size+5:16;});
+  };
+  const rule=()=>{doc.setDrawColor(220);doc.line(M,y,W-M,y);y+=14;};
+
+  doc.setFillColor(31,111,235);doc.rect(0,0,W,40,"F");
+  doc.setTextColor(255);doc.setFont("helvetica","bold");doc.setFontSize(16);
+  doc.text("IELTS Reading Studio — Module 7 — Performance Report",M,26);
+  y=64;
+  line("Student: "+(state.student.name||"—"),12,"bold");
+  line("Email: "+(state.student.email||"—"),11);
+  line("Generated: "+new Date().toLocaleString(),10,"normal",[95,107,124]);
+  y+=6;rule();
+
+  line("Results by test",13,"bold",[31,111,235]);
+  Object.keys(state.tests).forEach(k=>{
+    const t=state.tests[k],meta=TEST_META[k];
+    const sc=t.lastScore!=null?(t.lastScore+"/"+t.total+" ("+Math.round(t.lastScore/t.total*100)+"%)"):"not attempted";
+    line(meta.label,11,"bold");
+    line("   Latest: "+sc+"    Best: "+(t.best!=null?t.best+"/"+t.total:"—")+"    Attempts: "+t.attempts+"    Time: "+fmt(t.timeSec),10,"normal",[70,80,95]);
+  });
+  y+=4;rule();
+
+  line("Error logbook ("+state.errorLog.length+" entries)",13,"bold",[192,57,43]);
+  if(!state.errorLog.length){line("No errors recorded.",10,"italic",[95,107,124]);}
+  else{
+    state.errorLog.forEach((e,i)=>{
+      const meta=TEST_META[e.test]||{label:e.test};
+      line((i+1)+". ["+meta.label.split(" —")[0]+" Q"+e.num+"] "+e.q,10,"bold");
+      line("     Your answer: "+e.your+"   |   Correct: "+e.correct,10,"normal",[70,80,95]);
+      if(e.exp){const tmp=e.exp.replace(/<[^>]+>/g,"");line("     Why: "+tmp,9,"italic",[110,120,135]);}
+      y+=2;
+    });
+  }
+  const fn=(state.student.name||"student").replace(/[^a-z0-9]+/gi,"_")+"_module7_report.pdf";
+  doc.save(fn);
+  flash("PDF report downloaded.");
+});
+
+// ---------- glossary ----------
+const GLOSSARY=[
+ {w:"proliferation",pos:"noun",src:"R1",en:"a rapid increase in the number or amount of something.",vi:"sự gia tăng nhanh chóng, sự sinh sôi nảy nở.",ex:"The proliferation of book clubs is a remarkable literary phenomenon.",nu:"Formal; verb: proliferate. Often of things multiplying fast.",co:"the proliferation of; proliferate rapidly"},
+ {w:"phenomenon",pos:"noun",src:"R1",en:"a fact, situation or event that exists or happens, especially a remarkable one.",vi:"hiện tượng.",ex:"Book clubs are a remarkable literary phenomenon.",nu:"Plural: phenomena. Formal; neutral.",co:"a social / natural / cultural phenomenon"},
+ {w:"ostensibly",pos:"adverb",src:"R1",en:"as it appears on the surface, though perhaps not really so.",vi:"bề ngoài là, trên danh nghĩa (nhưng có thể không thật).",ex:"Members gather ostensibly to discuss books, but mainly to socialise.",nu:"Formal; signals a contrast between the stated and the real reason.",co:"ostensibly to do sth; ostensibly for"},
+ {w:"integral",pos:"adjective",src:"R1",en:"necessary and important as a part of a whole.",vi:"thiết yếu, không thể thiếu, cốt lõi.",ex:"Human interaction is integral to the success of book clubs.",nu:"Formal; &lsquo;integral to&rsquo;. Not about numbers here.",co:"integral to; an integral part of"},
+ {w:"attribute to",pos:"verb",src:"R1",en:"to say that something is caused by a particular thing.",vi:"quy cho, cho là do (nguyên nhân).",ex:"The spread of clubs can be attributed to the low cost of books.",nu:"Often passive: &lsquo;be attributed to&rsquo;. Noun: attribution.",co:"attribute sth to; be attributed to"},
+ {w:"conduit",pos:"noun",src:"R1",en:"a channel or means through which something is passed or conveyed.",vi:"kênh dẫn, phương tiện truyền dẫn.",ex:"The Internet acts as a conduit for readers wanting to join a club.",nu:"Formal / figurative here; literally a pipe or channel.",co:"a conduit for / between; act as a conduit"},
+ {w:"foreshadow",pos:"verb",src:"R1",en:"to be a sign or warning of a future event.",vi:"báo trước, là điềm báo của.",ex:"The Internet was once seen as foreshadowing the end of reading.",nu:"Formal / literary; noun phrase &lsquo;a foreshadowing of&rsquo;.",co:"foreshadow a change; a foreshadowing of"},
+ {w:"predilection",pos:"noun",src:"R1",en:"a preference or special liking for something.",vi:"sở thích riêng, thiên hướng.",ex:"Each group depends on the predilections of its members.",nu:"Formal; &lsquo;a predilection for&rsquo;. Slightly elevated register.",co:"a predilection for sth"},
+ {w:"eclectic",pos:"adjective",src:"R1",en:"taking ideas or things from many different sources.",vi:"chiết trung, đa dạng (lấy từ nhiều nguồn).",ex:"Some clubs are eclectic, combining romance with cricket.",nu:"Positive / neutral; adv: eclectically; noun: eclecticism.",co:"an eclectic mix / taste / selection"},
+ {w:"cohesion",pos:"noun",src:"R1",en:"the state of being united and working well together as a whole.",vi:"sự gắn kết, tính cố kết.",ex:"The cohesion of the groups seems to live on as members change.",nu:"Formal; adj: cohesive. Social or textual cohesion.",co:"social / group cohesion; a cohesive unit"},
+ {w:"unthreatening",pos:"adjective",src:"R1",en:"not causing fear, worry or pressure; easy to be around.",vi:"không gây áp lực, dễ chịu, thân thiện.",ex:"Most clubs are of an unthreatening, easy-going nature.",nu:"Neutral; formed with the negative prefix un-.",co:"an unthreatening atmosphere / manner"},
+ {w:"make-up",pos:"noun",src:"R1",en:"the particular combination of parts or people that forms something.",vi:"thành phần cấu tạo, cơ cấu.",ex:"Each group differs according to the make-up of its members.",nu:"Here = composition (not cosmetics). Often &lsquo;the make-up of&rsquo;.",co:"the make-up of a group / team / committee"},
+ {w:"collaboration",pos:"noun",src:"R2",en:"the act of working together with others to produce something.",vi:"sự hợp tác, cộng tác.",ex:"Sciart funded artists and scientists working in collaboration.",nu:"Formal; verb: collaborate; adj: collaborative.",co:"in collaboration with; close collaboration"},
+ {w:"biomedical",pos:"adjective",src:"R2",en:"relating to both biology and medicine.",vi:"(thuộc) y sinh học.",ex:"Sciart aimed to increase excitement in biomedical science.",nu:"Technical / academic register.",co:"biomedical science / research / engineering"},
+ {w:"capacity",pos:"noun",src:"R2",en:"the ability or power to do, experience or produce something.",vi:"năng lực, khả năng.",ex:"The programme aimed to build capacity in this field.",nu:"Many senses; here = ability/expertise. &lsquo;build capacity&rsquo;.",co:"build / increase capacity; the capacity to"},
+ {w:"awareness",pos:"noun",src:"R2",en:"knowledge or understanding that something exists or is important.",vi:"nhận thức, sự nhận biết.",ex:"Collaborations helped to raise awareness of the connections.",nu:"Formed with -ness; adj: aware. &lsquo;raise awareness of&rsquo;.",co:"raise / increase awareness of"},
+ {w:"conceptual",pos:"adjective",src:"R2",en:"relating to ideas or concepts rather than concrete things.",vi:"(thuộc) khái niệm, mang tính ý niệm, trừu tượng.",ex:"Connecting the sensory with the conceptual is fundamental to method.",nu:"Formal / academic; adv: conceptually; noun: concept.",co:"a conceptual framework / approach"},
+ {w:"testimony",pos:"noun",src:"R2",en:"a formal spoken or written statement giving evidence or an account.",vi:"lời chứng, lời kể, chứng cứ (lời khai).",ex:"The testimonies of interviewees revealed mutual respect.",nu:"Formal; plural: testimonies. Also legal register.",co:"give / provide testimony; the testimony of"},
+ {w:"parallel",pos:"noun",src:"R2",en:"a similarity or comparison between two things.",vi:"sự tương đồng, điểm giống nhau.",ex:"A scientist noted surprising parallels with being an artist.",nu:"Also adj/verb; &lsquo;draw a parallel between&rsquo;.",co:"draw / find parallels between; a close parallel"},
+ {w:"intrigued",pos:"adjective",src:"R2",en:"very interested in something because it is strange or mysterious.",vi:"bị cuốn hút, tò mò thích thú.",ex:"An artist was intrigued by the differences between the two methods.",nu:"Verb: intrigue; adj: intriguing. Positive curiosity.",co:"intrigued by / to find; an intriguing idea"},
+ {w:"manipulation",pos:"noun",src:"R2",en:"the skilful handling, control or working of something.",vi:"sự thao tác, xử lý khéo léo (vật liệu).",ex:"Art involves the creative manipulation of materials.",nu:"Neutral here (skill), though it can mean dishonest control.",co:"the manipulation of materials / data"},
+ {w:"anecdotal",pos:"adjective",src:"R2",en:"based on personal accounts rather than on systematic research.",vi:"mang tính giai thoại, dựa trên lời kể cá nhân.",ex:"There is a lot of anecdotal evidence of scientists&rsquo; astonishment.",nu:"Often contrasted with &lsquo;scientific/statistical&rsquo; evidence.",co:"anecdotal evidence; purely anecdotal"},
+ {w:"prejudice",pos:"noun",src:"R2",en:"an unfair, preconceived opinion not based on reason or experience.",vi:"định kiến, thành kiến.",ex:"The projects began to break down prejudices in the two camps.",nu:"Formal; verb: prejudice; adj: prejudiced. Usually negative.",co:"break down / overcome prejudice; prejudice against"},
+ {w:"mutual",pos:"adjective",src:"R2",en:"felt or done equally by two or more people towards each other.",vi:"lẫn nhau, qua lại, đôi bên.",ex:"A great deal of mutual respect grew up between the two cultures.",nu:"Formal; adv: mutually. &lsquo;mutual respect / benefit&rsquo;.",co:"mutual respect / understanding / benefit"}
+];
+function renderGlossary(filter){
+  const grid=$("#glossGrid");if(!grid)return;
+  const f=norm(filter||$("#glossSearch").value||"");
+  const rows=GLOSSARY.filter(g=>!f||norm(g.w+" "+g.en+" "+g.vi+" "+g.co).indexOf(f)>=0);
+  $("#glossCount").textContent="("+GLOSSARY.length+" terms)";
+  if(!rows.length){grid.innerHTML='<div class="gloss-empty">No term matches “'+escapeHtml(filter||"")+'”.</div>';return;}
+  grid.innerHTML=rows.map(g=>
+    '<div class="gloss"><div class="w"><h4>'+escapeHtml(g.w)+'</h4><span class="pos">'+escapeHtml(g.pos)+'</span><span class="pill '+(g.src.indexOf("R1")>=0?"r1":"r2")+'">'+escapeHtml(g.src)+'</span></div>'
+    +'<dl>'
+    +'<dt>EN</dt><dd>'+escapeHtml(g.en)+'</dd>'
+    +'<dt>VI</dt><dd class="vi">'+escapeHtml(g.vi)+'</dd>'
+    +'<dt>e.g.</dt><dd class="ex">'+escapeHtml(g.ex)+'</dd>'
+    +'<dt>Note</dt><dd class="nu">'+escapeHtml(g.nu)+'</dd>'
+    +'<dt>Colloc.</dt><dd class="co">'+escapeHtml(g.co)+'</dd>'
+    +'</dl></div>'
+  ).join("");
+}
+document.getElementById("glossSearch").addEventListener("input",e=>renderGlossary(e.target.value));
+
+// ---------- init ----------
+restoreAnswers();
+updateHeaderStats();
+save(true);
+})();
+</script>
+
+<script>
+(function(){
+ var bars=document.querySelectorAll('.swbar');
+ bars.forEach(function(bar){
+   var d=bar.querySelector('.swd'),b=bar.querySelector('.swb'),r=bar.querySelector('.swr');
+   var el=0,tick=null,run=false;
+   function fmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+   function render(){d.textContent=fmt(el);}
+   function stop(){run=false;b.textContent='Start';if(tick){clearInterval(tick);tick=null;}}
+   function start(){if(run){stop();return;}run=true;b.textContent='Pause';tick=setInterval(function(){el++;render();},1000);}
+   b.addEventListener('click',start);
+   r.addEventListener('click',function(){stop();el=0;render();});
+   render();
+ });
+})();
+</script>
+</body>
+</html>
